@@ -1,0 +1,65 @@
+---
+title: Reference
+slug: reference
+output:
+  blogdown::html_page:
+    template: ../pandoc/toc-title_html.template
+    toc: true
+---
+
+
+# Citations and bibliography
+
+[^bibtex] You can [download a BibTeX file](/bib/references.bib) of all the non-web-based readings in the course.
+
+[^bibtex]: {-} You can open the file in [BibDesk on macOS](http://bibdesk.sourceforge.net/), [JabRef on Windows](http://www.jabref.org/), or [Zotero](https://www.zotero.org/) or [Mendeley](https://www.mendeley.com/) online.
+
+
+# Things you should know for Exam 1
+
+## Capitalism
+
+**You should understand…**
+
+- …the components of the capitalist economic system: private property, markets, and firms
+- …what happens when any of these components gets distorted
+- …what makes public goods different from regular goods (see public goods game)
+- …what institutions are and how they coordinate action
+- …what GDP is, what it measures, what it doesn't measure, what problems there are with it, what alternatives there are for it, and why it continues to be popular
+- …the difference between real and nominal values (and why we care)
+- …what a price index is
+- …what purchasing power parity (PPP) is (and also what the Big Mac Index is)
+- …the downsides of capitalism (inequality + environmental damage)
+
+**Games and simulations played in class:**
+
+- *Pit market trading with paper clips*: how supply and demand are derived from producer willingness to accept and consumer willingness to pay
+
+**Important fomulas:**
+
+- Adjusting for inflation:
+
+    $$
+    \text{Real} = \frac{\text{Nominal}}{\text{Price Index / 100}}
+    $$
+
+- Percent change:
+
+    $$
+    \frac{\text{Current} - \text{Previous}}{\text{Previous}}
+    $$
+
+- Compound annual growth rate (CAGR); periodic method (this assumes interest is compounded once a year; this is the harder method and you don't really need to use it):
+
+    $$
+    r = exp(\frac{ln(\frac{\text{Price index}_{\text{new}}}{\text{Price index}_{\text{old}}})}{t}) - 1
+    $$
+- Compound annual growth rate (CAGR): continuous method (this assumes interest is compounded continuously; this is the easier method and you should generally use this):
+
+    $$
+    r = \frac{ln(\frac{\text{Price index}_{\text{new}}}{\text{Price index}_{\text{old}}})}{t}
+    $$
+
+**Helpful resources:**
+
+- [<i class="fas fa-external-link-square-alt"></i> CPI calculator](https://www.bls.gov/data/inflation_calculator.htm)

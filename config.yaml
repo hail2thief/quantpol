@@ -1,0 +1,70 @@
+baseURL: "https://statsf18.classes.andrewheiss.com/"
+languageCode: en-us
+title: The Political Science Discipline
+theme: "ath-tufte-hugo_18-19"
+googleAnalytics: ""
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - \.Rhistory$
+  - \.yaml$
+  - _files$
+  - _cache$
+  - \.csl$
+  - \.Rproj.user/*
+permalinks:
+  post: "/:year/:month/:day/:slug/"
+buildFuture: true
+menu:
+  main:
+    - name: Syllabus
+      url: /syllabus/
+      weight: 1
+    - name: Assignments
+      url: /assignments/
+      weight: 3
+    - name: Schedule
+      url: /schedule/
+      weight: 2
+    - name: Reference
+      url: /reference/
+      weight: 4
+    - name: RStudio.cloud
+      url: "https://rstudio.cloud"
+      weight: 5
+    - name: Slack
+      url: "https://gitter.im/byustatsf18/"
+      weight: 7
+params: 
+  author: Juan Tellez
+  thumbnail: /images/stats_meta.png
+  instructor: 
+    name: Juan Tellez
+    email: jft11@duke.edu
+    url: "https://www.andrewheiss.com"
+    twitter: beingofbeings
+    github: hail2thief
+    office: NUMBER AND ROOM
+  logo:
+    url: /images/POLI301.png
+    alt: The Political Science Discipline
+  course:
+    number: POLI 301
+    semester: Fall 2019
+    days: "Tuesdays, Thursdays"
+    time: "7:35–9:45 PM"
+    location: "417 SLC"
+    twitter: beingofbeings
+    dates: "September 6–December 13, 2018"
+    github: "hail2thief"
+    copyrightYear: "2019"
+    contactDetails: >-
+      Office hours: [Sign up here.](https://calendly.com/juan-f-tellez)<br><br>E-mail is the best way to get in contact with me—I will respond to all course-related e-mails within 24 hours (*really*).
+  university: 
+    name: University of South Carolina
+  school:
+    name: Department of Political Science
+  primaryColor: "#73000a"
+  secondaryColor: "#CC2E40"
+  credits: >-
+    Course website design adapted/stolen from [Andrew Heiss](https://www.andrewheiss.com/).
