@@ -1,4 +1,4 @@
-baseURL: "https://statsf18.classes.andrewheiss.com/"
+baseURL: "/"
 languageCode: en-us
 title: The Political Science Discipline
 theme: "ath-tufte-hugo_18-19"
@@ -37,7 +37,7 @@ menu:
       weight: 7
 params: 
   author: Juan Tellez
-  thumbnail: /images/stats_meta.png
+  thumbnail: /images/POLI301.png
   instructor: 
     name: Juan Tellez
     email: jft11@duke.edu
@@ -68,3 +68,7 @@ params:
   secondaryColor: "#CC2E40"
   credits: >-
     Course website design adapted/stolen from [Andrew Heiss](https://www.andrewheiss.com/).
+  meta:
+    twitterSite: "@beingofbeings"
+    twitterCreator: "@beingofbeings"
+    fbAuthor: ""
