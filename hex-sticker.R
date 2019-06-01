@@ -59,25 +59,9 @@ p =
   scale_fill_manual(values = c('#CC2E40', '#466A9F', '#1F414D'), guide = F)
 p
 
-sticker(p, package="POLI301",h_fill = 'white',h_color = '#73000a',
+sticker(p, package="POLI-301",h_fill = '#efefef',h_color = '#73000a',
         p_size=8, s_x=1, s_y=.75, s_width=1.3, s_height=1,
-        p_family = "Aller_Lt", p_color = '#73000a')
+        p_family = "Aller_Lt", p_color = '#73000a', 
+        filename = 'static/images/POLI301.png')
 
 
-## conflict class
-peitler_2 = jpeg::readJPEG("/Users/juanftellez/Dropbox/Teaching/images/toa-heftiba-703628-unsplash.jpg")
-
-peitler_2 <- grid::rasterGrob(peitler_2, width = .7, x = 0.5, y = 0.5,
-                        interpolate = TRUE)
-
-
-gg <- ggplot() +
-  annotation_custom(peitler_2) +
-  #annotation_custom(dna) + 
-  ## annotation_custom(dom) +
-  theme_void()
-gg
-
-sticker(gg, package="POLI416",h_fill = 'white',h_color = '#73000a',
-        p_size=8, s_x=1, s_y=.75, s_width=1.3, s_height=1,
-        p_family = "Aller_Lt", p_color = '#73000a')
