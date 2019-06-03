@@ -11,5 +11,5 @@ By the end of this course, you will (1) be literate in fundamental economic prin
 <br><br>
 
 <!-- <span class="newthought">How to draw an owl</span> -->
-[![](/images/draw-owl2.jpg)](/images/draw-owl2.jpg)
+[![](/images/draw-owl5.png)](/images/draw-owl5.png)
 
