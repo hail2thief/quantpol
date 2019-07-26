@@ -29,22 +29,19 @@ menu:
     - name: Reference
       url: /reference/
       weight: 4
-    - name: RStudio.cloud
-      url: "https://rstudio.cloud"
-      weight: 5
     - name: Slack
-      url: "https://gitter.im/byustatsf18/"
-      weight: 7
+      url: "https://poli301.slack.com/"
+      weight: 5
 params: 
   author: Juan Tellez
   thumbnail: /images/POLI301.png
   instructor: 
     name: Juan Tellez
-    email: jft11@duke.edu
-    url: "/"
-    twitter: beingofbeings
+    email: juan.f.tellez@gmail.com
+    url: "https://www.juanftellez.com"
+    twitter: juanftellez14
     github: hail2thief
-    office: NUMBER AND ROOM
+    office: 343 Gambrell Hall
   logo:
     url: /images/POLI301.png
     alt: The Political Science Discipline
@@ -54,12 +51,12 @@ params:
     days: "Tuesdays, Thursdays"
     time: "08:30-09:45 AM"
     location: "133 WMBB"
-    twitter: beingofbeings
+    twitter: juanftellez14
     dates: "August 22–December 06, 2019"
-    github: "hail2thief"
+    github: "hail2thief/poli-301"
     copyrightYear: "2019"
     contactDetails: >-
-      Office hours: [Sign up here.](https://calendly.com/juan-f-tellez)<br><br>E-mail is the best way to get in contact with me—I will respond to all course-related e-mails within 24 hours (*really*).
+      Office hours: [Sign up here.](https://calendly.com/juan-f-tellez)
   university: 
     name: University of South Carolina
   school:
@@ -69,6 +66,6 @@ params:
   credits: >-
     Course website design adapted/stolen from [Andrew Heiss](https://www.andrewheiss.com/).
   meta:
-    twitterSite: "@beingofbeings"
-    twitterCreator: "@beingofbeings"
+    twitterSite: "@juanftellez14"
+    twitterCreator: "@juanftellez14"
     fbAuthor: ""

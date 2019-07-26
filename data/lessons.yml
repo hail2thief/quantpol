@@ -1,265 +1,106 @@
 lessons:
-  - title: '<span class="fake-header-table">Capitalism, markets, and public policy</span>'
+  - title: '<span class="fake-header-table">Programming</span>'
     header: True
 
-  - title: "Capitalism I"
-    date: "January 7 (M)"
-    reading: "01-reading"
-    class: "01-class"
-
-  - title: "Capitalism II"
-    date: "January 9 (W)"
-    reading: "02-reading"
-    class: "02-class"
-
-  - title: "Lab 1"
-    date: "January 11 (F)"
-    class: "01-lab"
-
-  - title: "Social interactions and economic outcomes I"
-    date: "January 14 (M)"
-    reading: "03-reading"
-    class: "03-class"
-
-  - title: "Social interactions and economic outcomes II"
-    date: "January 16 (W)"
-    reading: "04-reading"
-    class: "04-class"
-
-  - title: "Lab 2"
-    date: "January 18 (F)"
-    class: "02-lab"
+  - title: "What is this class about, anyway?"
+    date: "2019-08-22, Thu"
   
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 1**'
-    date: "January 18 (F)"
-    assignment: "01-problem-set"
-
-  - title: "*No class; Martin Luther King Jr. Day*"
-    date: "January 21 (M)"
-
-  - title: "Incentives and human behavior"
-    date: "January 23 (W)"
-    reading: "05-reading"
-    class: "05-class"
-
-  - title: "Lab 3"
-    date: "January 25 (F)"
-    class: "03-lab"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 2**'
-    date: "January 25 (F)"
-    assignment: "02-problem-set"
-
-  - title: "Public policy for fairness and efficiency I"
-    date: "January 28 (M)"
-    reading: "06-reading"
-    class: "06-class"
-
-  - title: "Public policy for fairness and efficiency II"
-    date: "January 30 (W)"
-    reading: "07-reading"
-    class: "07-class"
-
-  - title: "Lab 4"
-    date: "February 1 (F)"
-    class: "04-lab"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 3**'
-    date: "February 1 (F)"
-    assignment: "03-problem-set"
-
-  - title: '<span class="fake-header-table">Scarcity, power, and inequality</span>'
-    header: True
-
-  - title: "Work, wellbeing, and scarcity I"
-    date: "February 4 (M)"
-    reading: "08-reading"
-    class: "08-class"
-    
-  - title: "Work, wellbeing, and scarcity II"
-    date: "February 6 (W)"
-    reading: "09-reading"
-    class: "09-class"
-
-  - title: "Lab 5"
-    date: "February 8 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 4**'
-    date: "February 8 (F)"
-    assignment: "04-problem-set"
+  - title: "Intro to R, RStudio, basics"
+    date: "2019-08-27 Tue"
   
-  - title: "Institutions, power, and inequality I"
-    date: "February 11 (M)"
-    reading: "10-reading"
-    class: "10-class"
+  - title: "*No class; Prof. Tellez at terrible conference*"
+    date: "2019-08-29, Thu"
+  
+  - title: "Importing + tidy data"
+    date:  "2019-09-03, Tue"
+  
+  - title: "More tidy + object classes"
+    date: "2019-09-05, Thu"
+  
+  - title: "Wrangling data: mutate, select, filter, slice"
+    date: "2019-09-10, Tue"
+  
+  - title: "Wrangling data: group_by, summarize"
+    date: "2019-09-12, Thu"
 
-  - title: "Institutions, power, and inequality II"
-    date: "February 13 (W)"
-    reading: "11-reading"
-    class: "11-class"
+  - title: "Wrangling data: joins + summary"
+    date: "2019-09-17, Tue"
+  
+  - title: "Making nice graphs I"
+    date: "2019-09-19, Thu"
+  
+  - title: "Making nice graphs II"
+    date: "2019-09-24, Tue"
 
-  - title: "Lab 6"
-    date: "February 15 (F)"
-    class: "06-lab"
+  - title: "Correlations & explanations"
+    date:  "2019-09-26, Thu"
+  
+  - title: "Intro to regression"
+    date: "2019-10-01, Tue"
+  
+  - title: "*MIDTERM*"
+    date: "2019-10-03, Thu"
 
-  - title: '<i class="fas fa-star"></i> **Exam 1**'
-    date: "February 15 (F)"
-
-  - title: "*No class; Presidents' Day*"
-    date: "February 18 (M)"
-
-  - title: '<span class="fake-header-table">Economic models</span>'
-    header: True
-
-  - title: "The firm I"
-    date: "February 19 (T)"
-    reading: "12-reading"
-    class: "12-class"
-
-  - title: "The firm II"
-    date: "February 20 (W)"
-    reading: "13-reading"
-    class: "13-class"
-
-  - title: "Lab 7"
-    date: "February 22 (F)"
-
-  - title: "Firms and markets I"
-    date: "February 25 (M)"
-    reading: "14-reading"
-    class: "14-class"
-
-  - title: "Firms and markets II"
-    date: "February 27 (W)"
-    reading: "15-reading"
-    class: "15-class"
-
-  - title: "Lab 8"
-    date: "March 1 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 5**'
-    date: "March 1 (F)"
-    assignment: "05-problem-set"
-
-  - title: "Firms and markets III"
-    date: "March 4 (M)"
-    reading: "16-reading"
-    class: "16-class"
-
-  - title: "Firms and markets IV"
-    date: "March 6 (W)"
-    reading: "17-reading"
-    class: "17-class"
-
-  - title: "Lab 9"
-    date: "March 8 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 6**'
-    date: "March 8 (F)"
-    assignment: "06-problem-set"
-
-  - title: "Credit markets"
-    date: "March 11 (M)"
-    reading: "18-reading"
-    class: "18-class"
-
-  - title: "Markets and macroeconomics"
-    date: "March 13 (W)"
-    reading: "19-reading"
-    class: "19-class"
-
-  - title: "*No lab; fake Marriott School spring break*"
-    date: "March 15 (F)"
-
-  - title: '<i class="fas fa-star"></i> **Exam 2**'
-    date: "March 15 (F)"
-
-  - title: '<span class="fake-header-table">Market failures, governments, and politics</span>'
-    header: True
-
-  - title: "Market failures I"
-    date: "March 18 (M)"
-    reading: "20-reading"
-    class: "20-class"
-
-  - title: "Market failures II"
-    date: "March 20 (W)"
-    reading: "21-reading"
-    class: "21-class"
-
-  - title: "Lab 11"
-    date: "March 22 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 7**'
-    date: "March 22 (F)"
-    assignment: "07-problem-set"
-
-  - title: "Governments and institutions I"
-    date: "March 25 (M)"
-    reading: "22-reading"
-    class: "22-class"
-
-  - title: "Government and institutions II"
-    date: "March 27 (W)"
-    reading: "23-reading"
-    class: "23-class"
-
-  - title: "Lab 12"
-    date: "March 29 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 8**'
-    date: "March 29 (F)"
-    assignment: "08-problem-set"
-
-  - title: "When governments go wrong"
-    date: "April 1 (M)"
-    reading: "24-reading"
-    class: "24-class"
-
-  - title: "Institutional alternatives"
-    date: "April 3 (W)"
-    reading: "25-reading"
-    class: "25-class"
-
-  - title: "Lab 13"
-    date: "April 5 (F)"
-
-  - title: '<span class="fake-header-table">Evaluating and implementing policies</span>'
+  - title: '<span class="fake-header-table">Causality</span>'
     header: True
     
-  - title: "Evaluating policies I"
-    date: "April 8 (M)"
-    reading: "26-reading"
-    class: "26-class"
+  - title: "The fundamental problem of causality"
+    date: "2019-10-08, Tue"
+    
+  - title: "*No class; Labor day*"
+    date: "2019-10-10, Thu"
+    
+  - title: "Causal diagrams"
+    date: "2019-10-15, Tue"
+    
+  - title: "Causal terror"
+    date: "2019-10-17, Thu"
+    
+  - title: "Drawing causal diagrams"
+    date: "2019-10-22, Tue"
+    
+  - title: "Multiple regression"
+    date: "2019-10-24, Thu"
+    
+  - title: "Multiple regression + closing backdoors"
+    date: " 2019-10-29, Tue"
+    
+  - title: "More controlling"
+    date: "2019-10-31, Thu"
 
-  - title: "Evaluating policies II"
-    date: "April 10 (W)"
-    reading: "27-reading"
-    class: "27-class"
+  - title: '<span class="fake-header-table">The Toolbox</span>'
+    header: True
+    
+  - title: "Matching"
+    date: "2019-11-05, Tue"
+    
+  - title: "Fixed effects"
+    date: "2019-11-07, Thu"
+    
+  - title: "Diff-in-diff"
+    date: "2019-11-12, Tue"
+    
+  - title: "Regression discontinuity"
+    date: "2019-11-14, Thu"
+    
+  - title: "Review: toolbox"
+    date: "2019-11-19, Tue"
 
-  - title: "Lab 14"
-    date: "April 12 (F)"
-
-  - title: '<i class="fas fa-laptop-code"></i> **Problem set 9**'
-    date: "April 12 (F)"
-    assignment: "09-problem-set"
-
-  - title: '<i class="fas fa-star"></i> **Exam 3**'
-    date: "April 13 (Sat)"
-
-  - title: "Policy formation and politics"
-    date: "April 15 (M)"
-    reading: "28-reading"
-    class: "28-class"
-
-  - title: "Markets, public policy, and public administration"
-    date: "April 17 (W)"
-    reading: "29-reading"
-    class: "29-class"
-
-  - title: '<span class="fake-header-table">Final</span>'
+  - title: '<span class="fake-header-table">Uncertainty and wrapping-up</span>'
     header: True
 
-  - title: "**Final project due** (submit online by 11:59 PM)"
-    date: "April 23 (T)"
-    assignment: "final-project"
+  - title: "Preview of inference" 
+    date: "2019-11-21, Thu"
+    
+  - title: "Sampling + infer"
+    date: "2019-11-26, Tue"
+
+  - title: "*No class; Thanksgiving*"
+    date: "2019-11-28, Thu"
+
+  - title: "Opening the can of worms"
+    date: "2019-12-03, Tue"
+  
+  - title: "Review for Final"
+    date: "2019-12-05, Thu"
+ 
