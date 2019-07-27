@@ -164,3 +164,9 @@ grading %>%
 ```
 
 
+# Hometown
+
+[^panda] <span class="newthought">Once you have read</span> this entire syllabus and [the assignments page](/assignments/), please post a picture of your hometown to the Slack.
+
+[^panda]: {-}
+  ![Cali, Colombia](https://upload.wikimedia.org/wikipedia/commons/b/b2/Gato_de_Tejada_Cali.JPG)
