@@ -1,19 +1,35 @@
 ---
-title: "Data visualization"
-date: "2018-09-13"
+title: "Intro to R, RStudio, basics"
+date: "2019-08-27 Tue"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 ---
 
-# Required
 
-- <i class="fas fa-book"></i> [3.1–3.9 in *ModernDive*](https://moderndive.com/3-viz.html) [@IsmayKim:2018]
-- <i class="fas fa-laptop-code"></i> "Data visualization," chapter 2 in David Robinson's [*Introduction to the Tidyverse* course on DataCamp](https://www.datacamp.com/courses/introduction-to-the-tidyverse)
-- <i class="fas fa-laptop-code"></i> "Types of visualizations," chapter 4 in David Robinson's [*Introduction to the Tidyverse* course on DataCamp](https://www.datacamp.com/courses/introduction-to-the-tidyverse)
-- <i class="fab fa-youtube"></i> Hans Rosling, ["200 Countries, 200 Years, 4 Minutes"](https://www.youtube.com/watch?v=jbkSRLYSojo)
+You need to install R and Rstudio. 
+
+If you have a Windows:
+
+1. Download R from [http://cran.us.r-project.org/](http://cran.us.r-project.org/) (click on “Download R for Windows” > “base” > “Download R 2.x.x for Windows”; you want to pick the biggest number)
+2. Install R. Leave all default settings in the installation options.
+3. Download RStudio from [http://rstudio.org/download/desktop](http://rstudio.org/download/desktop) and install it. Leave all default settings in the installation options.
+4. Open RStudio.
+
+
+If you have a Mac:
+
+1. Download R from [http://cran.us.r-project.org/](http://cran.us.r-project.org/) (click on “Download R for Mac OS X” > “R-2.x.x.pkg (latest version)”)
+2. Install R.
+3. Download RStudio from [http://rstudio.org/download/desktop](http://rstudio.org/download/desktop) .
+4. Install RStudio by dragging the application icon to your Applications folder.
+
+
+# Required Reading
+
+- <i class="fas fa-book"></i> [Ch2. in Modern Dive](https://moderndive.com/2-getting-started.html)
 
 
 # Recommended
 
-- <i class="fas fa-book"></i> ["Data visualization," chapter 3 in *R for Data Science*](http://r4ds.had.co.nz/data-visualisation.html) [@WickhamGrolemund:2017]
+- [The rise of data science](https://datasmart.ash.harvard.edu/news/article/the-rise-of-the-data-scientists-611)

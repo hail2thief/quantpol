@@ -7,6 +7,7 @@ lessons:
   
   - title: "Intro to R, RStudio, basics"
     date: "2019-08-27 Tue"
+    reading: "02-reading"
   
   - title: "*No class; Prof. Tellez at terrible conference*"
     date: "2019-08-29, Thu"

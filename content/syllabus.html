@@ -14,48 +14,49 @@ csl: ../static/bib/chicago-syllabus-no-bib.csl
 </span></span> Policymakers, academics, journalists and sports analysts are using data every day to make decisions. Data is<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote">Yes, I know “data” is plural. I don’t care.<br />
 <br />
 </span></span> also being used to make <strong>causal</strong> claims about the world – to argue that taking some course of action will improve or worsen our lives.</p>
-<p>In this class, you will learn how to <strong>do</strong> data analysis and how to <strong>think</strong> about causation.</p>
+<p>In this class, you will learn how to <strong>do</strong> data analysis and how to <strong>think</strong> causally.</p>
 <p>You will spend a lot of time getting off the ground in <a href="https://www.r-project.org/">R</a>, a powerful and in-demand programming language that will allow you to manipulate, summarize, and visualize the data that you care about.</p>
-<p>You will also spend a lot of time building a language and set of tools for determining whether and how we can know that one thing <em>causes</em> another using data.</p>
-<p>This course is meant for students without any statistics or programming background. We will emphasize hands-on application with software and intuition-building over statistical theory and mathematical proofs. The foundation you develop here can be built upon in future methods courses.</p>
+<p>You will also develop a language and set of tools for determining whether, and how, we can know that one thing <em>causes</em> another using data.</p>
+<p>This course is meant for students without any statistics or programming background. We will emphasize hands-on application with software and intuition-building over statistical theory and mathematical proofs.<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote">The foundation you develop here can be built upon in future methods courses.<br />
+<br />
+</span></span></p>
 <p><span class="newthought">By the end of this course,</span> you will be able to:</p>
 <ol style="list-style-type: decimal">
-<li>Feel comfortable using R to manipulate data</li>
-<li>Display patterns in data with visualizations</li>
+<li>Feel comfortable manipulating data in R</li>
+<li>Craft effective visualizations of patterns in data</li>
 <li>Draw causal diagrams and identify challenges to causal claims</li>
-<li>Understand the basics of regression</li>
+<li>Understand the basics of causal inference</li>
 </ol>
 <h2 id="course-materials">Course materials</h2>
 <p><span class="newthought">All materials for this course are free and online.</span></p>
 <h3 id="books">Books</h3>
 <ul>
-<li><p><span><label for="sn-3" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="marginnote"> Chester Ismay and Albert Y. Kim, <em>ModernDive: An Introduction to Statistical and Data Sciences via R</em>, version 0.4.0 (2018). [<strong>FREE</strong> <a href="https://moderndive.com/">online</a>]<br />
+<li><p><span><label for="sn-4" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="marginnote"> Chester Ismay and Albert Y. Kim, <em>ModernDive: An Introduction to Statistical and Data Sciences via R</em>, version 0.4.0 (2018). [<strong>FREE</strong> <a href="https://moderndive.com/">online</a>]<br />
 <br />
-</span></span> <a href="https://moderndive.com/"><strong>ModernDive</strong></a>: ModernDive will be our primary textbook.</p></li>
-<li><p><span><label for="sn-4" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-4" class="margin-toggle"/><span class="marginnote"> Hadley Wickham and Garrett Grolemund, <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em> (Sebastopol, California: O’Reilly Media, 2017). [<strong>FREE</strong> <a href="http://r4ds.had.co.nz/">online</a>; $13 used, $18 new at <a href="https://www.amazon.com/R-Data-Science-Hadley-Wickham/dp/1491910399/">Amazon</a>]<br />
+</span></span> <a href="https://moderndive.com/"><strong>ModernDive</strong></a></p></li>
+<li><p><span><label for="sn-5" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="marginnote"> Hadley Wickham and Garrett Grolemund, <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em> (Sebastopol, California: O’Reilly Media, 2017). [<strong>FREE</strong> <a href="http://r4ds.had.co.nz/">online</a>; $13 used, $18 new at <a href="https://www.amazon.com/R-Data-Science-Hadley-Wickham/dp/1491910399/">Amazon</a>]<br />
 <br />
-</span></span> <a href="http://r4ds.had.co.nz/"><strong>R for Data Science</strong></a>: Some of your readings will also come from the free R for Data Science book.</p></li>
+</span></span> <a href="http://r4ds.had.co.nz/"><strong>R for Data Science</strong></a></p></li>
 </ul>
 <h3 id="articles-and-other-readings">Articles and other readings</h3>
-<p>From time to time you will also read articles or watch videos outside of the assigned books. I will include links to these other sources in the reading page for that week.</p>
+<p>Outside of the textbooks, I will post links to additional articles and videos on this site.</p>
 <p>I also recommend subscribing to the <a href="https://rweekly.org/">R Weekly newsletter</a>. This weekly email is full of helpful tutorials about how to do stuff with R.</p>
 <h3 id="r-and-rstudio">R and RStudio</h3>
 <p>You will do all of your analysis with the open source (and free!) programming language <a href="https://cran.r-project.org/">R</a>. You will use <a href="https://www.rstudio.com/">RStudio</a> as the main program to access R. Think of R as an engine and RStudio as a car dashboard—R handles all the calculations and the actual statistics, while RStudio provides a nice interface for running R code.</p>
-<p>You can <a href="/install/">find instructions for installing R, RStudio, and all the tidyverse packages here.</a></p>
 <h3 id="email-and-slack">Email and Slack</h3>
 <p><span class="newthought">Slack will be our main mode of communication.</span> We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., “how do I summarize multiple variables at once?”) or class logistics (e.g., “I can’t find the reading”) in the class Slack workspace.</p>
 <p>I will monitor Slack regularly, and you should all do so as well. You’ll have similar questions as your peers, and you’ll likely be able to answer other peoples’ questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.</p>
 <p>If you would like to speak with me about something that only pertains to <em>you</em> (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on <a href="https://calendly.com/juan-f-tellez">Calendly</a>. If there’s a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack.</p>
 <h3 id="online-help">Online help</h3>
-<p><a href="/images/googling-error.png"><img src="/images/googling-error.png" /></a></p>
 <p>I have been programming in R for years and still find myself Googling how to do basic things that I’ve forgotten about. Other times, I encounter new coding problems where I can’t quite come up with a good solution.</p>
+<p><a href="/images/googling-error.png"><img src="/images/googling-error.png" /></a></p>
 <p>Fortunately there are tons of online resources to help you. The most important is <a href="https://stackoverflow.com/">StackOverflow</a> (a Q&amp;A site with hundreds of thousands of answers to all sorts of programming questions). I will point to others as the semester advances.</p>
 <h3 id="honor-code">Honor Code</h3>
 <p><span class="newthought">Be nice. Don’t cheat.</span> The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out <a href="https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php">here</a>. If you have doubts, it is your responsibility to ask about the Creed’s application.</p>
 <h3 id="cell-phones-and-laptops">Cell Phones and Laptops</h3>
 <ul>
 <li>Please turn off your phones or put them on silent before class.</li>
-<li>Be respectful with your laptop use. You’re adults.</li>
+<li>Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions.</li>
 </ul>
 <h3 id="counseling-psychiatry-services">Counseling &amp; Psychiatry Services</h3>
 <p>Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. <a href="https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php">Counseling and Psychiatry Services</a> provides <em>confidential</em> support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CAPS for assistance—getting help is a smart and good thing to do.</p>
@@ -77,8 +78,8 @@ csl: ../static/bib/chicago-syllabus-no-bib.csl
 <tbody>
 <tr class="odd">
 <td align="left">Problem sets (7 × 40)</td>
-<td align="center">250</td>
-<td align="center">50.0%</td>
+<td align="center">150</td>
+<td align="center">30.0%</td>
 </tr>
 <tr class="even">
 <td align="left">Code-through</td>
@@ -87,13 +88,13 @@ csl: ../static/bib/chicago-syllabus-no-bib.csl
 </tr>
 <tr class="odd">
 <td align="left">Midterm</td>
-<td align="center">100</td>
-<td align="center">20.0%</td>
+<td align="center">150</td>
+<td align="center">30.0%</td>
 </tr>
 <tr class="even">
 <td align="left">Final</td>
-<td align="center">100</td>
-<td align="center">20.0%</td>
+<td align="center">150</td>
+<td align="center">30.0%</td>
 </tr>
 <tr class="odd">
 <td align="left">Total</td>
@@ -158,7 +159,3 @@ csl: ../static/bib/chicago-syllabus-no-bib.csl
 </tr>
 </tbody>
 </table>
-<h2 id="red-pandas">Red pandas</h2>
-<p><span><label for="sn-5" class="margin-toggle">&#8853;</label><input type="checkbox" id="sn-5" class="margin-toggle"/><span class="marginnote"> <img src="https://media.giphy.com/media/r7Nbr97FsXxXG/giphy.gif" alt="Hungry red panda" /><br />
-<br />
-</span></span> <span class="newthought">Once you have read</span> this entire syllabus and <a href="/assignments/">the assignments page</a>, please a picture of a red panda to the Slack.</p>
