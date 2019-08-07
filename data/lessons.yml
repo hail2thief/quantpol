@@ -12,32 +12,43 @@ lessons:
   - title: "*No class; Prof. Tellez at terrible conference*"
     date: "2019-08-29, Thu"
   
-  - title: "Importing + tidy data"
+  - title: "Importing + tibbles"
     date:  "2019-09-03, Tue"
+    reading: "03-reading"
   
-  - title: "More tidy + object classes"
+  - title: "tidy data + variable types"
     date: "2019-09-05, Thu"
+    reading: "04-reading"
   
   - title: "Wrangling data: mutate, select, filter, slice"
     date: "2019-09-10, Tue"
+    reading: "05-reading"
+    assignment: "01-problem-set"
   
   - title: "Wrangling data: group_by, summarize"
     date: "2019-09-12, Thu"
+    reading: "06-reading"
 
   - title: "Wrangling data: joins + summary"
     date: "2019-09-17, Tue"
+    reading: "07-reading"
+    assignment: "01-problem-set"
   
   - title: "Making nice graphs I"
     date: "2019-09-19, Thu"
+    reading: "08-reading"
   
   - title: "Making nice graphs II"
     date: "2019-09-24, Tue"
+    reading: "09-reading"
 
   - title: "Correlations & explanations"
     date:  "2019-09-26, Thu"
+    reading: "10-reading"
   
   - title: "Intro to regression"
     date: "2019-10-01, Tue"
+    reading: "11-reading"
   
   - title: "*MIDTERM*"
     date: "2019-10-03, Thu"
@@ -47,27 +58,34 @@ lessons:
     
   - title: "The fundamental problem of causality"
     date: "2019-10-08, Tue"
+    reading: "12-reading"
     
   - title: "*No class; Labor day*"
     date: "2019-10-10, Thu"
     
   - title: "Causal diagrams"
     date: "2019-10-15, Tue"
+    reading: "13-reading"
     
   - title: "Causal terror"
     date: "2019-10-17, Thu"
+    reading: "13-reading"
     
   - title: "Drawing causal diagrams"
     date: "2019-10-22, Tue"
+    reading: "14-reading"
     
   - title: "Multiple regression"
     date: "2019-10-24, Thu"
+    reading: "15-reading"
     
   - title: "Multiple regression + closing backdoors"
     date: " 2019-10-29, Tue"
+    reading: "15-reading"
     
   - title: "More controlling"
     date: "2019-10-31, Thu"
+    reading: "15-reading"
 
   - title: '<span class="fake-header-table">The Toolbox</span>'
     header: True
@@ -80,9 +98,11 @@ lessons:
     
   - title: "Diff-in-diff"
     date: "2019-11-12, Tue"
+    reading: "18-reading"
     
   - title: "Regression discontinuity"
     date: "2019-11-14, Thu"
+    reading: "19-reading"
     
   - title: "Review: toolbox"
     date: "2019-11-19, Tue"
@@ -92,9 +112,11 @@ lessons:
 
   - title: "Preview of inference" 
     date: "2019-11-21, Thu"
+    reading: "21-reading"
     
   - title: "Sampling + infer"
     date: "2019-11-26, Tue"
+    reading: "22-reading"
 
   - title: "*No class; Thanksgiving*"
     date: "2019-11-28, Thu"
@@ -102,6 +124,6 @@ lessons:
   - title: "Opening the can of worms"
     date: "2019-12-03, Tue"
   
-  - title: "Review for Final"
+  - title: "Review for final"
     date: "2019-12-05, Thu"
  

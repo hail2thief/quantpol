@@ -1,6 +1,6 @@
 ---
-title: "Intro Regression"
-date: "2019-10-01"
+title: "More inference"
+date: "2019-11-21"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
@@ -8,6 +8,6 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [CH.6 in *ModernDive*](https://moderndive.com/6-regression.html)
+- <i class="fas fa-book"></i> [Ch.9 in *ModernDive*](https://moderndive.com/9-confidence-intervals.html)
 
 

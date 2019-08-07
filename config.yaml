@@ -59,8 +59,10 @@ params:
       Office hours: [Sign up here.](https://calendly.com/juan-f-tellez)
   university: 
     name: University of South Carolina
+    url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
   school:
     name: Department of Political Science
+    url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
   primaryColor: "#73000a"
   secondaryColor: "#CC2E40"
   credits: >-

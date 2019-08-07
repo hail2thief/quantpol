@@ -1,6 +1,6 @@
 ---
-title: "Sampling"
-date: "2018-11-01"
+title: "Making visualizations II"
+date: "2019-09-24"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
@@ -10,5 +10,6 @@ stuff-to-add: >-
 
 # Required
 
-- <i class="fas fa-book"></i> [8.1–8.5 in *ModernDive*](https://moderndive.com/8-sampling.html) [@IsmayKim:2018]
-- Other readings TBD
+- <i class="fas fa-book"></i> [CH.3 in *ModernDive*](https://moderndive.com/3-viz.html)
+- - <i class="fas fa-book"></i> [Ch.3 in *R for Data Science*](https://r4ds.had.co.nz/data-visualisation.html)
+

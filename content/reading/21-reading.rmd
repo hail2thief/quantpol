@@ -1,6 +1,6 @@
 ---
-title: "Correlations & explanations"
-date: "2019-09-26"
+title: "Inference preview"
+date: "2019-11-21"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
@@ -8,4 +8,6 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- reading TBA
+- <i class="fas fa-book"></i> [Ch.8 in *ModernDive*](https://moderndive.com/8-sampling.html)
+
+
