@@ -15,7 +15,7 @@ library(pander)
 
 # Course objectives
 
-<span class="newthought">Data is everywhere.</span>[^courseinfo] Policymakers, academics, journalists and sports analysts are using data every day to make decisions. Data is^[Yes, I know "data" is plural. I don't care.] also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. 
+<span class="newthought">Data is everywhere.</span>[^courseinfo] Policymakers, academics, journalists, civil servants, sports analysts, and many others are using data every day to make decisions. Data is^[Yes, I know "data" is plural. I don't care.] also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. 
 
 In this class, you will learn how to **do** data analysis and how to **think** causally. 
 
@@ -68,6 +68,7 @@ I also recommend subscribing to the [R Weekly newsletter](https://rweekly.org/).
 
 ## R and RStudio
 
+
 You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. Think of R as an engine and RStudio as a car dashboard—R handles all the calculations and the actual statistics, while RStudio provides a nice interface for running R code.
 
 
@@ -85,7 +86,6 @@ If you would like to speak with me about something that only pertains to *you* (
 
 
 ## Online help
-
 
 
 I have been programming in R for years and still find myself Googling how to do basic things that I've forgotten about. Other times, I encounter new coding problems where I can't quite come up with a good solution. 
@@ -126,8 +126,7 @@ Life at USC can be complicated and challenging. You might feel overwhelmed, expe
 ```{r assignments-grades, include=FALSE}
 assignments <- tribble(
   ~Points, ~Assignment,
-  150  , "Problem sets (7 × 40)",
-  50      , "Code-through",
+  200  , "Problem sets (10 × 20)",
   150     , "Midterm",
   150     , "Final"
 ) %>%
@@ -170,3 +169,11 @@ grading %>%
 
 [^panda]: {-}
   ![Cali, Colombia](https://upload.wikimedia.org/wikipedia/commons/b/b2/Gato_de_Tejada_Cali.JPG)
+  
+  
+# Credits
+  
+  
+This course site is built using Hugo and Blogdown. I use the [ath-tufte-hugo](https://github.com/andrewheiss/ath-tufte-hugo) theme by [Andrew Heiss](https://www.andrewheiss.com). I also borrow a few teaching ideas from his syllabus.  
+
+In terms of content, I drew inspiration from syllabi by Nick C. Huntington-Klein, Andrew Heiss, and others.  

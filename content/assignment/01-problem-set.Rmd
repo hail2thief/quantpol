@@ -9,4 +9,5 @@ editor_options:
 
 # Instructions
 
-TBA
+TBA, topics: 
+- importing data, variable types, converting variable types, making a dataset tidy (gather/spread).

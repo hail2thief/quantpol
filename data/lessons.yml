@@ -12,46 +12,60 @@ lessons:
   - title: "*No class; Prof. Tellez at terrible conference*"
     date: "2019-08-29, Thu"
   
-  - title: "Importing + tibbles"
+  - title: "Importing + tibbles + projects"
     date:  "2019-09-03, Tue"
     reading: "03-reading"
+
+  - title: "Making nice graphs I: ggplot"
+    date: "2019-09-05, Thu"
+    reading: "08-reading"
+    
+  - title: "**Problem set 1**"
+    date: "2019-09-10, Tue"
+    assignment: "problem-set-viz1"
+  
+  - title: "Making nice graphs II: ggplot"
+    date: "2019-09-10, Tue"
+    reading: "09-reading"
   
   - title: "tidy data + variable types"
-    date: "2019-09-05, Thu"
+    date: "2019-09-12, Thu"
     reading: "04-reading"
+    
+  - title: "**Problem set 2**"
+    date: "2019-09-17, Tue"
+    assignment: "01-problem-set"
   
   - title: "Wrangling data: mutate, select, filter, slice"
-    date: "2019-09-10, Tue"
+    date: "2019-09-17, Tue"
     reading: "05-reading"
-    assignment: "01-problem-set"
   
   - title: "Wrangling data: group_by, summarize"
-    date: "2019-09-12, Thu"
+    date: "2019-09-19, Thu"
     reading: "06-reading"
+    
+  - title: "**Problem set 3**"
+    date: "2019-09-17, Tue"
+    assignment: "02-problem-set"
 
   - title: "Wrangling data: joins + summary"
-    date: "2019-09-17, Tue"
-    reading: "07-reading"
-    assignment: "01-problem-set"
-  
-  - title: "Making nice graphs I"
-    date: "2019-09-19, Thu"
-    reading: "08-reading"
-  
-  - title: "Making nice graphs II"
     date: "2019-09-24, Tue"
-    reading: "09-reading"
+    reading: "07-reading"
 
-  - title: "Correlations & explanations"
+  - title: "*No class*"
     date:  "2019-09-26, Thu"
-    reading: "10-reading"
+    
   
   - title: "Intro to regression"
     date: "2019-10-01, Tue"
     reading: "11-reading"
   
-  - title: "*MIDTERM*"
+  - title: '<i class="fas fa-star"></i> **MIDTERM**'
     date: "2019-10-03, Thu"
+    
+  - title: "**Problem set 4**"
+    date: "2019-10-08, Tue"
+    assignment: "01-problem-set"
 
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
@@ -71,6 +85,10 @@ lessons:
     date: "2019-10-17, Thu"
     reading: "13-reading"
     
+  - title: "**Problem set 5**"
+    date: "2019-10-22, Tue"
+    assignment: "01-problem-set"
+    
   - title: "Drawing causal diagrams"
     date: "2019-10-22, Tue"
     reading: "14-reading"
@@ -79,13 +97,21 @@ lessons:
     date: "2019-10-24, Thu"
     reading: "15-reading"
     
+  - title: "**Problem set 6**"
+    date: "2019-10-29, Tue"
+    assignment: "01-problem-set"
+    
   - title: "Multiple regression + closing backdoors"
-    date: " 2019-10-29, Tue"
+    date: "2019-10-29, Tue"
     reading: "15-reading"
     
   - title: "More controlling"
     date: "2019-10-31, Thu"
     reading: "15-reading"
+    
+  - title: "**Problem set 7**"
+    date: "2019-11-05, Tue"
+    assignment: "01-problem-set"
 
   - title: '<span class="fake-header-table">The Toolbox</span>'
     header: True
@@ -96,6 +122,10 @@ lessons:
   - title: "Fixed effects"
     date: "2019-11-07, Thu"
     
+  - title: "**Problem set 8**"
+    date: "2019-11-12, Tue"
+    assignment: "01-problem-set"
+    
   - title: "Diff-in-diff"
     date: "2019-11-12, Tue"
     reading: "18-reading"
@@ -103,6 +133,10 @@ lessons:
   - title: "Regression discontinuity"
     date: "2019-11-14, Thu"
     reading: "19-reading"
+    
+  - title: "**Problem set 9**"
+    date: "2019-11-19, Tue"
+    assignment: "01-problem-set"
     
   - title: "Review: toolbox"
     date: "2019-11-19, Tue"
@@ -117,6 +151,10 @@ lessons:
   - title: "Sampling + infer"
     date: "2019-11-26, Tue"
     reading: "22-reading"
+    
+  - title: "**Problem set 10**"
+    date: "2019-12-03, Tue"
+    assignment: "01-problem-set"
 
   - title: "*No class; Thanksgiving*"
     date: "2019-11-28, Thu"
@@ -126,4 +164,10 @@ lessons:
   
   - title: "Review for final"
     date: "2019-12-05, Thu"
+    
+  - title: '<span class="fake-header-table">Final</span>'
+    header: True
+    
+  - title: '<i class="fas fa-star"></i> **Final Exam**'
+    date: "2019-12-12, Thu, 9am"
  
