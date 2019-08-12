@@ -87,8 +87,9 @@ I have been programming in R for years and still find myself Googling how to do 
 Fortunately there are tons of online resources to help you. The most important is [StackOverflow](https://stackoverflow.com/) (a Q&A site with hundreds of thousands of answers to all sorts of programming questions). I will point to others as the semester advances.
 
 
+# Course Policies
 
-# Communicating with me
+## Communicating with me
 
 
 <span class="newthought">Slack will be our main mode of communication.</span> We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
@@ -100,7 +101,7 @@ I will monitor Slack regularly, and you should all do so as well. You'll have si
 If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack. 
 
 
-# Honor Code
+## Honor Code
 
 <span class="newthought">Be nice. Don't cheat.</span> The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out [here](https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php). If you have doubts, it is your responsibility to ask about the Creed’s application.
 
@@ -112,7 +113,7 @@ If you would like to speak with me about something that only pertains to *you* (
 - Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions. 
 
 
-## Counseling & Psychiatry Services
+# Counseling & Psychiatry Services
 
 
 Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [Counseling and Psychiatry Services](https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php) provides *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CAPS for assistance—getting help is a smart and good thing to do.
