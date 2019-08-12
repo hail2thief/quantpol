@@ -10,23 +10,14 @@ slug: assignments
 
 # Homework
 
-<span class="newthought">To practice coding in R</span> you will complete 7 problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be some function of effort + correct answers. More to come on this. 
+<span class="newthought">To practice coding in R</span> you will complete problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be a function of effort + correct answers. 
 
 
-Feel free to work together on the problem sets (in fact, you should) but *you must turn in your own answers.* You cannot work in groups of more than **three** people, and you must note who participated in the group in your assignment.
+Feel free to work together on the problem sets but *you must turn in your own answers.* You cannot work in groups of more than **three** people.
 
 
 
 # Exams
 
 <span class="newthought">There will be two exams</span> covering (1) the first half of the course, especially programming, and (2) the second half of the course, especially causation.
-
-More details to come.
-
-
-# Code-thru
-
-<span class="newthought">At the end of the course,</span> you will complete a code-through project. 
-
-More details to come.
 

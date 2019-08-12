@@ -69,20 +69,9 @@ I also recommend subscribing to the [R Weekly newsletter](https://rweekly.org/).
 ## R and RStudio
 
 
-You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. Think of R as an engine and RStudio as a car dashboard—R handles all the calculations and the actual statistics, while RStudio provides a nice interface for running R code.
+You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
 
 
-
-## Email and Slack
-
-
-<span class="newthought">Slack will be our main mode of communication.</span> We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
-
-
-I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.
-
-
-If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack. 
 
 
 ## Online help
@@ -99,7 +88,19 @@ Fortunately there are tons of online resources to help you. The most important i
 
 
 
-## Honor Code
+# Communicating with me
+
+
+<span class="newthought">Slack will be our main mode of communication.</span> We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
+
+
+I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.
+
+
+If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack. 
+
+
+# Honor Code
 
 <span class="newthought">Be nice. Don't cheat.</span> The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out [here](https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php). If you have doubts, it is your responsibility to ask about the Creed’s application.
 
@@ -174,6 +175,6 @@ grading %>%
 # Credits
   
   
-This course site is built using Hugo and Blogdown. I use the [ath-tufte-hugo](https://github.com/andrewheiss/ath-tufte-hugo) theme by [Andrew Heiss](https://www.andrewheiss.com). I also borrow a few teaching ideas from his syllabus.  
+This course site is built using Hugo and Blogdown. I use the [ath-tufte-hugo](https://github.com/andrewheiss/ath-tufte-hugo) theme by [Andrew Heiss](https://www.andrewheiss.com). I also borrow more than a few teaching ideas from his syllabus.  
 
-In terms of content, I drew inspiration from syllabi by Nick C. Huntington-Klein, Andrew Heiss, and others.  
+In terms of content, I also draw inspiration from syllabus by Nick C. Huntington-Klein, Richard McElreath, and others.  
