@@ -1,5 +1,5 @@
 ---
-title: "Intro"
+title: "Introduction"
 date: "2019-08-22"
 citeproc: false
 bibliography: ../../static/bib/references.bib
