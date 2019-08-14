@@ -4,6 +4,7 @@ lessons:
 
   - title: "What is this class about, anyway?"
     date: "2019-08-22, Thu"
+    class: "01-class"
   
   - title: "Intro to R, RStudio, basics"
     date: "2019-08-27 Tue"

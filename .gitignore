@@ -7,3 +7,4 @@ blogdown
 public/ # if using Netlify
 public/*
 .DS_Store
+static/images/slides/intro.pdf

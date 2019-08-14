@@ -15,7 +15,7 @@ library(pander)
 
 # Course objectives
 
-<span class="newthought">Data is everywhere.</span>[^courseinfo] Policymakers, academics, journalists, civil servants, sports analysts, and many others are using data every day to make decisions. Data is^[Yes, I know "data" is plural. I don't care.] also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. 
+<span class="newthought">Data is everywhere.</span>[^courseinfo] Policymakers, academics, journalists, sports analysts, and many others are using data every day to make decisions. Data is^[Yes, I know "data" is plural. I don't care.] also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. 
 
 In this class, you will learn how to **do** data analysis and how to **think** causally. 
 
@@ -116,7 +116,7 @@ If you would like to speak with me about something that only pertains to *you* (
 # Counseling & Psychiatry Services
 
 
-Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [Counseling and Psychiatry Services](https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php) provides *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CAPS for assistance—getting help is a smart and good thing to do.
+Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [Counseling and Psychiatry Services](https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php) provides *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CPS for assistance—getting help is a smart and good thing to do.
 
 
 
@@ -167,7 +167,7 @@ grading %>%
 
 # Hometown
 
-[^panda] <span class="newthought">Once you have read</span> this entire syllabus and [the assignments page](/assignments/), please post a picture of your hometown to the Slack.
+[^panda] <span class="newthought">Once you have read</span> this entire syllabus and [the assignments page](/assignments/), please post a picture of your hometown to the Slack (2 bonus points).
 
 [^panda]: {-}
   ![Cali, Colombia](https://upload.wikimedia.org/wikipedia/commons/b/b2/Gato_de_Tejada_Cali.JPG)
