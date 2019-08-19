@@ -14,9 +14,9 @@ editor_options:
 
 # Slides
 
-[Download the slides from today's lecture](/images/slides/intro.pdf).
+No slides, just intro. 
 
 
-<!-- # Getting to know you (first pop quiz) -->
+# Getting to know you
 
-<!-- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> Go to this [Google form](https://forms.gle/4Ytr7ZZXcmss1tdH8) and tell me about yourself. -->
+<i class="fa fa-external-link-square-alt" aria-hidden="true"></i> Go to this [Google form](https://forms.gle/4Ytr7ZZXcmss1tdH8) and tell me about yourself.
