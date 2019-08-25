@@ -35,7 +35,7 @@ lessons:
     
   - title: "**Problem set 2**"
     date: "2019-09-17, Tue"
-    assignment: "01-problem-set"
+    assignment: "02-problem-set"
   
   - title: "Wrangling data: mutate, select, filter, slice"
     date: "2019-09-17, Tue"
@@ -46,8 +46,8 @@ lessons:
     reading: "06-reading"
     
   - title: "**Problem set 3**"
-    date: "2019-09-17, Tue"
-    assignment: "02-problem-set"
+    date: "2019-09-24, Tue"
+    assignment: "03-problem-set"
 
   - title: "Wrangling data: joins + summary"
     date: "2019-09-24, Tue"
