@@ -11,5 +11,5 @@ stuff-to-add: >-
 # Required
 
 - <i class="fas fa-book"></i> [CH.3 in *ModernDive*](https://moderndive.com/3-viz.html)
-- - <i class="fas fa-book"></i> [Ch.3 in *R for Data Science*](https://r4ds.had.co.nz/data-visualisation.html)
+- <i class="fas fa-book"></i> [Ch.3 in *R for Data Science*](https://r4ds.had.co.nz/data-visualisation.html)
 

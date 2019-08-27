@@ -14,21 +14,21 @@ lessons:
   - title: "*No class; Prof. Tellez at terrible conference*"
     date: "2019-08-29, Thu"
   
-  - title: "Importing + tibbles + projects"
+  - title: "Data Viz I"
     date:  "2019-09-03, Tue"
-    reading: "03-reading"
-
-  - title: "Making nice graphs I: ggplot"
-    date: "2019-09-05, Thu"
     reading: "08-reading"
+
+  - title: "Data Viz II"
+    date: "2019-09-05, Thu"
+    reading: "09-reading"
     
   - title: "**Problem set 1**"
     date: "2019-09-10, Tue"
     assignment: "problem-set-viz1"
   
-  - title: "Making nice graphs II: ggplot"
+  - title: "Importing + tibbles + projects"
     date: "2019-09-10, Tue"
-    reading: "09-reading"
+    reading: "03-reading"
   
   - title: "tidy data + variable types"
     date: "2019-09-12, Thu"

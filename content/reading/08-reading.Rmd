@@ -14,4 +14,4 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Highly recommened
 
-- print [this](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) out and keep it handy while you work
+- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> print [this](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) out and keep it handy while you work
