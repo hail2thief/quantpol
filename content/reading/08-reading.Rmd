@@ -1,6 +1,6 @@
 ---
 title: "Making visualizations I"
-date: "2019-09-19"
+date: "2019-09-03"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
@@ -8,8 +8,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [CH.3 in *ModernDive*](https://moderndive.com/3-viz.html)
-
+- <i class="fas fa-book"></i> [Ch.2 in *ModernDive* on Data Visualization](https://moderndive.com)
 
 
 # Highly recommened
