@@ -15,7 +15,7 @@ editor_options:
 # Slides
 
 
-TBA
+[Download the slides from today's lecture](/images/slides/03-viz1.pdf).
 
 
 # In-class examples
