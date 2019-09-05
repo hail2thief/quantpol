@@ -22,6 +22,7 @@ lessons:
   - title: "Data Viz II"
     date: "2019-09-05, Thu"
     reading: "09-reading"
+    class: "viz2-class"
     
   - title: "**Problem set 1**"
     date: "2019-09-10, Tue"
