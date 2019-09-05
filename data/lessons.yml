@@ -28,29 +28,27 @@ lessons:
     date: "2019-09-10, Tue"
     assignment: "problem-set-viz1"
   
-  - title: "Importing + tibbles + projects"
-    date: "2019-09-10, Tue"
-    reading: "03-reading"
-  
-  - title: "tidy data + variable types"
-    date: "2019-09-12, Thu"
-    reading: "04-reading"
-    
-  - title: "**Problem set 2**"
-    date: "2019-09-17, Tue"
-    assignment: "02-problem-set"
-  
   - title: "Wrangling data: mutate, select, filter, slice"
-    date: "2019-09-17, Tue"
+    date: "2019-09-10, Tue"
     reading: "05-reading"
   
   - title: "Wrangling data: group_by, summarize"
-    date: "2019-09-19, Thu"
+    date: "2019-09-12, Thu"
     reading: "06-reading"
+    
+  - title: "**Problem set 2**"
+    date: "2019-09-17, Tue"
+
+  - title: "Importing + tibbles + projects"
+    date: "2019-09-17, Tue"
+    reading: "03-reading"
+  
+  - title: "tidy data + variable types"
+    date: "2019-09-19, Thu"
+    reading: "04-reading"
     
   - title: "**Problem set 3**"
     date: "2019-09-24, Tue"
-    assignment: "03-problem-set"
 
   - title: "Wrangling data: joins + summary"
     date: "2019-09-24, Tue"

@@ -18,7 +18,7 @@ editor_options:
 
 4. Complete the tasks in the R Markdown file. Fill out code in the empty chunks provided and replace FILL YOUR ANSWER HERE with your answers to the questions.
 
-5. When you’re all done, click on the “Knit” button at the top of the editing window and create a WORD document of your problem set. Email me the WORD doc **and only the WORD doc**.
+5. When you’re all done, click on the “Knit” button at the top of the editing window and create a Word document of your problem set. Email me the Word doc **and only the Word doc**.
 
 
 ```{r knit-button, echo=FALSE, out.width="60%"}
