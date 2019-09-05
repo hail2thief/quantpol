@@ -10,8 +10,14 @@ output:
 
 
 # Things you should know for Midterm
+## You should know...
 
-I will populate this throughout semester.
+
+- ...how to plot the five most common graphs in `ggplot()`
+- ...when and how to use `facet_wrap`
+- ...how to customize `color`
+- ...how to use `theme_()` effectively
+
 
 
 # Things you should know for Final
