@@ -8,5 +8,5 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [3.1–3.3 in *ModernDive*](https://moderndive.com/)^[We will cover group_by and summarize next class, don't worry]
+- <i class="fas fa-book"></i> [Ch.3 in *ModernDive*](https://moderndive.com/)^[We will cover group_by and join next class, don't worry]
 - <i class="fas fa-book"></i> ["Data transformation," chapter 5 in *R for Data Science*](http://r4ds.had.co.nz/transform.html)
