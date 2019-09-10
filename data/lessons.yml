@@ -31,6 +31,7 @@ lessons:
   - title: "Wrangling data: pipes, filter, mutate, summarize"
     date: "2019-09-10, Tue"
     reading: "05-reading"
+    class: "wrangle1-class"
   
   - title: "Wrangling data: group_by, join"
     date: "2019-09-12, Thu"
