@@ -36,6 +36,7 @@ lessons:
   - title: "Wrangling data: group_by, join"
     date: "2019-09-12, Thu"
     reading: "06-reading"
+    class: "wrangle2-class"
     
   - title: "**Problem set 2**"
     date: "2019-09-17, Tue"
