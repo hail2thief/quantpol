@@ -40,6 +40,7 @@ lessons:
     
   - title: "**Problem set 2**"
     date: "2019-09-17, Tue"
+    assignment: "problem-set-wrangle"
 
   - title: "Importing + tibbles + projects"
     date: "2019-09-17, Tue"
