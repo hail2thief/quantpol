@@ -16,7 +16,7 @@ slug: assignments
 Feel free to work together on the problem sets but *you must turn in your own answers.* You cannot work in groups of more than **three** people.
 
 
-A late problem set will be deducted *a full letter grade for each day it is late*. On the 4th day it is a zero.
+I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 
 
 
 # Exams
