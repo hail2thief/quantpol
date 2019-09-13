@@ -1,5 +1,5 @@
 ---
-title: "Joins"
+title: "Intro to Regression"
 date: "2019-09-17"
 citeproc: false
 bibliography: ../../static/bib/references.bib
@@ -8,10 +8,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [Ch4.7 in *ModernDive*](https://moderndive.com/4-wrangling.html#joins)
-- <i class="fas fa-book"></i> [Ch.13 in *R for Data Science*](https://r4ds.had.co.nz/relational-data.html)
-
-## Recommended
+- <i class="fas fa-book"></i> [CH.5 in *ModernDive*](https://moderndive.com/5-regression.html)
 
 
-- Work through [this](https://stat545.com/bit001_dplyr-cheatsheet.html) example using comic book data
+
