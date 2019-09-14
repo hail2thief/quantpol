@@ -9,7 +9,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 # Required
 
 
-- <i class="fas fa-book"></i> [5.2 in *ModernDive*](https://moderndive.com/5-tidy.html)
+- <i class="fas fa-book"></i> [Ch.4 in *ModernDive*](https://moderndive.com/)
 
-- <i class="fas fa-book"></i> [Ch.12 in *R for Data Science*](https://r4ds.had.co.nz/tidy-data.html)^[Some stuff in this chapter (joins, merges, etc.) we will cover later. Don't stress about it!] 
+- <i class="fas fa-book"></i> [Ch.12 in *R for Data Science*](https://r4ds.had.co.nz/tidy-data.html)
 

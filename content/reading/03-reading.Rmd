@@ -11,7 +11,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 - <i class="fas fa-book"></i> [10.1 - 10.3 in *R for Data Science*](https://r4ds.had.co.nz/tibbles.html)
 
-- <i class="fas fa-book"></i> [5.1 in *ModernDive*](https://moderndive.com/5-tidy.html)
+- <i class="fas fa-book"></i> [Ch.4 in *ModernDive*](https://moderndive.com/)
 
 
 # Recommended
