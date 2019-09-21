@@ -42,14 +42,15 @@ lessons:
     date: "2019-09-17, Tue"
     assignment: "problem-set-wrangle"
 
+  - title: "Importing + tibbles + projects"
+    date: "2019-09-17, Tue"
+    reading: "03-reading"
+    class: "tidy2-class"
+
   - title: "tidy data + variable types"
     date: "2019-09-19, Thu"
     reading: "04-reading"
     class: "tidy1-class"
-
-  - title: "Importing + tibbles + projects"
-    date: "2019-09-17, Tue"
-    reading: "03-reading"
     
   - title: "**Problem set 3**"
     date: "2019-09-24, Tue"
