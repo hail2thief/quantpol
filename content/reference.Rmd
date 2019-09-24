@@ -10,14 +10,26 @@ output:
 
 
 # Things you should know for Midterm
-## You should know...
+## You should know how to...
 
 
-- ...how to plot the five most common graphs in `ggplot()`
-- ...when and how to use `facet_wrap`
-- ...how to customize `color`
-- ...how to use `theme_()` effectively
-
+- ...plot the five most common graphs in `ggplot()`
+- ...when to use `facet_wrap` and how to use it
+- ...customize `color`
+- ...use `theme_()` effectively
+- ...extract subsets of a dataset using `filter`
+- ...use the logical operators effectively (`==`, `!=`, `&`, `|`)
+- ...calculate summary statistics (mean, median, min, max) using `summarise`
+- ...calculate these statistics *by* one or more variables using `group_by()`
+- ...calculate group *proportions* using `group_by` (e.g., the *gss_cat* example from homework 3)
+- ...create new variables out of existing ones using `mutate`
+- ...code new variables using `case_when`
+- ...sort dataframes by one or more variables using `arrange`f
+- ...keep only a subset of variables in your dataset using `select`
+- ...merge two datasets with `inner_join`, *even when* the datasets have differently named keys in common
+- ...convert categorical variables to factors using `factor` and `factor_reorder`
+- ...tidy data, transforming data from wide format to long format using `gather`
+- ...draw a trend line using `geom_smooth`, and be able to extract and interpret regression output from an OLS model `lm`
 
 
 # Things you should know for Final
