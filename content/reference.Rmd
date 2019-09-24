@@ -28,8 +28,10 @@ output:
 - ...keep only a subset of variables in your dataset using `select`
 - ...merge two datasets with `inner_join`, *even when* the datasets have differently named keys in common
 - ...convert categorical variables to factors using `factor` and `factor_reorder`
-- ...tidy data, transforming data from wide format to long format using `gather`
-- ...draw a trend line using `geom_smooth`, and be able to extract and interpret regression output from an OLS model `lm`
+- ...tidy data at a conceptual level, i.e., know what it means for data to be "tidy"
+- ...transform data from wide format to long format using `gather`
+- ...draw a trend line using `geom_smooth`
+- ...extract and interpret regression output from an OLS model `lm`
 
 
 # Things you should know for Final
