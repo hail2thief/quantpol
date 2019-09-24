@@ -31,7 +31,10 @@ output:
 - ...tidy data at a conceptual level, i.e., know what it means for data to be "tidy"
 - ...transform data from wide format to long format using `gather`
 - ...draw a trend line using `geom_smooth`
-- ...extract and interpret regression output from an OLS model `lm`
+- ...talk about and interpret correlation coefficients
+- ...speak the language of statistical modeling, i.e., outcome variable, explanatory variable
+- ...run an OLS model using `lm` and extract its output
+- ... interpret results from an OLS model, e.g., the coefficient, "one unit change in..."
 
 
 # Things you should know for Final
