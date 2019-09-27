@@ -23,3 +23,5 @@ I'll accept problem sets late one day (but you will lose a full letter-grade). B
 
 <span class="newthought">There will be two exams</span> covering (1) the first half of the course, especially programming, and (2) the second half of the course, especially causation.
 
+Make-up exams will be given *only* to students with medical or personal emergencies. If an emergency arises, you will need to contact me **before** the exam or you will receive zero credit.
+

@@ -35,6 +35,7 @@ output:
 - ...speak the language of statistical modeling, i.e., outcome variable, explanatory variable
 - ...run an OLS model using `lm` and extract its output
 - ... interpret results from an OLS model, e.g., the coefficient, "one unit change in..."
+- ...interpret coefficient estimates of *continuous* and *categorical* variables
 
 
 # Things you should know for Final
