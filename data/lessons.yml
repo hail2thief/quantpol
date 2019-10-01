@@ -67,6 +67,7 @@ lessons:
   - title: "Intro to regression"
     date: "2019-10-01, Tue"
     reading: "11-reading"
+    class: "corr2-class"
   
   - title: '<i class="fas fa-star"></i> **MIDTERM**'
     date: "2019-10-03, Thu"
