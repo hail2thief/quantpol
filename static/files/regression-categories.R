@@ -99,7 +99,14 @@ ggplot(data = strong_cor, aes(x = tvhours)) +
 
 
 ## variation explained / total variation = unexplained "left over"
-var(bored_tv_results$residual)/var(bored_tv_results$tvhours)
+bored_tv_results %>% 
+  select(tvhours, tvhours_hat, residual) %>% 
+  summarise(total_variation = sum((tvhours - mean(tvhours))^2), 
+            explained_line = sum(residual^2), 
+            unexplained_variation = explained_line/total_variation, 
+            explained_variation = 1 - unexplained_variation)
+
+summary(bored_tv)
 
 ### weak correlation
 weak_cor = tibble(hunger = rnorm(100), 
@@ -119,8 +126,12 @@ hunger_tv_results = get_regression_points(hunger_tv)
 hunger_tv_results
 
 ## variation left over
-var(hunger_tv_results$residual)/var(hunger_tv_results$tv_hours)
-
+hunger_tv_results %>% 
+  select(tv_hours, tv_hours_hat, residual) %>% 
+  summarise(total_variation = sum((tv_hours - mean(tv_hours))^2), 
+            explained_line = sum(residual^2), 
+            unexplained_variation = explained_line/total_variation, 
+            explained_variation = 1 - unexplained_variation)
 
 
 ## your turn: 
