@@ -29,9 +29,20 @@ mtcars
 
 ## practice: evals from moderndive, 
 ## pick one numeric variable to explain beauty score
+age_prof = lm(score ~ age, data = evals)
+get_regression_table(age_prof)
+
+age_fit = get_regression_points(age_prof)
 
 
 
+ggplot(evals, aes(x = age, y = score)) + geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+# class size
+size_prof = lm(score ~ cls_students, data = evals)
+get_regression_table(size_prof)
+size_fit = get_regression_points(age_prof)
 
 
 ## Categorical variables
@@ -67,9 +78,38 @@ summary(model_rank)
 
 ## your turn: regress score against some categorical variable
 ## interpret output
+data("evals")
+evals
+?evals
+evals$gender
+View(evals)
+
+# gender
+prof_gender = lm(score ~ gender, data = evals)
+
+get_regression_table(prof_gender)
+
+gender_fit = get_regression_points(prof_gender)
 
 
 
+evals %>% 
+  group_by(gender) %>% 
+  summarise(avg = mean(score))
+
+
+prof_pic = lm(score ~ pic_outfit, data = evals)
+get_regression_table(prof_pic)
+evals$pic_outfit
+
+prof_lang = lm(score ~ language, data = evals)
+get_regression_table(prof_lang)
+evals$language
+
+
+prof_race = lm(score ~ ethnicity, data = evals)
+get_regression_table(prof_race)
+evals$ethnicity
 
 ## Explaining data
 ### compare strong correlation

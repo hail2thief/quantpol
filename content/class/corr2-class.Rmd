@@ -15,7 +15,7 @@ editor_options:
 # Slides
 
 
-TBA
+[Download slides from today's lecture](/images/slides/10-regression.pdf)
 
 # In-class examples
 
