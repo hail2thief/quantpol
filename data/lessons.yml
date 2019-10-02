@@ -72,9 +72,6 @@ lessons:
   - title: '<i class="fas fa-star"></i> **MIDTERM**'
     date: "2019-10-03, Thu"
     
-  - title: "**Problem set 4**"
-    date: "2019-10-08, Tue"
-    assignment: "01-problem-set"
 
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
@@ -85,6 +82,10 @@ lessons:
     
   - title: "*No class; Labor day*"
     date: "2019-10-10, Thu"
+
+  - title: "**Problem set 4**"
+    date: "2019-10-15, Tue"
+    assignment: "01-problem-set"
     
   - title: "Causal diagrams"
     date: "2019-10-15, Tue"
