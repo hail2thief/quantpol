@@ -79,6 +79,7 @@ lessons:
   - title: "The fundamental problem of causality"
     date: "2019-10-08, Tue"
     reading: "12-reading"
+    class: "causality-class"
     
   - title: "*No class; Labor day*"
     date: "2019-10-10, Thu"
