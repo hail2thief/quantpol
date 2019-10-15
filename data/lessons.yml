@@ -91,6 +91,7 @@ lessons:
   - title: "Causal diagrams"
     date: "2019-10-15, Tue"
     reading: "13-reading"
+    class: "dags-class"
     
   - title: "Causal terror"
     date: "2019-10-17, Thu"
