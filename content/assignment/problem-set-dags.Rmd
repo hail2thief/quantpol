@@ -22,7 +22,6 @@ Draw a DAG that incorporates `education`, `salary`, and the following additional
 
 
 - `Family wealth`: how wealthy the individual’s parents are
-- `Race`: the person’s race
 -  `Year of birth`: the year in which they were born
 - `School Laws`: whether state has laws requiring people finish high school or not
 - `Ability`: imagine people are better at some things than others
@@ -36,7 +35,7 @@ Draw a DAG that incorporates `education`, `salary`, and the following additional
 1. Which variables affect ONLY earnings?  Why don't you think they also affect education?
 2. Which variables affect ONLY education? Why don't you think they also affect earnings?
 3. Which variables affect BOTH earnings and education?
-4. List all the causal paths from *education* to *earnings*. 
+4. List all the causal paths from *education* to *earnings*. [Feel free to just write: education $\rightarrow$ whatever $\rightarrow$ earnings]
 5. Which backdoors do you need to close to identify `education` $\rightarrow$ `salary`? Note: it may not be possible to identify depending on how you drew the DAG (and that's OK!). 
 
 
