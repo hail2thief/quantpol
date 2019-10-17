@@ -96,6 +96,7 @@ lessons:
   - title: "Causal terror"
     date: "2019-10-17, Thu"
     reading: "13-reading"
+    class: "dags2-class"
     
   - title: "**Problem set 5**"
     date: "2019-10-22, Tue"
