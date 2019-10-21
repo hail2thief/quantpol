@@ -8,6 +8,5 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [Ch.7 in *ModernDive*](https://moderndive.com/7-multiple-regression.html)^[Work through the learning checks!]
-- more reading TBA.
+- <i class="fas fa-book"></i> [Ch.6 in *ModernDive*](https://moderndive.com/6-multiple-regression.html)^[Work through the learning checks!]
 
