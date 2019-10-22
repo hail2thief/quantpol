@@ -105,6 +105,7 @@ lessons:
   - title: "Drawing causal diagrams"
     date: "2019-10-22, Tue"
     reading: "14-reading"
+    class: "draw-dags-class"
     
   - title: "Multiple regression"
     date: "2019-10-24, Thu"
