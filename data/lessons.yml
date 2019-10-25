@@ -110,10 +110,11 @@ lessons:
   - title: "Multiple regression"
     date: "2019-10-24, Thu"
     reading: "15-reading"
+    class: "controls-class"
     
   - title: "**Problem set 6**"
     date: "2019-10-29, Tue"
-    assignment: "01-problem-set"
+    assignment: "problem-set-controls"
     
   - title: "Multiple regression + closing backdoors"
     date: "2019-10-29, Tue"
