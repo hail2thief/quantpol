@@ -119,6 +119,7 @@ lessons:
   - title: "Multiple regression + closing backdoors"
     date: "2019-10-29, Tue"
     reading: "15-reading"
+    class: "controls-practice-class"
     
   - title: "More controlling"
     date: "2019-10-31, Thu"
