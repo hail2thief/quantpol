@@ -120,47 +120,47 @@ lessons:
     date: "2019-10-29, Tue"
     reading: "15-reading"
     class: "controls-practice-class"
+
+  - title: '<span class="fake-header-table">The Toolbox</span>'
+    header: True
     
-  - title: "More controlling"
+  - title: "Fixed effects"
     date: "2019-10-31, Thu"
     reading: "15-reading"
     
   - title: "**Problem set 7**"
     date: "2019-11-05, Tue"
     assignment: "01-problem-set"
-
-  - title: '<span class="fake-header-table">The Toolbox</span>'
-    header: True
     
   - title: "Matching"
     date: "2019-11-05, Tue"
     
-  - title: "Fixed effects"
+  - title: "Diff-in-diff"
     date: "2019-11-07, Thu"
     
   - title: "**Problem set 8**"
     date: "2019-11-12, Tue"
     assignment: "01-problem-set"
     
-  - title: "Diff-in-diff"
+  - title: "Regression discontinuity"
     date: "2019-11-12, Tue"
     reading: "18-reading"
     
-  - title: "Regression discontinuity"
+  - title: "Review: toolbox"
     date: "2019-11-14, Thu"
     reading: "19-reading"
+
+  - title: '<span class="fake-header-table">Uncertainty-up</span>'
+    header: True
     
   - title: "**Problem set 9**"
     date: "2019-11-19, Tue"
     assignment: "01-problem-set"
     
-  - title: "Review: toolbox"
+  - title: "Inference"
     date: "2019-11-19, Tue"
 
-  - title: '<span class="fake-header-table">Uncertainty and wrapping-up</span>'
-    header: True
-
-  - title: "Preview of inference" 
+  - title: "Inference" 
     date: "2019-11-21, Thu"
     reading: "21-reading"
     

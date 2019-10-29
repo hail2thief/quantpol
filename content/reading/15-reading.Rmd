@@ -1,12 +1,12 @@
 ---
-title: "Multiple regression"
-date: "2019-10-24"
+title: "Fixed Effects"
+date: "2019-10-31"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 ---
 
-# Required
+# Recommended
 
-- <i class="fas fa-book"></i> [Ch.6 in *ModernDive*](https://moderndive.com/6-multiple-regression.html)^[Work through the learning checks!]
+- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> [Read this overview of fixed effects models](http://www.jblumenstock.com/files/courses/econ174/FEModels.pdf)
 

@@ -15,8 +15,7 @@ editor_options:
 # Slides
 
 
-<!-- [Download slides from today's lecture](/images/slides/15-intro2-controls.pdf) -->
-TBA
+[Download slides from today's lecture](/images/slides/16-control-practice.pdf)
 
 
 # Code for class
