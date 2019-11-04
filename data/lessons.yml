@@ -137,6 +137,7 @@ lessons:
     
   - title: "Diff-in-diff"
     date: "2019-11-07, Thu"
+    reading: "16-reading"
     
   - title: "**Problem set 8**"
     date: "2019-11-12, Tue"
@@ -144,11 +145,9 @@ lessons:
     
   - title: "Regression discontinuity"
     date: "2019-11-12, Tue"
-    reading: "18-reading"
     
   - title: "Review: toolbox"
     date: "2019-11-14, Thu"
-    reading: "19-reading"
 
   - title: '<span class="fake-header-table">Uncertainty-up</span>'
     header: True

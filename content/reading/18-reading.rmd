@@ -7,8 +7,3 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 ---
 
 # Required
-
-- Watch this video on estimating the effects of migration on employment, using a diff-in-diff [design](https://www.youtube.com/watch?v=xniasePiSd8)
-
-- Then watch this video on using graphs to evaluate diff-in-diff [assumptions](https://www.youtube.com/watch?v=jJoMEqVRk2I)
-
