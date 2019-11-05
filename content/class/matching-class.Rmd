@@ -15,49 +15,53 @@ editor_options:
 # Slides
 
 
-<!-- [Download slides from today's lecture](/images/slides/16-control-practice.pdf) -->
+[Download slides from today's lecture](/images/slides/18-matching.pdf)
 
 
 # Code for class
 
 
+Update: looks like using `cem` in `matchit()` requires installing a few more things on your computer, which is not worth the hassle at this point. So, don't include `method = "cem"` in your function call. This means we're not doing CEM; we're instead doing something called "nearest neighbor" matching. Different, but the basic idea is still the same. 
+
+Note that now there is no need to do `"weights = weights"` in the `lm()` call. 
+
+
 ```{r, eval=FALSE}
-# cem with affairs data
+# m atching with swiss data: does education increase/reduce fertility?
 library(tidyverse)
-library(AER)
 library(MatchIt) # you're also gonna need to install "cem"
-data("Affairs")
+data("swiss")
 
 
 # step 1: id matching variables and clean up data
-match_aff = 
-  Affairs %>% 
-  select(yearsmarried, religiousness, children, affairs, 
-         gender, occupation, education) %>% 
-  # this is a tricky part of matchit package; treatment variable (children), needs to be 0/1
-  mutate(children = ifelse(children == "yes", 1, 0))
+match_swiss = 
+  swiss %>% 
+  # this is a tricky part of matchit package; treatment variable (education), needs to be 0/1
+  # here we define education treatment as "above average education vs. below average"
+  mutate(edu_treat = ifelse(Education > mean(Education), 1, 0))
 
 
 # step 2: match using cem
-# same formula as lm(), except the outcome here is treatment variable (children)
-match_model = matchit(children ~ yearsmarried + religiousness, 
-                      data = match_aff, 
-                      method = "cem")
+# same formula as lm(), except the outcome here is treatment variable (edu_treat)
+match_model = matchit(edu_treat ~ Agriculture + Catholic + Examination, 
+                      data = match_swiss)
 
 
 # step 3: evaluate balance
 summary(match_model)
+## Note: notice that balance for some variables got better, some got worse, 
+## and those that got better didn't get that much better
 
 # step 4: estimate effect
 matched_data = match.data(match_model) ## extracts the new, matched dataset
-lm(affairs ~ children, data = matched_data, weights = weights) ## run model on your new data, and add weights!
+lm(Fertility ~ edu_treat, data = matched_data)
 
 
 
-# practice: Does being in a union pay off?
-library(Ecdat)
-data("Wages")
-Wages %>% 
-  select(lwage, union, black, bluecol, south, exp, sex) %>% 
-  sample_n(5)
+# # practice: Does being in a union pay off?
+# library(Ecdat)
+# data("Wages")
+# Wages %>% 
+#   select(lwage, union, black, bluecol, south, exp, sex) %>% 
+#   sample_n(5)
 ```

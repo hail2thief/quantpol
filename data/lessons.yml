@@ -127,6 +127,7 @@ lessons:
   - title: "Fixed effects"
     date: "2019-10-31, Thu"
     reading: "15-reading"
+    class: "fixed-effects-class"
     
   - title: "**Problem set 7**"
     date: "2019-11-05, Tue"

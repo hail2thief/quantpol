@@ -92,43 +92,44 @@ code span.wa { color: #bf0303; } /* Warning */
 </div>
 
 <h2 id="slides">Slides</h2>
-<!-- [Download slides from today's lecture](/images/slides/16-control-practice.pdf) -->
+<p><a href="/images/slides/18-matching.pdf">Download slides from today’s lecture</a></p>
 <h2 id="code-for-class">Code for class</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># cem with affairs data</span></span>
+<p>Update: looks like using <code>cem</code> in <code>matchit()</code> requires installing a few more things on your computer, which is not worth the hassle at this point. So, don’t include <code>method = "cem"</code> in your function call. This means we’re not doing CEM; we’re instead doing something called “nearest neighbor” matching. Different, but the basic idea is still the same.</p>
+<p>Note that now there is no need to do <code>"weights = weights"</code> in the <code>lm()</code> call.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># m atching with swiss data: does education increase/reduce fertility?</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(tidyverse)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(AER)</span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(MatchIt) <span class="co"># you&#39;re also gonna need to install &quot;cem&quot;</span></span>
-<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">data</span>(<span class="st">&quot;Affairs&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(MatchIt) <span class="co"># you&#39;re also gonna need to install &quot;cem&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">data</span>(<span class="st">&quot;swiss&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
 <span id="cb1-6"><a href="#cb1-6"></a></span>
-<span id="cb1-7"><a href="#cb1-7"></a></span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># step 1: id matching variables and clean up data</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a>match_aff =<span class="st"> </span></span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="st">  </span>Affairs <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-11"><a href="#cb1-11"></a><span class="st">  </span><span class="kw">select</span>(yearsmarried, religiousness, children, affairs, </span>
-<span id="cb1-12"><a href="#cb1-12"></a>         gender, occupation, education) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="st">  </span><span class="co"># this is a tricky part of matchit package; treatment variable (children), needs to be 0/1</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">children =</span> <span class="kw">ifelse</span>(children <span class="op">==</span><span class="st"> &quot;yes&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span>
-<span id="cb1-15"><a href="#cb1-15"></a></span>
-<span id="cb1-16"><a href="#cb1-16"></a></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co"># step 2: match using cem</span></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># same formula as lm(), except the outcome here is treatment variable (children)</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>match_model =<span class="st"> </span><span class="kw">matchit</span>(children <span class="op">~</span><span class="st"> </span>yearsmarried <span class="op">+</span><span class="st"> </span>religiousness, </span>
-<span id="cb1-20"><a href="#cb1-20"></a>                      <span class="dt">data =</span> match_aff, </span>
-<span id="cb1-21"><a href="#cb1-21"></a>                      <span class="dt">method =</span> <span class="st">&quot;cem&quot;</span>)</span>
-<span id="cb1-22"><a href="#cb1-22"></a></span>
-<span id="cb1-23"><a href="#cb1-23"></a></span>
-<span id="cb1-24"><a href="#cb1-24"></a><span class="co"># step 3: evaluate balance</span></span>
-<span id="cb1-25"><a href="#cb1-25"></a><span class="kw">summary</span>(match_model)</span>
-<span id="cb1-26"><a href="#cb1-26"></a></span>
-<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># step 4: estimate effect</span></span>
-<span id="cb1-28"><a href="#cb1-28"></a>matched_data =<span class="st"> </span><span class="kw">match.data</span>(match_model) <span class="co">## extracts the new, matched dataset</span></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="kw">lm</span>(affairs <span class="op">~</span><span class="st"> </span>children, <span class="dt">data =</span> matched_data, <span class="dt">weights =</span> weights) <span class="co">## run model on your new data, and add weights!</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co"># step 1: id matching variables and clean up data</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a>match_swiss =<span class="st"> </span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="st">  </span>swiss <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="st">  </span><span class="co"># this is a tricky part of matchit package; treatment variable (education), needs to be 0/1</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="st">  </span><span class="co"># here we define education treatment as &quot;above average education vs. below average&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">edu_treat =</span> <span class="kw">ifelse</span>(Education <span class="op">&gt;</span><span class="st"> </span><span class="kw">mean</span>(Education), <span class="dv">1</span>, <span class="dv">0</span>))</span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co"># step 2: match using cem</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co"># same formula as lm(), except the outcome here is treatment variable (edu_treat)</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a>match_model =<span class="st"> </span><span class="kw">matchit</span>(edu_treat <span class="op">~</span><span class="st"> </span>Agriculture <span class="op">+</span><span class="st"> </span>Catholic <span class="op">+</span><span class="st"> </span>Examination, </span>
+<span id="cb1-18"><a href="#cb1-18"></a>                      <span class="dt">data =</span> match_swiss)</span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co"># step 3: evaluate balance</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="kw">summary</span>(match_model)</span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="co">## Note: notice that balance for some variables got better, some got worse, </span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co">## and those that got better didn&#39;t get that much better</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># step 4: estimate effect</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>matched_data =<span class="st"> </span><span class="kw">match.data</span>(match_model) <span class="co">## extracts the new, matched dataset</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="kw">lm</span>(Fertility <span class="op">~</span><span class="st"> </span>edu_treat, <span class="dt">data =</span> matched_data)</span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
 <span id="cb1-30"><a href="#cb1-30"></a></span>
 <span id="cb1-31"><a href="#cb1-31"></a></span>
-<span id="cb1-32"><a href="#cb1-32"></a></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="co"># practice: Does being in a union pay off?</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="kw">library</span>(Ecdat)</span>
-<span id="cb1-35"><a href="#cb1-35"></a><span class="kw">data</span>(<span class="st">&quot;Wages&quot;</span>)</span>
-<span id="cb1-36"><a href="#cb1-36"></a>Wages <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-37"><a href="#cb1-37"></a><span class="st">  </span><span class="kw">select</span>(lwage, union, black, bluecol, south, exp, sex) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-38"><a href="#cb1-38"></a><span class="st">  </span><span class="kw">sample_n</span>(<span class="dv">5</span>)</span></code></pre></div>
+<span id="cb1-32"><a href="#cb1-32"></a><span class="co"># # practice: Does being in a union pay off?</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co"># library(Ecdat)</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co"># data(&quot;Wages&quot;)</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co"># Wages %&gt;% </span></span>
+<span id="cb1-36"><a href="#cb1-36"></a><span class="co">#   select(lwage, union, black, bluecol, south, exp, sex) %&gt;% </span></span>
+<span id="cb1-37"><a href="#cb1-37"></a><span class="co">#   sample_n(5)</span></span></code></pre></div>
