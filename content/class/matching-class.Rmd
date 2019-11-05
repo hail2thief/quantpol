@@ -1,0 +1,63 @@
+---
+title: "Matching"
+date: "2019-11-05"
+citeproc: false
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-syllabus-no-bib.csl
+output:
+  blogdown::html_page:
+    template: ../../pandoc/toc-title_html.template
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+# Slides
+
+
+<!-- [Download slides from today's lecture](/images/slides/16-control-practice.pdf) -->
+
+
+# Code for class
+
+
+```{r, eval=FALSE}
+# cem with affairs data
+library(tidyverse)
+library(AER)
+library(MatchIt) # you're also gonna need to install "cem"
+data("Affairs")
+
+
+# step 1: id matching variables and clean up data
+match_aff = 
+  Affairs %>% 
+  select(yearsmarried, religiousness, children, affairs, 
+         gender, occupation, education) %>% 
+  # this is a tricky part of matchit package; treatment variable (children), needs to be 0/1
+  mutate(children = ifelse(children == "yes", 1, 0))
+
+
+# step 2: match using cem
+# same formula as lm(), except the outcome here is treatment variable (children)
+match_model = matchit(children ~ yearsmarried + religiousness, 
+                      data = match_aff, 
+                      method = "cem")
+
+
+# step 3: evaluate balance
+summary(match_model)
+
+# step 4: estimate effect
+matched_data = match.data(match_model) ## extracts the new, matched dataset
+lm(affairs ~ children, data = matched_data, weights = weights) ## run model on your new data, and add weights!
+
+
+
+# practice: Does being in a union pay off?
+library(Ecdat)
+data("Wages")
+Wages %>% 
+  select(lwage, union, black, bluecol, south, exp, sex) %>% 
+  sample_n(5)
+```

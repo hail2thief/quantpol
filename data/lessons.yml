@@ -134,6 +134,7 @@ lessons:
     
   - title: "Matching"
     date: "2019-11-05, Tue"
+    class: "matching-class"
     
   - title: "Diff-in-diff"
     date: "2019-11-07, Thu"
