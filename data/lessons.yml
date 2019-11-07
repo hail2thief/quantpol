@@ -140,26 +140,24 @@ lessons:
   - title: "Diff-in-diff"
     date: "2019-11-07, Thu"
     reading: "16-reading"
+    class: "did-class"
     
-  - title: "**Problem set 8**"
+    
+  - title: "Diff-in-diff + Regression discontinuity"
     date: "2019-11-12, Tue"
-    assignment: "01-problem-set"
     
   - title: "Regression discontinuity"
-    date: "2019-11-12, Tue"
-    
-  - title: "Review: toolbox"
     date: "2019-11-14, Thu"
 
-  - title: '<span class="fake-header-table">Uncertainty-up</span>'
+  - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
-    
-  - title: "**Problem set 9**"
-    date: "2019-11-19, Tue"
-    assignment: "01-problem-set"
     
   - title: "Inference"
     date: "2019-11-19, Tue"
+
+  - title: "**Problem set 8**"
+    date: "2019-11-19, Tue"
+    assignment: "01-problem-set"
 
   - title: "Inference" 
     date: "2019-11-21, Thu"
@@ -168,10 +166,12 @@ lessons:
   - title: "Sampling + infer"
     date: "2019-11-26, Tue"
     reading: "22-reading"
-    
+
+  - title: "**No class: at-home assignment!**"
+    date: "2019-11-26, Tue"
+
   - title: "**Problem set 10**"
-    date: "2019-12-03, Tue"
-    assignment: "01-problem-set"
+    date: "2019-11-26, Tue"
 
   - title: "*No class; Thanksgiving*"
     date: "2019-11-28, Thu"
