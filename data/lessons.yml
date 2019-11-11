@@ -137,20 +137,23 @@ lessons:
     date: "2019-11-05, Tue"
     class: "matching-class"
     
-  - title: "Diff-in-diff"
+  - title: "Difference-in-difference"
     date: "2019-11-07, Thu"
     reading: "16-reading"
     class: "did-class"
     
     
-  - title: "Diff-in-diff + Regression discontinuity"
-    date: "2019-11-12, Tue"
-    
   - title: "Regression discontinuity"
-    date: "2019-11-14, Thu"
+    date: "2019-11-12, Tue"
+    class: "reg-discontinuity-class"
+  
 
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
+
+  - title: "Sampling"
+    date: "2019-11-14, Thu"
+    reading: "17-reading"
     
   - title: "Inference"
     date: "2019-11-19, Tue"

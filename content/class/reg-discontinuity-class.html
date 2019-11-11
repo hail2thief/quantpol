@@ -1,0 +1,45 @@
+---
+title: "Regression discontinuity"
+date: "2019-11-12"
+citeproc: false
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-syllabus-no-bib.csl
+output:
+  blogdown::html_page:
+    template: ../../pandoc/toc-title_html.template
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- BLOGDOWN-HEAD -->
+<!-- /BLOGDOWN-HEAD -->
+
+<h2>Contents</h2>
+<div id="TOC">
+<ul>
+<li><a href="#slides">Slides</a></li>
+<li><a href="#example-from-class">Example from class</a></li>
+</ul>
+</div>
+
+<h2 id="slides">Slides</h2>
+<!-- [Download slides from today's lecture](/images/slides/19-diff-in-diff.pdf) -->
+<h2 id="example-from-class">Example from class</h2>
+<p>What is incumbency worth?<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote">example taken from Nick-CH<br />
+<br />
+</span></span> If you win one election, how likely are you to win a subsequent one? Let’s take a regression discontinuity approach to this question.</p>
+<p>Data cleaning steps:</p>
+<ol style="list-style-type: decimal">
+<li>Install and load the <code>politicaldata</code> package, and load <code>data(house_results)</code></li>
+<li>Use <code>filter</code> to separate into two new dataframes, one for 2012 and one for 2016</li>
+<li>For 2012, create new variable (<code>r_margin</code>) that tells us the difference in vote share between R and D</li>
+<li>For 2016, create new variable (<code>r_wins</code>) that tells us if R beat D (i.e., vote share of R &gt; vote share of D)</li>
+<li>In each data set, <code>select</code> only <code>district</code> and the new variable</li>
+<li>Use <code>drop_na</code> to get rid of missing observations</li>
+<li><code>inner_join</code> the two resulting datasets</li>
+</ol>
+<p>The discontinuity:</p>
+<ul>
+<li>Think about how to compare the percentage of times <code>r_wins</code> just above and below a small threshold in <code>r_margin</code> (say, .04)</li>
+</ul>
