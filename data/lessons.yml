@@ -146,14 +146,13 @@ lessons:
   - title: "Regression discontinuity"
     date: "2019-11-12, Tue"
     class: "reg-discontinuity-class"
-  
+
+  - title: "Finish up Toolbox"
+    date: "2019-11-14, Thu"
+    reading: "17-reading"
 
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
-
-  - title: "Sampling"
-    date: "2019-11-14, Thu"
-    reading: "17-reading"
     
   - title: "Inference"
     date: "2019-11-19, Tue"

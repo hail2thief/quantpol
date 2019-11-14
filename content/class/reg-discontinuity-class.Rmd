@@ -15,7 +15,7 @@ editor_options:
 # Slides
 
 
-<!-- [Download slides from today's lecture](/images/slides/19-diff-in-diff.pdf) -->
+[Download slides from today's lecture](/images/slides/20-discontinuity.pdf)
 
 
 # Example from class
@@ -37,3 +37,46 @@ Data cleaning steps:
 The discontinuity: 
 
 - Think about how to compare the percentage of times `r_wins` just above and below a small threshold in `r_margin` (say, .04)
+
+
+```{r, eval=FALSE}
+# class example
+library(tidyverse)
+library(politicaldata)
+library(socviz)
+library(moderndive)
+data("house_results")
+house_results
+
+
+# data cleaning
+results_2012 = house_results %>% 
+  filter(year == 2012) %>% 
+  mutate(r_margin = rep - dem) %>% 
+  select(district, r_margin) %>% 
+  drop_na()
+
+results_2016 = house_results %>% 
+  filter(year == 2016) %>% 
+  mutate(r_wins = rep > dem) %>%
+  select(district, r_wins) %>% 
+  drop_na()
+
+# merge them together
+full_data = inner_join(results_2012, 
+                       results_2016, 
+                       by = "district")
+
+
+# DO THE DISCONTINUITY
+discontinuity = full_data %>% 
+  filter(abs(r_margin) <= .1) %>% 
+  mutate(above = r_margin > 0)
+
+# the estimate:
+discontinuity %>% 
+  group_by(above) %>% 
+  summarise(mean = mean(r_wins))
+
+```
+

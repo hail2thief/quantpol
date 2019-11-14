@@ -113,22 +113,23 @@ code span.wa { color: #bf0303; } /* Warning */
 <span id="cb1-14"><a href="#cb1-14"></a><span class="st">  </span>df <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-15"><a href="#cb1-15"></a><span class="st">  </span><span class="kw">group_by</span>(year, treated) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb1-16"><a href="#cb1-16"></a><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">work =</span> <span class="kw">mean</span>(work))</span>
-<span id="cb1-17"><a href="#cb1-17"></a>pdata</span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="kw">ggplot</span>(pdata, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> work, <span class="dt">color =</span> treated)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1-19"><a href="#cb1-19"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1-20"><a href="#cb1-20"></a><span class="st">  </span><span class="co"># make line at point where it crosses</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">1994</span>, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1-22"><a href="#cb1-22"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Percent of single women working&quot;</span>)</span>
-<span id="cb1-24"><a href="#cb1-24"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a>pdata</span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="kw">ggplot</span>(pdata, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> work, <span class="dt">color =</span> treated)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">size =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="st">  </span><span class="co"># make line at point where it crosses</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">1994</span>, <span class="dt">lty =</span> <span class="dv">2</span>) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-23"><a href="#cb1-23"></a><span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Year&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Percent of single women working&quot;</span>)</span>
 <span id="cb1-25"><a href="#cb1-25"></a></span>
-<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># Diff in diff, simple calculation</span></span>
-<span id="cb1-27"><a href="#cb1-27"></a>did =<span class="st"> </span></span>
-<span id="cb1-28"><a href="#cb1-28"></a><span class="st">  </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(treated, after) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">work =</span> <span class="kw">mean</span>(work))</span>
-<span id="cb1-30"><a href="#cb1-30"></a></span>
-<span id="cb1-31"><a href="#cb1-31"></a>did</span>
-<span id="cb1-32"><a href="#cb1-32"></a>untreat.diff =<span class="st"> </span>did<span class="op">$</span>work[<span class="dv">2</span>]<span class="op">-</span>did<span class="op">$</span>work[<span class="dv">1</span>]</span>
-<span id="cb1-33"><a href="#cb1-33"></a>treat.diff =<span class="st"> </span>did<span class="op">$</span>work[<span class="dv">4</span>]<span class="op">-</span>did<span class="op">$</span>work[<span class="dv">3</span>]</span>
-<span id="cb1-34"><a href="#cb1-34"></a>did.estimate =<span class="st"> </span>treat.diff <span class="op">-</span><span class="st"> </span>untreat.diff</span>
-<span id="cb1-35"><a href="#cb1-35"></a>did.estimate</span></code></pre></div>
+<span id="cb1-26"><a href="#cb1-26"></a></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># Diff in diff, simple calculation</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>did =<span class="st"> </span></span>
+<span id="cb1-29"><a href="#cb1-29"></a><span class="st">  </span>df <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">group_by</span>(treated, after) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">work =</span> <span class="kw">mean</span>(work))</span>
+<span id="cb1-31"><a href="#cb1-31"></a></span>
+<span id="cb1-32"><a href="#cb1-32"></a>did</span>
+<span id="cb1-33"><a href="#cb1-33"></a>untreat.diff =<span class="st"> </span>did<span class="op">$</span>work[<span class="dv">3</span>]<span class="op">-</span>did<span class="op">$</span>work[<span class="dv">4</span>]</span>
+<span id="cb1-34"><a href="#cb1-34"></a>treat.diff =<span class="st"> </span>did<span class="op">$</span>work[<span class="dv">1</span>]<span class="op">-</span>did<span class="op">$</span>work[<span class="dv">2</span>]</span>
+<span id="cb1-35"><a href="#cb1-35"></a>did.estimate =<span class="st"> </span>treat.diff <span class="op">-</span><span class="st"> </span>untreat.diff</span>
+<span id="cb1-36"><a href="#cb1-36"></a>did.estimate</span></code></pre></div>
