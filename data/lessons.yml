@@ -154,18 +154,19 @@ lessons:
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
-  - title: "Inference"
+  - title: "Sampling"
     date: "2019-11-19, Tue"
+    reading: "17-reading"
 
   - title: "**Problem set 8**"
     date: "2019-11-19, Tue"
     assignment: "08-problem-set"
 
-  - title: "Inference" 
+  - title: "Bootstrapping + CI" 
     date: "2019-11-21, Thu"
     reading: "21-reading"
     
-  - title: "Sampling + infer"
+  - title: "Hypothesis Testing"
     date: "2019-11-26, Tue"
     reading: "22-reading"
 
@@ -178,8 +179,9 @@ lessons:
   - title: "*No class; Thanksgiving*"
     date: "2019-11-28, Thu"
 
-  - title: "Opening the can of worms"
+  - title: "Inference for Regression"
     date: "2019-12-03, Tue"
+    reading: "24-reading"
   
   - title: "Review for final"
     date: "2019-12-05, Thu"

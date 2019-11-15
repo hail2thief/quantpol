@@ -1,5 +1,5 @@
 ---
-title: "Inference preview"
+title: "Bootstrapping + CI"
 date: "2019-11-21"
 citeproc: false
 bibliography: ../../static/bib/references.bib
@@ -8,6 +8,6 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 
 # Required
 
-- <i class="fas fa-book"></i> [Ch.8 in *ModernDive*](https://moderndive.com/8-sampling.html)
+- <i class="fas fa-book"></i> [Ch.8 in *ModernDive*](https://moderndive.com/8-confidence-intervals.html)
 
 
