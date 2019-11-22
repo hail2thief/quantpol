@@ -165,10 +165,8 @@ lessons:
   - title: "Bootstrapping + CI" 
     date: "2019-11-21, Thu"
     reading: "21-reading"
+    class: "infer-class"
     
-  - title: "Hypothesis Testing"
-    date: "2019-11-26, Tue"
-    reading: "22-reading"
 
   - title: "**Problem set 9**"
     date: "2019-11-26, Tue"
