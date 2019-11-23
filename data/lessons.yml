@@ -172,7 +172,7 @@ lessons:
     date: "2019-11-26, Tue"
     assignment: "09-problem-set"
 
-  - title: "**No class: at-home assignment!**"
+  - title: "*No class*"
     date: "2019-11-26, Tue"
 
   - title: "*No class; Thanksgiving*"
@@ -181,6 +181,10 @@ lessons:
   - title: "Inference for Regression"
     date: "2019-12-03, Tue"
     reading: "24-reading"
+
+  - title: "**Problem set 10**"
+    date: "2019-12-03, Tue"
+    assignment: "10-problem-set"
   
   - title: "Review for final"
     date: "2019-12-05, Thu"

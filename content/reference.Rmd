@@ -39,5 +39,23 @@ output:
 
 
 # Things you should know for Final
+## You should know...
 
-I will populate this throughout semester.
+
+- ...the fundamental problem of causality and why we can't simply regress X against Y to estimate the effect of X on Y
+- ...the difference between experimental research (e.g., rats and insulin) and observational research (e.g., school suspensions and crime)
+- ...how to make causal diagrams (DAGs) that explains how different variables affect one another
+- ...how to explain and give real-world examples of the "fundamental confounds", especially forks, pipes, and colliders, and how you should deal with each of them
+- ...what a backdoor is, and why we worry about backdoors in research
+- ...how we can use multiple regression to close backdoors
+- ...how to interpret coefficient estimates with specificity, using the units in which the variables are measured 
+- ...the logic of a fixed effects model, when we use fixed effects, what they control for (and what they don't)
+- ...how to do coarsened exact matching informally (by hand), and understand why we use matching
+- ...difference-in-difference, when we use it, how to calculate it by hand, and its limitations
+- ...regression discontinuity, when we use it, how to do it by hand, and its limitations
+- ...the difference between populations and samples, and why we worry about estimating stuff from samples
+- ...why we can use bootstrapping to get a sense of sampling uncertainty in our estimate, and the mechanics of how to do it
+- ...what a confidence interval is and how to interpret it
+- ...the logic of a hypothesis test, what the null hypothesis is, how we can use permutation to generate a null distribution
+- ...what a p-value is, how to interpret it, what statistical significance is
+- ...how to read a table with regression output (coefficient, standard error, p-value, significance)
