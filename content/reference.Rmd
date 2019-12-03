@@ -59,3 +59,4 @@ output:
 - ...the logic of a hypothesis test, what the null hypothesis is, how we can use permutation to generate a null distribution
 - ...what a p-value is, how to interpret it, what statistical significance is
 - ...how to read a table with regression output (coefficient, standard error, p-value, significance)
+- ...the tradeoff between Type 1 and Type 2 error in increasing/decreasing the alpha level
