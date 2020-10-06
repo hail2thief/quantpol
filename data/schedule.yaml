@@ -1,0 +1,94 @@
+lessons:
+- title: 'Topic'
+  header: True
+  date: "Date"
+  
+- title: '<span class="content-title">Evaluation and the causal revolution</span>'
+  
+- title:  "Introductions"
+  date: "Week 1 : Jan 11 - Jan 15"
+  class: 
+  reading: 
+  bg: 1
+  bottomborder: True
+
+- title: "Visualization, ggplot"
+  date: "Week 2 : Jan 18 - Jan 22"
+  class: 
+  reading: 
+
+- title:  "Wrangling data"
+  date: "Week 3 : Jan 25 - Jan 29"
+  class: 
+  reading: 
+
+- title:  "Importing data, tidy data"
+  date: "Week 4 : Feb 1 - Feb 5"
+  class: 
+  reading: 
+
+- title:  "Summarizing data"
+  date: "Week 5 : Feb 8 - Feb 12"
+  class: 
+  reading: 
+
+- title:  "The linear model"
+  date: "Week 6 : Feb 15 - Feb 19"
+  class: 
+  reading: 
+
+- title:  "Multiple regression"
+  date: "Week 7 : Feb 22 - Feb 26"
+  class: 
+  reading: 
+
+- title:  "Uncertainty and inference"
+  date: "Week 8 : Mar 1 - Mar 5"
+  class: 
+  reading: 
+
+- title:  "Making predictions"
+  date: "Week 9 : Mar 8 - Mar 12"
+  class: 
+  reading: 
+
+- title:  "Causal problems and diagrams"
+  date: "Week 10 : Mar 15 - Mar 19"
+  class: 
+  reading: 
+
+- title:  "Closing backdoors"
+  date: "Week 11 : Mar 22 - Mar 26"
+  class: 
+  reading: 
+
+- title:  
+  date: "Week 12 : Mar 29 - Apr 2"
+  class: 
+  reading: 
+
+- title:  
+  date: "Week 13 : Apr 5 - Apr 9"
+  class: 
+  reading: 
+  bg: 1
+
+- title:  
+  date: "Week 14 : Apr 12 - Apr 16"
+  class: 
+  reading: 
+
+- title:  
+  date: "Week 15 : Apr 19 - Apr 23"
+  class: 
+  reading: 
+
+- title:  "Review for final"
+  date: "April 26, Monday"
+  class: 
+  reading:
+  
+- title: '<i class="fas fa-star"></i> **Final Exam**'
+  date: "April 28, Wednesday, 9:00 a.m."
+
+ 

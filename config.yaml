@@ -1,73 +1,70 @@
-baseURL: "/"
-languageCode: en-us
-title: The Political Science Discipline
-theme: "ath-tufte-hugo_18-19"
-googleAnalytics: ""
-ignoreFiles:
-  - \.Rmd$
-  - \.Rmarkdown$
-  - \.Rhistory$
-  - \.yaml$
-  - _files$
-  - _cache$
-  - \.csl$
-  - \.Rproj.user/*
+baseurl: /
+defaultContentLanguage: en
+title: "Quantitative Methods"
+theme: hugo-academic
+
+
+# ------------------
+# Building options
+# ------------------
 permalinks:
   post: "/:year/:month/:day/:slug/"
-buildFuture: true
-menu:
-  main:
-    - name: Syllabus
-      url: /syllabus/
-      weight: 1
-    - name: Assignments
-      url: /assignments/
-      weight: 3
-    - name: Schedule
-      url: /schedule/
-      weight: 2
-    - name: Reference
-      url: /reference/
-      weight: 4
-    - name: Slack
-      url: "https://poli301.slack.com/"
-      weight: 5
-params: 
-  author: Juan Tellez
-  thumbnail: /images/POLI301.png
-  instructor: 
-    name: Juan Tellez
-    email: tellezj@mailbox.sc.edu
-    url: "https://www.juanftellez.com"
-    twitter: juanftellez14
-    github: hail2thief
-    office: 343 Gambrell Hall
-  logo:
-    url: /images/POLI301.png
-    alt: The Political Science Discipline
-  course:
-    number: POLI 301
-    semester: Fall 2019
-    days: "Tuesdays, Thursdays"
-    time: "08:30-09:45 AM"
-    location: "133 WMBB"
-    twitter: juanftellez14
-    dates: "August 22–December 06, 2019"
-    github: "hail2thief/poli-301"
-    copyrightYear: "2019"
-    contactDetails: >-
-      Office hours: [Sign up here.](https://calendly.com/juan-f-tellez)
-  university: 
-    name: University of South Carolina
-    url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
-  school:
-    name: Department of Political Science
-    url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
-  primaryColor: "#73000a"
-  secondaryColor: "#CC2E40"
-  credits: >-
-    Course website design adapted/stolen from [Andrew Heiss](https://www.andrewheiss.com/).
-  meta:
-    twitterSite: "@juanftellez14"
-    twitterCreator: "@juanftellez14"
-    fbAuthor: ""
+buildFuture: True
+
+# No taxonomy
+disableKinds:
+  - taxonomy
+  - taxonomyTerm
+markup:
+  defaultMarkdownHandler: goldmark
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    codeFences: false
+  tableOfContents:
+    startLevel: 2
+    endLevel: 4
+imaging:
+  resampleFilter: lanczos
+  quality: 90
+  anchor: smart
+
+
+copyright: ''
+enableGitInfo: true
+hasCJKLanguage: false
+defaultContentLanguageInSubdir: false
+removePathAccents: true
+paginate: 10
+enableEmoji: true
+footnotereturnlinkcontents: <sup>^</sup>
+
+
+# ----------------
+# Output options
+# ----------------
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON
+    - WebAppManifest
+  section:
+    - HTML
+    - RSS
+mediaTypes:
+  application/manifest+json:
+    suffixes:
+      - webmanifest
+outputFormats:
+  WebAppManifest:
+    mediaType: application/manifest+json
+    rel: manifest
+ignoreFiles:
+  - \.ipynb$
+  - .ipynb_checkpoints$
+  - \.Rmd$
+  - \.Rmarkdown$
+  - _files$
+  - _cache$

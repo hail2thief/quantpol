@@ -1,0 +1,35 @@
+---
+title: Description of assignments
+menu:
+  assignment:
+    parent: Overview
+    weight: 1
+type: docs
+weight: 1
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+## Preparation
+
+You will get the most out of this class if you (1) attend class, (2) do the homework, and (3) engage with the readings.
+
+
+## Homework
+
+*To practice coding in R* you will complete problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be a function of effort + correct answers. 
+
+
+Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
+
+
+I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 
+
+
+## Exams
+
+*There will be two exams* covering (1) the first half of the course, especially programming, and (2) the second half of the course, especially causation.
+
+Make-up exams will be given **only** to students with medical or personal emergencies. If an emergency arises, you will need to contact me **before** the exam or you will receive zero credit.
+

@@ -1,0 +1,152 @@
+---
+title: Syllabus
+slug: syllabus
+citeproc: true
+bibliography: /Users/JuamnTellez/Dropbox/github/whistle/master.bib
+csl: ../../static/bib/chicago-syllabus-no-bib.csl
+output:
+  blogdown::html_page:
+      toc: TRUE
+---
+
+
+```{r load-libraries, message=FALSE, warning=FALSE, include=FALSE}
+library(dplyr)
+library(tibble)
+library(pander)
+```
+
+
+`r blogdown::shortcode("courseinfo")`
+
+
+## Course objectives
+
+Data is everywhere. Policymakers, academics, journalists, sports analysts, and many others are using data every day to make decisions. Data is also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. In this class, you will learn how to **do** data analysis and how to **think** causally. 
+
+You will spend a lot of time getting off the ground in [R](https://www.r-project.org/), a powerful and in-demand programming language that will allow you to manipulate, summarize, and visualize the data that you care about. You will also develop a language and set of tools for determining whether, and how, we can know that one thing *causes* another using data. 
+
+
+This course is meant for students without any statistics or programming background. We will emphasize hands-on application with software and intuition-building over statistical theory and mathematical proofs.
+
+
+By the end of this course, you will be able to:
+
+
+1. Feel comfortable manipulating data in R
+2. Craft effective visualizations of patterns in data
+3. Draw causal diagrams and identify challenges to causal claims
+4. Understand the basics of causal inference
+
+
+## Course materials
+
+All materials for this course are *free and online*.
+
+### Books
+
+- [**ModernDive**](https://moderndive.com/) 
+
+- [**R for Data Science**](http://r4ds.had.co.nz/)
+
+    
+### Articles and other readings
+
+
+Outside of the textbooks, I will post links to additional articles and videos on this site. I also recommend subscribing to the [R Weekly newsletter](https://rweekly.org/). This weekly email is full of helpful tutorials about how to do stuff with R.
+
+
+
+
+### R and RStudio
+
+
+You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
+
+
+
+
+## Course Policies
+
+### Communicating with me
+
+
+Slack will be our main mode of communication. We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
+
+
+I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.
+
+
+If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack. 
+
+
+### Honor Code
+
+Be nice. Don't cheat. The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out [here](https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php). If you have doubts, it is your responsibility to ask about the Creed’s application.
+
+
+### Cell Phones and Laptops
+
+
+- Please turn off your phones or put them on silent before class. 
+- Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions. 
+
+
+## Counseling & Psychiatry Services
+
+
+Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [Counseling and Psychiatry Services](https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php) provides *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CPS for assistance—getting help is a smart and good thing to do.
+
+
+
+## Assignments and grades
+
+You can find descriptions for all the assignments on the [assignments page](/assignment/).
+
+
+```{r assignments-grades, include=FALSE}
+assignments <- tribble(
+  ~Points, ~Assignment,
+  200  , "Problem sets (10 × 20)",
+  150     , "Midterm",
+  150     , "Final"
+) %>%
+  mutate(Percent = Points / sum(Points),
+         Percent = scales::percent(Percent))
+
+grading <- tribble(
+  ~Grade, ~Range, ~Grade1, ~Range1,
+  "A",  "93–100%", "C",  "73–76%",
+  "A−", "90–92%", "C−", "70–72%",
+  "B+", "87–89%", "D+", "67–69%",
+  "B",  "83–86%", "D",  "63–66%",
+  "B−", "80–82%", "D−", "60–62%",
+  "C+", "77–79%", "F",  "< 60%"
+)
+```
+
+```{r show-assignments-table, echo=FALSE, results="asis"}
+assignments_total <- tibble(Assignment = "Total",
+                                Points = sum(assignments$Points),
+                                Percent = NA)
+
+bind_rows(assignments, assignments_total) %>% 
+  select(Assignment, Points, Percent) %>% 
+  pandoc.table(justify = "lcc", missing = "—")
+```
+
+
+```{r show-grades-table, echo=FALSE, results="asis"}
+grading %>%
+  pandoc.table(justify = "lclc", 
+               col.names = c("Grade", "Range", "Grade", "Range"))
+```
+
+
+## Old computers
+
+Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer to the Slack (2 bonus points).
+
+
+<img src="/media/cyber-green.gif" alt="drawing"/>
+
