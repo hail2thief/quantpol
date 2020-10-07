@@ -7,8 +7,8 @@ output:
 ---
 
 
+<img src="/media/analog.jpg" alt="analog" width="600"/>
 
-![](/media/analog.jpg)
 
 
 ## Online help
@@ -18,9 +18,7 @@ I have been programming in R for years and still find myself Googling how to do 
 
 
 
-<!-- ![](/media/googling-error.png) -->
-
-<img src="/media/googling-error.png" alt="drawing" width="400"/>
+<img src="/media/googling-error.png" alt="googing-error" width="600"/>
 
 
 

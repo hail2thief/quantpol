@@ -17,7 +17,7 @@ design:
     #gradient_end: '#4C566A'
     image: red-green-computer.gif
     image_size: "contain"
-    image_darken: 0.7
+    image_darken: 0.4
 
     # Text color (true=light or false=dark).
     text_color_light: true

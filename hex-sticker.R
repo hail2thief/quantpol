@@ -10,6 +10,13 @@ library(hrbrthemes)
 library(hexSticker)
 library(viridis)
 library(scales)
+library(showtext)
+
+
+## Loading Google fonts (http://www.google.com/fonts)
+font_add_google("Fira Sans")
+## Automatically use showtext to render text for future devices
+showtext_auto()
 
 
 # fake data from http://rpubs.com/lakenp/simpsonsparadox
@@ -59,9 +66,15 @@ p =
   scale_fill_manual(values = c('#CC2E40', '#466A9F', '#1F414D'), guide = F)
 p
 
-sticker(p, package="POLI-301",h_fill = '#efefef',h_color = '#73000a',
+sticker(p, package="POLI-301",h_fill = 'white',h_color = '#73000a',
         p_size=8, s_x=1, s_y=.75, s_width=1.3, s_height=1,
-        p_family = "Aller_Lt", p_color = '#73000a', 
-        filename = 'static/images/POLI301.png')
+        p_family = "Fira Sans", p_color = '#73000a', 
+        filename = 'assets/images/icon.png')
+
+
+sticker(p, package="POLI-301",h_fill = 'white',h_color = '#73000a',
+        p_size=8, s_x=1, s_y=.75, s_width=1.3, s_height=1,
+        p_family = "Fira Sans", p_color = '#73000a', 
+        filename = 'POLI301.png')
 
 

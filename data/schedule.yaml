@@ -1,16 +1,12 @@
 lessons:
-- title: 'Topic'
-  header: True
-  date: "Date"
-  
-- title: '<span class="content-title">Evaluation and the causal revolution</span>'
+
+- title: '<span class="fake-header-table">Introduction</span>'
+  header: true
   
 - title:  "Introductions"
   date: "Week 1 : Jan 11 - Jan 15"
   class: 
-  reading: 
-  bg: 1
-  bottomborder: True
+  reading:
 
 - title: "Visualization, ggplot"
   date: "Week 2 : Jan 18 - Jan 22"
