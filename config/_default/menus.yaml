@@ -17,3 +17,9 @@ assignment:
     weight: 1
   - name: Problem sets
     weight: 2
+
+reference:
+  - name: Overview
+    weight: 1
+  - name: Guides
+    weight: 2

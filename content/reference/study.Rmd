@@ -1,0 +1,67 @@
+---
+title: Exam study guides
+menu:
+  reference:
+    parent: Guides
+type: docs
+weight: 3
+output:
+  blogdown::html_page:
+      toc: TRUE
+
+---
+
+
+
+
+## Things you should know for Midterm
+### You should know how to...
+
+TBA
+<!-- - ...plot the five most common graphs in `ggplot()` -->
+<!-- - ...when to use `facet_wrap` and how to use it -->
+<!-- - ...customize `color` -->
+<!-- - ...use `theme_()` effectively -->
+<!-- - ...extract subsets of a dataset using `filter` -->
+<!-- - ...use the logical operators effectively (`==`, `!=`, `&`, `|`) -->
+<!-- - ...calculate summary statistics (mean, median, min, max) using `summarise` -->
+<!-- - ...calculate these statistics *by* one or more variables using `group_by()` -->
+<!-- - ...calculate group *proportions* using `group_by` (e.g., the *gss_cat* example from homework 3) -->
+<!-- - ...create new variables out of existing ones using `mutate` -->
+<!-- - ...code new variables using `case_when` -->
+<!-- - ...sort dataframes by one or more variables using `arrange`f -->
+<!-- - ...keep only a subset of variables in your dataset using `select` -->
+<!-- - ...merge two datasets with `inner_join`, *even when* the datasets have differently named keys in common -->
+<!-- - ...convert categorical variables to factors using `factor` and `factor_reorder` -->
+<!-- - ...tidy data at a conceptual level, i.e., know what it means for data to be "tidy" -->
+<!-- - ...transform data from wide format to long format using `gather` -->
+<!-- - ...draw a trend line using `geom_smooth` -->
+<!-- - ...talk about and interpret correlation coefficients -->
+<!-- - ...speak the language of statistical modeling, i.e., outcome variable, explanatory variable -->
+<!-- - ...run an OLS model using `lm` and extract its output -->
+<!-- - ... interpret results from an OLS model, e.g., the coefficient, "one unit change in..." -->
+<!-- - ...interpret coefficient estimates of *continuous* and *categorical* variables -->
+
+
+## Things you should know for Final
+### You should know...
+
+TBA
+<!-- - ...the fundamental problem of causality and why we can't simply regress X against Y to estimate the effect of X on Y -->
+<!-- - ...the difference between experimental research (e.g., rats and insulin) and observational research (e.g., school suspensions and crime) -->
+<!-- - ...how to make causal diagrams (DAGs) that explains how different variables affect one another -->
+<!-- - ...how to explain and give real-world examples of the "fundamental confounds", especially forks, pipes, and colliders, and how you should deal with each of them -->
+<!-- - ...what a backdoor is, and why we worry about backdoors in research -->
+<!-- - ...how we can use multiple regression to close backdoors -->
+<!-- - ...how to interpret coefficient estimates with specificity, using the units in which the variables are measured  -->
+<!-- - ...the logic of a fixed effects model, when we use fixed effects, what they control for (and what they don't) -->
+<!-- - ...how to do coarsened exact matching informally (by hand), and understand why we use matching -->
+<!-- - ...difference-in-difference, when we use it, how to calculate it by hand, and its limitations -->
+<!-- - ...regression discontinuity, when we use it, how to do it by hand, and its limitations -->
+<!-- - ...the difference between populations and samples, and why we worry about estimating stuff from samples -->
+<!-- - ...why we can use bootstrapping to get a sense of sampling uncertainty in our estimate, and the mechanics of how to do it -->
+<!-- - ...what a confidence interval is and how to interpret it -->
+<!-- - ...the logic of a hypothesis test, what the null hypothesis is, how we can use permutation to generate a null distribution -->
+<!-- - ...what a p-value is, how to interpret it, what statistical significance is -->
+<!-- - ...how to read a table with regression output (coefficient, standard error, p-value, significance) -->
+<!-- - ...the tradeoff between Type 1 and Type 2 error in increasing/decreasing the alpha level -->
