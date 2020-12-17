@@ -22,7 +22,8 @@ library(pander)
 
 ## Course objectives
 
-Data is everywhere. Policymakers, academics, journalists, sports analysts, and many others are using data every day to make decisions. Data is also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. In this class, you will learn how to **do** data analysis and how to **think** causally. 
+Data is everywhere. Policymakers, academics, journalists, sports analysts, and many others use data every day to make decisions. Data is also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. In this class, you will learn how to **do** data analysis and how to **think** causally. 
+
 
 You will spend a lot of time getting off the ground in [R](https://www.r-project.org/), a powerful and in-demand programming language that will allow you to manipulate, summarize, and visualize the data that you care about. You will also develop a language and set of tools for determining whether, and how, we can know that one thing *causes* another using data. 
 
@@ -43,14 +44,13 @@ By the end of this course, you will be able to:
 
 All materials for this course are *free and online*.
 
-### Books
+### Books, articles, and other readings
+
+We will mostly use these two online textbooks:
 
 - [**ModernDive**](https://moderndive.com/) 
 
 - [**R for Data Science**](http://r4ds.had.co.nz/)
-
-    
-### Articles and other readings
 
 
 Outside of the textbooks, I will post links to additional articles and videos on this site. I also recommend subscribing to the [R Weekly newsletter](https://rweekly.org/). This weekly email is full of helpful tutorials about how to do stuff with R.
@@ -77,7 +77,7 @@ Slack will be our main mode of communication. We have a class Slack channel wher
 I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.
 
 
-If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive emergency (e.g., car exploded) you can email me. Everything else goes in the Slack. 
+If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive issue you can email me. Everything else goes in the Slack. 
 
 
 ### Honor Code
@@ -85,11 +85,11 @@ If you would like to speak with me about something that only pertains to *you* (
 Be nice. Don't cheat. The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out [here](https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php). If you have doubts, it is your responsibility to ask about the Creed’s application.
 
 
-### Cell Phones and Laptops
+<!-- ### Cell Phones and Laptops -->
 
 
-- Please turn off your phones or put them on silent before class. 
-- Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions. 
+<!-- - Please turn off your phones or put them on silent before class.  -->
+<!-- - Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions.  -->
 
 
 ## Counseling & Psychiatry Services
@@ -143,9 +143,9 @@ grading %>%
 ```
 
 
-## Old computers
+## Cyberpunk
 
-Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer to the Slack (2 bonus points).
+Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of XXX to the Slack (2 bonus points).
 
 
 <img src="/media/cyber-green.gif" alt="drawing"/>

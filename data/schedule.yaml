@@ -1,198 +1,99 @@
 lessons:
-  - title: '<span class="fake-header-table">Programming</span>'
+  - title: '<span class="fake-header-table">Introduction</span>'
     header: True
 
-  - title: "What is this class about, anyway?"
-    date: "2019-08-22, Thu"
+  - title: "Class intro + software"
+    date: "W1: Jan 11 - 15"
+    reading: "01-reading"
     #class: "01-class"
-  
-  - title: "Intro to R, RStudio, basics"
-    date: "2019-08-27 Tue"
-    #reading: "02-reading"
+    
+  - title: "Data viz with ggplot"
+    date: "W2: Jan 18 - 22"
     #class: "02-class"
-  
-  - title: "*No class; Prof. Tellez at terrible conference*"
-    date: "2019-08-29, Thu"
-  
-  - title: "Data Viz I"
-    date:  "2019-09-03, Tue"
-    #reading: "08-reading"
-    #class: "viz1-class"
-
-  - title: "Data Viz II"
-    date: "2019-09-05, Thu"
-    #reading: "09-reading"
-    #class: "viz2-class"
+    reading: "02-reading"
     
-  - title: "**Problem set 1**"
-    date: "2019-09-10, Tue"
-    #assignment: "problem-set-viz1"
-  
-  - title: "Wrangling data: pipes, filter, mutate, summarize"
-    date: "2019-09-10, Tue"
-    #reading: "05-reading"
-    #class: "wrangle1-class"
-  
-  - title: "Wrangling data: group_by, join"
-    date: "2019-09-12, Thu"
-    #reading: "06-reading"
-    #class: "wrangle2-class"
+  - title: '<i class="fas fa-star"></i> **Problem set 1**'
+    date: "2020-09-29, Tue"
+    #assignment: "01-assignment"
     
-  - title: "**Problem set 2**"
-    date: "2019-09-17, Tue"
-    #assignment: "problem-set-wrangle"
-
-  - title: "Importing + tibbles + projects"
-    date: "2019-09-17, Tue"
-    #reading: "03-reading"
-    #class: "tidy2-class"
-
-  - title: "tidy data + variable types"
-    date: "2019-09-19, Thu"
-    #reading: "04-reading"
-    #class: "tidy1-class"
+  - title: "Wrangling data"
+    date: "W3: Jan 25 - 29"
+    #class: "03-class"
+    reading: "03-reading"
     
-  - title: "**Problem set 3**"
-    date: "2019-09-24, Tue"
-    #assignment: "problem-set-tidy"
+  - title: '<i class="fas fa-star"></i> **Problem set 2**'
+    date: "2020-02-05, Tue"
+    #assignment: "02-assignment"
+
+  - title: "Importing data + tidy data"
+    date: "W4: Feb 1 - 5"
+    #class: "04-class"
+    reading: "04-reading"
+    
+  - title: '<i class="fas fa-star"></i> **Assignment 3**'
+    date: "2020-02-12, Tue"
+    #assignment: "03-assignment"
 
   - title: "Intro to regression"
-    date: "2019-09-24, Tue"
-    #reading: "11-reading"
-    #class: "corr1-class"
-
-  - title: "*No class*"
-    date:  "2019-09-26, Thu"
+    date: "W5: Feb 8 - 12"
+    #class: "05-class"
+    reading: "05-reading"
     
-  - title: "Intro to regression"
-    date: "2019-10-01, Tue"
-    #reading: "11-reading"
-    #class: "corr2-class"
-  
-  - title: '<i class="fas fa-star"></i> **MIDTERM**'
-    date: "2019-10-03, Thu"
-    
+  - title: '<i class="fas fa-star"></i> **Assignment 4**'
+    date: "2020-02-19, Tue"
+    #assignment: "04-assignment"
 
-  - title: '<span class="fake-header-table">Causality</span>'
-    header: True
+  - title: "Quantifying uncertainty"
+    date: "W6: Feb 15 - 19"
+    #class: "06-class"
+    reading: "06-reading"
+
+  - title: "Predicting (what we already know)"
+    date: "W7: Feb 22 - 26"
+    #class: "07-class"
+    reading: "07-reading"
+
+  - title: '<i class="fas fa-star"></i> **Assignment 5**'
+    date: "2020-03-04, Tue"
+    #assignment: "05-assignment"
+
+  - title: "Predicting (the future)"
+    date: "W8: Mar 1 - 5"
+    #class: "08-class"
+    reading: "08-reading"
+    
+    
+  - title: '<i class="fas fa-star"></i> **Assignment 6**'
+    date: "2020-03-25, Tue"
+    #assignment: "06-assignment"
     
   - title: "The fundamental problem of causality"
-    date: "2019-10-08, Tue"
-    #reading: "12-reading"
-    #class: "causality-class"
+    date: "W9: Mar 15 - 19"
+    #class: "11-class"
+    reading: "11-reading"
     
-  - title: "*No class; Labor day*"
-    date: "2019-10-10, Thu"
+  - title: "Causal terror + diagrams with ggdag"
+    date: "W10: Mar 22 - 26"
+    #class: "12-class"
+    reading: "12-reading"
+    
+  - title: "Closing backdoors"
+    date: "W11: Mar 29 - Apr 2"
+    #class: "13-class"
+    reading: "13-reading"
+    
+  - title: "The Blue Wave"
+    date: "W12: Apr 5 - 9"
+    #class: "14-class"
+    reading: "14-reading"
 
-  - title: "**Problem set 4**"
-    date: "2019-10-15, Tue"
-    #assignment: "problem-set-lm"
-    
-  - title: "Causal diagrams"
-    date: "2019-10-15, Tue"
-    #reading: "13-reading"
-    #class: "dags-class"
-    
-  - title: "Causal terror"
-    date: "2019-10-17, Thu"
-    #reading: "13-reading"
-    #class: "dags2-class"
-    
-  - title: "**Problem set 5**"
-    date: "2019-10-22, Tue"
-    #assignment: "problem-set-dags"
-    
-  - title: "Drawing causal diagrams"
-    date: "2019-10-22, Tue"
-    #reading: "14-reading"
-    #class: "draw-dags-class"
-    
-  - title: "Multiple regression"
-    date: "2019-10-24, Thu"
-    #reading: "15-reading"
-    #class: "controls-class"
-    
-  - title: "**Problem set 6**"
-    date: "2019-10-29, Tue"
-    #assignment: "problem-set-controls"
-    
-  - title: "Multiple regression + closing backdoors"
-    date: "2019-10-29, Tue"
-    #reading: "15-reading"
-    #class: "controls-practice-class"
+  - title: "Conclusions + Review"
+    date: "W13: Apr 12 - 16"
 
-  - title: '<span class="fake-header-table">The Toolbox</span>'
-    header: True
     
-  - title: "Fixed effects"
-    date: "2019-10-31, Thu"
-    #reading: "15-reading"
-    #class: "fixed-effects-class"
-    
-  - title: "**Problem set 7**"
-    date: "2019-11-05, Tue"
-    #assignment: "07-problem-set"
-    
-  - title: "Matching"
-    date: "2019-11-05, Tue"
-    #class: "matching-class"
-    
-  - title: "Difference-in-difference"
-    date: "2019-11-07, Thu"
-    #reading: "16-reading"
-    #class: "did-class"
-    
-    
-  - title: "Regression discontinuity"
-    date: "2019-11-12, Tue"
-    #class: "reg-discontinuity-class"
-
-  - title: "Finish up Toolbox"
-    date: "2019-11-14, Thu"
-    #reading: "17-reading"
-
-  - title: '<span class="fake-header-table">Uncertainty</span>'
-    header: True
-    
-  - title: "Sampling"
-    date: "2019-11-19, Tue"
-    #reading: "17-reading"
-
-  - title: "**Problem set 8**"
-    date: "2019-11-19, Tue"
-    #assignment: "08-problem-set"
-
-  - title: "Bootstrapping + CI" 
-    date: "2019-11-21, Thu"
-    #reading: "21-reading"
-    #class: "infer-class"
-    
-
-  - title: "**Problem set 9**"
-    date: "2019-11-26, Tue"
-    #assignment: "09-problem-set"
-
-  - title: "*No class*"
-    date: "2019-11-26, Tue"
-
-  - title: "*No class; Thanksgiving*"
-    date: "2019-11-28, Thu"
-
-  - title: "Inference for Regression"
-    date: "2019-12-03, Tue"
-    #reading: "24-reading"
-    #class: "last-class"
-
-  - title: "**Problem set 10**"
-    date: "2019-12-03, Tue"
-    #assignment: "10-problem-set"
-  
-  - title: "Review for final"
-    date: "2019-12-05, Thu"
-    
-  - title: '<span class="fake-header-table">Final</span>'
-    header: True
+  - title: "Conclusions + Review"
+    date: "W14: Apr 19 - 26"
     
   - title: '<i class="fas fa-star"></i> **Final Exam**'
-    date: "2019-12-12, Thu, 9am"
+    date: "April 30, Friday, 9:00 a.m."
  
