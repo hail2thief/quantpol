@@ -12,7 +12,7 @@ output:
 ---
 
 
-<img src="/media/analog.jpg" alt="analog" width="600"/>
+<!-- <img src="/media/analog.jpg" alt="analog" width="600"/> -->
 
 
 

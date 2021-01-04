@@ -1,0 +1,23 @@
+---
+title: "DAGs"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  readings:
+    parent: Readings
+    weight: 8
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Required
+
+- work through the examples in the `ggdag` package vignette [ here](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html).^[Don't just copy/paste the code; write it out yourself! Change the variables in the smoking/cancer example to something of interest to you.]
+
+- <i class="fas fa-book"></i> [Directed Acyclical Graphs in Causal Inference: The Mixtape](https://scunning.com/cunningham_mixtape.pdf)^[This reading is mathy-er than what we've covered so far. It also features code from STATA, which we don't use. Don't worry about that so much; we will focus on broad concepts/ideas.]

@@ -18,10 +18,7 @@ You will get the most out of this class if you (1) attend class, (2) do the home
 
 ## Homework
 
-*To practice coding in R* you will complete problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be a function of effort + correct answers. 
-
-
-Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
+*To practice coding in R* you will complete problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be a function of effort + correct answers. Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
 
 
 I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 

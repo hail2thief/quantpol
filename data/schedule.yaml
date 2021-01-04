@@ -1,99 +1,128 @@
 lessons:
-  - title: '<span class="fake-header-table">Introduction</span>'
+  - title: '<span class="fake-header-table">Programming</span>'
     header: True
 
-  - title: "Class intro + software"
+  - title: "R, Rstudio, basics"
     date: "W1: Jan 11 - 15"
-    reading: "01-reading"
+    reading: "getting-started"
     #class: "01-class"
     
-  - title: "Data viz with ggplot"
+  - title: "Visualizing data with ggplot"
     date: "W2: Jan 18 - 22"
     #class: "02-class"
-    reading: "02-reading"
+    reading: "data-viz"
     
-  - title: '<i class="fas fa-star"></i> **Problem set 1**'
-    date: "2020-09-29, Tue"
+  - title: '<i class="fas fa-star"></i> **Assignment 1**'
+    date: "Jan 25, Mon"
     #assignment: "01-assignment"
     
-  - title: "Wrangling data"
+  - title: "Data wrangling"
     date: "W3: Jan 25 - 29"
     #class: "03-class"
-    reading: "03-reading"
+    reading: "data-wrangle"
     
-  - title: '<i class="fas fa-star"></i> **Problem set 2**'
-    date: "2020-02-05, Tue"
+  - title: '<i class="fas fa-star"></i> **Assignment 2**'
+    date: "Feb 1, Mon"
     #assignment: "02-assignment"
 
-  - title: "Importing data + tidy data"
+  - title: "Importing data, tidy data"
     date: "W4: Feb 1 - 5"
     #class: "04-class"
-    reading: "04-reading"
+    reading: "data-import"
     
   - title: '<i class="fas fa-star"></i> **Assignment 3**'
-    date: "2020-02-12, Tue"
+    date: "Feb 8, Mon"
     #assignment: "03-assignment"
 
   - title: "Intro to regression"
     date: "W5: Feb 8 - 12"
     #class: "05-class"
-    reading: "05-reading"
+    reading: "intro-reg"
     
   - title: '<i class="fas fa-star"></i> **Assignment 4**'
-    date: "2020-02-19, Tue"
+    date: "Feb 15, Mon"
     #assignment: "04-assignment"
+    
+  - title: '<span class="fake-header-table">Causality</span>'
+    header: True
 
-  - title: "Quantifying uncertainty"
+  - title: "The fundamental problem of causality"
     date: "W6: Feb 15 - 19"
     #class: "06-class"
-    reading: "06-reading"
+    reading: "causal"
 
-  - title: "Predicting (what we already know)"
+  - title: "Causal terror with ggdag"
     date: "W7: Feb 22 - 26"
     #class: "07-class"
-    reading: "07-reading"
+    reading: "dags"
 
   - title: '<i class="fas fa-star"></i> **Assignment 5**'
-    date: "2020-03-04, Tue"
+    date: "Mar 1, Mon"
     #assignment: "05-assignment"
-
-  - title: "Predicting (the future)"
-    date: "W8: Mar 1 - 5"
-    #class: "08-class"
-    reading: "08-reading"
     
+  - title: '<i class="fas fa-star"></i> **Midterm Exam**'
+    date: "W8: Mar 1 - 5"
+
+  
+  - title: "Closing backdoors with controls"
+    date: "W9: Mar 8 - 12"
+    #class: "08-class"
+    reading: "controls"
     
   - title: '<i class="fas fa-star"></i> **Assignment 6**'
-    date: "2020-03-25, Tue"
+    date: "Mar 15, Mon"
     #assignment: "06-assignment"
     
-  - title: "The fundamental problem of causality"
-    date: "W9: Mar 15 - 19"
+  - title: "Toolbox: fixed effects"
+    date: "W10: Mar 15 - 19"
     #class: "11-class"
-    reading: "11-reading"
+    reading: "fixed-effects"
     
-  - title: "Causal terror + diagrams with ggdag"
-    date: "W10: Mar 22 - 26"
+  - title: '<i class="fas fa-star"></i> **Assignment 7**'
+    date: "Mar 22, Tue"
+    #assignment: "07-assignment"
+    
+  - title: "Toolbox: difference-in-difference"
+    date: "W11: Mar 22 - 26"
     #class: "12-class"
-    reading: "12-reading"
+    reading: "did"
     
-  - title: "Closing backdoors"
-    date: "W11: Mar 29 - Apr 2"
+  - title: "Toolbox: regression discontinuity"
+    date: "W12: Mar 29 - Apr 2"
     #class: "13-class"
-    reading: "13-reading"
+    reading: "reg-discon"
     
-  - title: "The Blue Wave"
-    date: "W12: Apr 5 - 9"
+  - title: '<i class="fas fa-star"></i> **Assignment 8**'
+    date: "Apr 5, Mon"
+    #assignment: "08-assignment"
+    
+  - title: '<span class="fake-header-table">Uncertainty</span>'
+    header: True
+    
+  - title: "Bootstrapping + CI with infer"
+    date: "W13: Apr 5 - 9"
     #class: "14-class"
-    reading: "14-reading"
-
-  - title: "Conclusions + Review"
-    date: "W13: Apr 12 - 16"
-
+    reading: "bootstrap"
     
-  - title: "Conclusions + Review"
-    date: "W14: Apr 19 - 26"
+  - title: '<i class="fas fa-star"></i> **Assignment 9**'
+    date: "Apr 12, Mon"
+    #assignment: "08-assignment"
+
+  - title: "Inference for regression"
+    date: "W14: Apr 12 - 16"
+    reading: "inference"
+  
+  - title: '<i class="fas fa-star"></i> **Assignment 10**'
+    date: "Apr 19, Mon"
+    #assignment: "09-assignment"
+    
+  - title: "Bonus: prediction"
+    date: "W15: Apr 19 - 23"
+    reading: "prediction"
+    
+  - title: "Review for final"
+    date: "Apr 26, Mon"
     
   - title: '<i class="fas fa-star"></i> **Final Exam**'
-    date: "April 30, Friday, 9:00 a.m."
+    date: "April 28, Wed, 9:00 a.m."
  
