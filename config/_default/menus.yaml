@@ -10,6 +10,9 @@ main:
     weight: 3
   - name: Reference
     url: /reference/
+    weight: 4
+  - name: <i class="fab fa-slack"></i> Slack
+    url: https://poli301-sp21.slack.com/
     weight: 5
     
 assignment:
