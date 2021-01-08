@@ -10,7 +10,7 @@ menu:
 type: docs
 output:
   blogdown::html_page:
-    toc: true
+    toc: false
 editor_options: 
   chunk_output_type: console
 ---
@@ -18,5 +18,5 @@ editor_options:
 
 ## Required
 
-- The [syllabus](/syllabus/) and [assignments](/assignment/) pages for this class
-- Install R + Rstudio following [this guide](/reference/install/)
+- Read the [syllabus](/syllabus/) and [assignments](/assignment/) pages for this class
+- You need to install R and Rstudio^[These are two separate programs!] following [this guide](/reference/install/)

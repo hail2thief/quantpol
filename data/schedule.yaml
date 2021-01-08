@@ -5,7 +5,7 @@ lessons:
   - title: "R, Rstudio, basics"
     date: "W1: Jan 11 - 15"
     reading: "getting-started"
-    #class: "01-class"
+    class: "getting-started"
     
   - title: "Visualizing data with ggplot"
     date: "W2: Jan 18 - 22"

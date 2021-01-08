@@ -1,0 +1,34 @@
+---
+title: "R, Rstudio, basics"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 1
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+## Slides
+
+
+I'll post the slides here. 
+<!-- [Download the slides from today's lecture](/images/slides/02-using-r.pdf). -->
+
+
+## In-class example
+
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
+
+- [<i class="fas fa-file-archive"></i> `first-script`](/files/eat-cake.R)
+
+
+
+
