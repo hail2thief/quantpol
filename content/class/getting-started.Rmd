@@ -16,9 +16,6 @@ editor_options:
 ---
 
 
-## Getting to know you
-
-<i class="fa fa-external-link-square-alt" aria-hidden="true"></i> If you haven't already done so, go to this [Google form](https://forms.gle/nTJNBi6zgnB8H1U4A) and tell me about yourself.
 
 
 ## In-class example
