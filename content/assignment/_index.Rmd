@@ -16,13 +16,17 @@ output:
 You will get the most out of this class if you (1) attend class, (2) do the homework, and (3) engage with the readings.
 
 
-## Homework
+## Problem sets
 
-*To practice coding in R* you will complete problem sets throughout the semester. You need to show that you made a good faith effort to work each question. Grades will be a function of effort + correct answers. Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
+*To practice coding in R* you will complete problem sets throughout the semester. Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
+
+
+- ✔+: (*22 out of 20*) Assignment is 100% completed. Every question was attempted and answered correctly. Document is clean and easy to follow. I will not assign these often.
+- ✔: (*20 out of 20*) Assignment is mostly complete and most answers are correct. **This is the expected level of performance.**
+- ✔−: (*10 out of 20*) Assignment is mostly incomplete and/or most answers are incorrect. This indicates that you need to improve next time. 
 
 
 I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 
-
 
 ## Exams
 

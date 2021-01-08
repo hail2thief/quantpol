@@ -16,11 +16,9 @@ editor_options:
 ---
 
 
-## Slides
+## Getting to know you
 
-
-I'll post the slides here. 
-<!-- [Download the slides from today's lecture](/images/slides/02-using-r.pdf). -->
+<i class="fa fa-external-link-square-alt" aria-hidden="true"></i> If you haven't already done so, go to this [Google form](https://forms.gle/nTJNBi6zgnB8H1U4A) and tell me about yourself.
 
 
 ## In-class example
