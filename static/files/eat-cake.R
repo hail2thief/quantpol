@@ -10,10 +10,10 @@ library(scales)
 
 un_roll_calls
 View(un_roll_calls)
-
+?un_roll_calls
 
 # Make a plot ------------------------------------------------------------------
-un_votes %>%
+un_yes = un_votes %>%
   filter(country %in% c("United States of America", "Turkey")) %>%
   inner_join(un_roll_calls, by = "rcid") %>%
   inner_join(un_roll_call_issues, by = "rcid") %>%
@@ -22,8 +22,10 @@ un_votes %>%
     votes = n(),
     percent_yes = mean(vote == "yes")
   ) %>%
-  filter(votes > 5) %>%  # only use records where there are more than 5 votes
-  ggplot(mapping = aes(x = year, y = percent_yes, color = country)) +
+  filter(votes > 5)  # only use records where there are more than 5 votes
+  
+
+ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) +
   geom_point() +
   geom_smooth(method = "loess", se = FALSE) +
   facet_wrap(~ issue) +
@@ -34,4 +36,4 @@ un_votes %>%
     x = "Year",
     color = "Country"
   ) + 
-  scale_y_continuous(labels = scales::percent)
+  scale_y_continuous(labels = percent)
