@@ -6,12 +6,6 @@ library(scales)
 
 
 
-# Look at the data ----------------------------------------------------------------------
-
-un_roll_calls
-View(un_roll_calls)
-?un_roll_calls
-
 # Make a plot ------------------------------------------------------------------
 un_yes = un_votes %>%
   filter(country %in% c("United States of America", "Turkey")) %>%
@@ -37,3 +31,10 @@ ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) +
     color = "Country"
   ) + 
   scale_y_continuous(labels = percent)
+
+
+# Look at the data ----------------------------------------------------------------------
+
+un_roll_calls
+View(un_roll_calls) # opens dataViewer
+?un_roll_calls # gives you details on variables (but not all datasets have this!)
