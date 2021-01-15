@@ -24,6 +24,8 @@ Here's the code we'll be using in class. Download it and store it with the rest 
 
 [<i class="fas fa-file-archive"></i> `UN Voting Data`](/files/eat-cake.R)
 
+[<i class="fas fa-file-archive"></i> `Basic R Script`](/files/first-r-script.R)
 
+[<i class="fas fa-file-archive"></i> `Basic Rmarkdown Script`](/files/first-rmarkdown.Rmd)
 
 

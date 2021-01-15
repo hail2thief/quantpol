@@ -1,0 +1,57 @@
+---
+title: "R Markdown example"
+author: "NAME"
+date: "1/14/2021"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+
+## What is R Markdown?
+
+
+Simply put, R Markdown is a way to include both regular writing *and* R code in the same file. You write like you would in any other program, like I'm doing here. But you can also include code in what we call "chunks", as seen below.  
+
+```{r}
+# Load packages ----------------------------------------------------------------
+library(tidyverse)
+library(unvotes)
+library(lubridate)
+library(scales)
+
+
+
+# Make a plot ------------------------------------------------------------------
+un_yes = un_votes %>%
+  filter(country %in% c("United States of America", "Turkey")) %>%
+  inner_join(un_roll_calls, by = "rcid") %>%
+  inner_join(un_roll_call_issues, by = "rcid") %>%
+  group_by(country, year = year(date), issue) %>%
+  summarize(
+    votes = n(),
+    percent_yes = mean(vote == "yes")
+  ) %>%
+  filter(votes > 5)  # only use records where there are more than 5 votes
+  
+
+ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~ issue) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = "1946 to 2015",
+    y = "% Yes",
+    x = "Year",
+    color = "Country"
+  ) + 
+  scale_y_continuous(labels = percent)
+```
+
+
+When you're done, you can "knit" the whole document into a Word file that will include both writing and code. 
+
