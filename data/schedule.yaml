@@ -13,7 +13,7 @@ lessons:
     reading: "data-viz"
     
   - title: '<i class="fas fa-star"></i> **Assignment 1**'
-    date: "Jan 27, Wed"
+    date: "Jan 26, Tue"
     #assignment: "01-assignment"
     
   - title: "Data wrangling"
@@ -22,7 +22,7 @@ lessons:
     reading: "data-wrangle"
     
   - title: '<i class="fas fa-star"></i> **Assignment 2**'
-    date: "Feb 3, Wed"
+    date: "Feb 2, Tue"
     #assignment: "02-assignment"
 
   - title: "Importing data, tidy data"
@@ -31,7 +31,7 @@ lessons:
     reading: "data-import"
     
   - title: '<i class="fas fa-star"></i> **Assignment 3**'
-    date: "Feb 10, Wed"
+    date: "Feb 9, Tue"
     #assignment: "03-assignment"
 
   - title: "Intro to regression"
@@ -40,7 +40,7 @@ lessons:
     reading: "intro-reg"
     
   - title: '<i class="fas fa-star"></i> **Assignment 4**'
-    date: "Feb 17, Wed"
+    date: "Feb 16, Tue"
     #assignment: "04-assignment"
     
   - title: '<span class="fake-header-table">Causality</span>'
@@ -57,7 +57,7 @@ lessons:
     reading: "dags"
 
   - title: '<i class="fas fa-star"></i> **Assignment 5**'
-    date: "Mar 3, Wed"
+    date: "Mar 2, Tue"
     #assignment: "05-assignment"
     
   - title: '<i class="fas fa-star"></i> **Midterm Exam**'
@@ -70,7 +70,7 @@ lessons:
     reading: "controls"
     
   - title: '<i class="fas fa-star"></i> **Assignment 6**'
-    date: "Mar 17, Wed"
+    date: "Mar 16, Tue"
     #assignment: "06-assignment"
     
   - title: "Toolbox: fixed effects"
@@ -79,7 +79,7 @@ lessons:
     reading: "fixed-effects"
     
   - title: '<i class="fas fa-star"></i> **Assignment 7**'
-    date: "Mar 24, Wed"
+    date: "Mar 23, Tue"
     #assignment: "07-assignment"
     
   - title: "Toolbox: difference-in-difference"
@@ -93,7 +93,7 @@ lessons:
     reading: "reg-discon"
     
   - title: '<i class="fas fa-star"></i> **Assignment 8**'
-    date: "Apr 7, Wed"
+    date: "Apr 6, Tue"
     #assignment: "08-assignment"
     
   - title: '<span class="fake-header-table">Uncertainty</span>'
@@ -105,7 +105,7 @@ lessons:
     reading: "bootstrap"
     
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
-    date: "Apr 14, Wed"
+    date: "Apr 13, Tue"
     #assignment: "08-assignment"
 
   - title: "Inference for regression"
@@ -113,7 +113,7 @@ lessons:
     reading: "inference"
   
   - title: '<i class="fas fa-star"></i> **Assignment 10**'
-    date: "Apr 21, Wed"
+    date: "Apr 20, Tue"
     #assignment: "09-assignment"
     
   - title: "Bonus: prediction"
