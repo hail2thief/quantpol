@@ -9,7 +9,7 @@ lessons:
     
   - title: "Visualizing data with ggplot"
     date: "W2: Jan 18 - 22"
-    #class: "02-class"
+    class: "dataviz"
     reading: "data-viz"
     
   - title: '<i class="fas fa-star"></i> **Assignment 1**'
