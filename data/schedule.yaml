@@ -14,7 +14,7 @@ lessons:
     
   - title: '<i class="fas fa-star"></i> **Assignment 1**'
     date: "Jan 26, Tue"
-    #assignment: "01-assignment"
+    assignment: "ps-viz"
     
   - title: "Data wrangling"
     date: "W3: Jan 25 - 29"
