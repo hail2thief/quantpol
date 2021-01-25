@@ -18,7 +18,7 @@ lessons:
     
   - title: "Data wrangling"
     date: "W3: Jan 25 - 29"
-    #class: "03-class"
+    class: "data-wrangle"
     reading: "data-wrangle"
     
   - title: '<i class="fas fa-star"></i> **Assignment 2**'
