@@ -111,3 +111,97 @@ flights %>%
 
 
 
+## Mutating 
+
+Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this. 
+
+
+Let's convert arrival delay from minutes to hours. 
+
+```{r}
+## convert arrival_delay to hours
+new_flights = flights %>% 
+  mutate(arr_delay_hrs = arr_delay/60)
+```
+
+If you look in the dataset you will see a new variable called `arr_delay_hrs`. 
+
+
+Let's convert distance traveled from miles to thousands of miles. 
+
+```{r}
+## convert distance to thousands of miles
+new_flights2 = flights %>% 
+  mutate(dist_miles = distance/1000)
+```
+
+
+### Creating categorical variables
+
+Sometimes we want to create more complicated variables. Here's where [case_when](https://dplyr.tidyverse.org/reference/case_when.html) comes into play. 
+
+
+Let's create a variable that tells us what season a flight took off in. 
+
+```{r}
+## create a new variable called season
+## that tells me if flight departed
+## in summer, winter, fall, or spring
+new_flights = flights %>% 
+  mutate(seasons = case_when(month == 6 ~ "Summer", 
+                             month == 7 ~ "Summer",
+                             month == 8 ~ "Summer", 
+                             month == 9 ~ "Fall", 
+                             month == 10 ~ "Fall", 
+                             month == 11 ~ "Fall", 
+                             month == 12 ~ "Winter", 
+                             month == 1 ~ "Winter", 
+                             month == 2 ~ "Winter", 
+                             month == 3 ~ "Spring", 
+                             month == 4 ~ "Spring", 
+                             month == 5 ~ "Spring"))
+
+```
+
+
+We can then plot the distribution of arrival delays by season, below. 
+
+```{r}
+# plot histogram of arrival delay
+# separate it by season
+ggplot(new_flights, aes(x = arr_delay, fill = seasons)) + 
+  geom_histogram() + 
+  facet_wrap(vars(seasons))
+```
+
+
+Let's say we wanted to categorize flights by how late they are. See an example, below. 
+
+```{r}
+new_flights = flights %>% 
+  mutate(time_flight = case_when(arr_delay >= 120 ~ "very late",
+                                 arr_delay > 0 & arr_delay < 120 ~ "a little late", 
+                                 arr_delay == 0 ~ "on time", 
+                                 arr_delay < 0 & arr_delay > -120 ~ "a little early", 
+                                 arr_delay <=-120 ~ "very early"))
+
+```
+
+
+## Summarize
+
+
+Say we want to take the average of a variable in our dataset. `summarize()` can help us do that. 
+
+
+Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been? 
+
+```{r}
+## on average, how late are flights in departing? 
+flights %>% 
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
+            most_late = max(dep_delay, na.rm = TRUE))
+```
+
+
+Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. 

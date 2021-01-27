@@ -23,6 +23,11 @@ editor_options:
 <ul>
 <li><a href="#examples">Examples</a></li>
 </ul></li>
+<li><a href="#mutating">Mutating</a>
+<ul>
+<li><a href="#creating-categorical-variables">Creating categorical variables</a></li>
+</ul></li>
+<li><a href="#summarize">Summarize</a></li>
 </ul>
 </div>
 
@@ -154,4 +159,68 @@ flights %&gt;%
 ## #   flight &lt;int&gt;, tailnum &lt;chr&gt;, origin &lt;chr&gt;, dest &lt;chr&gt;, air_time &lt;dbl&gt;,
 ## #   distance &lt;dbl&gt;, hour &lt;dbl&gt;, minute &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
 </div>
+</div>
+<div id="mutating" class="section level2">
+<h2>Mutating</h2>
+<p>Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The <code>mutate()</code> function is one way of doing this.</p>
+<p>Let’s convert arrival delay from minutes to hours.</p>
+<pre class="r"><code>## convert arrival_delay to hours
+new_flights = flights %&gt;% 
+  mutate(arr_delay_hrs = arr_delay/60)</code></pre>
+<p>If you look in the dataset you will see a new variable called <code>arr_delay_hrs</code>.</p>
+<p>Let’s convert distance traveled from miles to thousands of miles.</p>
+<pre class="r"><code>## convert distance to thousands of miles
+new_flights2 = flights %&gt;% 
+  mutate(dist_miles = distance/1000)</code></pre>
+<div id="creating-categorical-variables" class="section level3">
+<h3>Creating categorical variables</h3>
+<p>Sometimes we want to create more complicated variables. Here’s where <a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a> comes into play.</p>
+<p>Let’s create a variable that tells us what season a flight took off in.</p>
+<pre class="r"><code>## create a new variable called season
+## that tells me if flight departed
+## in summer, winter, fall, or spring
+new_flights = flights %&gt;% 
+  mutate(seasons = case_when(month == 6 ~ &quot;Summer&quot;, 
+                             month == 7 ~ &quot;Summer&quot;,
+                             month == 8 ~ &quot;Summer&quot;, 
+                             month == 9 ~ &quot;Fall&quot;, 
+                             month == 10 ~ &quot;Fall&quot;, 
+                             month == 11 ~ &quot;Fall&quot;, 
+                             month == 12 ~ &quot;Winter&quot;, 
+                             month == 1 ~ &quot;Winter&quot;, 
+                             month == 2 ~ &quot;Winter&quot;, 
+                             month == 3 ~ &quot;Spring&quot;, 
+                             month == 4 ~ &quot;Spring&quot;, 
+                             month == 5 ~ &quot;Spring&quot;))</code></pre>
+<p>We can then plot the distribution of arrival delays by season, below.</p>
+<pre class="r"><code># plot histogram of arrival delay
+# separate it by season
+ggplot(new_flights, aes(x = arr_delay, fill = seasons)) + 
+  geom_histogram() + 
+  facet_wrap(vars(seasons))</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<pre><code>## Warning: Removed 9430 rows containing non-finite values (stat_bin).</code></pre>
+<p><img src="/class/data-wrangle_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Let’s say we wanted to categorize flights by how late they are. See an example, below.</p>
+<pre class="r"><code>new_flights = flights %&gt;% 
+  mutate(time_flight = case_when(arr_delay &gt;= 120 ~ &quot;very late&quot;,
+                                 arr_delay &gt; 0 &amp; arr_delay &lt; 120 ~ &quot;a little late&quot;, 
+                                 arr_delay == 0 ~ &quot;on time&quot;, 
+                                 arr_delay &lt; 0 &amp; arr_delay &gt; -120 ~ &quot;a little early&quot;, 
+                                 arr_delay &lt;=-120 ~ &quot;very early&quot;))</code></pre>
+</div>
+</div>
+<div id="summarize" class="section level2">
+<h2>Summarize</h2>
+<p>Say we want to take the average of a variable in our dataset. <code>summarize()</code> can help us do that.</p>
+<p>Say we wanted to know how late in departure is the <em>average</em> flight in our dataset and what’s the latest a flight has ever been?</p>
+<pre class="r"><code>## on average, how late are flights in departing? 
+flights %&gt;% 
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
+            most_late = max(dep_delay, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   avg_late most_late
+##      &lt;dbl&gt;     &lt;dbl&gt;
+## 1     12.6      1301</code></pre>
+<p>Not the <code>na.rm = TRUE</code> above and what happens if you remove it. The problem is there are missing values (<code>NA</code>) in our data, and R can’t take the average of a bunch of numbers where some are missing. <code>na.rm = TRUE</code> tells R to ignore those missing numbers and use only the complete observations.</p>
 </div>
