@@ -28,6 +28,12 @@ editor_options:
 <li><a href="#creating-categorical-variables">Creating categorical variables</a></li>
 </ul></li>
 <li><a href="#summarize">Summarize</a></li>
+<li><a href="#activity">Activity</a>
+<ul>
+<li><a href="#question-1">Question 1:</a></li>
+<li><a href="#question-2">question 2:</a></li>
+<li><a href="#question-3">Question 3:</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -223,4 +229,31 @@ flights %&gt;%
 ##      &lt;dbl&gt;     &lt;dbl&gt;
 ## 1     12.6      1301</code></pre>
 <p>Not the <code>na.rm = TRUE</code> above and what happens if you remove it. The problem is there are missing values (<code>NA</code>) in our data, and R can’t take the average of a bunch of numbers where some are missing. <code>na.rm = TRUE</code> tells R to ignore those missing numbers and use only the complete observations.</p>
+</div>
+<div id="activity" class="section level2">
+<h2>Activity</h2>
+<p>Copy this into RStudio. You will need to install <code>socviz</code>.</p>
+<pre class="r"><code># load the libraries
+library(tidyverse)
+library(socviz)
+
+
+# get the data
+election = county_data %&gt;% 
+  select(name, state, pop, female, white, black, 
+         land_area, hh_income, travel_time,
+         votes_dem_2016, votes_gop_2016, total_votes_2016, 
+         per_dem_2012, per_gop_2012)</code></pre>
+<div id="question-1" class="section level3">
+<h3>Question 1:</h3>
+<p>Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results.</p>
+</div>
+<div id="question-2" class="section level3">
+<h3>question 2:</h3>
+<p>Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers.</p>
+</div>
+<div id="question-3" class="section level3">
+<h3>Question 3:</h3>
+<p>Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same?</p>
+</div>
 </div>

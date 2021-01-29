@@ -205,3 +205,39 @@ flights %>%
 
 
 Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. 
+
+
+
+## Activity
+
+
+Copy this into RStudio. You will need to install `socviz`.
+
+```{r, eval=FALSE}
+# load the libraries
+library(tidyverse)
+library(socviz)
+
+
+# get the data
+election = county_data %>% 
+  select(name, state, pop, female, white, black, 
+         land_area, hh_income, travel_time,
+         votes_dem_2016, votes_gop_2016, total_votes_2016, 
+         per_dem_2012, per_gop_2012)
+```
+
+
+### Question 1: 
+
+Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results. 
+
+
+###  question 2:
+
+Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers. 
+
+
+### Question 3:
+
+Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same? 
