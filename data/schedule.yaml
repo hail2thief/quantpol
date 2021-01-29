@@ -23,7 +23,7 @@ lessons:
     
   - title: '<i class="fas fa-star"></i> **Assignment 2**'
     date: "Feb 2, Tue"
-    #assignment: "02-assignment"
+    assignment: "ps-wrangle"
 
   - title: "Importing data, tidy data"
     date: "W4: Feb 1 - 5"

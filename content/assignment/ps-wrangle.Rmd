@@ -1,0 +1,36 @@
+---
+title: "Data wrangling"
+linktitle: "Data wrangling"
+date: "2021-02-02"
+due_date: "2021-02-02"
+due_time: "11:59 PM"
+output:
+  blogdown::html_page:
+    toc: false
+menu:
+  assignment:
+    parent: Problem sets
+    weight: 2
+type: docs
+editor_options: 
+  chunk_output_type: console
+---
+
+## Instructions
+
+
+- Download this: <i class="far fa-file-archive"></i> [`ps-wrangle`](/files/ps-wrangle.zip)
+
+- **unzip** it, then double-click on the `.Rproj` file to open RStudio. Note: if you don't open `Rproj` the code will not work!
+
+- Ensure that you have the needed packages installed on your computer. If you try to run `library(PACKAGE NAME)` and R returns an error that the package is missing, use the “Packages” panel in RStudio to install it
+
+- Replace the `your-name` part of the R Markdown file `your-name_problem-set-1.Rmd` to something that matches your name and open it in RStudio
+
+- Complete the tasks in the R Markdown file. Fill out code in the empty chunks provided and replace FILL YOUR ANSWER HERE with your answers to the questions.
+
+- When you’re all done, click on the “Knit” button at the top of the editing window and create a Word document of your problem set. Submit **only the Word doc** to Blackboard.
+
+
+
+<img src="/images/assignment/knit-button.png" alt="analog" width="500"/>

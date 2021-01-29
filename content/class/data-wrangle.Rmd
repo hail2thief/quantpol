@@ -207,13 +207,35 @@ flights %>%
 Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. 
 
 
+## Summarize + group_by()
+
+
+Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`.
+
+
+```{r}
+# what if we wanted to know these statistics
+## for each month in our dataset? 
+carrier_late = flights %>% 
+  group_by(carrier) %>% 
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
+            most_late = max(dep_delay, na.rm = TRUE))
+
+
+# make a plot
+ggplot(carrier_late, aes(x = carrier, y = avg_late)) + 
+  geom_col() + 
+  coord_flip()
+```
+
+
 
 ## Activity
 
 
 Copy this into RStudio. You will need to install `socviz`.
 
-```{r, eval=FALSE}
+```{r}
 # load the libraries
 library(tidyverse)
 library(socviz)
@@ -233,11 +255,56 @@ election = county_data %>%
 Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results. 
 
 
+```{r}
+# question 1
+state_dems = election %>% 
+  filter(state == "AL" | state == "NC" | state == "SC" | state == "FL") %>% 
+  group_by(state) %>% 
+  summarise(total_dem = sum(votes_dem_2016, na.rm = TRUE), 
+            total_votes = sum(total_votes_2016, na.rm = TRUE)) %>% 
+  mutate(pct_dem = total_dem/total_votes)
+
+ggplot(state_dems, aes(x = state, y = pct_dem)) + geom_col() + coord_flip()
+```
+
+
+
+
 ###  question 2:
 
 Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers. 
 
 
+```{r}
+new_election = election %>% 
+  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016)
+
+
+ggplot(new_election, aes(x = per_dem_2012, 
+                         y = per_dem_2016)) + geom_point()
+```
+
+
+
+
 ### Question 3:
 
 Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same? 
+
+
+```{r}
+flips = election %>% 
+  mutate(winner_2016 = case_when(votes_dem_2016 > votes_gop_2016 ~ "D", 
+                                 votes_dem_2016 < votes_gop_2016 ~ "R",
+                                 votes_dem_2016 == votes_gop_2016 ~ "Tie")) %>% 
+  mutate(winner_2012 = case_when(per_dem_2012 > per_gop_2012 ~ "D", 
+                                 per_dem_2012 < per_gop_2012 ~ "R",
+                                 per_dem_2012 == per_gop_2012 ~ "Tie")) %>% 
+  mutate(flipped = case_when(winner_2016 != winner_2012 ~ "Flipped", 
+                             winner_2016 == winner_2012 ~ "Didn't Flip"))
+
+
+flips %>% 
+  count(flipped)
+```
+

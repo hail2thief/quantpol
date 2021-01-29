@@ -28,6 +28,7 @@ editor_options:
 <li><a href="#creating-categorical-variables">Creating categorical variables</a></li>
 </ul></li>
 <li><a href="#summarize">Summarize</a></li>
+<li><a href="#summarize-group_by">Summarize + group_by()</a></li>
 <li><a href="#activity">Activity</a>
 <ul>
 <li><a href="#question-1">Question 1:</a></li>
@@ -230,6 +231,22 @@ flights %&gt;%
 ## 1     12.6      1301</code></pre>
 <p>Not the <code>na.rm = TRUE</code> above and what happens if you remove it. The problem is there are missing values (<code>NA</code>) in our data, and R can’t take the average of a bunch of numbers where some are missing. <code>na.rm = TRUE</code> tells R to ignore those missing numbers and use only the complete observations.</p>
 </div>
+<div id="summarize-group_by" class="section level2">
+<h2>Summarize + group_by()</h2>
+<p>Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining <code>group_by()</code> and <code>summarise()</code>.</p>
+<pre class="r"><code># what if we wanted to know these statistics
+## for each month in our dataset? 
+carrier_late = flights %&gt;% 
+  group_by(carrier) %&gt;% 
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
+            most_late = max(dep_delay, na.rm = TRUE))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code># make a plot
+ggplot(carrier_late, aes(x = carrier, y = avg_late)) + 
+  geom_col() + 
+  coord_flip()</code></pre>
+<p><img src="/class/data-wrangle_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
 <div id="activity" class="section level2">
 <h2>Activity</h2>
 <p>Copy this into RStudio. You will need to install <code>socviz</code>.</p>
@@ -247,13 +264,48 @@ election = county_data %&gt;%
 <div id="question-1" class="section level3">
 <h3>Question 1:</h3>
 <p>Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results.</p>
+<pre class="r"><code># question 1
+state_dems = election %&gt;% 
+  filter(state == &quot;AL&quot; | state == &quot;NC&quot; | state == &quot;SC&quot; | state == &quot;FL&quot;) %&gt;% 
+  group_by(state) %&gt;% 
+  summarise(total_dem = sum(votes_dem_2016, na.rm = TRUE), 
+            total_votes = sum(total_votes_2016, na.rm = TRUE)) %&gt;% 
+  mutate(pct_dem = total_dem/total_votes)</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>ggplot(state_dems, aes(x = state, y = pct_dem)) + geom_col() + coord_flip()</code></pre>
+<p><img src="/class/data-wrangle_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
 </div>
 <div id="question-2" class="section level3">
 <h3>question 2:</h3>
 <p>Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers.</p>
+<pre class="r"><code>new_election = election %&gt;% 
+  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016)
+
+
+ggplot(new_election, aes(x = per_dem_2012, 
+                         y = per_dem_2016)) + geom_point()</code></pre>
+<pre><code>## Warning: Removed 83 rows containing missing values (geom_point).</code></pre>
+<p><img src="/class/data-wrangle_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 <div id="question-3" class="section level3">
 <h3>Question 3:</h3>
 <p>Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same?</p>
+<pre class="r"><code>flips = election %&gt;% 
+  mutate(winner_2016 = case_when(votes_dem_2016 &gt; votes_gop_2016 ~ &quot;D&quot;, 
+                                 votes_dem_2016 &lt; votes_gop_2016 ~ &quot;R&quot;,
+                                 votes_dem_2016 == votes_gop_2016 ~ &quot;Tie&quot;)) %&gt;% 
+  mutate(winner_2012 = case_when(per_dem_2012 &gt; per_gop_2012 ~ &quot;D&quot;, 
+                                 per_dem_2012 &lt; per_gop_2012 ~ &quot;R&quot;,
+                                 per_dem_2012 == per_gop_2012 ~ &quot;Tie&quot;)) %&gt;% 
+  mutate(flipped = case_when(winner_2016 != winner_2012 ~ &quot;Flipped&quot;, 
+                             winner_2016 == winner_2012 ~ &quot;Didn&#39;t Flip&quot;))
+
+
+flips %&gt;% 
+  count(flipped)</code></pre>
+<pre><code>##       flipped    n
+## 1 Didn&#39;t Flip 2874
+## 2     Flipped  238
+## 3        &lt;NA&gt;   83</code></pre>
 </div>
 </div>
