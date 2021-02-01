@@ -277,11 +277,23 @@ Figure out the percent of the vote DEMS got in 2016, by county. Plot the relatio
 
 ```{r}
 new_election = election %>% 
-  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016)
+  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016) %>% 
+  # where did dems improve?
+  mutate(improved = case_when(per_dem_2016 > per_dem_2012 ~ "Yes", 
+                              TRUE ~ "No"))
 
 
 ggplot(new_election, aes(x = per_dem_2012, 
-                         y = per_dem_2016)) + geom_point()
+                         y = per_dem_2016, 
+                         color = improved)) + geom_point() + 
+  labs(x = "Democrat vote share in 2012", 
+       y = "Democrat vote share in 2016", 
+       title = "Comparison of 2016 and 2012 Presidential Election Performance",
+       color = "Did Dems improve?") + 
+  theme_light() + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  theme(legend.position = "bottom")
 ```
 
 

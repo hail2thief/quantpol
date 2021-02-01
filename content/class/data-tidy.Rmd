@@ -1,0 +1,60 @@
+---
+title: "Tidy data"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 4
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+## pivot_longer
+
+
+We can use the `pivot_longer` function to make data that is in "wide" format into "long" format. 
+
+Here's an example, using the `masculinity survey` from `fivethirtyeight`. 
+
+```{r, warning=F,message=F}
+# load libraries
+library(tidyverse)
+library(fivethirtyeight)
+
+
+# different dataset on masculinity
+masculinity_survey
+
+
+# focus on one question
+# collapse age categories into long format
+manly_pressure = masculinity_survey %>% 
+  filter(question == "Do you think that society puts pressure on men in a way that is unhealthy or bad for them?") %>% 
+  pivot_longer(names_to = "ages", 
+               values_to = "percent", 
+               c(age_18_34, age_35_64, age_65_over))
+
+manly_pressure
+```
+
+
+And we can plot the results: 
+
+
+```{r}
+# plot
+ggplot(manly_pressure, aes(x = response, y = percent, fill = ages)) + 
+  geom_col(position = "dodge")
+
+```
+
+
+

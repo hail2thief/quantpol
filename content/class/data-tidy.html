@@ -1,0 +1,80 @@
+---
+title: "Tidy data"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 4
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#pivot_longer">pivot_longer</a></li>
+</ul>
+</div>
+
+<div id="pivot_longer" class="section level2">
+<h2>pivot_longer</h2>
+<p>We can use the <code>pivot_longer</code> function to make data that is in “wide” format into “long” format.</p>
+<p>Here’s an example, using the <code>masculinity survey</code> from <code>fivethirtyeight</code>.</p>
+<pre class="r"><code># load libraries
+library(tidyverse)
+library(fivethirtyeight)
+
+
+# different dataset on masculinity
+masculinity_survey</code></pre>
+<pre><code>## # A tibble: 189 x 12
+##    question response overall age_18_34 age_35_64 age_65_over white_yes white_no
+##    &lt;fct&gt;    &lt;fct&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 &quot;In gen… Very ma…    0.37     0.290      0.42        0.37      0.34     0.44
+##  2 &quot;In gen… Somewha…    0.46     0.47       0.46        0.47      0.5      0.39
+##  3 &quot;In gen… Not ver…    0.11     0.13       0.09        0.13      0.11     0.11
+##  4 &quot;In gen… Not at …    0.05     0.1        0.02        0.03      0.04     0.06
+##  5 &quot;In gen… No answ…    0.01     0          0.01        0.01      0.01     0   
+##  6 &quot;How im… Very im…    0.16     0.18       0.17        0.13      0.11     0.26
+##  7 &quot;How im… Somewha…    0.37     0.38       0.37        0.32      0.38     0.35
+##  8 &quot;How im… Not too…    0.28     0.18       0.31        0.37      0.32     0.2 
+##  9 &quot;How im… Not at …    0.18     0.26       0.15        0.18      0.18     0.19
+## 10 &quot;How im… No answ…    0        0          0.01        0         0        0   
+## # … with 179 more rows, and 4 more variables: children_yes &lt;dbl&gt;,
+## #   children_no &lt;dbl&gt;, straight_yes &lt;dbl&gt;, straight_no &lt;dbl&gt;</code></pre>
+<pre class="r"><code># focus on one question
+# collapse age categories into long format
+manly_pressure = masculinity_survey %&gt;% 
+  filter(question == &quot;Do you think that society puts pressure on men in a way that is unhealthy or bad for them?&quot;) %&gt;% 
+  pivot_longer(names_to = &quot;ages&quot;, 
+               values_to = &quot;percent&quot;, 
+               c(age_18_34, age_35_64, age_65_over))
+
+manly_pressure</code></pre>
+<pre><code>## # A tibble: 9 x 11
+##   question response overall white_yes white_no children_yes children_no
+##   &lt;fct&gt;    &lt;fct&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Do you … Yes         0.6      0.580     0.65         0.56        0.66
+## 2 Do you … Yes         0.6      0.580     0.65         0.56        0.66
+## 3 Do you … Yes         0.6      0.580     0.65         0.56        0.66
+## 4 Do you … No          0.39     0.41      0.35         0.44        0.34
+## 5 Do you … No          0.39     0.41      0.35         0.44        0.34
+## 6 Do you … No          0.39     0.41      0.35         0.44        0.34
+## 7 Do you … No answ…    0.01     0.01      0            0.01        0   
+## 8 Do you … No answ…    0.01     0.01      0            0.01        0   
+## 9 Do you … No answ…    0.01     0.01      0            0.01        0   
+## # … with 4 more variables: straight_yes &lt;dbl&gt;, straight_no &lt;dbl&gt;, ages &lt;chr&gt;,
+## #   percent &lt;dbl&gt;</code></pre>
+<p>And we can plot the results:</p>
+<pre class="r"><code># plot
+ggplot(manly_pressure, aes(x = response, y = percent, fill = ages)) + 
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>

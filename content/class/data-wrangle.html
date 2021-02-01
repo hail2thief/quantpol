@@ -279,11 +279,23 @@ state_dems = election %&gt;%
 <h3>question 2:</h3>
 <p>Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers.</p>
 <pre class="r"><code>new_election = election %&gt;% 
-  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016)
+  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016) %&gt;% 
+  # where did dems improve?
+  mutate(improved = case_when(per_dem_2016 &gt; per_dem_2012 ~ &quot;Yes&quot;, 
+                              TRUE ~ &quot;No&quot;))
 
 
 ggplot(new_election, aes(x = per_dem_2012, 
-                         y = per_dem_2016)) + geom_point()</code></pre>
+                         y = per_dem_2016, 
+                         color = improved)) + geom_point() + 
+  labs(x = &quot;Democrat vote share in 2012&quot;, 
+       y = &quot;Democrat vote share in 2016&quot;, 
+       title = &quot;Comparison of 2016 and 2012 Presidential Election Performance&quot;,
+       color = &quot;Did Dems improve?&quot;) + 
+  theme_light() + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  theme(legend.position = &quot;bottom&quot;)</code></pre>
 <pre><code>## Warning: Removed 83 rows containing missing values (geom_point).</code></pre>
 <p><img src="/class/data-wrangle_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>

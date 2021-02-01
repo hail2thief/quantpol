@@ -27,7 +27,7 @@ lessons:
 
   - title: "Importing data, tidy data"
     date: "W4: Feb 1 - 5"
-    #class: "04-class"
+    class: "data-tidy"
     reading: "data-import"
     
   - title: '<i class="fas fa-star"></i> **Assignment 3**'
