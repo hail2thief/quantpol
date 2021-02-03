@@ -102,7 +102,7 @@ ggplot(tidy_relig, aes(x = income_categories, y = percent)) +
 ```
 
 
-## Calculating counts (group_by + tally)
+## Counts and percentages (group_by + tally)
 
 
 Say we wanted to count how many characters in the starwars dataset have blonde, brown, etc., hair. I can do this with `group_by` and `tally`:
@@ -120,6 +120,16 @@ Or, with `group_by` and `summarise` and `n()`:
 starwars %>% 
   group_by(hair_color) %>% 
   summarise(n = n())
+```
+
+
+Now, say I wanted to calculate the *percent* of characters with each eye color. I can do this below: 
+
+```{r}
+starwars %>% 
+  group_by(hair_color) %>% 
+  tally() %>% 
+  mutate(percent = n/sum(n))
 ```
 
 

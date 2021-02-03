@@ -20,7 +20,7 @@ editor_options:
 <div id="TOC">
 <ul>
 <li><a href="#tidy-data">Tidy data</a></li>
-<li><a href="#calculating-counts-group_by-tally">Calculating counts (group_by + tally)</a></li>
+<li><a href="#counts-and-percentages-group_by-tally">Counts and percentages (group_by + tally)</a></li>
 <li><a href="#factor-variables">Factor variables</a>
 <ul>
 <li><a href="#fct_reorder">fct_reorder</a></li>
@@ -155,8 +155,8 @@ ggplot(tidy_relig, aes(x = income_categories, y = percent)) +
   theme_light()</code></pre>
 <p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 </div>
-<div id="calculating-counts-group_by-tally" class="section level2">
-<h2>Calculating counts (group_by + tally)</h2>
+<div id="counts-and-percentages-group_by-tally" class="section level2">
+<h2>Counts and percentages (group_by + tally)</h2>
 <p>Say we wanted to count how many characters in the starwars dataset have blonde, brown, etc., hair. I can do this with <code>group_by</code> and <code>tally</code>:</p>
 <pre class="r"><code>starwars %&gt;% 
   group_by(hair_color) %&gt;% 
@@ -198,6 +198,27 @@ ggplot(tidy_relig, aes(x = income_categories, y = percent)) +
 ## 11 unknown           1
 ## 12 white             4
 ## 13 &lt;NA&gt;              5</code></pre>
+<p>Now, say I wanted to calculate the <em>percent</em> of characters with each eye color. I can do this below:</p>
+<pre class="r"><code>starwars %&gt;% 
+  group_by(hair_color) %&gt;% 
+  tally() %&gt;% 
+  mutate(percent = n/sum(n))</code></pre>
+<pre><code>## # A tibble: 13 x 3
+##    hair_color        n percent
+##    &lt;chr&gt;         &lt;int&gt;   &lt;dbl&gt;
+##  1 auburn            1  0.0115
+##  2 auburn, grey      1  0.0115
+##  3 auburn, white     1  0.0115
+##  4 black            13  0.149 
+##  5 blond             3  0.0345
+##  6 blonde            1  0.0115
+##  7 brown            18  0.207 
+##  8 brown, grey       1  0.0115
+##  9 grey              1  0.0115
+## 10 none             37  0.425 
+## 11 unknown           1  0.0115
+## 12 white             4  0.0460
+## 13 &lt;NA&gt;              5  0.0575</code></pre>
 </div>
 <div id="factor-variables" class="section level2">
 <h2>Factor variables</h2>
@@ -225,10 +246,10 @@ weather_factor = weather %&gt;%
                                           &quot;December&quot;)))</code></pre>
 <p>Notice plot without factor:</p>
 <pre class="r"><code>ggplot(weather, aes(x = month, y = temp)) + geom_col()</code></pre>
-<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>And new and imrpoved plot where month is a factor:</p>
 <pre class="r"><code>ggplot(weather_factor, aes(x = month_factor, y = temp)) + geom_col()</code></pre>
-<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <div id="fct_reorder" class="section level3">
 <h3>fct_reorder</h3>
 <p>Instead of explicitly telling R how we want to order a factor, we can instead use another variable in the dataset to determine the order.</p>
@@ -261,6 +282,6 @@ star_eyes = star_eyes %&gt;%
 ggplot(star_eyes, aes(x = eye_color, y = n)) + 
   geom_col() + 
   coord_flip()</code></pre>
-<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 </div>
