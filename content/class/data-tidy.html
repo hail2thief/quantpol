@@ -19,20 +19,56 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#pivot_longer">pivot_longer</a></li>
+<li><a href="#tidy-data">Tidy data</a></li>
+<li><a href="#calculating-counts-group_by-tally">Calculating counts (group_by + tally)</a></li>
+<li><a href="#factor-variables">Factor variables</a>
+<ul>
+<li><a href="#fct_reorder">fct_reorder</a></li>
+</ul></li>
 </ul>
 </div>
 
-<div id="pivot_longer" class="section level2">
-<h2>pivot_longer</h2>
+<div id="tidy-data" class="section level2">
+<h2>Tidy data</h2>
 <p>We can use the <code>pivot_longer</code> function to make data that is in “wide” format into “long” format.</p>
-<p>Here’s an example, using the <code>masculinity survey</code> from <code>fivethirtyeight</code>.</p>
+<p>Here’s an example, using the <code>drinks</code> dataset from <code>fivethirtyheight</code>.</p>
 <pre class="r"><code># load libraries
 library(tidyverse)
 library(fivethirtyeight)
 
+# too many countries, let&#39;s look at a few
+# %in% is a new logical operator: returns observations that match one of the strings
+drinks_subset = 
+  drinks %&gt;% 
+  filter(country %in% c(&quot;USA&quot;, &quot;China&quot;, &quot;Italy&quot;, &quot;Saudi Arabia&quot;)) 
 
-# different dataset on masculinity
+
+# let&#39;s gather the three alcohol variables into two: type and serving
+tidy_drinks = drinks_subset %&gt;% 
+  pivot_longer(cols = c(beer_servings, spirit_servings, wine_servings), 
+               names_to = &quot;type&quot;, values_to = &quot;serving&quot;)
+tidy_drinks</code></pre>
+<pre><code>## # A tibble: 12 x 4
+##    country      total_litres_of_pure_alcohol type            serving
+##    &lt;chr&gt;                               &lt;dbl&gt; &lt;chr&gt;             &lt;int&gt;
+##  1 China                                 5   beer_servings        79
+##  2 China                                 5   spirit_servings     192
+##  3 China                                 5   wine_servings         8
+##  4 Italy                                 6.5 beer_servings        85
+##  5 Italy                                 6.5 spirit_servings      42
+##  6 Italy                                 6.5 wine_servings       237
+##  7 Saudi Arabia                          0.1 beer_servings         0
+##  8 Saudi Arabia                          0.1 spirit_servings       5
+##  9 Saudi Arabia                          0.1 wine_servings         0
+## 10 USA                                   8.7 beer_servings       249
+## 11 USA                                   8.7 spirit_servings     158
+## 12 USA                                   8.7 wine_servings        84</code></pre>
+<pre class="r"><code># let&#39;s put position = dodge in geom_col, which will place bars side by side
+ggplot(tidy_drinks, aes(x = country, y = serving, fill = type)) + 
+  geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>Here’s another example, using the <code>masculinity survey</code> from <code>fivethirtyeight</code>.</p>
+<pre class="r"><code># different dataset on masculinity
 masculinity_survey</code></pre>
 <pre><code>## # A tibble: 189 x 12
 ##    question response overall age_18_34 age_35_64 age_65_over white_yes white_no
@@ -76,5 +112,155 @@ manly_pressure</code></pre>
 <pre class="r"><code># plot
 ggplot(manly_pressure, aes(x = response, y = percent, fill = ages)) + 
   geom_col(position = &quot;dodge&quot;)</code></pre>
-<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Finally, here’s another example using <code>relig_income</code>. Notice here how instead of explicitly writing out every variable we want to collapse, we can just exclude the only other variable in the dataset via the “-”.</p>
+<pre class="r"><code># look at the data
+relig_income</code></pre>
+<pre><code>## # A tibble: 18 x 11
+##    religion `&lt;$10k` `$10-20k` `$20-30k` `$30-40k` `$40-50k` `$50-75k` `$75-100k`
+##    &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Agnostic      27        34        60        81        76       137        122
+##  2 Atheist       12        27        37        52        35        70         73
+##  3 Buddhist      27        21        30        34        33        58         62
+##  4 Catholic     418       617       732       670       638      1116        949
+##  5 Don’t k…      15        14        15        11        10        35         21
+##  6 Evangel…     575       869      1064       982       881      1486        949
+##  7 Hindu          1         9         7         9        11        34         47
+##  8 Histori…     228       244       236       238       197       223        131
+##  9 Jehovah…      20        27        24        24        21        30         15
+## 10 Jewish        19        19        25        25        30        95         69
+## 11 Mainlin…     289       495       619       655       651      1107        939
+## 12 Mormon        29        40        48        51        56       112         85
+## 13 Muslim         6         7         9        10         9        23         16
+## 14 Orthodox      13        17        23        32        32        47         38
+## 15 Other C…       9         7        11        13        13        14         18
+## 16 Other F…      20        33        40        46        49        63         46
+## 17 Other W…       5         2         3         4         2         7          3
+## 18 Unaffil…     217       299       374       365       341       528        407
+## # … with 3 more variables: `$100-150k` &lt;dbl&gt;, `&gt;150k` &lt;dbl&gt;, `Don&#39;t
+## #   know/refused` &lt;dbl&gt;</code></pre>
+<pre class="r"><code># make tidy
+tidy_relig = relig_income %&gt;% 
+  pivot_longer(-religion, names_to = &quot;income_categories&quot;, 
+               values_to = &quot;responses&quot;) %&gt;% 
+  group_by(religion) %&gt;% 
+  mutate(percent = responses/sum(responses))
+
+
+# make the plot
+ggplot(tidy_relig, aes(x = income_categories, y = percent)) + 
+  geom_col() + 
+  facet_wrap(vars(religion)) + 
+  coord_flip() + 
+  theme_light()</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="calculating-counts-group_by-tally" class="section level2">
+<h2>Calculating counts (group_by + tally)</h2>
+<p>Say we wanted to count how many characters in the starwars dataset have blonde, brown, etc., hair. I can do this with <code>group_by</code> and <code>tally</code>:</p>
+<pre class="r"><code>starwars %&gt;% 
+  group_by(hair_color) %&gt;% 
+  tally()</code></pre>
+<pre><code>## # A tibble: 13 x 2
+##    hair_color        n
+##    &lt;chr&gt;         &lt;int&gt;
+##  1 auburn            1
+##  2 auburn, grey      1
+##  3 auburn, white     1
+##  4 black            13
+##  5 blond             3
+##  6 blonde            1
+##  7 brown            18
+##  8 brown, grey       1
+##  9 grey              1
+## 10 none             37
+## 11 unknown           1
+## 12 white             4
+## 13 &lt;NA&gt;              5</code></pre>
+<p>Or, with <code>group_by</code> and <code>summarise</code> and <code>n()</code>:</p>
+<pre class="r"><code>starwars %&gt;% 
+  group_by(hair_color) %&gt;% 
+  summarise(n = n())</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 13 x 2
+##    hair_color        n
+##    &lt;chr&gt;         &lt;int&gt;
+##  1 auburn            1
+##  2 auburn, grey      1
+##  3 auburn, white     1
+##  4 black            13
+##  5 blond             3
+##  6 blonde            1
+##  7 brown            18
+##  8 brown, grey       1
+##  9 grey              1
+## 10 none             37
+## 11 unknown           1
+## 12 white             4
+## 13 &lt;NA&gt;              5</code></pre>
+</div>
+<div id="factor-variables" class="section level2">
+<h2>Factor variables</h2>
+<p>Sometimes we have a categorical variable (e.g., months of the year) that we understand as having some qualitative ordering (e.g., January comes before June). R doesn’t know this though, but we can tell it using <code>factor</code> variables.</p>
+<p>Here’s an example using some data I made up:</p>
+<pre class="r"><code># i have data on weather that looks like this:
+weather = tibble(temp = c(80, 23, 14, 23, 25), 
+                 month = c(&quot;January&quot;, &quot;December&quot;, 
+                           &quot;July&quot;, &quot;June&quot;, &quot;October&quot;))
+
+weather</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##    temp month   
+##   &lt;dbl&gt; &lt;chr&gt;   
+## 1    80 January 
+## 2    23 December
+## 3    14 July    
+## 4    23 June    
+## 5    25 October</code></pre>
+<pre class="r"><code># i want the month variable in order
+# i can use factors for this
+weather_factor = weather %&gt;% 
+  mutate(month_factor = factor(month, levels = c(&quot;January&quot;, &quot;June&quot;, 
+                                          &quot;July&quot;, &quot;October&quot;, 
+                                          &quot;December&quot;)))</code></pre>
+<p>Notice plot without factor:</p>
+<pre class="r"><code>ggplot(weather, aes(x = month, y = temp)) + geom_col()</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>And new and imrpoved plot where month is a factor:</p>
+<pre class="r"><code>ggplot(weather_factor, aes(x = month_factor, y = temp)) + geom_col()</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div id="fct_reorder" class="section level3">
+<h3>fct_reorder</h3>
+<p>Instead of explicitly telling R how we want to order a factor, we can instead use another variable in the dataset to determine the order.</p>
+<p>Look at the example below, using the <code>starwars</code> dataset:</p>
+<pre class="r"><code># starwars example
+starwars</code></pre>
+<pre><code>## # A tibble: 87 x 14
+##    name  height  mass hair_color skin_color eye_color birth_year sex   gender
+##    &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; 
+##  1 Luke…    172    77 blond      fair       blue            19   male  mascu…
+##  2 C-3PO    167    75 &lt;NA&gt;       gold       yellow         112   none  mascu…
+##  3 R2-D2     96    32 &lt;NA&gt;       white, bl… red             33   none  mascu…
+##  4 Dart…    202   136 none       white      yellow          41.9 male  mascu…
+##  5 Leia…    150    49 brown      light      brown           19   fema… femin…
+##  6 Owen…    178   120 brown, gr… light      blue            52   male  mascu…
+##  7 Beru…    165    75 brown      light      blue            47   fema… femin…
+##  8 R5-D4     97    32 &lt;NA&gt;       white, red red             NA   none  mascu…
+##  9 Bigg…    183    84 black      light      brown           24   male  mascu…
+## 10 Obi-…    182    77 auburn, w… fair       blue-gray       57   male  mascu…
+## # … with 77 more rows, and 5 more variables: homeworld &lt;chr&gt;, species &lt;chr&gt;,
+## #   films &lt;list&gt;, vehicles &lt;list&gt;, starships &lt;list&gt;</code></pre>
+<pre class="r"><code># count how many characters with each eye_color
+star_eyes = starwars %&gt;% 
+  group_by(eye_color) %&gt;% 
+  tally()
+
+star_eyes = star_eyes %&gt;% 
+  mutate(eye_color = fct_reorder(eye_color, n))
+
+ggplot(star_eyes, aes(x = eye_color, y = n)) + 
+  geom_col() + 
+  coord_flip()</code></pre>
+<p><img src="/class/data-tidy_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
 </div>

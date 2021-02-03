@@ -17,19 +17,41 @@ editor_options:
 
 
 
-## pivot_longer
+## Tidy data
 
 
 We can use the `pivot_longer` function to make data that is in "wide" format into "long" format. 
 
-Here's an example, using the `masculinity survey` from `fivethirtyeight`. 
+
+Here's an example, using the `drinks` dataset from `fivethirtyheight`. 
 
 ```{r, warning=F,message=F}
 # load libraries
 library(tidyverse)
 library(fivethirtyeight)
 
+# too many countries, let's look at a few
+# %in% is a new logical operator: returns observations that match one of the strings
+drinks_subset = 
+  drinks %>% 
+  filter(country %in% c("USA", "China", "Italy", "Saudi Arabia")) 
 
+
+# let's gather the three alcohol variables into two: type and serving
+tidy_drinks = drinks_subset %>% 
+  pivot_longer(cols = c(beer_servings, spirit_servings, wine_servings), 
+               names_to = "type", values_to = "serving")
+tidy_drinks
+
+# let's put position = dodge in geom_col, which will place bars side by side
+ggplot(tidy_drinks, aes(x = country, y = serving, fill = type)) + 
+  geom_col(position = "dodge")
+```
+
+
+Here's another example, using the `masculinity survey` from `fivethirtyeight`. 
+
+```{r, warning=F,message=F}
 # different dataset on masculinity
 masculinity_survey
 
@@ -57,4 +79,110 @@ ggplot(manly_pressure, aes(x = response, y = percent, fill = ages)) +
 ```
 
 
+Finally, here's another example using `relig_income`. Notice here how instead of explicitly writing out every variable we want to collapse, we can just exclude the only other variable in the dataset via the "-". 
+
+```{r}
+# look at the data
+relig_income
+
+# make tidy
+tidy_relig = relig_income %>% 
+  pivot_longer(-religion, names_to = "income_categories", 
+               values_to = "responses") %>% 
+  group_by(religion) %>% 
+  mutate(percent = responses/sum(responses))
+
+
+# make the plot
+ggplot(tidy_relig, aes(x = income_categories, y = percent)) + 
+  geom_col() + 
+  facet_wrap(vars(religion)) + 
+  coord_flip() + 
+  theme_light()
+```
+
+
+## Calculating counts (group_by + tally)
+
+
+Say we wanted to count how many characters in the starwars dataset have blonde, brown, etc., hair. I can do this with `group_by` and `tally`:
+
+
+```{r}
+starwars %>% 
+  group_by(hair_color) %>% 
+  tally()
+```
+
+Or, with `group_by` and `summarise` and `n()`:
+
+```{r}
+starwars %>% 
+  group_by(hair_color) %>% 
+  summarise(n = n())
+```
+
+
+## Factor variables
+
+
+Sometimes we have a categorical variable (e.g., months of the year) that we understand as having some qualitative ordering (e.g., January comes before June). R doesn't know this though, but we can tell it using `factor` variables. 
+
+
+Here's an example using some data I made up: 
+
+```{r}
+# i have data on weather that looks like this:
+weather = tibble(temp = c(80, 23, 14, 23, 25), 
+                 month = c("January", "December", 
+                           "July", "June", "October"))
+
+weather
+
+
+# i want the month variable in order
+# i can use factors for this
+weather_factor = weather %>% 
+  mutate(month_factor = factor(month, levels = c("January", "June", 
+                                          "July", "October", 
+                                          "December")))
+```
+
+
+Notice plot without factor: 
+
+```{r}
+
+ggplot(weather, aes(x = month, y = temp)) + geom_col()
+```
+
+And new and imrpoved plot where month is a factor: 
+
+```{r}
+ggplot(weather_factor, aes(x = month_factor, y = temp)) + geom_col()
+```
+
+
+### fct_reorder
+
+Instead of explicitly telling R how we want to order a factor, we can instead use another variable in the dataset to determine the order. 
+
+Look at the example below, using the `starwars` dataset: 
+
+```{r}
+# starwars example
+starwars
+
+# count how many characters with each eye_color
+star_eyes = starwars %>% 
+  group_by(eye_color) %>% 
+  tally()
+
+star_eyes = star_eyes %>% 
+  mutate(eye_color = fct_reorder(eye_color, n))
+
+ggplot(star_eyes, aes(x = eye_color, y = n)) + 
+  geom_col() + 
+  coord_flip()
+```
 
