@@ -32,7 +32,7 @@ lessons:
     
   - title: '<i class="fas fa-star"></i> **Assignment 3**'
     date: "Feb 9, Tue"
-    #assignment: "03-assignment"
+    assignment: "ps-tidy"
 
   - title: "Intro to regression"
     date: "W5: Feb 8 - 12"
