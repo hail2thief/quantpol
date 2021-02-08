@@ -36,7 +36,7 @@ lessons:
 
   - title: "Intro to regression"
     date: "W5: Feb 8 - 12"
-    #class: "05-class"
+    class: "regression"
     reading: "intro-reg"
     
   - title: '<i class="fas fa-star"></i> **Assignment 4**'
