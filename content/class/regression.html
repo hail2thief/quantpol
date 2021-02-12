@@ -24,7 +24,11 @@ editor_options:
 <ul>
 <li><a href="#why-not-just-take-an-average">Why not just take an average?</a></li>
 </ul></li>
-<li><a href="#regression-models-lm">Regression models (lm)</a></li>
+<li><a href="#regression-models-lm">Regression models (lm)</a>
+<ul>
+<li><a href="#continuous-number-variables">continuous (number) variables</a></li>
+<li><a href="#categorical-word-variables">categorical (word) variables</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -110,6 +114,8 @@ mtcars %&gt;%
 </div>
 <div id="regression-models-lm" class="section level2">
 <h2>Regression models (lm)</h2>
+<div id="continuous-number-variables" class="section level3">
+<h3>continuous (number) variables</h3>
 <p>If we want to find the “math-y” parts of the line (the y-intercept, the slope), we can fit a regression model using <code>lm()</code> and interpret the output using <code>get_regression_table()</code>.</p>
 <pre class="r"><code># finding the math-y parts of the line
 # what is the y-intercept? 
@@ -122,4 +128,46 @@ get_regression_table(weight_m)</code></pre>
 ##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
 ## 1 intercept    37.3      1.88      19.9        0    33.4     41.1 
 ## 2 wt           -5.34     0.559     -9.56       0    -6.49    -4.20</code></pre>
+</div>
+<div id="categorical-word-variables" class="section level3">
+<h3>categorical (word) variables</h3>
+<p>Sometimes we want to use explanatory variables that are not numbers, like car weight above, but categories (e.g., men vs. women). We can use them as below:</p>
+<pre class="r"><code># let&#39;s look at rank
+mod_rank = lm(score ~ rank, data = evals)
+get_regression_table(mod_rank)</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   term             estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept           4.28      0.054     79.9    0        4.18     4.39 
+## 2 ranktenure track   -0.13      0.075     -1.73   0.084   -0.277    0.017
+## 3 ranktenured        -0.145     0.064     -2.28   0.023   -0.27    -0.02</code></pre>
+<p>Interpreting is a bit tricky here. It helps to compare these coefficients to the average values of the outcome for the different categories.</p>
+<pre class="r"><code># take the average score across ranks
+evals %&gt;% 
+  group_by(rank) %&gt;% 
+  summarise(ave_score = mean(score, na.rm = TRUE))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   rank         ave_score
+##   &lt;fct&gt;            &lt;dbl&gt;
+## 1 teaching          4.28
+## 2 tenure track      4.15
+## 3 tenured           4.14</code></pre>
+<p>Notice the correspondence: intercept above is the average eval score for teaching faculty; <code>ranktenure track</code> is the <em>difference</em> between teaching faculty and tenure track faculty (4.28 - .13 = 4.15); <code>ranktenured</code> is the <em>difference</em> between teaching faculty and tenure track faculty (4.28 - .145 = 4.14) [with some rounding].</p>
+<p>The coefficients are all differences relative to the baseline. What if we want to change the baseline? Here’s where factors come in. The baseline in <code>lm</code> is just the lowest factor level for the variable. So we can use <code>factor</code> to change the baseline by reordering the levels, as below :</p>
+<pre class="r"><code>new_evals = 
+  evals %&gt;% 
+  mutate(rank = factor(rank, levels = c(&quot;tenured&quot;, &quot;tenure track&quot;, &quot;teaching&quot;)))
+
+# let&#39;s look at rank
+mod_rank = lm(score ~ rank, data = new_evals)
+get_regression_table(mod_rank)</code></pre>
+<pre><code>## # A tibble: 3 x 7
+##   term             estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept           4.14      0.034   122.      0        4.07     4.21 
+## 2 ranktenure track    0.015     0.062     0.249   0.804   -0.107    0.138
+## 3 rankteaching        0.145     0.064     2.28    0.023    0.02     0.27</code></pre>
+<p>Notice the new baseline = tenured because it’s the first one on line 151.</p>
+</div>
 </div>

@@ -103,7 +103,7 @@ mtcars %>%
 
 ## Regression models (lm)
 
-
+### continuous (number) variables
 
 If we want to find the "math-y" parts of the line (the y-intercept, the slope), we can fit a regression model using `lm()` and interpret the output using `get_regression_table()`. 
 
@@ -117,3 +117,42 @@ weight_m = lm(mpg ~ wt, data = mtcars)
 get_regression_table(weight_m)
 ```
 
+
+### categorical (word) variables
+
+Sometimes we want to use explanatory variables that are not numbers, like car weight above, but categories (e.g., men vs. women). We can use them as below: 
+
+```{r}
+# let's look at rank
+mod_rank = lm(score ~ rank, data = evals)
+get_regression_table(mod_rank)
+```
+
+
+Interpreting is a bit tricky here. It helps to compare these coefficients to the average values of the outcome for the different categories. 
+
+```{r}
+# take the average score across ranks
+evals %>% 
+  group_by(rank) %>% 
+  summarise(ave_score = mean(score, na.rm = TRUE))
+
+```
+
+Notice the correspondence: intercept above is the average eval score for teaching faculty; `ranktenure track` is the *difference* between teaching faculty and tenure track faculty (4.28 - .13 = 4.15); `ranktenured` is the *difference* between teaching faculty and tenure track faculty (4.28 - .145 = 4.14) [with some rounding]. 
+
+
+The coefficients are all differences relative to the baseline. What if we want to change the baseline? Here's where factors come in. The baseline in `lm` is just the lowest factor level for the variable. So we can use `factor` to change the baseline by reordering the levels, as below :
+
+
+```{r}
+new_evals = 
+  evals %>% 
+  mutate(rank = factor(rank, levels = c("tenured", "tenure track", "teaching")))
+
+# let's look at rank
+mod_rank = lm(score ~ rank, data = new_evals)
+get_regression_table(mod_rank)
+```
+
+Notice the new baseline = tenured because it's the first one on line 151. 
