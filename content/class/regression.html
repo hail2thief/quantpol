@@ -20,10 +20,11 @@ editor_options:
 <div id="TOC">
 <ul>
 <li><a href="#the-problem-with-objects">The problem with objects</a></li>
-<li><a href="#drawing-lines">Drawing lines</a>
+<li><a href="#drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a>
 <ul>
 <li><a href="#why-not-just-take-an-average">Why not just take an average?</a></li>
 </ul></li>
+<li><a href="#regression-models-lm">Regression models (lm)</a></li>
 </ul>
 </div>
 
@@ -72,14 +73,16 @@ gss_new = gss_cat %&gt;%
 gss_cat = gss_cat %&gt;% 
   mutate(tv_mins = tvhours*60)</code></pre>
 </div>
-<div id="drawing-lines" class="section level2">
-<h2>Drawing lines</h2>
-<p>Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X.</p>
+<div id="drawing-lines-geom_smooth" class="section level2">
+<h2>Drawing lines (geom_smooth)</h2>
+<p>Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using <code>geom_smooth</code>, as below. Notice <code>method = "lm"</code>.</p>
 <pre class="r"><code># libraries
 library(tidyverse)
+library(moderndive)
 
 # mtcars
-ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + geom_smooth(method = &quot;lm&quot;)</code></pre>
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
+  geom_smooth(method = &quot;lm&quot;)</code></pre>
 <p><img src="/class/regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <div id="why-not-just-take-an-average" class="section level3">
 <h3>Why not just take an average?</h3>
@@ -104,4 +107,19 @@ mtcars %&gt;%
 ## 10  2.77    19.7
 ## # … with 19 more rows</code></pre>
 </div>
+</div>
+<div id="regression-models-lm" class="section level2">
+<h2>Regression models (lm)</h2>
+<p>If we want to find the “math-y” parts of the line (the y-intercept, the slope), we can fit a regression model using <code>lm()</code> and interpret the output using <code>get_regression_table()</code>.</p>
+<pre class="r"><code># finding the math-y parts of the line
+# what is the y-intercept? 
+# what is the slope? 
+# lm(Y ~ X, data = DATA) # TEMPLATE
+weight_m = lm(mpg ~ wt, data = mtcars)
+get_regression_table(weight_m)</code></pre>
+<pre><code>## # A tibble: 2 x 7
+##   term      estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept    37.3      1.88      19.9        0    33.4     41.1 
+## 2 wt           -5.34     0.559     -9.56       0    -6.49    -4.20</code></pre>
 </div>

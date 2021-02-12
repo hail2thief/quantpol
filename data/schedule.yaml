@@ -41,53 +41,52 @@ lessons:
     
   - title: '<i class="fas fa-star"></i> **Assignment 4**'
     date: "Feb 16, Tue"
-    #assignment: "04-assignment"
+    assignment: "ps-reg"
+    
+  - title: "Prediction"
+    date: "W6: Feb 15 - 19"
+    #class: "06-class"
+    #reading: "causal"
+    
+  - title: '<i class="fas fa-star"></i> **Assignment 5**'
+    date: "Feb 23, Tue"
+    #assignment: "05-assignment"
+    
+  - title: '<i class="fas fa-star"></i> **Midterm Exam**'
+    date: "W7: Feb 22 - 26"
     
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
 
   - title: "The fundamental problem of causality"
-    date: "W6: Feb 15 - 19"
-    #class: "06-class"
-    reading: "causal"
-
-  - title: "Causal terror with ggdag"
-    date: "W7: Feb 22 - 26"
-    #class: "07-class"
-    reading: "dags"
-
-  - title: '<i class="fas fa-star"></i> **Assignment 5**'
-    date: "Mar 2, Tue"
-    #assignment: "05-assignment"
-    
-  - title: '<i class="fas fa-star"></i> **Midterm Exam**'
     date: "W8: Mar 1 - 5"
-
-  
-  - title: "Closing backdoors with controls"
+    #class: "07-class"
+    reading: "causal"
+    
+  - title: "Causal diagrams"
     date: "W9: Mar 8 - 12"
     #class: "08-class"
-    reading: "controls"
+    reading: "dags"
     
   - title: '<i class="fas fa-star"></i> **Assignment 6**'
     date: "Mar 16, Tue"
     #assignment: "06-assignment"
     
-  - title: "Toolbox: fixed effects"
+  - title: "Closing backdoors with controls"
     date: "W10: Mar 15 - 19"
     #class: "11-class"
-    reading: "fixed-effects"
+    reading: "controls"
     
   - title: '<i class="fas fa-star"></i> **Assignment 7**'
     date: "Mar 23, Tue"
     #assignment: "07-assignment"
     
-  - title: "Toolbox: difference-in-difference"
+  - title: "Causal toolbox: fixed effects + DID"
     date: "W11: Mar 22 - 26"
     #class: "12-class"
-    reading: "did"
+    reading: "fe"
     
-  - title: "Toolbox: regression discontinuity"
+  - title: "Toolbox: DID + regression discontinuity"
     date: "W12: Mar 29 - Apr 2"
     #class: "13-class"
     reading: "reg-discon"
@@ -99,10 +98,10 @@ lessons:
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
-  - title: "Bootstrapping + CI with infer"
+  - title: "Uncertainty + bootstrapping"
     date: "W13: Apr 5 - 9"
     #class: "14-class"
-    reading: "bootstrap"
+    #reading: "bootstrap"
     
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
     date: "Apr 13, Tue"
@@ -116,9 +115,9 @@ lessons:
     date: "Apr 20, Tue"
     #assignment: "09-assignment"
     
-  - title: "Bonus: prediction"
+  - title: "Hypothesis testing"
     date: "W15: Apr 19 - 23"
-    reading: "prediction"
+    #reading: "prediction"
     
   - title: "Review for final"
     date: "Apr 26, Mon"

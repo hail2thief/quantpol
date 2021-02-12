@@ -69,18 +69,20 @@ gss_cat = gss_cat %>%
 ```
 
 
-## Drawing lines
+## Drawing lines (geom_smooth)
 
 
-Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. 
+Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using `geom_smooth`, as below. Notice `method = "lm"`. 
 
 
 ```{r, warning=F,message=F}
 # libraries
 library(tidyverse)
+library(moderndive)
 
 # mtcars
-ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + geom_smooth(method = "lm")
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
+  geom_smooth(method = "lm")
 ```
 
 
@@ -98,4 +100,20 @@ mtcars %>%
 
 ```
 
+
+## Regression models (lm)
+
+
+
+If we want to find the "math-y" parts of the line (the y-intercept, the slope), we can fit a regression model using `lm()` and interpret the output using `get_regression_table()`. 
+
+
+```{r}
+# finding the math-y parts of the line
+# what is the y-intercept? 
+# what is the slope? 
+# lm(Y ~ X, data = DATA) # TEMPLATE
+weight_m = lm(mpg ~ wt, data = mtcars)
+get_regression_table(weight_m)
+```
 
