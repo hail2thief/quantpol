@@ -1,0 +1,160 @@
+---
+title: "Prediction"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 6
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#predictions-simple-model-one-explanatory-variable">Predictions (simple model, one explanatory variable)</a></li>
+<li><a href="#more-complicated-models-multiple-explanatory-variables">More complicated models (multiple explanatory variables)</a>
+<ul>
+<li><a href="#interpreting-regression-output">Interpreting regression output</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="predictions-simple-model-one-explanatory-variable" class="section level2">
+<h2>Predictions (simple model, one explanatory variable)</h2>
+<pre class="r"><code># libraries
+library(tidyverse)
+library(broom)
+library(moderndive)</code></pre>
+<p>Let’s say we want to use mtcars to make predictions about a car’s fuel efficency (mpg) using a car’s weight (wt).</p>
+<pre class="r"><code># data
+head(mtcars)</code></pre>
+<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+<p>First we fit a model and look at the output.</p>
+<pre class="r"><code># fitting a model of mpg ~ weight
+mod = lm(mpg ~ wt, data = mtcars)
+get_regression_table(mod)</code></pre>
+<pre><code>## # A tibble: 2 x 7
+##   term      estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept    37.3      1.88      19.9        0    33.4     41.1 
+## 2 wt           -5.34     0.559     -9.56       0    -6.49    -4.20</code></pre>
+<p>Next, we define a scenario we want a prediction for. For example, what MPG should we expect with a car that weighs 1.05 tons?</p>
+<pre class="r"><code>scenario = tibble(wt = 1.05)</code></pre>
+<p>Finally, we use the <code>augment</code> function to get our prediction. We give it our model and our scenario.</p>
+<pre class="r"><code># get my prediction with augment()
+augment(mod, newdata = scenario)</code></pre>
+<pre><code>## Warning: &#39;newdata&#39; had 1 row but variables found have 234 rows</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##      wt .fitted
+##   &lt;dbl&gt;   &lt;dbl&gt;
+## 1  1.05    31.7</code></pre>
+<p>We can also do this by hand (plus or minus some rounding!). We just take our regression equation and plug in 1.05 for weight:</p>
+<pre class="r"><code>37.3 + -5.34*1.05</code></pre>
+<pre><code>## [1] 31.693</code></pre>
+<p>We can make more complicated predictions. For example, predicted MPG for cars with weights 1 through 5:</p>
+<pre class="r"><code># what is the predicted mpg, for a car with: 
+# wt = 1, 2, 3, 4, 5 tons?
+scenario = tibble(wt = c(1, 2, 3, 4, 5))
+
+# get prediction (i saved as data object to plot below)
+preds_wt = augment(mod, newdata = scenario)</code></pre>
+<pre><code>## Warning: &#39;newdata&#39; had 5 rows but variables found have 234 rows</code></pre>
+<pre class="r"><code># look at predictions
+preds_wt</code></pre>
+<pre><code>## # A tibble: 5 x 2
+##      wt .fitted
+##   &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1    31.9
+## 2     2    26.6
+## 3     3    21.3
+## 4     4    15.9
+## 5     5    10.6</code></pre>
+<p>We could use this to plot our predictions:</p>
+<pre class="r"><code>ggplot(preds_wt, aes(x = wt, y = .fitted)) + 
+  # the stuff in geom_col is just for aesthetic purposes!
+  geom_col(color = &quot;white&quot;, fill = &quot;red&quot;, alpha = .8) + 
+  theme_light() + 
+  labs(x = &quot;Weight (in tons)&quot;, y = &quot;Predicted fuel efficiency&quot;)</code></pre>
+<p><img src="/class/prediction_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="more-complicated-models-multiple-explanatory-variables" class="section level2">
+<h2>More complicated models (multiple explanatory variables)</h2>
+<p>The real power of modeling is in using more than one explanatory variable. Below, we can model MPG using car weight (wt), number of cylinders (cyl), horsepower (hp), and the shape of the engine (vs; vs = 0 is v-shaped, vs = 1 is straight).</p>
+<pre class="r"><code>mod = lm(mpg ~ wt + cyl + hp + vs, data = mtcars)
+get_regression_table(mod)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##   term      estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept   38.5       3.34     11.5     0       31.6     45.3  
+## 2 wt          -3.18      0.774    -4.12    0       -4.77    -1.60 
+## 3 cyl         -0.905     0.679    -1.33    0.194   -2.30     0.488
+## 4 hp          -0.018     0.012    -1.46    0.156   -0.043    0.007
+## 5 vs           0.155     1.62      0.096   0.924   -3.16     3.47</code></pre>
+<div id="interpreting-regression-output" class="section level3">
+<h3>Interpreting regression output</h3>
+<p>Remember, the basic template for interpreting regression coefficients for <strong>continuous variables</strong> is the following:</p>
+<blockquote>
+<p>For every unit increase in EXPLANATORY VARIABLE there is an associated COEFFICIENT ESTIMATE change in OUTCOME VARIABLE</p>
+</blockquote>
+<p>The basic template for interpreting regression coefficients for <strong>categorical variables</strong> is the following:</p>
+<blockquote>
+<p>observations with CATEGORY have, on average, COEFFICIENT ESTIMATE more/less OUTCOME VARIABLE than observations with BASELINE CATEGORY</p>
+</blockquote>
+<p>And the template for interpreting the <em>intercept</em> is the following:</p>
+<blockquote>
+<p>The average value of the OUTCOME VARIABLE when all EXPLANATORY VARIABLES are set to 0</p>
+</blockquote>
+<p>So with our model above:</p>
+<pre class="r"><code>get_regression_table(mod)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##   term      estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept   38.5       3.34     11.5     0       31.6     45.3  
+## 2 wt          -3.18      0.774    -4.12    0       -4.77    -1.60 
+## 3 cyl         -0.905     0.679    -1.33    0.194   -2.30     0.488
+## 4 hp          -0.018     0.012    -1.46    0.156   -0.043    0.007
+## 5 vs           0.155     1.62      0.096   0.924   -3.16     3.47</code></pre>
+<ul>
+<li><code>wt</code> = for every ADDITIONAL TON OF WEIGHT a car has, there is an associated <strong>3.18</strong> decrease in expected MILES PER GALLON (continuous)</li>
+<li><code>cyl</code> = for every ADDITIONAL ENGINE CYLYNDER a car has, there is an associated <strong>.905</strong> decrease in expected MILES PER GALLON (continuous)</li>
+<li><code>hp</code> = for every ADDITIONAL UNIT OF HORSE POWER a car has, there is an associated <strong>.018</strong> decrease in expected MILES PER GALLON (continuous)</li>
+<li><code>vs</code> = cars with STRAIGHT ENGINES have, on average, .155 more MILES PER GALLON than cars with V-SHAPED ENGINES. (categorical)</li>
+<li><code>intercept</code> = The average MILES PER GALLON of a car with <em>0 weight (wt = 0)</em>, <em>0 cylinders (cyl = 0)</em>, <em>0 horsepower (hp = 0)</em>, and <em>a v-shaped engine (vs = 0)</em> is <strong>38.5</strong>.</li>
+</ul>
+<p>Here’s a different example, using the <code>evals</code> dataset:</p>
+<pre class="r"><code># fit model
+mod_evals = lm(score ~ age + bty_avg + gender + rank, data = evals)
+get_regression_table(mod_evals)</code></pre>
+<pre><code>## # A tibble: 6 x 7
+##   term             estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept           4.32      0.195     22.1    0        3.94     4.70 
+## 2 age                -0.008     0.003     -2.67   0.008   -0.015   -0.002
+## 3 bty_avg             0.062     0.017      3.72   0        0.029    0.095
+## 4 gendermale          0.209     0.052      4.01   0        0.107    0.312
+## 5 ranktenure track   -0.226     0.08      -2.81   0.005   -0.384   -0.068
+## 6 ranktenured        -0.153     0.062     -2.46   0.014   -0.275   -0.031</code></pre>
+<ul>
+<li><code>age</code> = for every ADDITIONAL YEAR of a professor, there is an associated <strong>.008</strong> decrease in their STUDENT EVALUATION SCORE (continuous)</li>
+<li><code>bty_score</code> = for every ADDITIONAL POINT OF of a professor’s BEAUTY SCORE, there is an associated <strong>.008</strong> decrease in their STUDENT EVALUATION SCORE (continuous)</li>
+<li><code>gendermale</code> = MALE professors have, on average, .2 more points on their STUDENT EVALUATION SCORE than FEMALE professors (continuous)</li>
+<li><code>ranktenure track</code> = TENURE TRACK professors have, on average, .226 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)</li>
+<li><code>ranktenured</code> = TENURED professors have, on average, .153 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)</li>
+<li><code>intercept</code> = the average STUDENT EVALUATION SCORE for a professor who is <em>0 years old (age = 0)</em>, has a <em>beauty score of 0 (bty_avg = 0)</em>, is <em>female (gendermale = 0)</em>, is <em>not tenure track (ranktenure track = 0)</em> and <em>not tenured (ranktenured = 0)</em> (i.e., they are “teaching track”, the baseline category)</li>
+</ul>
+</div>
+</div>

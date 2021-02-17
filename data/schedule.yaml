@@ -46,11 +46,11 @@ lessons:
   - title: "Prediction"
     date: "W6: Feb 15 - 19"
     #class: "06-class"
-    #reading: "causal"
+    class: "prediction"
     
   - title: '<i class="fas fa-star"></i> **Assignment 5**'
     date: "Feb 23, Tue"
-    #assignment: "05-assignment"
+    assignment: "ps-predict"
     
   - title: '<i class="fas fa-star"></i> **Midterm Exam**'
     date: "W7: Feb 22 - 26"
