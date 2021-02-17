@@ -20,6 +20,7 @@ output:
 
 - ...plot the four most common graphs with `ggplot()`
 - ...when to use `facet_wrap` and how to use it
+- ...using color with ggplot to create separate lines
 - ...extract subsets of a dataset using `filter`
 - ...use the logical operators effectively (`==`, `!=`, `&`, `|`)
 - ...calculate summary statistics (mean, median, min, max) using `summarise`
@@ -34,10 +35,10 @@ output:
 - ...draw a trend line using `geom_smooth()`
 - ...talk about and interpret correlation coefficients
 - ...speak the language of statistical modeling, i.e., outcome variable, explanatory variable
-<!-- - ...run an OLS model using `lm` and extract its output -->
-<!-- - ... interpret results from an OLS model, e.g., the coefficient, "one unit change in..." -->
-<!-- - ...interpret coefficient estimates of *continuous* and *categorical* variables -->
-
+- ...run an OLS model using `lm` and extract its output
+- ... interpret results from an OLS model, e.g., the coefficient, "one unit change in..."
+- ...interpret coefficient estimates of *continuous* and *categorical* variables
+- ...use `tibble` and `augment` to make predictions about specific scenarios
 
 ## Things you should know for Final
 ### You should know...

@@ -137,7 +137,7 @@ mod_evals = lm(score ~ age + bty_avg + gender + rank, data = evals)
 get_regression_table(mod_evals)
 ```
 
-- `age` = for every ADDITIONAL YEAR of a professor, there is an associated **.008** decrease in their STUDENT EVALUATION SCORE (continuous)
+- `age` = for every ADDITIONAL YEAR OF AGE of a professor, there is an associated **.008** decrease in their STUDENT EVALUATION SCORE (continuous)
 - `bty_score` = for every ADDITIONAL POINT OF of a professor's BEAUTY SCORE, there is an associated **.008** decrease in their STUDENT EVALUATION SCORE (continuous)
 - `gendermale` = MALE professors have, on average, .2 more points on their STUDENT EVALUATION SCORE than FEMALE professors (continuous)
 - `ranktenure track` = TENURE TRACK professors have, on average, .226 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)
