@@ -20,6 +20,12 @@ editor_options:
 ## Predictions (simple model, one explanatory variable)
 
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+
 ```{r, warning=F, message=F}
 # libraries
 library(tidyverse)
@@ -100,7 +106,62 @@ get_regression_table(mod)
 ```
 
 
-### Interpreting regression output
+We can then make use of these explanatory variables to make (hopefully) more precise predictions about the outcome we care about. Here's an example predicting fuel efficiency for a 1 ton car, with a 4 cylinder engine, with 120 horsepower, and a straight engine:
+
+```{r}
+# set scenario
+scen = tibble(wt = 3, 
+              cyl = 4, 
+              hp = 160, 
+              vs = 0)
+
+# get prediction
+augment(mod, newdata = scen)
+```
+
+
+
+I can also get predictions where I vary the values one variable takes on and leave the others at a constant value: 
+
+```{r}
+# i have a car that weighs 1 ton, hp = 100, vs = 0, 
+# what does fuel efficiency look like, if I have 4, 6, 8?
+scenario = tibble(wt = 1, 
+                  hp = 100, 
+                  vs = 0, 
+                  cyl = c(4, 6, 8))
+
+augment(mod, newdata = scenario)
+```
+
+
+Here's a different example, using a model of housing prices: 
+
+```{r}
+mod_prices = lm(price ~ sqft_living + bedrooms + bathrooms + waterfront, 
+                data = house_prices)
+get_regression_table(mod_prices)
+```
+
+
+How much should we expect a house with 4 bedrooms, 2 bathrooms, 2000 square feet, and a waterfront view to cost? Note that `waterfront` variable is coded as either TRUE or FALSE in the original data. 
+
+
+```{r}
+scenario = tibble(bedrooms = 4, 
+                  bathrooms = 2, 
+                  sqft_living = 2000, 
+                  waterfront = TRUE)
+
+augment(mod_prices, newdata = scenario)
+```
+
+
+
+
+
+
+## Interpreting regression output
 
 Remember, the basic template for interpreting regression coefficients for **continuous variables** is the following: 
 

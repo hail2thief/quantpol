@@ -20,10 +20,8 @@ editor_options:
 <div id="TOC">
 <ul>
 <li><a href="#predictions-simple-model-one-explanatory-variable">Predictions (simple model, one explanatory variable)</a></li>
-<li><a href="#more-complicated-models-multiple-explanatory-variables">More complicated models (multiple explanatory variables)</a>
-<ul>
+<li><a href="#more-complicated-models-multiple-explanatory-variables">More complicated models (multiple explanatory variables)</a></li>
 <li><a href="#interpreting-regression-output">Interpreting regression output</a></li>
-</ul></li>
 </ul>
 </div>
 
@@ -57,7 +55,6 @@ get_regression_table(mod)</code></pre>
 <p>Finally, we use the <code>augment</code> function to get our prediction. We give it our model and our scenario.</p>
 <pre class="r"><code># get my prediction with augment()
 augment(mod, newdata = scenario)</code></pre>
-<pre><code>## Warning: &#39;newdata&#39; had 1 row but variables found have 234 rows</code></pre>
 <pre><code>## # A tibble: 1 x 2
 ##      wt .fitted
 ##   &lt;dbl&gt;   &lt;dbl&gt;
@@ -71,9 +68,9 @@ augment(mod, newdata = scenario)</code></pre>
 scenario = tibble(wt = c(1, 2, 3, 4, 5))
 
 # get prediction (i saved as data object to plot below)
-preds_wt = augment(mod, newdata = scenario)</code></pre>
-<pre><code>## Warning: &#39;newdata&#39; had 5 rows but variables found have 234 rows</code></pre>
-<pre class="r"><code># look at predictions
+preds_wt = augment(mod, newdata = scenario)
+
+# look at predictions
 preds_wt</code></pre>
 <pre><code>## # A tibble: 5 x 2
 ##      wt .fitted
@@ -104,8 +101,60 @@ get_regression_table(mod)</code></pre>
 ## 3 cyl         -0.905     0.679    -1.33    0.194   -2.30     0.488
 ## 4 hp          -0.018     0.012    -1.46    0.156   -0.043    0.007
 ## 5 vs           0.155     1.62      0.096   0.924   -3.16     3.47</code></pre>
-<div id="interpreting-regression-output" class="section level3">
-<h3>Interpreting regression output</h3>
+<p>We can then make use of these explanatory variables to make (hopefully) more precise predictions about the outcome we care about. Here’s an example predicting fuel efficiency for a 1 ton car, with a 4 cylinder engine, with 120 horsepower, and a straight engine:</p>
+<pre class="r"><code># set scenario
+scen = tibble(wt = 3, 
+              cyl = 4, 
+              hp = 160, 
+              vs = 0)
+
+# get prediction
+augment(mod, newdata = scen)</code></pre>
+<pre><code>## # A tibble: 1 x 5
+##      wt   cyl    hp    vs .fitted
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1     3     4   160     0    22.5</code></pre>
+<p>I can also get predictions where I vary the values one variable takes on and leave the others at a constant value:</p>
+<pre class="r"><code># i have a car that weighs 1 ton, hp = 100, vs = 0, 
+# what does fuel efficiency look like, if I have 4, 6, 8?
+scenario = tibble(wt = 1, 
+                  hp = 100, 
+                  vs = 0, 
+                  cyl = c(4, 6, 8))
+
+augment(mod, newdata = scenario)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##      wt    hp    vs   cyl .fitted
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1     1   100     0     4    29.9
+## 2     1   100     0     6    28.1
+## 3     1   100     0     8    26.3</code></pre>
+<p>Here’s a different example, using a model of housing prices:</p>
+<pre class="r"><code>mod_prices = lm(price ~ sqft_living + bedrooms + bathrooms + waterfront, 
+                data = house_prices)
+get_regression_table(mod_prices)</code></pre>
+<pre><code>## # A tibble: 5 x 7
+##   term           estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept        68337.   6670.       10.2    0       55263.   81410.
+## 2 sqft_living        297.      2.99     99.0    0         291.     302.
+## 3 bedrooms        -50641.   2259.      -22.4    0      -55068.  -46214.
+## 4 bathrooms         9327.   3386.        2.76   0.006    2690.   15964.
+## 5 waterfrontTRUE  794639.  19723.       40.3    0      755981.  833297.</code></pre>
+<p>How much should we expect a house with 4 bedrooms, 2 bathrooms, 2000 square feet, and a waterfront view to cost? Note that <code>waterfront</code> variable is coded as either TRUE or FALSE in the original data.</p>
+<pre class="r"><code>scenario = tibble(bedrooms = 4, 
+                  bathrooms = 2, 
+                  sqft_living = 2000, 
+                  waterfront = TRUE)
+
+augment(mod_prices, newdata = scenario)</code></pre>
+<pre><code>## # A tibble: 1 x 5
+##   bedrooms bathrooms sqft_living waterfront  .fitted
+##      &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;lgl&gt;         &lt;dbl&gt;
+## 1        4         2        2000 TRUE       1272111.</code></pre>
+</div>
+<div id="interpreting-regression-output" class="section level2">
+<h2>Interpreting regression output</h2>
 <p>Remember, the basic template for interpreting regression coefficients for <strong>continuous variables</strong> is the following:</p>
 <blockquote>
 <p>For every unit increase in EXPLANATORY VARIABLE there is an associated COEFFICIENT ESTIMATE change in OUTCOME VARIABLE</p>
@@ -156,5 +205,4 @@ get_regression_table(mod_evals)</code></pre>
 <li><code>ranktenured</code> = TENURED professors have, on average, .153 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)</li>
 <li><code>intercept</code> = the average STUDENT EVALUATION SCORE for a professor who is <em>0 years old (age = 0)</em>, has a <em>beauty score of 0 (bty_avg = 0)</em>, is <em>female (gendermale = 0)</em>, is <em>not tenure track (ranktenure track = 0)</em> and <em>not tenured (ranktenured = 0)</em> (i.e., they are “teaching track”, the baseline category)</li>
 </ul>
-</div>
 </div>
