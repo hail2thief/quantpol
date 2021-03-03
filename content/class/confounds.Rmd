@@ -1,0 +1,88 @@
+---
+title: "Confounds"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 7
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+## The experimental gold standard
+
+
+Remember that in an experiment, we randomize assignment to some treatment, measure an outcome we care about, and compare whether the units that got the treatment have better or worse results on the outcome than the group that didn't get the treatment. 
+
+
+We can simulate a fake experiment (on rats) using R: 
+
+```{r}
+library(tidyverse)
+library(broom)
+
+rats = tibble(rat_id = 1:200, 
+              vaccine = sample(c(1, 0), size = 200, 
+                               replace = TRUE)) %>% 
+  mutate(covid_levels = -2*vaccine + rnorm(200))
+
+rats
+```
+
+
+Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels. 
+
+
+We can estimate the effect of the vaccine on COVID using regression: 
+
+```{r}
+# estimate treatment effect
+m1 = lm(covid_levels ~ vaccine, data = rats)
+tidy(m1)
+```
+
+
+
+## Marriage, divorce, age, and confounding
+
+Remember in class that we can have a DAG like the below, where the age (A) at which people get married has a negative causal effect on the marriage (M) rate (places where people wait till later to get married have lower marriage rates) and a negative causal effect on the divorce (D) rate (places where people wait to get married have lower divorce rates). 
+
+
+```{r}
+library(ggdag)
+
+dagify(D ~ A, 
+       M ~ A) %>% 
+  ggdag(layout = "circle") + 
+  theme_dag()
+```
+
+
+Note that there is no arrow from marriage rate (M) to divorce (D). We have explicitly made our data so that there is no causal effect of M on D. And yet! this DAG will produce data that shows a strong relationship between M and D. 
+
+Faking some data helps us see this: 
+
+```{r}
+fake = tibble(age = rnorm(100), 
+       marriage = -2*age + rnorm(100), 
+       divorce = -2*age + rnorm(100))
+
+ggplot(fake, aes(x = marriage, y = divorce)) + 
+  geom_point() + geom_smooth(method = "lm") + 
+  theme_light()
+```
+
+
+Note the line of code defining the divorce rate: no marriage there! 

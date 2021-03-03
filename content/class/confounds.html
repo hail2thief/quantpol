@@ -1,0 +1,86 @@
+---
+title: "Confounds"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 7
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#the-experimental-gold-standard">The experimental gold standard</a></li>
+<li><a href="#marriage-divorce-age-and-confounding">Marriage, divorce, age, and confounding</a></li>
+</ul>
+</div>
+
+<div id="the-experimental-gold-standard" class="section level2">
+<h2>The experimental gold standard</h2>
+<p>Remember that in an experiment, we randomize assignment to some treatment, measure an outcome we care about, and compare whether the units that got the treatment have better or worse results on the outcome than the group that didn’t get the treatment.</p>
+<p>We can simulate a fake experiment (on rats) using R:</p>
+<pre class="r"><code>library(tidyverse)
+library(broom)
+
+rats = tibble(rat_id = 1:200, 
+              vaccine = sample(c(1, 0), size = 200, 
+                               replace = TRUE)) %&gt;% 
+  mutate(covid_levels = -2*vaccine + rnorm(200))
+
+rats</code></pre>
+<pre><code>## # A tibble: 200 x 3
+##    rat_id vaccine covid_levels
+##     &lt;int&gt;   &lt;dbl&gt;        &lt;dbl&gt;
+##  1      1       1      -3.07  
+##  2      2       1      -3.19  
+##  3      3       1      -2.57  
+##  4      4       0      -0.534 
+##  5      5       1      -2.95  
+##  6      6       1      -0.922 
+##  7      7       1      -2.32  
+##  8      8       0       0.314 
+##  9      9       0      -0.0918
+## 10     10       1      -1.84  
+## # … with 190 more rows</code></pre>
+<p>Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels.</p>
+<p>We can estimate the effect of the vaccine on COVID using regression:</p>
+<pre class="r"><code># estimate treatment effect
+m1 = lm(covid_levels ~ vaccine, data = rats)
+tidy(m1)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  0.00709    0.0888    0.0798 9.36e- 1
+## 2 vaccine     -2.05       0.128   -16.1    9.84e-38</code></pre>
+</div>
+<div id="marriage-divorce-age-and-confounding" class="section level2">
+<h2>Marriage, divorce, age, and confounding</h2>
+<p>Remember in class that we can have a DAG like the below, where the age (A) at which people get married has a negative causal effect on the marriage (M) rate (places where people wait till later to get married have lower marriage rates) and a negative causal effect on the divorce (D) rate (places where people wait to get married have lower divorce rates).</p>
+<pre class="r"><code>library(ggdag)
+
+dagify(D ~ A, 
+       M ~ A) %&gt;% 
+  ggdag(layout = &quot;circle&quot;) + 
+  theme_dag()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Note that there is no arrow from marriage rate (M) to divorce (D). We have explicitly made our data so that there is no causal effect of M on D. And yet! this DAG will produce data that shows a strong relationship between M and D.</p>
+<p>Faking some data helps us see this:</p>
+<pre class="r"><code>fake = tibble(age = rnorm(100), 
+       marriage = -2*age + rnorm(100), 
+       divorce = -2*age + rnorm(100))
+
+ggplot(fake, aes(x = marriage, y = divorce)) + 
+  geom_point() + geom_smooth(method = &quot;lm&quot;) + 
+  theme_light()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Note the line of code defining the divorce rate: no marriage there!</p>
+</div>

@@ -60,7 +60,7 @@ lessons:
 
   - title: "The fundamental problem of causality"
     date: "W8: Mar 1 - 5"
-    #class: "07-class"
+    class: "confounds"
     reading: "causal"
     
   - title: "Causal diagrams"
