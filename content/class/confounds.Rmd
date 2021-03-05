@@ -86,3 +86,64 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
 
 
 Note the line of code defining the divorce rate: no marriage there! 
+
+
+
+## Elemental confounds
+
+
+### forks
+
+Remember, the fork looks like this: 
+
+```{r}
+confounder_triangle(x = "Has Huge beard", 
+                    y = "Amount of basketball watched",
+                    z = "Love James Harden") %>% 
+  ggdag(use_labels = "label") +
+  theme_dag()
+```
+
+
+Or like this:
+
+```{r}
+confounder_triangle(x = "Marriage rate", 
+                    y = "Divorce rate",
+                    z = "Median age at marriage", x_y_associated = TRUE) %>% 
+  ggdag(use_labels = "label") +
+  theme_dag()
+```
+
+
+### pipes
+
+
+The pipe looks like this: 
+
+
+```{r}
+dagify(Y ~ B + G, 
+       B ~ X, 
+       labels = c("Y" = "Plant growth", 
+                  "B" = "Good bacteria", 
+                  "G" = "Starting size", 
+                  "X" = "Fertilizer")) %>% 
+  ggdag(use_labels = "label") + 
+  theme_dag_blank()
+```
+
+
+
+### collider
+
+The collider looks like this: 
+
+```{r}
+collider_triangle(x = "Qualtiy research", 
+                  y = "Surprising results", 
+                  m = "Published") %>% 
+  ggdag(use_labels = "label") + 
+  theme_dag_blank()
+```
+

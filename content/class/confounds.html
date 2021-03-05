@@ -21,6 +21,12 @@ editor_options:
 <ul>
 <li><a href="#the-experimental-gold-standard">The experimental gold standard</a></li>
 <li><a href="#marriage-divorce-age-and-confounding">Marriage, divorce, age, and confounding</a></li>
+<li><a href="#elemental-confounds">Elemental confounds</a>
+<ul>
+<li><a href="#forks">forks</a></li>
+<li><a href="#pipes">pipes</a></li>
+<li><a href="#collider">collider</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -40,16 +46,16 @@ rats</code></pre>
 <pre><code>## # A tibble: 200 x 3
 ##    rat_id vaccine covid_levels
 ##     &lt;int&gt;   &lt;dbl&gt;        &lt;dbl&gt;
-##  1      1       1      -3.07  
-##  2      2       1      -3.19  
-##  3      3       1      -2.57  
-##  4      4       0      -0.534 
-##  5      5       1      -2.95  
-##  6      6       1      -0.922 
-##  7      7       1      -2.32  
-##  8      8       0       0.314 
-##  9      9       0      -0.0918
-## 10     10       1      -1.84  
+##  1      1       1       -1.65 
+##  2      2       0        0.830
+##  3      3       1       -1.91 
+##  4      4       1       -1.92 
+##  5      5       1       -2.53 
+##  6      6       1       -2.79 
+##  7      7       1       -2.46 
+##  8      8       0       -0.738
+##  9      9       1       -2.25 
+## 10     10       1       -0.671
 ## # … with 190 more rows</code></pre>
 <p>Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels.</p>
 <p>We can estimate the effect of the vaccine on COVID using regression:</p>
@@ -59,8 +65,8 @@ tidy(m1)</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)  0.00709    0.0888    0.0798 9.36e- 1
-## 2 vaccine     -2.05       0.128   -16.1    9.84e-38</code></pre>
+## 1 (Intercept) -0.00180    0.0856   -0.0210 9.83e- 1
+## 2 vaccine     -2.04       0.122   -16.8    6.72e-40</code></pre>
 </div>
 <div id="marriage-divorce-age-and-confounding" class="section level2">
 <h2>Marriage, divorce, age, and confounding</h2>
@@ -83,4 +89,47 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
   theme_light()</code></pre>
 <p><img src="/class/confounds_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Note the line of code defining the divorce rate: no marriage there!</p>
+</div>
+<div id="elemental-confounds" class="section level2">
+<h2>Elemental confounds</h2>
+<div id="forks" class="section level3">
+<h3>forks</h3>
+<p>Remember, the fork looks like this:</p>
+<pre class="r"><code>confounder_triangle(x = &quot;Has Huge beard&quot;, 
+                    y = &quot;Amount of basketball watched&quot;,
+                    z = &quot;Love James Harden&quot;) %&gt;% 
+  ggdag(use_labels = &quot;label&quot;) +
+  theme_dag()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Or like this:</p>
+<pre class="r"><code>confounder_triangle(x = &quot;Marriage rate&quot;, 
+                    y = &quot;Divorce rate&quot;,
+                    z = &quot;Median age at marriage&quot;, x_y_associated = TRUE) %&gt;% 
+  ggdag(use_labels = &quot;label&quot;) +
+  theme_dag()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="pipes" class="section level3">
+<h3>pipes</h3>
+<p>The pipe looks like this:</p>
+<pre class="r"><code>dagify(Y ~ B + G, 
+       B ~ X, 
+       labels = c(&quot;Y&quot; = &quot;Plant growth&quot;, 
+                  &quot;B&quot; = &quot;Good bacteria&quot;, 
+                  &quot;G&quot; = &quot;Starting size&quot;, 
+                  &quot;X&quot; = &quot;Fertilizer&quot;)) %&gt;% 
+  ggdag(use_labels = &quot;label&quot;) + 
+  theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="collider" class="section level3">
+<h3>collider</h3>
+<p>The collider looks like this:</p>
+<pre class="r"><code>collider_triangle(x = &quot;Qualtiy research&quot;, 
+                  y = &quot;Surprising results&quot;, 
+                  m = &quot;Published&quot;) %&gt;% 
+  ggdag(use_labels = &quot;label&quot;) + 
+  theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
 </div>
