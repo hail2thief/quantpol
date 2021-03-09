@@ -21,6 +21,63 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```
 
 
+
+## Confounding
+
+
+Remember that we're always trying to estimate the effect of some treatment, X, on some outcome, Y. The problem is that simply looking at the relationship between X and Y can lead you astray, since lots of things are correlated in the world that have no causal relationship (e.g., number of shark attacks and amount of ice cream consumed are probably positively correlated; but obviously ice cream does not cause shark attacks!). 
+
+This "being led astray" by data is what we call **confounding**. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, *without confounding*. 
+
+
+
+## Marriage, divorce, age, and confounding
+
+Remember in class that we can have a DAG like the below, where the age (A) at which people get married has a negative causal effect on the marriage (M) rate (places where people wait till later to get married have lower marriage rates) and a negative causal effect on the divorce (D) rate (places where people wait to get married have lower divorce rates). 
+
+
+```{r}
+library(ggdag)
+library(tidyverse)
+library(broom)
+
+dagify(D ~ A, 
+       M ~ A) %>% 
+  ggdag(layout = "circle") + 
+  theme_dag()
+```
+
+
+Note that there is no arrow from marriage rate (M) to divorce (D). We have explicitly made our data so that there is no causal effect of M on D. And yet! this DAG will produce data that shows a strong relationship between M and D. 
+
+Faking some data helps us see this:
+
+
+```{r}
+fake = tibble(age = rnorm(100), 
+       marriage = -2*age + rnorm(100), 
+       divorce = -2*age + rnorm(100))
+
+ggplot(fake, aes(x = marriage, y = divorce)) + 
+  geom_point() + geom_smooth(method = "lm") + 
+  theme_light()
+```
+
+
+We end up with a *confounded* estimate of the effect of marriage on divorce. 
+
+
+
+## Backdoors and front-doors
+
+
+The reason that the above DAG produces a *confounded* estimate of marriage on divorce is that there is a *backdoor path* from marriage to divorce, going through age. A backdoor path is a path linking our X and Y variables in a *non-causal* way. If we don't close backdoor paths, our estimate of the effect of X (marriage) on Y (divorce) will be confounded. To close the backdoor path we must control for age. 
+
+
+Front-door paths are *direct* causal flow from X to Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and **not** accidentally control for them. 
+
+
+
 ## The experimental gold standard
 
 
@@ -30,13 +87,12 @@ Remember that in an experiment, we randomize assignment to some treatment, measu
 We can simulate a fake experiment (on rats) using R: 
 
 ```{r}
-library(tidyverse)
-library(broom)
-
 rats = tibble(rat_id = 1:200, 
               vaccine = sample(c(1, 0), size = 200, 
+                               replace = TRUE), 
+              social = sample(c(1, 0), size = 200, 
                                replace = TRUE)) %>% 
-  mutate(covid_levels = -2*vaccine + rnorm(200))
+  mutate(covid_levels = -2*vaccine + 3*social + rnorm(200))
 
 rats
 ```
@@ -54,43 +110,35 @@ tidy(m1)
 ```
 
 
+Note the estimated coefficient on the vaccine is pretty close to the true effect (-2). The reason is because there is no *backdoor path*, no third variable, or set of variables, causing both the vaccine **and** COVID levels. 
 
-## Marriage, divorce, age, and confounding
 
-Remember in class that we can have a DAG like the below, where the age (A) at which people get married has a negative causal effect on the marriage (M) rate (places where people wait till later to get married have lower marriage rates) and a negative causal effect on the divorce (D) rate (places where people wait to get married have lower divorce rates). 
+## Easy DAGs
+
+
+Remember, unless otherwise specified, when we are looking at DAGs we assume that *X is the treatment variable* and *Y is the outcome variable*. 
 
 
 ```{r}
-library(ggdag)
-
-dagify(D ~ A, 
-       M ~ A) %>% 
-  ggdag(layout = "circle") + 
-  theme_dag()
+dag = dagify(Y ~ X)
+ggdag(dag) + theme_dag_blank()
 ```
 
+No need to close anything here. 
 
-Note that there is no arrow from marriage rate (M) to divorce (D). We have explicitly made our data so that there is no causal effect of M on D. And yet! this DAG will produce data that shows a strong relationship between M and D. 
-
-Faking some data helps us see this: 
 
 ```{r}
-fake = tibble(age = rnorm(100), 
-       marriage = -2*age + rnorm(100), 
-       divorce = -2*age + rnorm(100))
-
-ggplot(fake, aes(x = marriage, y = divorce)) + 
-  geom_point() + geom_smooth(method = "lm") + 
-  theme_light()
+dag = dagify(Y ~ X + B + A + C + G, 
+             B ~ A + C, 
+             G ~ C)
+ggdag(dag) + theme_dag_blank()
 ```
 
-
-Note the line of code defining the divorce rate: no marriage there! 
-
+No need to close anything here either. All we care about is estimating the effect of X on Y; it doesn't matter that other things also cause Y!
 
 
-## Elemental confounds
 
+## When things go wrong: Elemental confounds
 
 ### forks
 
@@ -105,6 +153,9 @@ confounder_triangle(x = "Has Huge beard",
 ```
 
 
+Need to control for loving James harden!
+
+
 Or like this:
 
 ```{r}
@@ -116,11 +167,14 @@ confounder_triangle(x = "Marriage rate",
 ```
 
 
+Need to control for median age at marriage!
+
+
+
 ### pipes
 
 
-The pipe looks like this: 
-
+The pipe looks like this and it's an example of why we shouldn't close front-door paths: 
 
 ```{r}
 dagify(Y ~ B + G, 
@@ -133,6 +187,8 @@ dagify(Y ~ B + G,
   theme_dag_blank()
 ```
 
+
+If we control for presence of good bacteria we are closing front-door from Fertilizer to Plant Growth (which is bad)!
 
 
 ### collider
@@ -147,3 +203,79 @@ collider_triangle(x = "Qualtiy research",
   theme_dag_blank()
 ```
 
+
+If we control for M here we are creating a backdoor path from X to Y. This is bad!
+
+
+
+## More complicated DAGs
+
+
+
+```{r}
+dag = dagify(Y ~ X + P + A + I, 
+             X ~ P, 
+             exposure = "X", 
+             outcome = "Y")
+
+ggdag(dag) + 
+  theme_dag_blank()
+
+```
+
+
+Here, we need to control for P since it is a backdoor from X to Y. Note that there are other variables that also cause Y (I and A) but *we don't need to control for them to estimate the effect of X on Y*. 
+
+
+
+```{r}
+dag = dagify(support ~ anxiety + event, 
+             anxiety ~ event, 
+             labels = c("support" = "Support for torture", 
+                        "anxiety" = "Level of anxiety", 
+                        "event" = "Terrorism event")
+)
+ggdag(dag, text = FALSE, use_labels = "label") + theme_dag_blank()
+```
+
+
+In this example from class, we want to know the effect of experiencing terrorism on support for torture. Notice the effect of terrorism on support for torture is both direct and indirect (via heightened anxiety). This is an example of a *pipe*; if we control for anxiety here, we are effectively controlling away part of the effect of terrorism on support for torture. 
+
+
+
+```{r}
+smoking_ca_dag = dagify(cardiacarrest ~ cholesterol,
+                         cholesterol ~ smoking + weight,
+                         smoking ~ unhealthy,
+                         weight ~ unhealthy,
+                         labels = c("cardiacarrest" = "Cardiac\n Arrest", 
+                                    "smoking" = "Drugs",
+                                    "cholesterol" = "Cholesterol",
+                                    "unhealthy" = "Unhealthy\n Lifestyle",
+                                    "weight" = "Weight"),
+                         latent = "unhealthy",
+                         exposure = "smoking",
+                         outcome = "cardiacarrest")
+
+ggdag(smoking_ca_dag, text = FALSE, use_labels = "label") + theme_dag_blank()
+```
+
+
+In this example we want to know the effect of drug use on cardiac arrest. Notice there is a backdoor path through unhealthy life styles, to weight, to cholesterol, and onto cardiac arrest. We want to close that backdoor path: we can control for unhealthy lifestyle, OR weight (notice how both break the chain!). 
+
+But there is also a pipe here! If we were to accidentally control for cholesterol we would be closing a front-door path (bad). So we need to avoid doing that. 
+
+
+```{r}
+dag = dagify(y ~ x + c, 
+       x ~ u, 
+       u ~ a, 
+       c ~ a,
+       b ~ u + c, 
+       exposure = "x", 
+       outcome = "y")
+ggdag(dag) + theme_dag_blank()
+```
+
+
+Notice the backdoor path: X <- U -> A -> C -> Y. To close it and break the chain we can control for U, A, or C. 

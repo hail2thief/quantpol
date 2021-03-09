@@ -19,65 +19,38 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#the-experimental-gold-standard">The experimental gold standard</a></li>
+<li><a href="#confounding">Confounding</a></li>
 <li><a href="#marriage-divorce-age-and-confounding">Marriage, divorce, age, and confounding</a></li>
-<li><a href="#elemental-confounds">Elemental confounds</a>
+<li><a href="#backdoors-and-front-doors">Backdoors and front-doors</a></li>
+<li><a href="#the-experimental-gold-standard">The experimental gold standard</a></li>
+<li><a href="#easy-dags">Easy DAGs</a></li>
+<li><a href="#when-things-go-wrong-elemental-confounds">When things go wrong: Elemental confounds</a>
 <ul>
 <li><a href="#forks">forks</a></li>
 <li><a href="#pipes">pipes</a></li>
 <li><a href="#collider">collider</a></li>
 </ul></li>
+<li><a href="#more-complicated-dags">More complicated DAGs</a></li>
 </ul>
 </div>
 
-<div id="the-experimental-gold-standard" class="section level2">
-<h2>The experimental gold standard</h2>
-<p>Remember that in an experiment, we randomize assignment to some treatment, measure an outcome we care about, and compare whether the units that got the treatment have better or worse results on the outcome than the group that didn’t get the treatment.</p>
-<p>We can simulate a fake experiment (on rats) using R:</p>
-<pre class="r"><code>library(tidyverse)
-library(broom)
-
-rats = tibble(rat_id = 1:200, 
-              vaccine = sample(c(1, 0), size = 200, 
-                               replace = TRUE)) %&gt;% 
-  mutate(covid_levels = -2*vaccine + rnorm(200))
-
-rats</code></pre>
-<pre><code>## # A tibble: 200 x 3
-##    rat_id vaccine covid_levels
-##     &lt;int&gt;   &lt;dbl&gt;        &lt;dbl&gt;
-##  1      1       1       -1.65 
-##  2      2       0        0.830
-##  3      3       1       -1.91 
-##  4      4       1       -1.92 
-##  5      5       1       -2.53 
-##  6      6       1       -2.79 
-##  7      7       1       -2.46 
-##  8      8       0       -0.738
-##  9      9       1       -2.25 
-## 10     10       1       -0.671
-## # … with 190 more rows</code></pre>
-<p>Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels.</p>
-<p>We can estimate the effect of the vaccine on COVID using regression:</p>
-<pre class="r"><code># estimate treatment effect
-m1 = lm(covid_levels ~ vaccine, data = rats)
-tidy(m1)</code></pre>
-<pre><code>## # A tibble: 2 x 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept) -0.00180    0.0856   -0.0210 9.83e- 1
-## 2 vaccine     -2.04       0.122   -16.8    6.72e-40</code></pre>
+<div id="confounding" class="section level2">
+<h2>Confounding</h2>
+<p>Remember that we’re always trying to estimate the effect of some treatment, X, on some outcome, Y. The problem is that simply looking at the relationship between X and Y can lead you astray, since lots of things are correlated in the world that have no causal relationship (e.g., number of shark attacks and amount of ice cream consumed are probably positively correlated; but obviously ice cream does not cause shark attacks!).</p>
+<p>This “being led astray” by data is what we call <strong>confounding</strong>. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, <em>without confounding</em>.</p>
 </div>
 <div id="marriage-divorce-age-and-confounding" class="section level2">
 <h2>Marriage, divorce, age, and confounding</h2>
 <p>Remember in class that we can have a DAG like the below, where the age (A) at which people get married has a negative causal effect on the marriage (M) rate (places where people wait till later to get married have lower marriage rates) and a negative causal effect on the divorce (D) rate (places where people wait to get married have lower divorce rates).</p>
 <pre class="r"><code>library(ggdag)
+library(tidyverse)
+library(broom)
 
 dagify(D ~ A, 
        M ~ A) %&gt;% 
   ggdag(layout = &quot;circle&quot;) + 
   theme_dag()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Note that there is no arrow from marriage rate (M) to divorce (D). We have explicitly made our data so that there is no causal effect of M on D. And yet! this DAG will produce data that shows a strong relationship between M and D.</p>
 <p>Faking some data helps us see this:</p>
 <pre class="r"><code>fake = tibble(age = rnorm(100), 
@@ -87,11 +60,68 @@ dagify(D ~ A,
 ggplot(fake, aes(x = marriage, y = divorce)) + 
   geom_point() + geom_smooth(method = &quot;lm&quot;) + 
   theme_light()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-<p>Note the line of code defining the divorce rate: no marriage there!</p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We end up with a <em>confounded</em> estimate of the effect of marriage on divorce.</p>
 </div>
-<div id="elemental-confounds" class="section level2">
-<h2>Elemental confounds</h2>
+<div id="backdoors-and-front-doors" class="section level2">
+<h2>Backdoors and front-doors</h2>
+<p>The reason that the above DAG produces a <em>confounded</em> estimate of marriage on divorce is that there is a <em>backdoor path</em> from marriage to divorce, going through age. A backdoor path is a path linking our X and Y variables in a <em>non-causal</em> way. If we don’t close backdoor paths, our estimate of the effect of X (marriage) on Y (divorce) will be confounded. To close the backdoor path we must control for age.</p>
+<p>Front-door paths are <em>direct</em> causal flow from X to Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and <strong>not</strong> accidentally control for them.</p>
+</div>
+<div id="the-experimental-gold-standard" class="section level2">
+<h2>The experimental gold standard</h2>
+<p>Remember that in an experiment, we randomize assignment to some treatment, measure an outcome we care about, and compare whether the units that got the treatment have better or worse results on the outcome than the group that didn’t get the treatment.</p>
+<p>We can simulate a fake experiment (on rats) using R:</p>
+<pre class="r"><code>rats = tibble(rat_id = 1:200, 
+              vaccine = sample(c(1, 0), size = 200, 
+                               replace = TRUE), 
+              social = sample(c(1, 0), size = 200, 
+                               replace = TRUE)) %&gt;% 
+  mutate(covid_levels = -2*vaccine + 3*social + rnorm(200))
+
+rats</code></pre>
+<pre><code>## # A tibble: 200 x 4
+##    rat_id vaccine social covid_levels
+##     &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;
+##  1      1       1      1       1.09  
+##  2      2       0      1       1.22  
+##  3      3       1      0      -2.08  
+##  4      4       0      1       3.60  
+##  5      5       0      0       0.0692
+##  6      6       0      0       1.69  
+##  7      7       1      0      -2.87  
+##  8      8       1      0      -2.37  
+##  9      9       0      1       2.90  
+## 10     10       0      1       3.60  
+## # … with 190 more rows</code></pre>
+<p>Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels.</p>
+<p>We can estimate the effect of the vaccine on COVID using regression:</p>
+<pre class="r"><code># estimate treatment effect
+m1 = lm(covid_levels ~ vaccine, data = rats)
+tidy(m1)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     1.57     0.175      8.96 2.46e-16
+## 2 vaccine        -2.55     0.259     -9.85 7.10e-19</code></pre>
+<p>Note the estimated coefficient on the vaccine is pretty close to the true effect (-2). The reason is because there is no <em>backdoor path</em>, no third variable, or set of variables, causing both the vaccine <strong>and</strong> COVID levels.</p>
+</div>
+<div id="easy-dags" class="section level2">
+<h2>Easy DAGs</h2>
+<p>Remember, unless otherwise specified, when we are looking at DAGs we assume that <em>X is the treatment variable</em> and <em>Y is the outcome variable</em>.</p>
+<pre class="r"><code>dag = dagify(Y ~ X)
+ggdag(dag) + theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>No need to close anything here.</p>
+<pre class="r"><code>dag = dagify(Y ~ X + B + A + C + G, 
+             B ~ A + C, 
+             G ~ C)
+ggdag(dag) + theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>No need to close anything here either. All we care about is estimating the effect of X on Y; it doesn’t matter that other things also cause Y!</p>
+</div>
+<div id="when-things-go-wrong-elemental-confounds" class="section level2">
+<h2>When things go wrong: Elemental confounds</h2>
 <div id="forks" class="section level3">
 <h3>forks</h3>
 <p>Remember, the fork looks like this:</p>
@@ -100,18 +130,20 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
                     z = &quot;Love James Harden&quot;) %&gt;% 
   ggdag(use_labels = &quot;label&quot;) +
   theme_dag()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Need to control for loving James harden!</p>
 <p>Or like this:</p>
 <pre class="r"><code>confounder_triangle(x = &quot;Marriage rate&quot;, 
                     y = &quot;Divorce rate&quot;,
                     z = &quot;Median age at marriage&quot;, x_y_associated = TRUE) %&gt;% 
   ggdag(use_labels = &quot;label&quot;) +
   theme_dag()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Need to control for median age at marriage!</p>
 </div>
 <div id="pipes" class="section level3">
 <h3>pipes</h3>
-<p>The pipe looks like this:</p>
+<p>The pipe looks like this and it’s an example of why we shouldn’t close front-door paths:</p>
 <pre class="r"><code>dagify(Y ~ B + G, 
        B ~ X, 
        labels = c(&quot;Y&quot; = &quot;Plant growth&quot;, 
@@ -120,7 +152,8 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
                   &quot;X&quot; = &quot;Fertilizer&quot;)) %&gt;% 
   ggdag(use_labels = &quot;label&quot;) + 
   theme_dag_blank()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>If we control for presence of good bacteria we are closing front-door from Fertilizer to Plant Growth (which is bad)!</p>
 </div>
 <div id="collider" class="section level3">
 <h3>collider</h3>
@@ -130,6 +163,55 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
                   m = &quot;Published&quot;) %&gt;% 
   ggdag(use_labels = &quot;label&quot;) + 
   theme_dag_blank()</code></pre>
-<p><img src="/class/confounds_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>If we control for M here we are creating a backdoor path from X to Y. This is bad!</p>
 </div>
+</div>
+<div id="more-complicated-dags" class="section level2">
+<h2>More complicated DAGs</h2>
+<pre class="r"><code>dag = dagify(Y ~ X + P + A + I, 
+             X ~ P, 
+             exposure = &quot;X&quot;, 
+             outcome = &quot;Y&quot;)
+
+ggdag(dag) + 
+  theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Here, we need to control for P since it is a backdoor from X to Y. Note that there are other variables that also cause Y (I and A) but <em>we don’t need to control for them to estimate the effect of X on Y</em>.</p>
+<pre class="r"><code>dag = dagify(support ~ anxiety + event, 
+             anxiety ~ event, 
+             labels = c(&quot;support&quot; = &quot;Support for torture&quot;, 
+                        &quot;anxiety&quot; = &quot;Level of anxiety&quot;, 
+                        &quot;event&quot; = &quot;Terrorism event&quot;)
+)
+ggdag(dag, text = FALSE, use_labels = &quot;label&quot;) + theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>In this example from class, we want to know the effect of experiencing terrorism on support for torture. Notice the effect of terrorism on support for torture is both direct and indirect (via heightened anxiety). This is an example of a <em>pipe</em>; if we control for anxiety here, we are effectively controlling away part of the effect of terrorism on support for torture.</p>
+<pre class="r"><code>smoking_ca_dag = dagify(cardiacarrest ~ cholesterol,
+                         cholesterol ~ smoking + weight,
+                         smoking ~ unhealthy,
+                         weight ~ unhealthy,
+                         labels = c(&quot;cardiacarrest&quot; = &quot;Cardiac\n Arrest&quot;, 
+                                    &quot;smoking&quot; = &quot;Drugs&quot;,
+                                    &quot;cholesterol&quot; = &quot;Cholesterol&quot;,
+                                    &quot;unhealthy&quot; = &quot;Unhealthy\n Lifestyle&quot;,
+                                    &quot;weight&quot; = &quot;Weight&quot;),
+                         latent = &quot;unhealthy&quot;,
+                         exposure = &quot;smoking&quot;,
+                         outcome = &quot;cardiacarrest&quot;)
+
+ggdag(smoking_ca_dag, text = FALSE, use_labels = &quot;label&quot;) + theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>In this example we want to know the effect of drug use on cardiac arrest. Notice there is a backdoor path through unhealthy life styles, to weight, to cholesterol, and onto cardiac arrest. We want to close that backdoor path: we can control for unhealthy lifestyle, OR weight (notice how both break the chain!).</p>
+<p>But there is also a pipe here! If we were to accidentally control for cholesterol we would be closing a front-door path (bad). So we need to avoid doing that.</p>
+<pre class="r"><code>dag = dagify(y ~ x + c, 
+       x ~ u, 
+       u ~ a, 
+       c ~ a,
+       b ~ u + c, 
+       exposure = &quot;x&quot;, 
+       outcome = &quot;y&quot;)
+ggdag(dag) + theme_dag_blank()</code></pre>
+<p><img src="/class/confounds_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p>Notice the backdoor path: X &lt;- U -&gt; A -&gt; C -&gt; Y. To close it and break the chain we can control for U, A, or C.</p>
 </div>
