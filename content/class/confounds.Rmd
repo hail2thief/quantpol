@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 Remember that we're always trying to estimate the effect of some treatment, X, on some outcome, Y. The problem is that simply looking at the relationship between X and Y can lead you astray, since lots of things are correlated in the world that have no causal relationship (e.g., number of shark attacks and amount of ice cream consumed are probably positively correlated; but obviously ice cream does not cause shark attacks!). 
 
-This "being led astray" by data is what we call **confounding**. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, *without confounding*. 
+This "being led astray" by data is what we call **confounding**. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, *and avoid confounding*. 
 
 
 
@@ -40,6 +40,7 @@ Remember in class that we can have a DAG like the below, where the age (A) at wh
 library(ggdag)
 library(tidyverse)
 library(broom)
+set.seed(1990)
 
 dagify(D ~ A, 
        M ~ A) %>% 
@@ -74,8 +75,7 @@ We end up with a *confounded* estimate of the effect of marriage on divorce.
 The reason that the above DAG produces a *confounded* estimate of marriage on divorce is that there is a *backdoor path* from marriage to divorce, going through age. A backdoor path is a path linking our X and Y variables in a *non-causal* way. If we don't close backdoor paths, our estimate of the effect of X (marriage) on Y (divorce) will be confounded. To close the backdoor path we must control for age. 
 
 
-Front-door paths are *direct* causal flow from X to Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and **not** accidentally control for them. 
-
+Front-door paths are the ways in which X **causes** Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and **not** accidentally control for them. 
 
 
 ## The experimental gold standard
@@ -139,6 +139,10 @@ No need to close anything here either. All we care about is estimating the effec
 
 
 ## When things go wrong: Elemental confounds
+
+
+We talked about three common scenarios in which confounding can take place: forks, pipes, and colliders. 
+
 
 ### forks
 

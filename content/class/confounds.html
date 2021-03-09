@@ -37,7 +37,7 @@ editor_options:
 <div id="confounding" class="section level2">
 <h2>Confounding</h2>
 <p>Remember that we’re always trying to estimate the effect of some treatment, X, on some outcome, Y. The problem is that simply looking at the relationship between X and Y can lead you astray, since lots of things are correlated in the world that have no causal relationship (e.g., number of shark attacks and amount of ice cream consumed are probably positively correlated; but obviously ice cream does not cause shark attacks!).</p>
-<p>This “being led astray” by data is what we call <strong>confounding</strong>. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, <em>without confounding</em>.</p>
+<p>This “being led astray” by data is what we call <strong>confounding</strong>. What we want to do in this part of the class is use causal models to figure out how to estimate the effect of X on Y, <em>and avoid confounding</em>.</p>
 </div>
 <div id="marriage-divorce-age-and-confounding" class="section level2">
 <h2>Marriage, divorce, age, and confounding</h2>
@@ -45,6 +45,7 @@ editor_options:
 <pre class="r"><code>library(ggdag)
 library(tidyverse)
 library(broom)
+set.seed(1990)
 
 dagify(D ~ A, 
        M ~ A) %&gt;% 
@@ -66,7 +67,7 @@ ggplot(fake, aes(x = marriage, y = divorce)) +
 <div id="backdoors-and-front-doors" class="section level2">
 <h2>Backdoors and front-doors</h2>
 <p>The reason that the above DAG produces a <em>confounded</em> estimate of marriage on divorce is that there is a <em>backdoor path</em> from marriage to divorce, going through age. A backdoor path is a path linking our X and Y variables in a <em>non-causal</em> way. If we don’t close backdoor paths, our estimate of the effect of X (marriage) on Y (divorce) will be confounded. To close the backdoor path we must control for age.</p>
-<p>Front-door paths are <em>direct</em> causal flow from X to Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and <strong>not</strong> accidentally control for them.</p>
+<p>Front-door paths are the ways in which X <strong>causes</strong> Y. They might be direct (as in an arrow from X to Y), or indirect, as in an arrow from X, to Z, to Y. We want to keep front doors open and <strong>not</strong> accidentally control for them.</p>
 </div>
 <div id="the-experimental-gold-standard" class="section level2">
 <h2>The experimental gold standard</h2>
@@ -83,16 +84,16 @@ rats</code></pre>
 <pre><code>## # A tibble: 200 x 4
 ##    rat_id vaccine social covid_levels
 ##     &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;
-##  1      1       1      1       1.09  
-##  2      2       0      1       1.22  
-##  3      3       1      0      -2.08  
-##  4      4       0      1       3.60  
-##  5      5       0      0       0.0692
-##  6      6       0      0       1.69  
-##  7      7       1      0      -2.87  
-##  8      8       1      0      -2.37  
-##  9      9       0      1       2.90  
-## 10     10       0      1       3.60  
+##  1      1       1      0       -2.35 
+##  2      2       0      1        3.74 
+##  3      3       1      0        1.38 
+##  4      4       1      0       -1.82 
+##  5      5       1      1        1.90 
+##  6      6       1      1        2.15 
+##  7      7       1      0       -1.60 
+##  8      8       1      1        0.923
+##  9      9       1      0       -2.90 
+## 10     10       0      1        4.34 
 ## # … with 190 more rows</code></pre>
 <p>Note that in making up our data, we decided that the vaccine would have an effect of -2 on covid_levels.</p>
 <p>We can estimate the effect of the vaccine on COVID using regression:</p>
@@ -102,8 +103,8 @@ tidy(m1)</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)     1.57     0.175      8.96 2.46e-16
-## 2 vaccine        -2.55     0.259     -9.85 7.10e-19</code></pre>
+## 1 (Intercept)     1.56     0.181      8.64 1.89e-15
+## 2 vaccine        -2.06     0.250     -8.26 2.05e-14</code></pre>
 <p>Note the estimated coefficient on the vaccine is pretty close to the true effect (-2). The reason is because there is no <em>backdoor path</em>, no third variable, or set of variables, causing both the vaccine <strong>and</strong> COVID levels.</p>
 </div>
 <div id="easy-dags" class="section level2">
@@ -122,6 +123,7 @@ ggdag(dag) + theme_dag_blank()</code></pre>
 </div>
 <div id="when-things-go-wrong-elemental-confounds" class="section level2">
 <h2>When things go wrong: Elemental confounds</h2>
+<p>We talked about three common scenarios in which confounding can take place: forks, pipes, and colliders.</p>
 <div id="forks" class="section level3">
 <h3>forks</h3>
 <p>Remember, the fork looks like this:</p>
