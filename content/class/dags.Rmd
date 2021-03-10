@@ -1,0 +1,93 @@
+---
+title: "DAGs"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 8
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+
+
+
+## Making DAGs with ggdag()
+
+
+To make DAGs we use `dagify()` from the `ggdag` package. Note the basic format: 
+
+- Y ~ A + B + C + ... = think of this as "Y is caused by A, B, C, ...". 
+- you need to specify the treatment variable with `exposure` (another word for "treatment") and the outcome variable with `outcome`
+
+
+```{r}
+library(ggdag)
+library(tidyverse)
+
+# make a dag
+dag = dagify(Y ~ X + A + B + C, 
+             X ~ A, 
+             A ~ B + C, exposure = "X", outcome = "Y")
+```
+
+
+We can then plot with `ggdag`:
+
+```{r}
+# plot it
+ggdag(dag)
+```
+
+
+We can make prettier in the following ways (but no need): 
+
+```{r}
+ggdag(dag) + theme_dag()
+```
+
+
+We can use `ggdag_paths` to identify front and backdoor paths from treatment to outcome: 
+```{r}
+ggdag_paths(dag)
+```
+
+
+We can use `ggdag_adjustment_set` to see what variables we need to control for: 
+
+```{r}
+ggdag_adjustment_set(dag)
+```
+
+
+
+We can also use words instead of letters:
+
+```{r}
+## made up exqmple: shuttle service --> turnout
+dag = dagify(turnout ~ shuttle + income + distance_poll + schedule_flex, 
+             income ~ job + location, 
+             distance_poll ~ location + car, 
+             shuttle ~ cost + partisan + location, 
+             exposure = "shuttle", outcome = "turnout")
+```
+
+
+If we want to use labels instead of text to make it easier to read: 
+
+```{r}
+ggdag(dag, use_labels = "name", text = FALSE) + theme_dag()
+```
+

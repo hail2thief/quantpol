@@ -65,12 +65,12 @@ lessons:
     
   - title: "Causal diagrams"
     date: "W9: Mar 8 - 12"
-    #class: "08-class"
+    class: "dags"
     reading: "dags"
     
   - title: '<i class="fas fa-star"></i> **Assignment 6**'
     date: "Mar 16, Tue"
-    #assignment: "06-assignment"
+    assignment: "ps-dags"
     
   - title: "Closing backdoors with controls"
     date: "W10: Mar 15 - 19"

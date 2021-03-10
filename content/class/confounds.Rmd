@@ -283,3 +283,5 @@ ggdag(dag) + theme_dag_blank()
 
 
 Notice the backdoor path: X <- U -> A -> C -> Y. To close it and break the chain we can control for U, A, or C. 
+
+
