@@ -74,12 +74,12 @@ lessons:
     
   - title: "Closing backdoors with controls"
     date: "W10: Mar 15 - 19"
-    #class: "11-class"
+    class: "controls"
     reading: "controls"
     
   - title: '<i class="fas fa-star"></i> **Assignment 7**'
     date: "Mar 23, Tue"
-    #assignment: "07-assignment"
+    assignment: "ps-controls"
     
   - title: "Causal toolbox: fixed effects + DID"
     date: "W11: Mar 22 - 26"

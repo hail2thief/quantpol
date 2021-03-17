@@ -1,0 +1,209 @@
+---
+title: "Controls"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 10
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+```{r}
+library(ggdag)
+library(tidyverse)
+library(broom)
+
+# set seed
+set.seed(1990)
+
+```
+
+
+## Closing backdoors with controls
+
+
+Remember that one of the lessons from our week on DAGs is that in order to estimate the effect of X on Y, sometimes we need to control for some variables and *avoid* controlling for others. 
+
+
+### Dealing with forks
+
+Here's an example dealing with forks. The classic fork looks like this:
+
+
+```{r}
+dag = dagify(Y ~ Z, 
+       X ~ Z, 
+       exposure = "X", 
+       outcome = "Y")
+ggdag(dag) + theme_dag_blank()
+
+```
+
+
+Notice that we need to control for Z:
+
+```{r}
+ggdag_adjustment_set(dag)
+```
+
+
+Let's simulate some fake data from this DAG. Notice that X does not cause Y:
+
+```{r}
+# fake data
+fake = tibble(person = 1:200, 
+       z = rnorm(200), 
+       x = rnorm(200) + 2*z, 
+       y = rnorm(200) - 3*z)
+```
+
+
+And yet when we look at X and Y there's a relationship!
+
+```{r}
+ggplot(fake, aes(x = x, y = y)) + 
+  geom_point() + geom_smooth(method = "lm")
+```
+
+
+We can see this relationship in regression too: 
+
+```{r}
+# naive regression
+lm(y ~ x, data = fake) %>% tidy()
+```
+
+
+But notice that when we correcty control for Z, the estimate on X goes to 0:
+
+```{r}
+# with controls
+lm(y ~ x + z, data = fake) %>% tidy()
+```
+
+
+### Dealing with pipes
+
+Here's an example dealing with pipes The classic pipe looks like this:
+
+
+```{r}
+dag = dagify(Y ~ Z, 
+             Z ~ X, 
+             exposure = "X", 
+             outcome = "Y")
+ggdag(dag) + theme_dag_blank()
+
+```
+
+
+Notice that we **shouldn't** control for Z:
+
+```{r}
+ggdag_adjustment_set(dag)
+```
+
+
+Let's simulate some fake data from this DAG. Notice that X -> Y -> Z:
+
+```{r}
+# fake data
+fake = tibble(person = 1:200, 
+              x = rnorm(200), 
+              z = rnorm(200) + 2*x, 
+              y = rnorm(200) - 3*z)
+
+```
+
+
+When we look at X and Y, there's a relationship:
+
+```{r}
+ggplot(fake, aes(x = x, y = y)) + 
+  geom_point() + geom_smooth(method = "lm")
+```
+
+
+We can see this relationship in regression too: 
+
+```{r}
+lm(y ~ x, data = fake) %>% tidy()
+```
+
+
+But notice that when we **incorrectly** control for Z, the estimate on X goes to 0:
+
+```{r}
+# with controls
+lm(y ~ x + z, data = fake) %>% tidy()
+```
+
+
+### Dealing with colliders
+
+Here's an example dealing with colliders The classic collider looks like this:
+
+
+```{r}
+dag = dagify(Z ~ Y + X, 
+             exposure = "X", 
+             outcome = "Y")
+ggdag(dag) + theme_dag_blank()
+
+```
+
+
+Notice that we **shouldn't** control for Z:
+
+```{r}
+ggdag_adjustment_set(dag)
+```
+
+
+Let's simulate some fake data from this DAG. Notice that X does not cause Y:
+
+```{r}
+# fake data
+fake = tibble(person = 1:200, 
+              x = rnorm(200), 
+              y = rnorm(200),
+              z = rnorm(200) + 2*x + -3*y)
+```
+
+
+When we look at X and Y alone, there's no relationship:
+
+```{r}
+ggplot(fake, aes(x = x, y = y)) + 
+  geom_point() + geom_smooth(method = "lm")
+```
+
+
+We can see this relationship in regression too: 
+
+```{r}
+# naive regression
+lm(y ~ x, data = fake) %>% tidy()
+```
+
+
+But notice that when we **incorrectly** control for Z, the estimate on X goes away from 0:
+
+```{r}
+# with controls
+lm(y ~ x + z, data = fake) %>% tidy()
+```
+
