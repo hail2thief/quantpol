@@ -1,0 +1,130 @@
+---
+title: "Fixed Effects + DID"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 11
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#the-fixed-effects-dag">The fixed effects DAG</a></li>
+<li><a href="#simulation-to-show-how-it-works">Simulation to show how it works</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(ggdag)
+library(tidyverse)
+library(broom)
+library(fixest)
+library(gapminder)
+
+# set seed
+set.seed(1990)</code></pre>
+<div id="the-fixed-effects-dag" class="section level2">
+<h2>The fixed effects DAG</h2>
+<p>Say we wanted to estimate the effect of GDP on life expectancy, and had a DAG like the following:</p>
+<pre class="r"><code>dagify(Life ~ GDP + Geography + Population + Pollution + WW2 + Equator, 
+       GDP ~ Geography + Population + Pollution + WW2 + Equator, 
+       exposure = &quot;GDP&quot;, outcome = &quot;Life&quot;) %&gt;% 
+  ggdag_status(text = FALSE, use_labels = &quot;name&quot;) + theme_dag(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/class/fixed-effects_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>The key thing here is that some of these variables only vary <em>across</em> countries, but not within them. They are <em>constant within the country</em>. For example, a country’s distance from the equator is fixed. Same with whether or not they participated in WW2. Other variables <em>also vary within country</em>, like a country’s level of pollution (or population) which changes over time.</p>
+<p>The insight is that we can think about all of the variables that are <em>constant within country</em> as a general “country” backdoor. The “country” backdoor is all of the differences between the countries in our data that are static or fixed. Pollution and population are not included because they also vary within country.</p>
+<pre class="r"><code>dagify(Life ~ GDP + Country + Population + Pollution, 
+       GDP ~ Country + Population + Pollution, 
+       exposure = &quot;GDP&quot;, outcome = &quot;Life&quot;) %&gt;% 
+  ggdag_status(text = FALSE, use_labels = &quot;name&quot;) + theme_dag(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/class/fixed-effects_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>We can use fixed effects to control for the “country” backdoor, and implicitly, all variables that are static within countries.</p>
+<p>Here’s the naive regression, without country fixed effects:</p>
+<pre class="r"><code># naive
+m1 = lm(lifeExp ~ gdpPercap + pop, data = gapminder) 
+tidy(m1)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   term        estimate     std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)  5.36e+1 0.322            166.   0.       
+## 2 gdpPercap    7.68e-4 0.0000257         29.9  4.04e-158
+## 3 pop          9.73e-9 0.00000000238      4.08 4.72e-  5</code></pre>
+<p>Here’s the fixed effect regression, using the <code>fixest</code> package. The general template is: <code>feols(Y ~ X1 + X2 + ... | UNIT, data = DATA)</code></p>
+<pre class="r"><code># naive
+m2 = feols(lifeExp ~ gdpPercap + pop | country, data = gapminder) 
+tidy(m2)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term          estimate    std.error statistic  p.value
+##   &lt;chr&gt;            &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 gdpPercap 0.000394     0.000177          2.22 0.0279  
+## 2 pop       0.0000000620 0.0000000180      3.44 0.000776</code></pre>
+<p>Notice how the estimate on GDP changes with the addition of FE. Notice also that we still haven’t closed all the backdoors in our original DAG! Pollution is a backdoor, and varies within country, so the country fixed effect will not suffice. We need to control for it, but we have no data on it! This captures the broad takeaway of FE:</p>
+<ol style="list-style-type: decimal">
+<li>FE help us close backdoors that are constant within the unit</li>
+<li>But we still need to control for confounds that vary within the unit (e.g., population, pollution)</li>
+<li>We can add those alongside FE (e.g., population)</li>
+<li>but sometimes we don’t have data on all confounds that vary within unit, so we’re not out of the woods (e.g., pollution)</li>
+</ol>
+</div>
+<div id="simulation-to-show-how-it-works" class="section level2">
+<h2>Simulation to show how it works</h2>
+<p>We’re gonna make up some data to estimate effect of a teacher having an MA on their student’s test scores. The DAG looks like this:</p>
+<pre class="r"><code># draw the dag
+dag = dagify(score ~ teacher_ma + male + parent_income,
+       teacher_ma ~ male + parent_income, 
+       exposure = &quot;teacher_ma&quot;, outcome = &quot;score&quot;)
+
+ggdag_status(dag, text = FALSE, use_labels = &quot;name&quot;) + theme_dag()</code></pre>
+<p><img src="/class/fixed-effects_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Notice we have some backdoors that we need to control for:</p>
+<pre class="r"><code>ggdag_adjustment_set(dag)</code></pre>
+<p><img src="/class/fixed-effects_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Let’s make up the data:</p>
+<pre class="r"><code># make up student data
+kids = tibble(student = c(&quot;Joe&quot;, &quot;Jessica&quot;, &quot;Laia&quot;, &quot;Jeff&quot;, &quot;Martin&quot;), 
+       male = sample(c(1, 0), size = 5, replace = TRUE), 
+       parent_income = rnorm(5))
+
+
+fake = crossing(student = unique(kids$student), 
+         test = 1:50) %&gt;% 
+  left_join(kids) %&gt;% 
+  mutate(teacher_ma = 2*male + 3*parent_income + rnorm(250)) %&gt;% 
+  mutate(score = 5*teacher_ma + -2*male + 5*parent_income + rnorm(250))</code></pre>
+<p>Notice above that the <em>true effect</em> of <code>teacher_ma</code> on <code>score</code> is 5.</p>
+<p>Here’s the (wrong) result when we don’t control for anything:</p>
+<pre class="r"><code># naive regression
+lm(score ~ teacher_ma, data = fake) %&gt;% tidy()</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)    -3.67    0.193      -19.0 2.36e- 50
+## 2 teacher_ma      7.01    0.0619     113.  1.44e-215</code></pre>
+<p>Here’s the (right) result when we control for all confounds:</p>
+<pre class="r"><code># correctly specify controls
+lm(score ~ teacher_ma + parent_income + male, data = fake) %&gt;% tidy()</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   term          estimate std.error statistic   p.value
+##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)     -0.145    0.132      -1.10 2.74e-  1
+## 2 teacher_ma       5.08     0.0646     78.6  2.55e-176
+## 3 parent_income    4.82     0.206      23.4  1.27e- 64
+## 4 male            -1.91     0.235      -8.12 2.21e- 14</code></pre>
+<p>Here’s the (right) result when we use student FE:</p>
+<pre class="r"><code># use fixed effects to account for student-constant variables
+feols(score ~ teacher_ma | student, data = fake) %&gt;% tidy()</code></pre>
+<pre><code>## # A tibble: 1 x 5
+##   term       estimate std.error statistic      p.value
+##   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+## 1 teacher_ma     5.08    0.0365      139. 0.0000000160</code></pre>
+<p>Notice above how we get the right answer <em>even without</em> controlling for the <code>parent_income</code> and <code>male</code> backdoors. This is because we are implicitly controlling for them.</p>
+</div>

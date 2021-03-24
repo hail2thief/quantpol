@@ -1,0 +1,166 @@
+---
+title: "Fixed Effects + DID"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 11
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+
+```{r}
+library(ggdag)
+library(tidyverse)
+library(broom)
+library(fixest)
+library(gapminder)
+
+# set seed
+set.seed(1990)
+```
+
+
+
+
+## The fixed effects DAG
+
+
+Say we wanted to estimate the effect of GDP on life expectancy, and had a DAG like the following: 
+
+
+```{r}
+dagify(Life ~ GDP + Geography + Population + Pollution + WW2 + Equator, 
+       GDP ~ Geography + Population + Pollution + WW2 + Equator, 
+       exposure = "GDP", outcome = "Life") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag(legend.position = "none")
+```
+
+
+The key thing here is that some of these variables only vary *across* countries, but not within them. They are *constant within the country*. For example, a country's distance from the equator is fixed. Same with whether or not they participated in WW2. Other variables *also vary within country*, like a country's level of pollution (or population) which changes over time. 
+
+
+The insight is that we can think about all of the variables that are *constant within country* as a general "country" backdoor. The "country" backdoor is all of the differences between the countries in our data that are static or fixed. Pollution and population are not included because they also vary within country. 
+
+
+```{r}
+dagify(Life ~ GDP + Country + Population + Pollution, 
+       GDP ~ Country + Population + Pollution, 
+       exposure = "GDP", outcome = "Life") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag(legend.position = "none")
+```
+
+
+
+We can use fixed effects to control for the "country" backdoor, and implicitly, all variables that are static within countries. 
+
+Here's the naive regression, without country fixed effects: 
+
+
+```{r}
+# naive
+m1 = lm(lifeExp ~ gdpPercap + pop, data = gapminder) 
+tidy(m1)
+```
+Here's the fixed effect regression, using the `fixest` package. The general template is: `feols(Y ~ X1 + X2 + ... | UNIT, data = DATA)`
+
+
+```{r}
+# naive
+m2 = feols(lifeExp ~ gdpPercap + pop | country, data = gapminder) 
+tidy(m2)
+```
+
+Notice how the estimate on GDP changes with the addition of FE. Notice also that we still haven't closed all the backdoors in our original DAG! Pollution is a backdoor, and varies within country, so the country fixed effect will not suffice. We need to control for it, but we have no data on it! This captures the broad takeaway of FE: 
+
+1. FE help us close backdoors that are constant within the unit
+2. But we still need to control for confounds that vary within the unit (e.g., population, pollution)
+3. We can add those alongside FE (e.g., population)
+4. but sometimes we don't have data on all confounds that vary within unit, so we're not out of the woods (e.g., pollution)
+
+
+
+## Simulation to show how it works
+
+
+
+We're gonna make up some data to estimate effect of a teacher having an MA on their student's test scores. The DAG looks like this: 
+
+```{r}
+# draw the dag
+dag = dagify(score ~ teacher_ma + male + parent_income,
+       teacher_ma ~ male + parent_income, 
+       exposure = "teacher_ma", outcome = "score")
+
+ggdag_status(dag, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+
+Notice we have some backdoors that we need to control for: 
+
+```{r}
+ggdag_adjustment_set(dag)
+```
+
+
+Let's make up the data:
+
+
+```{r}
+# make up student data
+kids = tibble(student = c("Joe", "Jessica", "Laia", "Jeff", "Martin"), 
+       male = sample(c(1, 0), size = 5, replace = TRUE), 
+       parent_income = rnorm(5))
+
+
+fake = crossing(student = unique(kids$student), 
+         test = 1:50) %>% 
+  left_join(kids) %>% 
+  mutate(teacher_ma = 2*male + 3*parent_income + rnorm(250)) %>% 
+  mutate(score = 5*teacher_ma + -2*male + 5*parent_income + rnorm(250))
+```
+
+
+Notice above that the *true effect* of `teacher_ma` on `score` is 5. 
+
+
+Here's the (wrong) result when we don't control for anything: 
+
+```{r}
+# naive regression
+lm(score ~ teacher_ma, data = fake) %>% tidy()
+```
+
+Here's the (right) result when we control for all confounds: 
+
+
+```{r}
+# correctly specify controls
+lm(score ~ teacher_ma + parent_income + male, data = fake) %>% tidy()
+```
+
+
+Here's the (right) result when we use student FE: 
+
+```{r}
+# use fixed effects to account for student-constant variables
+feols(score ~ teacher_ma | student, data = fake) %>% tidy()
+```
+
+
+Notice above how we get the right answer *even without* controlling for the `parent_income` and `male` backdoors. This is because we are implicitly controlling for them. 
+
+

@@ -83,7 +83,7 @@ lessons:
     
   - title: "Causal toolbox: fixed effects + DID"
     date: "W11: Mar 22 - 26"
-    #class: "12-class"
+    class: "fixed-effects"
     reading: "fe"
     
   - title: "Toolbox: DID + regression discontinuity"
