@@ -21,6 +21,7 @@ editor_options:
 <ul>
 <li><a href="#the-fixed-effects-dag">The fixed effects DAG</a></li>
 <li><a href="#simulation-to-show-how-it-works">Simulation to show how it works</a></li>
+<li><a href="#diff-in-diff-by-hand">Diff-in-diff by hand</a></li>
 </ul>
 </div>
 
@@ -127,4 +128,70 @@ feols(score ~ teacher_ma | student, data = fake) %&gt;% tidy()</code></pre>
 ##   &lt;chr&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
 ## 1 teacher_ma     5.08    0.0365      139. 0.0000000160</code></pre>
 <p>Notice above how we get the right answer <em>even without</em> controlling for the <code>parent_income</code> and <code>male</code> backdoors. This is because we are implicitly controlling for them.</p>
+</div>
+<div id="diff-in-diff-by-hand" class="section level2">
+<h2>Diff-in-diff by hand</h2>
+<p>Remember in class we were looking at the effect of Pokemon Go on exercise using difference-in-differences. Let’s see how this works by making up some data where we already know the effect of the app on exercise (let’s set the effect to 2).</p>
+<pre class="r"><code>set.seed(1990)
+#Create our data
+fake_pokemon = 
+  tibble(year = sample(2002:2010,10000,replace=T), 
+         app = sample(c(&quot;Has app&quot;, &quot;Doesn&#39;t have app&quot;), 10000, replace = TRUE)) %&gt;% 
+  mutate(after = ifelse(year &gt; 2007, 1, 0)) %&gt;% 
+  mutate(D = after*(app == &quot;Has app&quot;)) %&gt;% 
+  mutate(Y = 2*D + .25*year + (app == &#39;Has app&#39;) +  rnorm(10000))</code></pre>
+<p>We can find that exact difference by filling out the 2x2 before/after treatment/control table:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="center">Before 2016</th>
+<th align="center">After 2016</th>
+<th align="center">∆</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Doesn’t have app</td>
+<td align="center">A</td>
+<td align="center">B</td>
+<td align="center">B − A</td>
+</tr>
+<tr class="even">
+<td>Has app</td>
+<td align="center">C</td>
+<td align="center">D</td>
+<td align="center">D − C</td>
+</tr>
+<tr class="odd">
+<td>∆</td>
+<td align="center">C − A</td>
+<td align="center">D − B</td>
+<td align="center">(D − C) − (B − A)</td>
+</tr>
+</tbody>
+</table>
+<p>Here’s the table in our data:</p>
+<pre class="r"><code>#Now, get before-after differences for both groups
+means = fake_pokemon %&gt;% group_by(app,after) %&gt;% summarize(Y=mean(Y))
+means %&gt;% pivot_wider(names_from = &quot;after&quot;, values_from = &quot;Y&quot;) %&gt;% 
+  rename(After = `1`, Before = `0`)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+## # Groups:   app [2]
+##   app              Before After
+##   &lt;chr&gt;             &lt;dbl&gt; &lt;dbl&gt;
+## 1 Doesn&#39;t have app   501.  502.
+## 2 Has app            502.  505.</code></pre>
+<p>Let’s calculate all of the differences we need. Here’s B - A:</p>
+<pre class="r"><code>502 - 501</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>This is the change in exercise in the pre to post-period among those who didn’t receive treatment (i.e., download the app). The exercise among these kids increased by 1. Why? Remember, all sorts of thing are happening in the world at any given time. And the app was released in summer! So this increase might just be because kids are out of school, or its nicer out, etc.</p>
+<p>Let’s calculate D - C:</p>
+<pre class="r"><code>505 - 502</code></pre>
+<pre><code>## [1] 3</code></pre>
+<p>This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who <em>didn’t</em> even have the app. So exercise up went up over this time (because school’s out, it’s nice out, etc.). We need to <em>remove</em> this general increase in exercise.
+Let’s get the diff-in-diff estimate:</p>
+<pre class="r"><code>(505 - 502) - (502 - 501)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>The diff-in-diff estimate is that exercise went up by 2 as a result of Pokemon Go.</p>
 </div>

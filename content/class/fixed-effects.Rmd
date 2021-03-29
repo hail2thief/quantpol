@@ -164,3 +164,65 @@ feols(score ~ teacher_ma | student, data = fake) %>% tidy()
 Notice above how we get the right answer *even without* controlling for the `parent_income` and `male` backdoors. This is because we are implicitly controlling for them. 
 
 
+
+## Diff-in-diff by hand
+
+
+Remember in class we were looking at the effect of Pokemon Go on exercise using difference-in-differences. Let's see how this works by making up some data where we already know the effect of the app on exercise (let's set the effect to 2). 
+
+
+```{r}
+set.seed(1990)
+#Create our data
+fake_pokemon = 
+  tibble(year = sample(2002:2010,10000,replace=T), 
+         app = sample(c("Has app", "Doesn't have app"), 10000, replace = TRUE)) %>% 
+  mutate(after = ifelse(year > 2007, 1, 0)) %>% 
+  mutate(D = after*(app == "Has app")) %>% 
+  mutate(Y = 2*D + .25*year + (app == 'Has app') +  rnorm(10000))
+```
+
+
+We can find that exact difference by filling out the 2x2 before/after treatment/control table:
+
+|              | Before 2016 | After 2016 |         ∆         |
+|--------------|:-----------:|:----------:|:-----------------:|
+| Doesn't have app  |      A      |      B     |       B − A       |
+| Has app |      C      |      D     |       D − C       |
+| ∆            |    C − A    |    D − B   | (D − C) − (B − A) |
+
+
+Here's the table in our data:
+
+```{r}
+#Now, get before-after differences for both groups
+means = fake_pokemon %>% group_by(app,after) %>% summarize(Y=mean(Y))
+means %>% pivot_wider(names_from = "after", values_from = "Y") %>% 
+  rename(After = `1`, Before = `0`)
+```
+
+Let's calculate all of the differences we need. Here's B - A:
+
+```{r}
+502 - 501
+```
+
+
+This is the change in exercise in the pre to post-period among those who didn't receive treatment (i.e., download the app). The exercise among these kids increased by 1. Why? Remember, all sorts of thing are happening in the world at any given time. And the app was released in summer! So this increase might just be because kids are out of school, or its nicer out, etc. 
+
+Let's calculate D - C: 
+
+```{r}
+505 - 502
+```
+
+This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who *didn't* even have the app. So exercise up went up over this time (because school's out, it's nice out, etc.). We need to *remove* this general increase in exercise. 
+Let's get the diff-in-diff estimate: 
+
+```{r}
+(505 - 502) - (502 - 501)
+```
+
+
+The diff-in-diff estimate is that exercise went up by 2 as a result of Pokemon Go. 
+
