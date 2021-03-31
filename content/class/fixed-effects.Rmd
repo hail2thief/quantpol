@@ -216,7 +216,7 @@ Let's calculate D - C:
 505 - 502
 ```
 
-This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who *didn't* even have the app. So exercise up went up over this time (because school's out, it's nice out, etc.). We need to *remove* this general increase in exercise. 
+This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who *didn't* even have the app. So exercise went up over this time (because school's out, it's nice out, etc.). We need to *remove* this general increase in exercise. 
 Let's get the diff-in-diff estimate: 
 
 ```{r}
@@ -226,3 +226,22 @@ Let's get the diff-in-diff estimate:
 
 The diff-in-diff estimate is that exercise went up by 2 as a result of Pokemon Go. 
 
+
+## Diff-in-diff with regression
+
+
+We can also do diff-in-diff via regression (in fact this is how everyone does it). The basic template is: `lm(Y ~ TREATMENT + TIME + TREATMENT*TIME, data = DATA)`
+
+- `Y` is our outcome of interest (here: exercise)
+- `TREATMENT` is a variable that tells us an observation's treatment status (here: has pokemon go vs. doesn't have it)
+- `TIME` is a variable that tells us if an observation is pre- or post-treatment (here: has pokemon go been released yet?)
+- `TREATMENT*TIME` is the **interaction** of these two variables (more on this later)
+
+
+```{r}
+m1 = lm(Y ~ app + after + app*after, data = fake_pokemon)
+tidy(m1)
+```
+
+
+The coefficient for the interaction term (`appHas app:after`) is our diff-in-diff estimate. Here we would say that Pokemon Go increased the exercise rate by 2 among app users. 

@@ -93,7 +93,7 @@ lessons:
     
   - title: '<i class="fas fa-star"></i> **Assignment 8**'
     date: "Apr 6, Tue"
-    #assignment: "08-assignment"
+    assignment: "ps-fe"
     
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True

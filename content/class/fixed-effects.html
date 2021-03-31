@@ -22,6 +22,7 @@ editor_options:
 <li><a href="#the-fixed-effects-dag">The fixed effects DAG</a></li>
 <li><a href="#simulation-to-show-how-it-works">Simulation to show how it works</a></li>
 <li><a href="#diff-in-diff-by-hand">Diff-in-diff by hand</a></li>
+<li><a href="#diff-in-diff-with-regression">Diff-in-diff with regression</a></li>
 </ul>
 </div>
 
@@ -189,9 +190,29 @@ means %&gt;% pivot_wider(names_from = &quot;after&quot;, values_from = &quot;Y&q
 <p>Let’s calculate D - C:</p>
 <pre class="r"><code>505 - 502</code></pre>
 <pre><code>## [1] 3</code></pre>
-<p>This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who <em>didn’t</em> even have the app. So exercise up went up over this time (because school’s out, it’s nice out, etc.). We need to <em>remove</em> this general increase in exercise.
+<p>This is the change in exercise in the pre to post-period among those who did receive treatment (i.e., downloaded the app). The exercise among these kids increased by 3. Is this increase causal? No! Notice above that exercise also went up a bit among students who <em>didn’t</em> even have the app. So exercise went up over this time (because school’s out, it’s nice out, etc.). We need to <em>remove</em> this general increase in exercise.
 Let’s get the diff-in-diff estimate:</p>
 <pre class="r"><code>(505 - 502) - (502 - 501)</code></pre>
 <pre><code>## [1] 2</code></pre>
 <p>The diff-in-diff estimate is that exercise went up by 2 as a result of Pokemon Go.</p>
+</div>
+<div id="diff-in-diff-with-regression" class="section level2">
+<h2>Diff-in-diff with regression</h2>
+<p>We can also do diff-in-diff via regression (in fact this is how everyone does it). The basic template is: <code>lm(Y ~ TREATMENT + TIME + TREATMENT*TIME, data = DATA)</code></p>
+<ul>
+<li><code>Y</code> is our outcome of interest (here: exercise)</li>
+<li><code>TREATMENT</code> is a variable that tells us an observation’s treatment status (here: has pokemon go vs. doesn’t have it)</li>
+<li><code>TIME</code> is a variable that tells us if an observation is pre- or post-treatment (here: has pokemon go been released yet?)</li>
+<li><code>TREATMENT*TIME</code> is the <strong>interaction</strong> of these two variables (more on this later)</li>
+</ul>
+<pre class="r"><code>m1 = lm(Y ~ app + after + app*after, data = fake_pokemon)
+tidy(m1)</code></pre>
+<pre><code>## # A tibble: 4 x 5
+##   term             estimate std.error statistic   p.value
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        501.      0.0184   27233.  0.       
+## 2 appHas app           1.01    0.0259      39.0 1.44e-309
+## 3 after                1.13    0.0321      35.2 8.69e-256
+## 4 appHas app:after     1.99    0.0452      43.9 0.</code></pre>
+<p>The coefficient for the interaction term (<code>appHas app:after</code>) is our diff-in-diff estimate. Here we would say that Pokemon Go increased the exercise rate by 2 among app users.</p>
 </div>
