@@ -1,0 +1,68 @@
+---
+title: "Regression discontinuity"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 12
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#regression-discontinuity-design-rdd">Regression discontinuity design (RDD)</a></li>
+</ul>
+</div>
+
+<div id="regression-discontinuity-design-rdd" class="section level2">
+<h2>Regression discontinuity design (RDD)</h2>
+<p>Remember the example from class about the effect of being in a gifted program on future earnings. The DAG looks like this:</p>
+<pre class="r"><code>library(ggdag)
+library(tidyverse)
+
+# dag
+dagify(earnings ~ gifted + ability, 
+       gifted ~ ability, 
+       exposure = &quot;gifted&quot;, 
+       outcome = &quot;earnings&quot;) %&gt;% 
+  ggdag_status(text = FALSE, use_labels = &quot;name&quot;) + theme_dag() + 
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/class/rdd_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p>The problem is that students aren’t randomly placed in gifted programs; they are put there for a host of reasons (including, for instance, “ability”).</p>
+<p>The idea behind the RDD is to exploit the fact that the exact test score that gets you into gifted is arbitrary, while the test itself is noisy. This means that students just below and above that cutoff score (75) are pretty similar, but some just barely made it and others just barely didn’t (for reasons that are arguably random: luck, mostly).</p>
+<p>That phrase is key: “for reasons that are arguably <strong>random</strong>…”. Some students got treatment and others got the control condition randomly, i.e., an experiment.</p>
+<p>Make up data to see how it works:</p>
+<pre class="r"><code>set.seed(1991)
+
+
+# discontinuity example
+fake = tibble(kids = 1:1000, 
+       test = runif(1000)*100) %&gt;% 
+  mutate(gifted = ifelse(test &gt;= 75, 1, 0)) %&gt;% 
+  mutate(earnings = runif(1000)*40 + 10*gifted + .5*test)
+
+
+ggplot(fake, aes(x = test, y = earnings)) + 
+  geom_point()</code></pre>
+<p><img src="/class/rdd_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Do it by hand:</p>
+<pre class="r"><code># rdd by hand
+fake %&gt;% 
+  filter(test &gt;= 73, test &lt;= 77) %&gt;% 
+  group_by(gifted) %&gt;% 
+  summarise(earnings = mean(earnings))</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   gifted earnings
+##    &lt;dbl&gt;    &lt;dbl&gt;
+## 1      0     54.7
+## 2      1     68.2</code></pre>
+</div>

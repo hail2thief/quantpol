@@ -88,7 +88,7 @@ lessons:
     
   - title: "Toolbox: DID + regression discontinuity"
     date: "W12: Mar 29 - Apr 2"
-    #class: "13-class"
+    class: "rdd"
     reading: "reg-discon"
     
   - title: '<i class="fas fa-star"></i> **Assignment 8**'
