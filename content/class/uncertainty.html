@@ -1,0 +1,199 @@
+---
+title: "Uncertainty"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 13
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#why-are-we-uncertain">Why are we uncertain?</a></li>
+<li><a href="#become-less-uncertain">Become less uncertain</a></li>
+<li><a href="#more-data-more-certain">More data, more certain</a></li>
+</ul>
+</div>
+
+<pre class="r"><code>library(tidyverse)
+library(broom)
+library(socviz)
+library(moderndive)
+
+set.seed(1990)</code></pre>
+<div id="why-are-we-uncertain" class="section level2">
+<h2>Why are we uncertain?</h2>
+<p>Remember that with data we are always trying to estimate something: the effect of X on Y, the average value of Y among some population, etc, – but we can be more or less <em>certain</em> about our estimate.</p>
+<p>A key reason we are uncertain is that our data is usually a <em>sample</em> of something bigger that we want to learn about (that bigger thing = the <em>population</em>). The problem is that each sample is going to give us a (slightly) different answer.</p>
+<p>For example, below, imagine that in the US there were only <span class="math inline">\(\approx\)</span> 2,800 people, and they were all included in the <code>gss_sm</code> dataset from <code>socviz</code>.</p>
+<p>What proportion of men and women voted for Obama in 2012? In this made up example, we can know the <em>exact answer</em>:</p>
+<pre class="r"><code>true_prop = gss_sm %&gt;% 
+  group_by(sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE))
+true_prop</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   sex    obama
+##   &lt;fct&gt;  &lt;dbl&gt;
+## 1 Male   0.576
+## 2 Female 0.663</code></pre>
+<p>Now, imagine that we instead only had a <em>sample</em> of <code>gss_sm.</code> Say, we picked 10 random people from <code>gss_sm</code> and calculated the proportion of support among men and women for Obama.</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  # randomly draw 10 observations
+  sample_n(10) %&gt;% 
+  group_by(sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   sex    obama
+##   &lt;fct&gt;  &lt;dbl&gt;
+## 1 Male    0.25
+## 2 Female  1</code></pre>
+<p>Run the code above over and over. Notice: you get a different answer each time! Some very far from the true proportion of men and women who voted from Obama. This is the big problem: we only have a sample and each sample gives us a different answer.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> How do we know that our sample is <em>close</em> to the true answer and not weirdly off?</p>
+</div>
+<div id="become-less-uncertain" class="section level2">
+<h2>Become less uncertain</h2>
+<p>It turns out that if a sample is <em>random, representative, and large</em>, our estimate from the <strong>sample</strong> will be pretty close to the estimate from the population.</p>
+<p>Let’s see how this works: the code below uses the function <code>rep_sample_n</code> from <code>moderndive</code> to:</p>
+<ol style="list-style-type: decimal">
+<li>Pick <code>N</code> random people from <code>gss_sm</code> (our sample)</li>
+<li>Estimate the proportion of men and women who voted for Obama in that sample (our sample estimate)</li>
+<li>Repeat this <code>P</code> times</li>
+</ol>
+<p>Below, <code>N</code> = 10 and <code>P</code> = 10. So 10 different samples, each with 10 random people.</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  # 10 samples, each of size 10
+  rep_sample_n(size = 10, reps = 10) %&gt;% 
+  group_by(sex, replicate) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  arrange(replicate)</code></pre>
+<pre><code>## # A tibble: 19 x 3
+## # Groups:   sex [2]
+##    sex    replicate   obama
+##    &lt;fct&gt;      &lt;int&gt;   &lt;dbl&gt;
+##  1 Female         1   0.571
+##  2 Male           2 NaN    
+##  3 Female         2   0.333
+##  4 Male           3   0    
+##  5 Female         3   0.5  
+##  6 Male           4   0.5  
+##  7 Female         4   0.5  
+##  8 Male           5   0    
+##  9 Female         5   1    
+## 10 Male           6   0.5  
+## 11 Female         6   0.6  
+## 12 Male           7   0    
+## 13 Female         7   1    
+## 14 Male           8   0.667
+## 15 Female         8   0.5  
+## 16 Male           9   1    
+## 17 Female         9   1    
+## 18 Male          10   0.5  
+## 19 Female        10   0.5</code></pre>
+<p>Notice how the sample estimate differ varies across samples (the <code>replicate</code> variable tells you which sample you are looking at).</p>
+<p>Let’s do this many more times, and plot the distribution of our sample estimates. Below, each sample only has 10 people in it, and we take 1,000 samples. The black bars are the <em>proportion of men and women who voted for Obama across all of gss_sm</em> (the population parameter):</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  rep_sample_n(size = 10, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;)</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>This is a sample that is <em>random and representative</em>, but small (only 10 people in each sample!). Notice how some of our sample estimates are far off from the population estimate: we get lots of cases where every man, for instance, voted for Obama, which is really wrong.</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  rep_sample_n(size = 10, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;) + 
+  scale_x_continuous(limits = c(-.1, 1.1))</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Now look what happens when we make our samples bigger, for instance, where each sample is composed of 50 people:</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  rep_sample_n(size = 50, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;)  + 
+  scale_x_continuous(limits = c(0, 1)) + 
+  scale_x_continuous(limits = c(-.1, 1.1))</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Now our estimates look very different: many of them are pretty close to the true population proportion. Let’s make our samples even bigger, with 100 people each:</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  rep_sample_n(size = 100, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;)  + 
+  scale_x_continuous(limits = c(0, 1)) + 
+  scale_x_continuous(limits = c(-.1, 1.1))</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Notice how much “narrower” the distribution is getting. We’re getting fewer and fewer samples that are far away from the black line. Let’s look at a sample of 500:</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  rep_sample_n(size = 500, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;)  + 
+  scale_x_continuous(limits = c(0, 1)) + 
+  scale_x_continuous(limits = c(-.1, 1.1))</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Even closer! The result is that if you take a large, random, representative sample the vast majority of estimates are going to be pretty damn close to the population parameter.</p>
+</div>
+<div id="more-data-more-certain" class="section level2">
+<h2>More data, more certain</h2>
+<p>What’s happening above is pretty intuitive; if you are estimating something, you should feel more confident about that estimate the more data you have.</p>
+<p>Compare the two trend-lines below: we should be much more certain about the one on the left, even though both have the sample slope (2)!</p>
+<pre class="r"><code># uncertainty example
+low_certain = tibble(x = rnorm(10), 
+                     y = 2*x + rnorm(10), 
+                     certain = &quot;low&quot;)
+
+hi_certain = tibble(x = rnorm(1000), 
+                     y = 2*x + rnorm(1000), 
+                     certain = &quot;high&quot;)
+
+
+rbind(low_certain, hi_certain) %&gt;% 
+  ggplot(aes(x = x, y = y, color = certain)) + 
+  geom_jitter(size = 2, width = 1) + 
+  facet_wrap(vars(certain)) + 
+  geom_smooth(method = &quot;lm&quot;, color = &quot;blue&quot;) + 
+  theme_bw() + 
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>There are other sources of uncertainty (e.g., measurement error) which we will not discuss here.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>

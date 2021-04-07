@@ -100,7 +100,7 @@ lessons:
     
   - title: "Uncertainty + bootstrapping"
     date: "W13: Apr 5 - 9"
-    #class: "14-class"
+    class: "uncertainty"
     #reading: "bootstrap"
     
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
