@@ -227,3 +227,42 @@ rbind(low_certain, hi_certain) %>%
   theme(legend.position = "none")
 ```
 
+
+
+
+## Good and bad samples
+
+
+Bigger samples decrease uncertainty in our estimate, but this all hinges on the sample being *good*. By good I mean the sample is random and representative of the population. 
+
+
+What makes a sample representative of the population? It's easier to think about what makes a sample unrepresentative. Imagine, for whatever reason, that in the example above, *no one under 50 showed up in our sample*. 
+
+We can simulate this easily by just adding a call to `filter` below to exclude people below 50:
+
+
+```{r}
+gss_sm %>% 
+  filter(age >= 50) %>% 
+  rep_sample_n(size = 500, reps = 1000) %>% 
+  group_by(replicate, sex) %>% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %>% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = "white", alpha = .8) + 
+  facet_wrap(vars(sex), scales = "free") + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = "black")  + 
+  scale_x_continuous(limits = c(0, 1)) + 
+  scale_x_continuous(limits = c(-.1, 1.1))
+```
+
+
+Notice how the distribution of sample estimates are no longer centered around the true population parameter (the black lines). They are centered elsewhere. Increasing the sample size will continue to make the distribution taller and skinnier, but it will not be centered around the black lines. 
+
+
+This is because our sample is *biased*. In the population, there are people of all sorts of ages. But in our sample, it's only older people. A bigger sample will not solve this problem. 
+
+
+Why would our sample not have young people in it, even though the population does? These *sampling biases* happens in the real world all the time. Maybe younger people are less willing to answer polls, or to take surveys, or to have landlines, etc., that means they are "missing" at higher rates from samples. 
+

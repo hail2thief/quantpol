@@ -22,6 +22,7 @@ editor_options:
 <li><a href="#why-are-we-uncertain">Why are we uncertain?</a></li>
 <li><a href="#become-less-uncertain">Become less uncertain</a></li>
 <li><a href="#more-data-more-certain">More data, more certain</a></li>
+<li><a href="#good-and-bad-samples">Good and bad samples</a></li>
 </ul>
 </div>
 
@@ -190,6 +191,29 @@ rbind(low_certain, hi_certain) %&gt;%
   theme_bw() + 
   theme(legend.position = &quot;none&quot;)</code></pre>
 <p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="good-and-bad-samples" class="section level2">
+<h2>Good and bad samples</h2>
+<p>Bigger samples decrease uncertainty in our estimate, but this all hinges on the sample being <em>good</em>. By good I mean the sample is random and representative of the population.</p>
+<p>What makes a sample representative of the population? It’s easier to think about what makes a sample unrepresentative. Imagine, for whatever reason, that in the example above, <em>no one under 50 showed up in our sample</em>.</p>
+<p>We can simulate this easily by just adding a call to <code>filter</code> below to exclude people below 50:</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  filter(age &gt;= 50) %&gt;% 
+  rep_sample_n(size = 500, reps = 1000) %&gt;% 
+  group_by(replicate, sex) %&gt;% 
+  summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
+  ggplot(aes(x = obama, fill = sex)) + 
+  geom_histogram(color = &quot;white&quot;, alpha = .8) + 
+  facet_wrap(vars(sex), scales = &quot;free&quot;) + 
+  theme_bw() + 
+  geom_vline(data = true_prop, aes(xintercept = obama), 
+             size = 2, color = &quot;black&quot;)  + 
+  scale_x_continuous(limits = c(0, 1)) + 
+  scale_x_continuous(limits = c(-.1, 1.1))</code></pre>
+<p><img src="/class/uncertainty_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>Notice how the distribution of sample estimates are no longer centered around the true population parameter (the black lines). They are centered elsewhere. Increasing the sample size will continue to make the distribution taller and skinnier, but it will not be centered around the black lines.</p>
+<p>This is because our sample is <em>biased</em>. In the population, there are people of all sorts of ages. But in our sample, it’s only older people. A bigger sample will not solve this problem.</p>
+<p>Why would our sample not have young people in it, even though the population does? These <em>sampling biases</em> happens in the real world all the time. Maybe younger people are less willing to answer polls, or to take surveys, or to have landlines, etc., that means they are “missing” at higher rates from samples.</p>
 </div>
 <div class="footnotes">
 <hr />
