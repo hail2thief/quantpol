@@ -105,7 +105,8 @@ lessons:
 
   - title: "Bootstrapping + inference"
     date: "W14: Apr 12 - 16"
-    reading: "inference"
+    reading: "bootstrap"
+    class: "bootstrap"
   
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
     date: "Apr 20, Tue"

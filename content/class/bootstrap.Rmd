@@ -1,0 +1,151 @@
+---
+title: "Bootstrap"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 14
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
+
+
+
+```{r libraries}
+library(tidyverse)
+library(broom)
+library(socviz)
+library(infer)
+```
+
+
+
+## Bootstrapping concepts
+
+
+Remember, our estimate is based on a sample from some population, and each sample is going to give us a different estimate. This means our estimates will **vary** from sample to sample. How can we quantify this **variability**?
+
+
+One approach is via **bootstrapping**, where we: 
+
+1. Simulate many new datasets out of our original dataset
+2. Estimate the thing we want to estimate in each of those *bootstrapped* samples
+3. Look at the distribution of estimates across bootstrap samples
+
+
+That distribution of bootstrapped estimates gives us a sense for how much an estimate might var from sample to sample. 
+
+
+## Using infer
+
+Let's do this with the `infer` package, to estimate the number of kids the average American has. 
+
+```{r}
+gss_sm %>% 
+  # specify the outcome variable
+  specify(response = childs) %>% 
+  # generate the bootstrapped samples
+  generate(reps = 1000, type = "bootstrap")
+```
+
+
+Notice how each of the 1,000 bootstrapped sample has the same number of observations as the original dataset. 
+
+
+We can then calculate the average number of kids in each of those 1,000 bootstraps: 
+
+
+```{r}
+boot_kids = gss_sm %>% 
+  # specify the outcome variable
+  specify(response = childs) %>% 
+  # generate the bootstrapped samples
+  generate(reps = 1000, type = "bootstrap") %>% 
+  # find the average # of kids in each bootstrap sample
+  calculate(stat = "mean")
+
+boot_kids
+```
+
+
+`stat` is the average number of kids in each bootstrap (`replicate`). 
+
+
+We can look at the distribution to get a sense for the variability in the estimates: 
+
+
+```{r}
+ggplot(boot_kids, aes(x = stat)) + 
+  geom_histogram(color = "white", fill = "coral", alpha = .7, 
+                 bins = 30) + 
+  theme_bw() + 
+  labs(title = "Average number of kids across bootstraps", 
+       x = NULL, y = NULL)
+```
+
+
+We can also **quantify** this variation by taking the standard deviation of `stat`:
+
+```{r}
+boot_kids %>% 
+  summarise(se = sd(stat))
+```
+
+This is also known as the **standard error**. 
+
+
+
+## Variability gets smaller as sample size gets bigger
+
+
+The process above gives us a sense of the variability in our estimate of the average number of kids in the US, based on our survey of $\approx$ 2,800 people. What if we had a much smaller survey? Say 100 people? 
+
+We can mimic that below by taking 100 random people from `gss_sm` and pretending that's our full survey:
+
+
+```{r}
+boot_kids = gss_sm %>% 
+  # smaller survey of only 100 people
+  sample_n(100) %>% 
+  # specify the outcome variable
+  specify(response = childs) %>% 
+  # generate the bootstrapped samples
+  generate(reps = 1000, type = "bootstrap") %>% 
+  # find the average # of kids in each bootstrap sample
+  calculate(stat = "mean")
+```
+
+
+Notice how much wider this distribution is than the one above. The variability in our bootstrapped estimates is much higher!
+
+```{r}
+ggplot(boot_kids, aes(x = stat)) + 
+  geom_histogram(color = "white", fill = "coral", alpha = .7, 
+                 bins = 30) + 
+  theme_bw() + 
+  labs(title = "Average number of kids across bootstraps", 
+       x = NULL, y = NULL)
+```
+
+
+You can quantify this too; notice how much bigger the standard error is of this much smaller survey: 
+
+
+```{r}
+boot_kids %>% 
+  summarise(se = sd(stat))
+```
+
