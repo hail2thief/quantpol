@@ -53,16 +53,16 @@ library(infer)</code></pre>
 ## # Groups:   replicate [1,000]
 ##    replicate childs
 ##        &lt;int&gt;  &lt;dbl&gt;
-##  1         1      2
+##  1         1      3
 ##  2         1      0
-##  3         1      2
+##  3         1      0
 ##  4         1      0
-##  5         1      4
-##  6         1      2
+##  5         1      6
+##  6         1      0
 ##  7         1      0
-##  8         1      3
+##  8         1      1
 ##  9         1      2
-## 10         1      2
+## 10         1      0
 ## # … with 2,858,990 more rows</code></pre>
 <p>Notice how each of the 1,000 bootstrapped sample has the same number of observations as the original dataset.</p>
 <p>We can then calculate the average number of kids in each of those 1,000 bootstraps:</p>
@@ -78,25 +78,25 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1,000 x 2
 ##    replicate  stat
 ##        &lt;int&gt; &lt;dbl&gt;
-##  1         1  1.88
-##  2         2  1.84
-##  3         3  1.90
-##  4         4  1.80
-##  5         5  1.89
+##  1         1  1.81
+##  2         2  1.83
+##  3         3  1.92
+##  4         4  1.86
+##  5         5  1.80
 ##  6         6  1.85
-##  7         7  1.85
-##  8         8  1.85
-##  9         9  1.84
-## 10        10  1.85
+##  7         7  1.88
+##  8         8  1.84
+##  9         9  1.87
+## 10        10  1.82
 ## # … with 990 more rows</code></pre>
 <p><code>stat</code> is the average number of kids in each bootstrap (<code>replicate</code>).</p>
 <p>We can look at the distribution to get a sense for the variability in the estimates:</p>
 <pre class="r"><code>ggplot(boot_kids, aes(x = stat)) + 
-  geom_histogram(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7, 
-                 bins = 30) + 
+  geom_density(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7) + 
   theme_bw() + 
   labs(title = &quot;Average number of kids across bootstraps&quot;, 
-       x = NULL, y = NULL)</code></pre>
+       x = NULL, y = NULL) + 
+  scale_x_continuous(limits = c(1, 3))</code></pre>
 <p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We can also <strong>quantify</strong> this variation by taking the standard deviation of <code>stat</code>:</p>
 <pre class="r"><code>boot_kids %&gt;% 
@@ -104,7 +104,7 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##       se
 ##    &lt;dbl&gt;
-## 1 0.0312</code></pre>
+## 1 0.0310</code></pre>
 <p>This is also known as the <strong>standard error</strong>.</p>
 </div>
 <div id="variability-gets-smaller-as-sample-size-gets-bigger" class="section level2">
@@ -122,11 +122,11 @@ boot_kids</code></pre>
   calculate(stat = &quot;mean&quot;)</code></pre>
 <p>Notice how much wider this distribution is than the one above. The variability in our bootstrapped estimates is much higher!</p>
 <pre class="r"><code>ggplot(boot_kids, aes(x = stat)) + 
-  geom_histogram(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7, 
-                 bins = 30) + 
+  geom_density(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7) + 
   theme_bw() + 
   labs(title = &quot;Average number of kids across bootstraps&quot;, 
-       x = NULL, y = NULL)</code></pre>
+       x = NULL, y = NULL) + 
+  scale_x_continuous(limits = c(1, 3))</code></pre>
 <p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>You can quantify this too; notice how much bigger the standard error is of this much smaller survey:</p>
 <pre class="r"><code>boot_kids %&gt;% 
@@ -134,5 +134,5 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##      se
 ##   &lt;dbl&gt;
-## 1 0.173</code></pre>
+## 1 0.156</code></pre>
 </div>
