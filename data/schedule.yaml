@@ -98,20 +98,16 @@ lessons:
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
-  - title: "Uncertainty + bootstrapping"
+  - title: "Sampling + Uncertainty"
     date: "W13: Apr 5 - 9"
     class: "uncertainty"
     #reading: "bootstrap"
-    
-  - title: '<i class="fas fa-star"></i> **Assignment 9**'
-    date: "Apr 13, Tue"
-    #assignment: "08-assignment"
 
-  - title: "Inference for regression"
+  - title: "Bootstrapping + inference"
     date: "W14: Apr 12 - 16"
     reading: "inference"
   
-  - title: '<i class="fas fa-star"></i> **Assignment 10**'
+  - title: '<i class="fas fa-star"></i> **Assignment 9**'
     date: "Apr 20, Tue"
     #assignment: "09-assignment"
     
