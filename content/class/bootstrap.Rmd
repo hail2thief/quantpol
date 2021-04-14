@@ -46,12 +46,13 @@ One approach is via **bootstrapping**, where we:
 3. Look at the distribution of estimates across bootstrap samples
 
 
-That distribution of bootstrapped estimates gives us a sense for how much an estimate might var from sample to sample. 
+That distribution of bootstrapped estimates gives us a sense for how much an estimate might vary from sample to sample. 
 
 
-## Using infer
+### Bootstrapping averages
 
 Let's do this with the `infer` package, to estimate the number of kids the average American has. 
+
 
 ```{r}
 gss_sm %>% 
@@ -62,7 +63,19 @@ gss_sm %>%
 ```
 
 
-Notice how each of the 1,000 bootstrapped sample has the same number of observations as the original dataset. 
+Notice how each of the 1,000 bootstrapped samples has the same number of observations as the original dataset. 
+
+
+The above is equivalent to doing this 1,000 times:
+
+```{r}
+gss_sm %>% 
+  # subset down to just kids
+  select(childs) %>% 
+  # sample with replacement, same size as original dataset
+  sample_n(nrow(gss_sm), replace = TRUE)
+```
+
 
 
 We can then calculate the average number of kids in each of those 1,000 bootstraps: 
@@ -97,6 +110,9 @@ ggplot(boot_kids, aes(x = stat)) +
 ```
 
 
+Notice how almost all bootstrapped estimates of the average number of kids are between 1.75 and 2, and the vast majority are in a narrower range than that. 
+
+
 We can also **quantify** this variation by taking the standard deviation of `stat`:
 
 ```{r}
@@ -108,7 +124,7 @@ This is also known as the **standard error**.
 
 
 
-## Variability gets smaller as sample size gets bigger
+#### Variability gets bigger as sample size gets smaller
 
 
 The process above gives us a sense of the variability in our estimate of the average number of kids in the US, based on our survey of $\approx$ 2,800 people. What if we had a much smaller survey? Say 100 people? 
@@ -148,4 +164,218 @@ You can quantify this too; notice how much bigger the standard error is of this 
 boot_kids %>% 
   summarise(se = sd(stat))
 ```
+
+
+
+
+### Bootstrapping regression coefficients
+
+
+We can use bootstrapping to approximate the variability in lots of things we might want to estimaet, including coefficients from regression. 
+
+
+Say we wanted to look at the effect of age on whether or not someone has children:
+
+```{r}
+lm(childs ~ age, data = gss_sm) %>% 
+  tidy()
+```
+
+
+Remember this estimate comes from a *sample*. Other samples will give us different estimates. We can get a sense for how much coefficients will vary across samples with bootstrapping: 
+
+```{r}
+boot_age = gss_sm %>% 
+  # specify is now Y ~ X
+  specify(childs ~ age) %>% 
+  generate(reps = 1000, type = "bootstrap") %>% 
+  # "slope" is another word for coefficient
+  calculate(stat = "slope")
+```
+
+
+Notice how the code looks a bit different: we put `childs ~ age` in `specify()` and we gotta tell R to calculate the "slope", or coefficient, from `lm(childs ~ age)`. 
+
+
+We can plot:
+
+```{r}
+ggplot(boot_age, aes(x = stat)) + 
+  geom_density(color = "white", fill = "coral", alpha = .7) + 
+  theme_bw() + 
+  labs(title = "Estimate of relationship between age and number of kids",
+       subtitle = "Coefficient estimates across bootstrapped samples.",
+       x = NULL, y = NULL)
+```
+
+
+Notice how coefficient estimates vary a lot, from .03 to almost .04. 
+
+
+
+## Standard errors and confidence intervals
+
+
+The distributions we get from bootstrapping give us a sense for the **variability** in our sample estimates. We can quantify that variability in two ways: 
+
+
+One is through the standard error (the standard deviation of the bootstrapped sample estimates):
+
+```{r}
+boot_age %>% 
+  summarise(se = sd(stat))
+```
+
+
+The other is the confidence interval, which provides our "best guess" of the thing we are trying to estimate: 
+
+
+```{r}
+boot_age %>% get_confidence_interval(level = .95)
+```
+
+
+The standard is 95%: so the two numbers give us the upper and lower bound of the middle 95% of the bootstrapped distribution. 
+
+
+Notice that as the confidence increases, the bounds get larger: 
+
+```{r}
+boot_age %>% get_confidence_interval(level = .99)
+```
+
+As the confidence decreases, the bounds get smaller: 
+
+```{r}
+boot_age %>% get_confidence_interval(level = .5)
+```
+
+
+
+
+## Hypothesis testing
+
+
+Remember, hypothesis testing is about how we decide between two competing hypotheses -- or theories about the relationship between two variables -- using data. 
+
+
+Take the example from class, on whether [bicep size predicts conservative ideology](https://www.theatlantic.com/health/archive/2013/05/study-mens-biceps-predict-their-political-ideologies/275942/). The two competing hypotheses are:
+
+1. Null hypothesis: there is no relationship between biceps and conservative ideology
+2. Alternative hypothesis: there is a positive relationship between biceps and conservative ideology
+
+We make up fake data below: 
+
+```{r}
+# fake bicep data
+fake = tibble(person = 1:100, 
+              bicep = rnorm(100), 
+              conservative = runif(100)*100 + 2*bicep)
+
+```
+
+
+We estimate the relationship between bicep and ideology: 
+
+```{r}
+# what is the effect?
+lm(conservative ~ bicep, data = fake) %>% summary()
+```
+
+
+Remember, this estimate is based on one sample. How much might estimates vary? We can use bootstrapping to get a sense: 
+
+
+```{r}
+boot_bicep = fake %>% 
+  specify(conservative ~ bicep) %>% 
+  generate(reps = 1000, type = "bootstrap") %>% 
+  calculate(stat = "slope")
+
+
+ggplot(boot_bicep, aes(x = stat)) + 
+  geom_density(color = "white", fill = "coral", alpha = .7) + 
+  theme_bw() + 
+  labs(title = "Estimate of relationship between bicep size and ideology score",
+       subtitle = "Coefficient estimates across bootstrapped samples.",
+       x = NULL, y = NULL)
+
+```
+
+
+Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative. 
+
+
+How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? That's the goal of hypothesis testing. 
+
+
+
+
+<!-- We can do this for a wider range of sample sizes to see how variability changes as sample size changes: -->
+
+
+<!-- ```{r} -->
+<!-- get_boot = function(data) -->
+<!-- { -->
+<!--   data %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") -->
+<!-- } -->
+
+
+<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
+<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
+<!--   mutate(boots = map(data, get_boot)) %>%  -->
+<!--   unnest(boots) -->
+
+
+<!-- # plot it -->
+<!-- library(ggridges) -->
+
+<!-- ggplot(pDat, aes(y = fct_rev(factor(N)), x = stat)) +  -->
+<!--   geom_density_ridges(rel_min_height = 0.01,  -->
+<!--                       scale = 3,  -->
+<!--                       color = "white",  -->
+<!--                       fill = "black") + -->
+<!--   theme_light() +  -->
+<!--   labs(x = "Average number of kids",  -->
+<!--        y = "Size of the sample") -->
+<!-- ``` -->
+
+
+
+<!-- ```{r, eval = FALSE} -->
+<!-- get_boot = function(data) -->
+<!-- { -->
+<!--   data %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") %>%  -->
+<!--   get_confidence_interval(level = .95, type = "percentile") -->
+<!-- } -->
+
+
+<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
+<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
+<!--   mutate(boots = map(data, get_boot)) %>%  -->
+<!--   unnest(boots) -->
+
+
+<!-- # plot it -->
+<!-- library(ggridges) -->
+
+<!-- ggplot(pDat, aes(x = N, ymin = lower_ci, ymax = upper_ci)) + -->
+<!--   geom_linerange() +  -->
+<!--   theme_light() +  -->
+<!--   labs(x = "Average number of kids",  -->
+<!--        y = "Size of the sample") -->
+<!-- ``` -->
+
 

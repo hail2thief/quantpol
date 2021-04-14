@@ -19,9 +19,13 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#bootstrapping-concepts">Bootstrapping concepts</a></li>
-<li><a href="#using-infer">Using infer</a></li>
-<li><a href="#variability-gets-smaller-as-sample-size-gets-bigger">Variability gets smaller as sample size gets bigger</a></li>
+<li><a href="#bootstrapping-concepts">Bootstrapping concepts</a>
+<ul>
+<li><a href="#bootstrapping-averages">Bootstrapping averages</a></li>
+<li><a href="#bootstrapping-regression-coefficients">Bootstrapping regression coefficients</a></li>
+</ul></li>
+<li><a href="#standard-errors-and-confidence-intervals">Standard errors and confidence intervals</a></li>
+<li><a href="#hypothesis-testing">Hypothesis testing</a></li>
 </ul>
 </div>
 
@@ -38,10 +42,9 @@ library(infer)</code></pre>
 <li>Estimate the thing we want to estimate in each of those <em>bootstrapped</em> samples</li>
 <li>Look at the distribution of estimates across bootstrap samples</li>
 </ol>
-<p>That distribution of bootstrapped estimates gives us a sense for how much an estimate might var from sample to sample.</p>
-</div>
-<div id="using-infer" class="section level2">
-<h2>Using infer</h2>
+<p>That distribution of bootstrapped estimates gives us a sense for how much an estimate might vary from sample to sample.</p>
+<div id="bootstrapping-averages" class="section level3">
+<h3>Bootstrapping averages</h3>
 <p>Let’s do this with the <code>infer</code> package, to estimate the number of kids the average American has.</p>
 <pre class="r"><code>gss_sm %&gt;% 
   # specify the outcome variable
@@ -53,18 +56,38 @@ library(infer)</code></pre>
 ## # Groups:   replicate [1,000]
 ##    replicate childs
 ##        &lt;int&gt;  &lt;dbl&gt;
-##  1         1      3
+##  1         1      2
 ##  2         1      0
-##  3         1      0
+##  3         1      2
 ##  4         1      0
-##  5         1      6
+##  5         1      3
 ##  6         1      0
-##  7         1      0
+##  7         1      2
 ##  8         1      1
-##  9         1      2
+##  9         1      4
 ## 10         1      0
 ## # … with 2,858,990 more rows</code></pre>
-<p>Notice how each of the 1,000 bootstrapped sample has the same number of observations as the original dataset.</p>
+<p>Notice how each of the 1,000 bootstrapped samples has the same number of observations as the original dataset.</p>
+<p>The above is equivalent to doing this 1,000 times:</p>
+<pre class="r"><code>gss_sm %&gt;% 
+  # subset down to just kids
+  select(childs) %&gt;% 
+  # sample with replacement, same size as original dataset
+  sample_n(nrow(gss_sm), replace = TRUE)</code></pre>
+<pre><code>## # A tibble: 2,867 x 1
+##    childs
+##     &lt;dbl&gt;
+##  1      0
+##  2      5
+##  3      1
+##  4      7
+##  5      7
+##  6      5
+##  7      2
+##  8      4
+##  9      3
+## 10      2
+## # … with 2,857 more rows</code></pre>
 <p>We can then calculate the average number of kids in each of those 1,000 bootstraps:</p>
 <pre class="r"><code>boot_kids = gss_sm %&gt;% 
   # specify the outcome variable
@@ -78,16 +101,16 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1,000 x 2
 ##    replicate  stat
 ##        &lt;int&gt; &lt;dbl&gt;
-##  1         1  1.81
-##  2         2  1.83
-##  3         3  1.92
-##  4         4  1.86
-##  5         5  1.80
-##  6         6  1.85
-##  7         7  1.88
-##  8         8  1.84
-##  9         9  1.87
-## 10        10  1.82
+##  1         1  1.88
+##  2         2  1.85
+##  3         3  1.87
+##  4         4  1.85
+##  5         5  1.84
+##  6         6  1.86
+##  7         7  1.86
+##  8         8  1.82
+##  9         9  1.81
+## 10        10  1.83
 ## # … with 990 more rows</code></pre>
 <p><code>stat</code> is the average number of kids in each bootstrap (<code>replicate</code>).</p>
 <p>We can look at the distribution to get a sense for the variability in the estimates:</p>
@@ -97,18 +120,18 @@ boot_kids</code></pre>
   labs(title = &quot;Average number of kids across bootstraps&quot;, 
        x = NULL, y = NULL) + 
   scale_x_continuous(limits = c(1, 3))</code></pre>
-<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Notice how almost all bootstrapped estimates of the average number of kids are between 1.75 and 2, and the vast majority are in a narrower range than that.</p>
 <p>We can also <strong>quantify</strong> this variation by taking the standard deviation of <code>stat</code>:</p>
 <pre class="r"><code>boot_kids %&gt;% 
   summarise(se = sd(stat))</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##       se
 ##    &lt;dbl&gt;
-## 1 0.0310</code></pre>
+## 1 0.0312</code></pre>
 <p>This is also known as the <strong>standard error</strong>.</p>
-</div>
-<div id="variability-gets-smaller-as-sample-size-gets-bigger" class="section level2">
-<h2>Variability gets smaller as sample size gets bigger</h2>
+<div id="variability-gets-bigger-as-sample-size-gets-smaller" class="section level4">
+<h4>Variability gets bigger as sample size gets smaller</h4>
 <p>The process above gives us a sense of the variability in our estimate of the average number of kids in the US, based on our survey of <span class="math inline">\(\approx\)</span> 2,800 people. What if we had a much smaller survey? Say 100 people?</p>
 <p>We can mimic that below by taking 100 random people from <code>gss_sm</code> and pretending that’s our full survey:</p>
 <pre class="r"><code>boot_kids = gss_sm %&gt;% 
@@ -127,7 +150,7 @@ boot_kids</code></pre>
   labs(title = &quot;Average number of kids across bootstraps&quot;, 
        x = NULL, y = NULL) + 
   scale_x_continuous(limits = c(1, 3))</code></pre>
-<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
 <p>You can quantify this too; notice how much bigger the standard error is of this much smaller survey:</p>
 <pre class="r"><code>boot_kids %&gt;% 
   summarise(se = sd(stat))</code></pre>
@@ -135,4 +158,167 @@ boot_kids</code></pre>
 ##      se
 ##   &lt;dbl&gt;
 ## 1 0.156</code></pre>
+</div>
+</div>
+<div id="bootstrapping-regression-coefficients" class="section level3">
+<h3>Bootstrapping regression coefficients</h3>
+<p>We can use bootstrapping to approximate the variability in lots of things we might want to estimaet, including coefficients from regression.</p>
+<p>Say we wanted to look at the effect of age on whether or not someone has children:</p>
+<pre class="r"><code>lm(childs ~ age, data = gss_sm) %&gt;% 
+  tidy()</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   0.153    0.0858       1.79 7.40e- 2
+## 2 age           0.0345   0.00164     21.0  1.83e-91</code></pre>
+<p>Remember this estimate comes from a <em>sample</em>. Other samples will give us different estimates. We can get a sense for how much coefficients will vary across samples with bootstrapping:</p>
+<pre class="r"><code>boot_age = gss_sm %&gt;% 
+  # specify is now Y ~ X
+  specify(childs ~ age) %&gt;% 
+  generate(reps = 1000, type = &quot;bootstrap&quot;) %&gt;% 
+  # &quot;slope&quot; is another word for coefficient
+  calculate(stat = &quot;slope&quot;)</code></pre>
+<p>Notice how the code looks a bit different: we put <code>childs ~ age</code> in <code>specify()</code> and we gotta tell R to calculate the “slope”, or coefficient, from <code>lm(childs ~ age)</code>.</p>
+<p>We can plot:</p>
+<pre class="r"><code>ggplot(boot_age, aes(x = stat)) + 
+  geom_density(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7) + 
+  theme_bw() + 
+  labs(title = &quot;Estimate of relationship between age and number of kids&quot;,
+       subtitle = &quot;Coefficient estimates across bootstrapped samples.&quot;,
+       x = NULL, y = NULL)</code></pre>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Notice how coefficient estimates vary a lot, from .03 to almost .04.</p>
+</div>
+</div>
+<div id="standard-errors-and-confidence-intervals" class="section level2">
+<h2>Standard errors and confidence intervals</h2>
+<p>The distributions we get from bootstrapping give us a sense for the <strong>variability</strong> in our sample estimates. We can quantify that variability in two ways:</p>
+<p>One is through the standard error (the standard deviation of the bootstrapped sample estimates):</p>
+<pre class="r"><code>boot_age %&gt;% 
+  summarise(se = sd(stat))</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##        se
+##     &lt;dbl&gt;
+## 1 0.00164</code></pre>
+<p>The other is the confidence interval, which provides our “best guess” of the thing we are trying to estimate:</p>
+<pre class="r"><code>boot_age %&gt;% get_confidence_interval(level = .95)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1   0.0314   0.0377</code></pre>
+<p>The standard is 95%: so the two numbers give us the upper and lower bound of the middle 95% of the bootstrapped distribution.</p>
+<p>Notice that as the confidence increases, the bounds get larger:</p>
+<pre class="r"><code>boot_age %&gt;% get_confidence_interval(level = .99)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1   0.0301   0.0386</code></pre>
+<p>As the confidence decreases, the bounds get smaller:</p>
+<pre class="r"><code>boot_age %&gt;% get_confidence_interval(level = .5)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1   0.0334   0.0355</code></pre>
+</div>
+<div id="hypothesis-testing" class="section level2">
+<h2>Hypothesis testing</h2>
+<p>Remember, hypothesis testing is about how we decide between two competing hypotheses – or theories about the relationship between two variables – using data.</p>
+<p>Take the example from class, on whether <a href="https://www.theatlantic.com/health/archive/2013/05/study-mens-biceps-predict-their-political-ideologies/275942/">bicep size predicts conservative ideology</a>. The two competing hypotheses are:</p>
+<ol style="list-style-type: decimal">
+<li>Null hypothesis: there is no relationship between biceps and conservative ideology</li>
+<li>Alternative hypothesis: there is a positive relationship between biceps and conservative ideology</li>
+</ol>
+<p>We make up fake data below:</p>
+<pre class="r"><code># fake bicep data
+fake = tibble(person = 1:100, 
+              bicep = rnorm(100), 
+              conservative = runif(100)*100 + 2*bicep)</code></pre>
+<p>We estimate the relationship between bicep and ideology:</p>
+<pre class="r"><code># what is the effect?
+lm(conservative ~ bicep, data = fake) %&gt;% summary()</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = conservative ~ bicep, data = fake)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -54.854 -24.316  -3.294  23.814  64.796 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   47.486      2.891  16.427   &lt;2e-16 ***
+## bicep         -3.102      2.742  -1.131    0.261    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 28.91 on 98 degrees of freedom
+## Multiple R-squared:  0.01289,    Adjusted R-squared:  0.002815 
+## F-statistic:  1.28 on 1 and 98 DF,  p-value: 0.2608</code></pre>
+<p>Remember, this estimate is based on one sample. How much might estimates vary? We can use bootstrapping to get a sense:</p>
+<pre class="r"><code>boot_bicep = fake %&gt;% 
+  specify(conservative ~ bicep) %&gt;% 
+  generate(reps = 1000, type = &quot;bootstrap&quot;) %&gt;% 
+  calculate(stat = &quot;slope&quot;)
+
+
+ggplot(boot_bicep, aes(x = stat)) + 
+  geom_density(color = &quot;white&quot;, fill = &quot;coral&quot;, alpha = .7) + 
+  theme_bw() + 
+  labs(title = &quot;Estimate of relationship between bicep size and ideology score&quot;,
+       subtitle = &quot;Coefficient estimates across bootstrapped samples.&quot;,
+       x = NULL, y = NULL)</code></pre>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative.</p>
+<p>How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? That’s the goal of hypothesis testing.</p>
+<!-- We can do this for a wider range of sample sizes to see how variability changes as sample size changes: -->
+<!-- ```{r} -->
+<!-- get_boot = function(data) -->
+<!-- { -->
+<!--   data %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") -->
+<!-- } -->
+<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
+<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
+<!--   mutate(boots = map(data, get_boot)) %>%  -->
+<!--   unnest(boots) -->
+<!-- # plot it -->
+<!-- library(ggridges) -->
+<!-- ggplot(pDat, aes(y = fct_rev(factor(N)), x = stat)) +  -->
+<!--   geom_density_ridges(rel_min_height = 0.01,  -->
+<!--                       scale = 3,  -->
+<!--                       color = "white",  -->
+<!--                       fill = "black") + -->
+<!--   theme_light() +  -->
+<!--   labs(x = "Average number of kids",  -->
+<!--        y = "Size of the sample") -->
+<!-- ``` -->
+<!-- ```{r, eval = FALSE} -->
+<!-- get_boot = function(data) -->
+<!-- { -->
+<!--   data %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") %>%  -->
+<!--   get_confidence_interval(level = .95, type = "percentile") -->
+<!-- } -->
+<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
+<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
+<!--   mutate(boots = map(data, get_boot)) %>%  -->
+<!--   unnest(boots) -->
+<!-- # plot it -->
+<!-- library(ggridges) -->
+<!-- ggplot(pDat, aes(x = N, ymin = lower_ci, ymax = upper_ci)) + -->
+<!--   geom_linerange() +  -->
+<!--   theme_light() +  -->
+<!--   labs(x = "Average number of kids",  -->
+<!--        y = "Size of the sample") -->
+<!-- ``` -->
 </div>
