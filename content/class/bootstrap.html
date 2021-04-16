@@ -25,7 +25,12 @@ editor_options:
 <li><a href="#bootstrapping-regression-coefficients">Bootstrapping regression coefficients</a></li>
 </ul></li>
 <li><a href="#standard-errors-and-confidence-intervals">Standard errors and confidence intervals</a></li>
-<li><a href="#hypothesis-testing">Hypothesis testing</a></li>
+<li><a href="#hypothesis-testing">Hypothesis testing</a>
+<ul>
+<li><a href="#hypothesis-testing-permutation">Hypothesis testing: permutation</a></li>
+<li><a href="#alpha-levels-standards-of-evidence">Alpha-levels (standards of evidence)</a></li>
+<li><a href="#hypothesis-testing-confidence-intervals">Hypothesis testing: confidence intervals</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -58,14 +63,14 @@ library(infer)</code></pre>
 ##        &lt;int&gt;  &lt;dbl&gt;
 ##  1         1      2
 ##  2         1      0
-##  3         1      2
-##  4         1      0
+##  3         1      4
+##  4         1      2
 ##  5         1      3
-##  6         1      0
-##  7         1      2
-##  8         1      1
-##  9         1      4
-## 10         1      0
+##  6         1      2
+##  7         1      4
+##  8         1      4
+##  9         1      3
+## 10         1      1
 ## # … with 2,858,990 more rows</code></pre>
 <p>Notice how each of the 1,000 bootstrapped samples has the same number of observations as the original dataset.</p>
 <p>The above is equivalent to doing this 1,000 times:</p>
@@ -77,16 +82,16 @@ library(infer)</code></pre>
 <pre><code>## # A tibble: 2,867 x 1
 ##    childs
 ##     &lt;dbl&gt;
-##  1      0
-##  2      5
-##  3      1
-##  4      7
-##  5      7
-##  6      5
-##  7      2
-##  8      4
-##  9      3
-## 10      2
+##  1      1
+##  2      1
+##  3      3
+##  4      0
+##  5      2
+##  6      2
+##  7      0
+##  8      2
+##  9      2
+## 10      0
 ## # … with 2,857 more rows</code></pre>
 <p>We can then calculate the average number of kids in each of those 1,000 bootstraps:</p>
 <pre class="r"><code>boot_kids = gss_sm %&gt;% 
@@ -101,16 +106,16 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1,000 x 2
 ##    replicate  stat
 ##        &lt;int&gt; &lt;dbl&gt;
-##  1         1  1.88
-##  2         2  1.85
-##  3         3  1.87
-##  4         4  1.85
-##  5         5  1.84
+##  1         1  1.87
+##  2         2  1.87
+##  3         3  1.86
+##  4         4  1.87
+##  5         5  1.82
 ##  6         6  1.86
-##  7         7  1.86
-##  8         8  1.82
-##  9         9  1.81
-## 10        10  1.83
+##  7         7  1.85
+##  8         8  1.87
+##  9         9  1.92
+## 10        10  1.87
 ## # … with 990 more rows</code></pre>
 <p><code>stat</code> is the average number of kids in each bootstrap (<code>replicate</code>).</p>
 <p>We can look at the distribution to get a sense for the variability in the estimates:</p>
@@ -128,7 +133,7 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##       se
 ##    &lt;dbl&gt;
-## 1 0.0312</code></pre>
+## 1 0.0311</code></pre>
 <p>This is also known as the <strong>standard error</strong>.</p>
 <div id="variability-gets-bigger-as-sample-size-gets-smaller" class="section level4">
 <h4>Variability gets bigger as sample size gets smaller</h4>
@@ -157,7 +162,7 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##      se
 ##   &lt;dbl&gt;
-## 1 0.156</code></pre>
+## 1 0.190</code></pre>
 </div>
 </div>
 <div id="bootstrapping-regression-coefficients" class="section level3">
@@ -199,7 +204,7 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 1
 ##        se
 ##     &lt;dbl&gt;
-## 1 0.00164</code></pre>
+## 1 0.00167</code></pre>
 <p>The other is the confidence interval, which provides our “best guess” of the thing we are trying to estimate:</p>
 <pre class="r"><code>boot_age %&gt;% get_confidence_interval(level = .95)</code></pre>
 <pre><code>## # A tibble: 1 x 2
@@ -212,13 +217,13 @@ boot_kids</code></pre>
 <pre><code>## # A tibble: 1 x 2
 ##   lower_ci upper_ci
 ##      &lt;dbl&gt;    &lt;dbl&gt;
-## 1   0.0301   0.0386</code></pre>
+## 1   0.0305   0.0387</code></pre>
 <p>As the confidence decreases, the bounds get smaller:</p>
 <pre class="r"><code>boot_age %&gt;% get_confidence_interval(level = .5)</code></pre>
 <pre><code>## # A tibble: 1 x 2
 ##   lower_ci upper_ci
 ##      &lt;dbl&gt;    &lt;dbl&gt;
-## 1   0.0334   0.0355</code></pre>
+## 1   0.0334   0.0356</code></pre>
 </div>
 <div id="hypothesis-testing" class="section level2">
 <h2>Hypothesis testing</h2>
@@ -229,7 +234,8 @@ boot_kids</code></pre>
 <li>Alternative hypothesis: there is a positive relationship between biceps and conservative ideology</li>
 </ol>
 <p>We make up fake data below:</p>
-<pre class="r"><code># fake bicep data
+<pre class="r"><code>set.seed(23424)
+# fake bicep data
 fake = tibble(person = 1:100, 
               bicep = rnorm(100), 
               conservative = runif(100)*100 + 2*bicep)</code></pre>
@@ -242,18 +248,18 @@ lm(conservative ~ bicep, data = fake) %&gt;% summary()</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -54.854 -24.316  -3.294  23.814  64.796 
+## -45.688 -24.505  -5.035  28.053  54.741 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)   47.486      2.891  16.427   &lt;2e-16 ***
-## bicep         -3.102      2.742  -1.131    0.261    
+## (Intercept)   46.839      2.892  16.197   &lt;2e-16 ***
+## bicep          3.996      2.754   1.451     0.15    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 28.91 on 98 degrees of freedom
-## Multiple R-squared:  0.01289,    Adjusted R-squared:  0.002815 
-## F-statistic:  1.28 on 1 and 98 DF,  p-value: 0.2608</code></pre>
+## Residual standard error: 28.92 on 98 degrees of freedom
+## Multiple R-squared:  0.02103,    Adjusted R-squared:  0.01104 
+## F-statistic: 2.105 on 1 and 98 DF,  p-value: 0.15</code></pre>
 <p>Remember, this estimate is based on one sample. How much might estimates vary? We can use bootstrapping to get a sense:</p>
 <pre class="r"><code>boot_bicep = fake %&gt;% 
   specify(conservative ~ bicep) %&gt;% 
@@ -269,56 +275,134 @@ ggplot(boot_bicep, aes(x = stat)) +
        x = NULL, y = NULL)</code></pre>
 <p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative.</p>
-<p>How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? That’s the goal of hypothesis testing.</p>
-<!-- We can do this for a wider range of sample sizes to see how variability changes as sample size changes: -->
-<!-- ```{r} -->
-<!-- get_boot = function(data) -->
-<!-- { -->
-<!--   data %>%  -->
-<!--   # specify the outcome variable -->
-<!--   specify(response = childs) %>%  -->
-<!--   # generate the bootstrapped samples -->
-<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
-<!--   # find the average # of kids in each bootstrap sample -->
-<!--   calculate(stat = "mean") -->
-<!-- } -->
-<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
-<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
-<!--   mutate(boots = map(data, get_boot)) %>%  -->
-<!--   unnest(boots) -->
-<!-- # plot it -->
-<!-- library(ggridges) -->
-<!-- ggplot(pDat, aes(y = fct_rev(factor(N)), x = stat)) +  -->
-<!--   geom_density_ridges(rel_min_height = 0.01,  -->
-<!--                       scale = 3,  -->
-<!--                       color = "white",  -->
-<!--                       fill = "black") + -->
-<!--   theme_light() +  -->
-<!--   labs(x = "Average number of kids",  -->
-<!--        y = "Size of the sample") -->
-<!-- ``` -->
-<!-- ```{r, eval = FALSE} -->
-<!-- get_boot = function(data) -->
-<!-- { -->
-<!--   data %>%  -->
-<!--   # specify the outcome variable -->
-<!--   specify(response = childs) %>%  -->
-<!--   # generate the bootstrapped samples -->
-<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
-<!--   # find the average # of kids in each bootstrap sample -->
-<!--   calculate(stat = "mean") %>%  -->
-<!--   get_confidence_interval(level = .95, type = "percentile") -->
-<!-- } -->
-<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
-<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
-<!--   mutate(boots = map(data, get_boot)) %>%  -->
-<!--   unnest(boots) -->
-<!-- # plot it -->
-<!-- library(ggridges) -->
-<!-- ggplot(pDat, aes(x = N, ymin = lower_ci, ymax = upper_ci)) + -->
-<!--   geom_linerange() +  -->
-<!--   theme_light() +  -->
-<!--   labs(x = "Average number of kids",  -->
-<!--        y = "Size of the sample") -->
-<!-- ``` -->
+<p>How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology?</p>
+<div id="hypothesis-testing-permutation" class="section level3">
+<h3>Hypothesis testing: permutation</h3>
+<p>One way to decide is to simulate what the world might look like under the null hypothesis – a world where biceps don’t affect ideology.</p>
+<p>We can do this by randomly “shuffling” or <em>permuting</em> the values in our bicep variable. Why? This mimics the idea that if bicep size and ideology are unrelated, you could completely alter one variable without affecting the other. So we:</p>
+<ol style="list-style-type: decimal">
+<li>“shuffle” or permute the bicep variable</li>
+<li>estimate <code>lm(conservative ~ bicep)</code>, store coefficient on bicep</li>
+<li>repeat N times</li>
+</ol>
+<pre class="r"><code># permutation based hypothesis testing
+null_biceps = fake %&gt;% 
+  # specify is now Y ~ X
+  specify(conservative ~ bicep) %&gt;% 
+  # define null hypothesis: &quot;independence&quot;
+  hypothesize(null = &quot;independence&quot;) %&gt;% 
+  # now we do &quot;permute&quot; instead of bootstrap
+  generate(reps = 1000, type = &quot;permute&quot;) %&gt;% 
+  # &quot;slope&quot; is another word for coefficient
+  calculate(stat = &quot;slope&quot;)
+
+null_biceps</code></pre>
+<pre><code>## # A tibble: 1,000 x 2
+##    replicate   stat
+##        &lt;int&gt;  &lt;dbl&gt;
+##  1         1  3.60 
+##  2         2  3.28 
+##  3         3  1.73 
+##  4         4  0.390
+##  5         5  2.15 
+##  6         6  5.20 
+##  7         7 -5.17 
+##  8         8 -4.43 
+##  9         9 -2.34 
+## 10        10  1.15 
+## # … with 990 more rows</code></pre>
+<p>Each row here is the estimated coefficient of bicep from a permuted sample – a sample where the values of bicep have been shuffled. Look at the distribution:</p>
+<pre class="r"><code>ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = &quot;white&quot;, 
+                                                     fill = &quot;coral&quot;) + 
+  theme_bw() + 
+  labs(title = &quot;The Simulated Null Distribution&quot;, 
+       subtitle = &quot;What we would observe in a world where biceps and ideology are unrelated.&quot;, 
+       x = &quot;Permuted coefficient estimates from lm(affairs ~ children)&quot;, 
+       y = NULL)</code></pre>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>This is our simulation of what we might observe under the <em>null hypothesis</em> – that there is no relationship between biceps and ideology. Two key takeaways here:</p>
+<ol style="list-style-type: decimal">
+<li><p>As we would expect, most of our simulated coefficient estimates are close to zero. This makes sense! The null hypothesis is precisely that there is no relationship between the two (e.g., that the coefficient is not greater than zero!).</p></li>
+<li><p>Even in a world where the null is true, you can still get pretty large coefficient estimates by chance, even as large as -10 and +10.</p></li>
+</ol>
+<p>Point (2) is really important: totally by chance, two variables that are unrelated can still have strong positive or negative correlations. It is <em>unlikely that this happens, but it’s still possible</em>.</p>
+<p>With a simulation of what the world would like under the null hypothesis, we can turn back to our original estimate:</p>
+<pre class="r"><code>lm(conservative ~ bicep, data = fake) %&gt;% summary()</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = conservative ~ bicep, data = fake)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -45.688 -24.505  -5.035  28.053  54.741 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   46.839      2.892  16.197   &lt;2e-16 ***
+## bicep          3.996      2.754   1.451     0.15    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 28.92 on 98 degrees of freedom
+## Multiple R-squared:  0.02103,    Adjusted R-squared:  0.01104 
+## F-statistic: 2.105 on 1 and 98 DF,  p-value: 0.15</code></pre>
+<p>How likely is it that our estimate would have occurred by chance?</p>
+<pre class="r"><code>ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = &quot;white&quot;, 
+                                                     fill = &quot;coral&quot;) + 
+  theme_bw() + 
+  labs(title = &quot;The Simulated Null Distribution&quot;, 
+       subtitle = &quot;What we would observe in a world where biceps and ideology are unrelated.&quot;, 
+       x = &quot;Permuted coefficient estimates from lm(affairs ~ children)&quot;, 
+       y = NULL) + 
+  geom_vline(xintercept = 3.996, lty = 2, color = &quot;black&quot;, size = 2)</code></pre>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p>Our estimate is a fair bit larger than what you would expect to observe under the null hypothesis. We can calculate exactly how much larger using the <strong>p-value</strong>. We set <code>direction = right</code> because we want to know how much <em>larger</em> the estimate is than expected.</p>
+<pre class="r"><code>get_p_value(null_biceps, obs_stat = 3.996, direction = &quot;right&quot;)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##   p_value
+##     &lt;dbl&gt;
+## 1   0.084</code></pre>
+<p>The <strong>p-value</strong> is .084, meaning that only 8.4% of the estimates we got by chance are as large or larger than our original result. In other words, our estimate is larger than 84% of the results we could observe by chance.</p>
+<p>We can calculate this “by hand” too, like so:</p>
+<pre class="r"><code>null_biceps %&gt;% 
+  mutate(bigger = ifelse(stat &gt; 3.996, &quot;yes&quot;, &quot;no&quot;)) %&gt;% 
+  group_by(bigger) %&gt;% 
+  tally() %&gt;% 
+  mutate(percent = n/sum(n))</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   bigger     n percent
+##   &lt;chr&gt;  &lt;int&gt;   &lt;dbl&gt;
+## 1 no       916   0.916
+## 2 yes       84   0.084</code></pre>
+<p>84% larger than we might observe by chance – sounds like our result is unusually large, and unlikely to be the result of random chance. But is it unlikely enough for us to be confident?</p>
+</div>
+<div id="alpha-levels-standards-of-evidence" class="section level3">
+<h3>Alpha-levels (standards of evidence)</h3>
+<p>Remember the standard and totally arbitrary <em>alpha-level</em> accepted in the scientific community is .05. This means that p-values lower than .05 are considered too small to be the result of random chance, while p-values higher than that are considered too large to feel confident in. Arbitrary? Yes.</p>
+<p>Since our p-value of .084 is larger than the .05 standard (the alpha-level), we would <em>fail to reject the null hypothesis</em>. In other words, the result is too plausible in a world where null hypothesis is true for us to reject it!</p>
+</div>
+<div id="hypothesis-testing-confidence-intervals" class="section level3">
+<h3>Hypothesis testing: confidence intervals</h3>
+<p>A different, and much more straightforward way, to do hypothesis testing is to bootstrap confidence intervals and see if they exclude 0. Let’s do the bootstrap.</p>
+<pre class="r"><code>boot_bicep = fake %&gt;% 
+  specify(conservative ~ bicep) %&gt;% 
+  generate(reps = 1000, type = &quot;boot&quot;) %&gt;% 
+  calculate(stat = &quot;slope&quot;)</code></pre>
+<p>Here is the distribution of bootstrapped estimates from our data:</p>
+<pre class="r"><code>ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = &quot;white&quot;, 
+                                                     fill = &quot;coral&quot;) + 
+  theme_bw() + 
+  labs(title = &quot;Distribution of bootstrapped estimates&quot;, 
+       subtitle = &quot;How the relationship between biceps and ideology might vary across samples.&quot;, 
+       x = &quot;Bootstrapped coefficient estimates from lm(conservative ~ bicep)&quot;, 
+       y = NULL)</code></pre>
+<p><img src="/class/bootstrap_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Here’s the 95% confidence interval:</p>
+<pre class="r"><code>get_confidence_interval(boot_bicep, level = .95)</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   lower_ci upper_ci
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1    -1.58     9.23</code></pre>
+<p>Notice this interval <em>includes</em> 0. This means that the range of values that are our “best guess” for the effect of biceps on ideology <strong>include</strong> the possibility that there is no effect (or that the effect is negative). Following the standard of using .05 as the threshold, we would <em>fail to reject the null hypothesis of no effect of biceps on ideology</em>.</p>
+</div>
 </div>

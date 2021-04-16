@@ -267,6 +267,7 @@ Take the example from class, on whether [bicep size predicts conservative ideolo
 We make up fake data below: 
 
 ```{r}
+set.seed(23424)
 # fake bicep data
 fake = tibble(person = 1:100, 
               bicep = rnorm(100), 
@@ -306,76 +307,153 @@ ggplot(boot_bicep, aes(x = stat)) +
 Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative. 
 
 
-How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? That's the goal of hypothesis testing. 
+How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? 
 
 
 
-
-<!-- We can do this for a wider range of sample sizes to see how variability changes as sample size changes: -->
-
-
-<!-- ```{r} -->
-<!-- get_boot = function(data) -->
-<!-- { -->
-<!--   data %>%  -->
-<!--   # specify the outcome variable -->
-<!--   specify(response = childs) %>%  -->
-<!--   # generate the bootstrapped samples -->
-<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
-<!--   # find the average # of kids in each bootstrap sample -->
-<!--   calculate(stat = "mean") -->
-<!-- } -->
+### Hypothesis testing: permutation
 
 
-<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
-<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
-<!--   mutate(boots = map(data, get_boot)) %>%  -->
-<!--   unnest(boots) -->
+One way to decide is to simulate what the world might look like under the null hypothesis -- a world where biceps don't affect ideology. 
 
 
-<!-- # plot it -->
-<!-- library(ggridges) -->
+We can do this by randomly "shuffling" or *permuting* the values in our bicep variable. Why? This mimics the idea that if bicep size and ideology are unrelated, you could completely alter one variable without affecting the other. So we:
 
-<!-- ggplot(pDat, aes(y = fct_rev(factor(N)), x = stat)) +  -->
-<!--   geom_density_ridges(rel_min_height = 0.01,  -->
-<!--                       scale = 3,  -->
-<!--                       color = "white",  -->
-<!--                       fill = "black") + -->
-<!--   theme_light() +  -->
-<!--   labs(x = "Average number of kids",  -->
-<!--        y = "Size of the sample") -->
-<!-- ``` -->
+
+1. "shuffle" or permute the bicep variable
+2. estimate `lm(conservative ~ bicep)`, store coefficient on bicep
+3. repeat N times
 
 
 
-<!-- ```{r, eval = FALSE} -->
-<!-- get_boot = function(data) -->
-<!-- { -->
-<!--   data %>%  -->
-<!--   # specify the outcome variable -->
-<!--   specify(response = childs) %>%  -->
-<!--   # generate the bootstrapped samples -->
-<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
-<!--   # find the average # of kids in each bootstrap sample -->
-<!--   calculate(stat = "mean") %>%  -->
-<!--   get_confidence_interval(level = .95, type = "percentile") -->
-<!-- } -->
+```{r}
+# permutation based hypothesis testing
+null_biceps = fake %>% 
+  # specify is now Y ~ X
+  specify(conservative ~ bicep) %>% 
+  # define null hypothesis: "independence"
+  hypothesize(null = "independence") %>% 
+  # now we do "permute" instead of bootstrap
+  generate(reps = 1000, type = "permute") %>% 
+  # "slope" is another word for coefficient
+  calculate(stat = "slope")
+
+null_biceps
+```
 
 
-<!-- pDat = crossing(N = seq(10, 2800, by = 50)) %>%  -->
-<!--   mutate(data = map(N, ~sample_n(gss_sm, .x))) %>%  -->
-<!--   mutate(boots = map(data, get_boot)) %>%  -->
-<!--   unnest(boots) -->
+Each row here is the estimated coefficient of bicep from a permuted sample -- a sample where the values of bicep have been shuffled. Look at the distribution:
 
 
-<!-- # plot it -->
-<!-- library(ggridges) -->
+```{r}
+ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white", 
+                                                     fill = "coral") + 
+  theme_bw() + 
+  labs(title = "The Simulated Null Distribution", 
+       subtitle = "What we would observe in a world where biceps and ideology are unrelated.", 
+       x = "Permuted coefficient estimates from lm(affairs ~ children)", 
+       y = NULL)
+```
 
-<!-- ggplot(pDat, aes(x = N, ymin = lower_ci, ymax = upper_ci)) + -->
-<!--   geom_linerange() +  -->
-<!--   theme_light() +  -->
-<!--   labs(x = "Average number of kids",  -->
-<!--        y = "Size of the sample") -->
-<!-- ``` -->
 
+This is our simulation of what we might observe under the *null hypothesis* -- that there is no relationship between biceps and ideology. Two key takeaways here: 
+
+1. As we would expect, most of our simulated coefficient estimates are close to zero. This makes sense! The null hypothesis is precisely that there is no relationship between the two (e.g., that the coefficient is not greater than zero!). 
+
+2. Even in a world where the null is true, you can still get pretty large coefficient estimates by chance, even as large as -10 and +10.  
+
+Point (2) is really important: totally by chance, two variables that are unrelated can still have strong positive or negative correlations. It is *unlikely that this happens, but it's still possible*. 
+
+
+With a simulation of what the world would like under the null hypothesis, we can turn back to our original estimate: 
+
+
+```{r}
+lm(conservative ~ bicep, data = fake) %>% summary()
+```
+
+
+How likely is it that our estimate would have occurred by chance? 
+
+
+```{r}
+ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white", 
+                                                     fill = "coral") + 
+  theme_bw() + 
+  labs(title = "The Simulated Null Distribution", 
+       subtitle = "What we would observe in a world where biceps and ideology are unrelated.", 
+       x = "Permuted coefficient estimates from lm(affairs ~ children)", 
+       y = NULL) + 
+  geom_vline(xintercept = 3.996, lty = 2, color = "black", size = 2)
+```
+
+
+Our estimate is a fair bit larger than what you would expect to observe under the null hypothesis. We can calculate exactly how much larger using the **p-value**. We set `direction = right` because we want to know how much *larger* the estimate is than expected. 
+
+```{r}
+get_p_value(null_biceps, obs_stat = 3.996, direction = "right")
+```
+
+The **p-value** is .084, meaning that only 8.4% of the estimates we got by chance are as large or larger than our original result. In other words, our estimate is larger than 84% of the results we could observe by chance. 
+
+
+We can calculate this "by hand" too, like so: 
+
+```{r}
+null_biceps %>% 
+  mutate(bigger = ifelse(stat > 3.996, "yes", "no")) %>% 
+  group_by(bigger) %>% 
+  tally() %>% 
+  mutate(percent = n/sum(n))
+```
+
+
+84% larger than we might observe by chance -- sounds like our result is unusually large, and unlikely to be the result of random chance. But is it unlikely enough for us to be confident? 
+
+
+### Alpha-levels (standards of evidence)
+
+
+Remember the standard and totally arbitrary *alpha-level* accepted in the scientific community is .05. This means that p-values lower than .05 are considered too small to be the result of random chance, while p-values higher than that are considered too large to feel confident in. Arbitrary? Yes. 
+
+
+Since our p-value of .084 is larger than the .05 standard (the alpha-level), we would *fail to reject the null hypothesis*. In other words, the result is too plausible in a world where null hypothesis is true for us to reject it!
+
+
+### Hypothesis testing: confidence intervals
+
+
+A different, and much more straightforward way, to do hypothesis testing is to bootstrap confidence intervals and see if they exclude 0. Let's do the bootstrap. 
+
+
+```{r}
+boot_bicep = fake %>% 
+  specify(conservative ~ bicep) %>% 
+  generate(reps = 1000, type = "boot") %>% 
+  calculate(stat = "slope")
+```
+
+
+Here is the distribution of bootstrapped estimates from our data:
+
+
+```{r}
+ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white", 
+                                                     fill = "coral") + 
+  theme_bw() + 
+  labs(title = "Distribution of bootstrapped estimates", 
+       subtitle = "How the relationship between biceps and ideology might vary across samples.", 
+       x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)", 
+       y = NULL)
+```
+
+
+Here's the 95% confidence interval:
+
+```{r}
+get_confidence_interval(boot_bicep, level = .95)
+```
+
+
+Notice this interval *includes* 0. This means that the range of values that are our "best guess" for the effect of biceps on ideology **include** the possibility that there is no effect (or that the effect is negative). Following the standard of using .05 as the threshold, we would *fail to reject the null hypothesis of no effect of biceps on ideology*. 
 

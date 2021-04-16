@@ -109,8 +109,8 @@ lessons:
     class: "bootstrap"
   
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
-    date: "Apr 20, Tue"
-    #assignment: "09-assignment"
+    date: "Apr 23, Fri"
+    assignment: "ps-uncertainty"
     
   - title: "Hypothesis testing"
     date: "W15: Apr 19 - 23"
