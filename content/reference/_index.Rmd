@@ -2,7 +2,7 @@
 title: General help
 menu:
   reference:
-    parent: Overview
+    parent: Guides
 type: docs
 weight: 1
 output:
@@ -14,6 +14,11 @@ output:
 
 <!-- <img src="/media/analog.jpg" alt="analog" width="600"/> -->
 
+
+## Study guides
+
+
+You can access the [study guides for the midterm and final here.](study/)
 
 
 ## Online help

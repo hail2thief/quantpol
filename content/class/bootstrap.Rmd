@@ -369,7 +369,7 @@ With a simulation of what the world would like under the null hypothesis, we can
 
 
 ```{r}
-lm(conservative ~ bicep, data = fake) %>% summary()
+lm(conservative ~ bicep, data = fake) %>% moderndive::get_regression_table()
 ```
 
 
@@ -391,7 +391,7 @@ ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white",
 Our estimate is a fair bit larger than what you would expect to observe under the null hypothesis. We can calculate exactly how much larger using the **p-value**. We set `direction = right` because we want to know how much *larger* the estimate is than expected. 
 
 ```{r}
-get_p_value(null_biceps, obs_stat = 3.996, direction = "right")
+get_p_value(null_biceps, obs_stat = 3.996, direction = "both")
 ```
 
 The **p-value** is .084, meaning that only 8.4% of the estimates we got by chance are as large or larger than our original result. In other words, our estimate is larger than 84% of the results we could observe by chance. 
@@ -448,6 +448,17 @@ ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white",
 ```
 
 
+
+Here's the standard error:
+
+```{r}
+boot_bicep %>% 
+  summarise(se = sd(stat))
+```
+
+
+
+
 Here's the 95% confidence interval:
 
 ```{r}
@@ -456,4 +467,88 @@ get_confidence_interval(boot_bicep, level = .95)
 
 
 Notice this interval *includes* 0. This means that the range of values that are our "best guess" for the effect of biceps on ideology **include** the possibility that there is no effect (or that the effect is negative). Following the standard of using .05 as the threshold, we would *fail to reject the null hypothesis of no effect of biceps on ideology*. 
+
+
+
+Here's the confidence interval again, with shading:
+
+
+```{r}
+ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white", 
+                                                     fill = "coral") + 
+  theme_bw() + 
+  labs(title = "Distribution of bootstrapped estimates", 
+       subtitle = "How the relationship between biceps and ideology might vary across samples.", 
+       x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)", 
+       y = NULL) + 
+  annotate(geom = "rect", xmin = get_confidence_interval(boot_bicep)[["lower_ci"]], 
+           xmax = get_confidence_interval(boot_bicep)[["upper_ci"]], ymin = 0, ymax = Inf, 
+           fill = "#2ECC40", alpha = 0.25)
+```
+
+
+
+<!-- ## Alpha-levels: tradeoffs -->
+
+
+<!-- Remember, the (abitrary) convention for deciding between competing hypotheses is a p-value less than .05; that .05 threshold is known as the `alpha-level`. An important thing to remember is that there is a trade-off in the size of the alpha-level:  -->
+
+
+<!-- - the bigger the alpha-level, the lower our standard of evidence for rejecting the null, which means a lower chance of Type 2 error (e.g., letting the guilty go free) and a higher chance of Type 1 error (e.g., convicting the innocent) -->
+
+<!-- - the smaller the alpha-level, the higher our standard of evidence for rejecting the null, which means a higher chance of Type 2 error and a lower chance of Type 1 error -->
+
+
+<!-- Let's use simulation to see this. Let's pretend once again that `gss_sm` is the whole of the American public. We want to estimate the effect of age on children in this population. H1 is that people who are older are more likely to have children than people who are younger. H0 (the null) is that people who are older don't have children at higher rates than people who are younger.  -->
+
+
+<!-- We can know the exact effect of age on children in this made-up example: -->
+
+
+<!-- ```{r} -->
+<!-- lm(childs ~ age, data = gss_sm) %>%  -->
+<!--   tidy() -->
+<!-- ``` -->
+
+
+<!-- The true effect size is .0345. So we *should* reject the null, since the coefficient is not zero (or less than zero).  -->
+
+
+
+<!-- Now, say we have a random sample of 200 people from this population. We can take a sample, estimate 95% confidence interval below: -->
+
+
+<!-- ```{r} -->
+<!-- gss_sm %>%  -->
+<!--   drop_na() %>%  -->
+<!--   sample_n(200) %>%  -->
+<!--   specify(childs ~ age) %>%  -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   calculate(stat = "slope") %>%  -->
+<!--   get_confidence_interval() -->
+<!-- ``` -->
+
+
+
+<!-- What if we do this many times? How many times will our confidence interval  -->
+
+<!-- ```{r} -->
+<!-- get_ci = function(x) -->
+<!-- { -->
+<!--   ci = x %>%  -->
+<!--   specify(childs ~ age) %>%  -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   calculate(stat = "slope") %>%  -->
+<!--   get_confidence_interval() -->
+
+<!--   return(ci) -->
+<!-- } -->
+
+<!-- gss_sm %>%  -->
+<!--   select(childs, age) %>%  -->
+<!--   rep_sample_n(size = 200, reps = 100, replace = FALSE) %>%  -->
+<!--   nest() %>%  -->
+<!--   mutate(cis = map(data, get_ci)) -->
+<!-- ``` -->
+
 

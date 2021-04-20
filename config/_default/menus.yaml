@@ -22,7 +22,5 @@ assignment:
     weight: 2
 
 reference:
-  - name: Overview
-    weight: 1
   - name: Guides
-    weight: 2
+    weight: 1
