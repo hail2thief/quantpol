@@ -4,53 +4,53 @@ lessons:
 
   - title: "R, Rstudio, basics"
     date: "W1: Jan 11 - 15"
-    reading: "getting-started"
-    class: "getting-started"
+    #reading: "getting-started"
+    #class: "getting-started"
     
   - title: "Visualizing data with ggplot"
     date: "W2: Jan 18 - 22"
-    class: "dataviz"
-    reading: "data-viz"
+    #class: "dataviz"
+    #reading: "data-viz"
     
   - title: '<i class="fas fa-star"></i> **Assignment 1**'
     date: "Jan 26, Tue"
-    assignment: "ps-viz"
+    #assignment: "ps-viz"
     
   - title: "Data wrangling"
     date: "W3: Jan 25 - 29"
-    class: "data-wrangle"
-    reading: "data-wrangle"
+    #class: "data-wrangle"
+    #reading: "data-wrangle"
     
   - title: '<i class="fas fa-star"></i> **Assignment 2**'
     date: "Feb 2, Tue"
-    assignment: "ps-wrangle"
+    #assignment: "ps-wrangle"
 
   - title: "Importing data, tidy data"
     date: "W4: Feb 1 - 5"
-    class: "data-tidy"
-    reading: "data-import"
+    #class: "data-tidy"
+    #reading: "data-import"
     
   - title: '<i class="fas fa-star"></i> **Assignment 3**'
     date: "Feb 9, Tue"
-    assignment: "ps-tidy"
+    #assignment: "ps-tidy"
 
   - title: "Intro to regression"
     date: "W5: Feb 8 - 12"
-    class: "regression"
-    reading: "intro-reg"
+    #class: "regression"
+    #reading: "intro-reg"
     
   - title: '<i class="fas fa-star"></i> **Assignment 4**'
     date: "Feb 16, Tue"
-    assignment: "ps-reg"
+    #assignment: "ps-reg"
     
   - title: "Prediction"
     date: "W6: Feb 15 - 19"
     #class: "06-class"
-    class: "prediction"
+    #class: "prediction"
     
   - title: '<i class="fas fa-star"></i> **Assignment 5**'
     date: "Feb 23, Tue"
-    assignment: "ps-predict"
+    #assignment: "ps-predict"
     
   - title: '<i class="fas fa-star"></i> **Midterm Exam**'
     date: "W7: Feb 22 - 26"
@@ -60,57 +60,57 @@ lessons:
 
   - title: "The fundamental problem of causality"
     date: "W8: Mar 1 - 5"
-    class: "confounds"
-    reading: "causal"
+    #class: "confounds"
+    #reading: "causal"
     
   - title: "Causal diagrams"
     date: "W9: Mar 8 - 12"
-    class: "dags"
-    reading: "dags"
+    #class: "dags"
+    #reading: "dags"
     
   - title: '<i class="fas fa-star"></i> **Assignment 6**'
     date: "Mar 16, Tue"
-    assignment: "ps-dags"
+    #assignment: "ps-dags"
     
   - title: "Closing backdoors with controls"
     date: "W10: Mar 15 - 19"
-    class: "controls"
-    reading: "controls"
+    #class: "controls"
+    #reading: "controls"
     
   - title: '<i class="fas fa-star"></i> **Assignment 7**'
     date: "Mar 23, Tue"
-    assignment: "ps-controls"
+    #assignment: "ps-controls"
     
   - title: "Causal toolbox: fixed effects + DID"
     date: "W11: Mar 22 - 26"
-    class: "fixed-effects"
-    reading: "fe"
+    #class: "fixed-effects"
+    #reading: "fe"
     
   - title: "Toolbox: DID + regression discontinuity"
     date: "W12: Mar 29 - Apr 2"
-    class: "rdd"
-    reading: "reg-discon"
+    #class: "rdd"
+    #reading: "reg-discon"
     
   - title: '<i class="fas fa-star"></i> **Assignment 8**'
     date: "Apr 6, Tue"
-    assignment: "ps-fe"
+    #assignment: "ps-fe"
     
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
   - title: "Sampling + Uncertainty"
     date: "W13: Apr 5 - 9"
-    class: "uncertainty"
+    #class: "uncertainty"
     #reading: "bootstrap"
 
   - title: "Bootstrapping + inference"
     date: "W14: Apr 12 - 16"
-    reading: "bootstrap"
-    class: "bootstrap"
+    #reading: "bootstrap"
+    #class: "bootstrap"
   
   - title: '<i class="fas fa-star"></i> **Assignment 9**'
     date: "Apr 23, Fri"
-    assignment: "ps-uncertainty"
+    #assignment: "ps-uncertainty"
     
   - title: "Hypothesis testing"
     date: "W15: Apr 19 - 23"
