@@ -1,0 +1,131 @@
+---
+title: "Data visualization"
+subtitle: "POL051: The Scientific Study of Politics"  
+author: 
+  - "Prof. Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    seal: true
+    css: [xaringan-themer.css, "ath-slides.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+      navigation:
+        scroll: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+library(flipbookr)
+library(tidyverse)
+style_mono_accent(
+  base_color = "#1c5253",
+  header_font_google = google_font("Josefin Sans"),
+  text_font_google   = google_font("Montserrat", "300", "300i"),
+  code_font_google   = google_font("Fira Mono")
+)
+```
+
+
+```{r xaringanExtra-share-again, echo=FALSE}
+xaringanExtra::use_share_again()
+```
+
+class: center middle main-title section-title-0
+
+# Data Visualization
+
+.class-info[
+
+.medium[**Prof. Juan Tellez**]
+
+
+.light.small[Andrew Young School of Policy Studies<br>
+Georgia State University<br>
+July 7, 2020]
+
+]
+
+---
+# Hello
+
+This is just a slide.
+- whatever
+* whatever
+
+.box-1[Don't tell me what to do]
+
+???
+
+presenter notes.
+
+---
+
+# Code on one side and text on the other
+
+.left-code[
+```{r plot-label, eval=FALSE}
+# code chunk here
+ggplot(iris) + 
+  aes(Sepal.Length, 
+      Sepal.Width, 
+      color = Species) + 
+  geom_point()
+```
+]
+
+.right-plot[
+```{r plot-label-out, ref.label="plot-label", echo=FALSE}
+```
+]
+---
+
+# And here's some math
+
+$$Y_{it} = \alpha + \beta X + \epsilon_{it}$$
+
+
+---
+class: inverse, middle, center
+
+# First up: classic flipbook, using defaults to walk through code pipeline
+
+
+
+
+
+<!-- get a flipbook version of the my_cars code chunk - pauses are where parentheses are balanced -->
+---
+
+`r chunk_reveal("my_cars")`
+
+```{r my_cars, include = FALSE}
+cars %>%
+  filter(speed > 4) %>%
+  ggplot() +
+  aes(x = speed) + #BREAK
+  aes(y = dist) + #BREAK
+  geom_point(
+    alpha = .8, 
+    color = "blue" 
+    ) + 
+  aes(size = speed) #BREAK
+```
+

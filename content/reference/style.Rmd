@@ -14,6 +14,20 @@ output:
 
 R is fairly forgiving about how you type code (unlike other languages like Python, where miscounting spaces can ruin your code!). All of these things will do exactly the same thing:
 
+```{r show-slide-tabs, echo=FALSE, results="asis"}
+slide_details <- tibble::tribble(
+  ~youtube_id,   ~title, ~slide, ~active,
+  "BIhz1dz5Vws", "Introduction", "1", TRUE,
+  "f-sOSXyeeJE", "Data science and public service", "ds-ps", FALSE,
+  "Z2foqSMWnGU", "Evidence, evaluation, and causation (1)", "evidence-evaluation-causation", FALSE,
+  "W5ChuEhAzrs", "Evidence, evaluation, and causation (2)", "evidence-evaluation-causation1", FALSE,
+  "D4LoEctZxHE", "Class details", "class-details", FALSE
+)
+slide_tabs(slide_details, "/slides/01-slides.html")
+```
+
+
+
 ```{r eval=FALSE, tidy=FALSE}
 mpg %>% 
   filter(cty > 10, class == "compact")

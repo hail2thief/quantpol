@@ -28,3 +28,18 @@ Here's the code we'll be using in class. Download it and store it with the rest 
 
 
 
+## Embedding xaringan slides
+
+[Class slides here](/slides/flipbook-themed.html)
+
+
+
+## using xaringan embed
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+  url = "/slides/flipbook-themed.html",
+  ratio = "16:9"
+)
+```
+

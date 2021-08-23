@@ -13,7 +13,6 @@ output:
 
 
 
-
 ## Things you should know for Midterm
 ### You should know how to...
 
