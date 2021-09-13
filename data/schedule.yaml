@@ -2,123 +2,100 @@ lessons:
   - title: '<span class="fake-header-table">Programming</span>'
     header: True
 
-  - title: "R, Rstudio, basics"
-    date: "W1: Jan 11 - 15"
-    #reading: "getting-started"
+  - title: 'Week 1: Introduction'
+    date: "Sep 23"
+    reading: "getting-started"
     #class: "getting-started"
     
-  - title: "Visualizing data with ggplot"
-    date: "W2: Jan 18 - 22"
+  - title: 'Week 2: Visualizing data with ggplot<br><i class="fas fa-star"></i> **Assignment 1**'
+    date: "Sep 28, Sep 30"
     class: "dataviz"
-    #reading: "data-viz"
-    
-  - title: '<i class="fas fa-star"></i> **Assignment 1**'
-    date: "Jan 26, Tue"
+    reading: "data-viz"
     #assignment: "ps-viz"
     
-  - title: "Data wrangling"
-    date: "W3: Jan 25 - 29"
+  # - title: '<i class="fas fa-star"></i> **Assignment 1**'
+  #   #date: "Jan 26, Tue"
+  #   #assignment: "ps-viz"
+    
+  - title: 'Week 3: Data wrangling<br><i class="fas fa-star"></i> **Assignment 2**'
+    date: "Oct 5, Oct 7"
     #class: "data-wrangle"
     #reading: "data-wrangle"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 2**'
-    date: "Feb 2, Tue"
-    #assignment: "ps-wrangle"
+  # - title: '<i class="fas fa-star"></i> **Assignment 2**'
+  #   #date: "Feb 2, Tue"
+  #   #assignment: "ps-wrangle"
 
-  - title: "Importing data, tidy data"
-    date: "W4: Feb 1 - 5"
+  - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
+    date: "Oct 12, Oct 14"
     #class: "data-tidy"
     #reading: "data-import"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 3**'
-    date: "Feb 9, Tue"
-    #assignment: "ps-tidy"
+  # - title: '<i class="fas fa-star"></i> **Assignment 3**'
+  #   #date: "Feb 9, Tue"
+  #   #assignment: "ps-tidy"
 
-  - title: "Intro to regression"
-    date: "W5: Feb 8 - 12"
+  - title: 'Week 5: Intro to regression<br><i class="fas fa-star"></i> **Assignment 4**'
+    date: "Oct 19, Oct 21"
     #class: "regression"
     #reading: "intro-reg"
+  #   
+  # - title: '<i class="fas fa-star"></i> **Assignment 4**'
+  #   #date: "Feb 16, Tue"
+  #   #assignment: "ps-reg"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 4**'
-    date: "Feb 16, Tue"
-    #assignment: "ps-reg"
-    
-  - title: "Prediction"
-    date: "W6: Feb 15 - 19"
+  - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
+    date: "Oct 26, Oct 28"
     #class: "06-class"
     #class: "prediction"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 5**'
-    date: "Feb 23, Tue"
-    #assignment: "ps-predict"
-    
-  - title: '<i class="fas fa-star"></i> **Midterm Exam**'
-    date: "W7: Feb 22 - 26"
+  # - title: '<i class="fas fa-star"></i> **Assignment 5**'
+  #   #date: "Feb 23, Tue"
+  #   #assignment: "ps-predict"
     
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
 
-  - title: "The fundamental problem of causality"
-    date: "W8: Mar 1 - 5"
+  - title: "Week 7: Causality and DAGs"
+    date: "Nov 2, Nov 4"
     #class: "confounds"
     #reading: "causal"
     
-  - title: "Causal diagrams"
-    date: "W9: Mar 8 - 12"
+  - title: 'Week 8: ggdag<br>(**no class Thursday: Veterans Day**)<br><i class="fas fa-star"></i> **Assignment 6**'
+    date: "Nov 9"
     #class: "dags"
     #reading: "dags"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 6**'
-    date: "Mar 16, Tue"
-    #assignment: "ps-dags"
+  # - title: '<i class="fas fa-star"></i> **Assignment 6**'
+  #   #date: "Mar 16, Tue"
+  #   #assignment: "ps-dags"
     
-  - title: "Closing backdoors with controls"
-    date: "W10: Mar 15 - 19"
+  - title: 'Week 9: Closing backdoors<br><i class="fas fa-star"></i> **Assignment 7**'
+    date: "Nov 16, Nov 18"
     #class: "controls"
     #reading: "controls"
     
-  - title: '<i class="fas fa-star"></i> **Assignment 7**'
-    date: "Mar 23, Tue"
-    #assignment: "ps-controls"
-    
-  - title: "Causal toolbox: fixed effects + DID"
-    date: "W11: Mar 22 - 26"
-    #class: "fixed-effects"
-    #reading: "fe"
-    
-  - title: "Toolbox: DID + regression discontinuity"
-    date: "W12: Mar 29 - Apr 2"
-    #class: "rdd"
-    #reading: "reg-discon"
-    
-  - title: '<i class="fas fa-star"></i> **Assignment 8**'
-    date: "Apr 6, Tue"
-    #assignment: "ps-fe"
+  # - title: '<i class="fas fa-star"></i> **Assignment 7**'
+  #   #date: "Mar 23, Tue"
+  #   #assignment: "ps-controls"
     
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
-  - title: "Sampling + Uncertainty"
-    date: "W13: Apr 5 - 9"
-    #class: "uncertainty"
-    #reading: "bootstrap"
-
-  - title: "Bootstrapping + inference"
-    date: "W14: Apr 12 - 16"
-    #reading: "bootstrap"
-    #class: "bootstrap"
-  
-  - title: '<i class="fas fa-star"></i> **Assignment 9**'
-    date: "Apr 23, Fri"
-    #assignment: "ps-uncertainty"
+  - title: "Week 10: Uncertainty <br> (**no class Thursday: Thanksgiving**)"
+    date: "Nov 23"
+    #class: "fixed-effects"
+    #reading: "fe"
     
-  - title: "Hypothesis testing"
-    date: "W15: Apr 19 - 23"
-    #reading: "prediction"
+  - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
+    date: "Nov 30 - Dec 2"
+    #class: "rdd"
+    #reading: "reg-discon"
+  #   
+  # - title: '<i class="fas fa-star"></i> **Assignment 8**'
+  #   #date: "Apr 6, Tue"
+  #   #assignment: "ps-fe"
     
-  - title: "Review for final"
-    date: "Apr 26, Mon"
-    
-  - title: '<i class="fas fa-star"></i> **Final Exam**'
-    date: "April 28, Wed, 9:00 a.m."
+  - title: '<i class="fas fa-star"></i> **Final Project Presentations**'
+    date: "Dec 6, Wed, 8:30PM"
  

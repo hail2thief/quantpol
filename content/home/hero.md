@@ -23,8 +23,8 @@ design:
     text_color_light: true
 
 cta_note:
-  label: Spring 2021<br>Department of Political Science<br>University of South Carolina
+  label: Fall 2021<br>Department of Political Science<br>University of California, Davis
 
 ---
 
-**POLI 301: The Political Science Discipline**
+**POL051: The Scientific Study of Politics**

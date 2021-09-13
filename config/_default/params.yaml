@@ -95,31 +95,29 @@ instructor:
   name: Juan F. Tellez
   email: juan.f.tellez@gmail.com
   url: "https://www.juanftellez.com"
-  twitter: juanftellez14
   github: hail2thief
-  office: "343 Gambrell Hall"
+  office: "Kerr Hall 583"
   contact_policy: >-
     E-mail and Slack are the best ways to get in contact with me. I will try to respond to all course-related e-mails and Slack messages quickly, but also remember that life can be busy and chaotic for everyone (including me!)
   appointment_url: https://calendly.com/juan-f-tellez/
   
 course:
-  number: "POLI 301"
-  semester: "Spring 2021"
-  days: "MWF"
-  time: "10:50-11:40 AM"
-  location: "Online"
-  twitter: juanftellez14
-  dates: "January 11–May 5, 2021"
+  number: "POL-051"
+  semester: "Fall 2021"
+  days: "T,TH"
+  time: "5:40 PM - 7:00 PM"
+  location: "Wellman Hall 106"
+  dates: "Sept. 22 - Dec 3 2021"
   github: "hail2thief/poli-301"
   copyrightYear: "2020"
 
 university: 
-  name: University of South Carolina
-  url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
+  name: University of California, Davis
+  url: "https://ps.ucdavis.edu"
 
 school:
   name: Department of Political Science
-  url: "https://www.sc.edu/study/colleges_schools/artsandsciences/political_science/index.php"
+  url: "https://ps.ucdavis.edu"
 
 
 
