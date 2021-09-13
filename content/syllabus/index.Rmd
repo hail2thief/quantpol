@@ -2,7 +2,7 @@
 title: Syllabus
 slug: syllabus
 citeproc: true
-bibliography: /Users/JuamnTellez/Dropbox/github/whistle/master.bib
+bibliography: /Users/juan/Dropbox/github/whistle2/master.bib
 csl: ../../static/bib/chicago-syllabus-no-bib.csl
 output:
   blogdown::html_page:
@@ -20,15 +20,30 @@ library(pander)
 `r blogdown::shortcode("courseinfo")`
 
 
-## Course objectives
-
-Data is everywhere. Policymakers, academics, journalists, financial analysts, and many others use data every day to make decisions. Data is also being used to make **causal** claims about the world -- to argue that taking some course of action will improve or worsen our lives. In this class, you will learn how to **do** data analysis and how to **think** causally. 
+## What is this class about? 
 
 
-You will spend a lot of time getting off the ground in [R](https://www.r-project.org/), a powerful and in-demand programming language that will allow you to manipulate, summarize, and visualize the data that you care about. You will also develop a language and set of tools for determining whether, and how, we can know that one thing *causes* another using data. 
+Governments, academics, journalists, firms, NGOs and many others use quantitative data every day to make decisions. Data are also being used to make **causal** claims about the world -- to argue that some policy will improve or worsen our lives. 
 
 
-This course is meant for students without any statistics or programming background. We will emphasize hands-on application with software and intuition-building over statistical theory and mathematical proofs.
+This undergraduate course is about how to **do** data analysis and how to **think** causally about the political world. We will cover topics in data science, programming, regression, causal inference, and uncertainty. 
+
+
+*This course assumes students have no statistics or programming background*. We will emphasize hands-on application with software and intuition-building instead of statistical theory and mathematical proofs.
+
+
+
+## What will we do in this class? 
+
+
+
+Our class philosophy is all about **doing**. Readings are **optional** -- everything you need to succeed in class is covered in lecture and section. There are also **no exams**. 
+
+
+Instead, you will spend time getting your hands dirty with data in weekly **problem sets** touching on the class content. You will also complete an **original data analysis project** on a topic of your choosing that you will showcase at the end of the quarter. 
+
+
+You will do this all in [R](https://www.r-project.org/), a powerful and in-demand programming language that will allow you to manipulate, summarize, and visualize the data that you care about. You will also develop a conceptual language for determining whether, and how, we can know that one thing **causes** another using data. 
 
 
 By the end of this course, you will be able to:
@@ -36,65 +51,64 @@ By the end of this course, you will be able to:
 
 1. Feel comfortable manipulating data in R
 2. Craft effective visualizations of patterns in data
-3. Draw causal diagrams and identify challenges to causal claims
-4. Understand the basics of causal inference
-
-
-## Course materials
-
-All materials for this course are *free and online*.
-
-### Books, articles, and other readings
-
-We will mostly use these two online textbooks:
-
-- [**ModernDive**](https://moderndive.com/) 
-
-- [**R for Data Science**](http://r4ds.had.co.nz/)
-
-
-Outside of the textbooks, I will post links to additional articles and videos on this site. I also recommend subscribing to the [R Weekly newsletter](https://rweekly.org/). This weekly email is full of helpful tutorials about how to do stuff with R.
+3. Draw causal diagrams and identify obstacles to causal claims
+4. Understand the basics of regression and uncertainty
 
 
 
+## What will we do in discussion section? 
 
-### R and RStudio
+
+The weekly discussion sections will be the place to get help on lecture content, problem sets, and the final project. In section, you will: 
+
+- Go over student questions from the week's lecture content
+- Get help from the TAs on new problem sets and review answers from past problem sets
+- Get help from the TAs on your final project
+- Discuss and debate some of the concepts that arise in lecture
 
 
-You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
+
+## What materials do I need for this course?
+
+
+All materials for this course are **free and online**. You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
+
+
+Given the focus on programming, *you will need consistent access to a laptop or computer for this class*. 
 
 
 
 ## Course Policies
 
-### Communicating with me
+
+### How can I get help or get in contact with the instructors?
 
 
-Slack will be our main mode of communication. We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
+*Slack will be our main mode of communication*. We have a class Slack channel where anyone in the class can ask questions and anyone can answer. Ask questions about coding (e.g., "how do I summarize multiple variables at once?") or class logistics (e.g., "I can't find the reading") in the class Slack workspace. 
 
 
-I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too. I will also post announcements and interesting/helpful content on Slack as the semester progresses.
+The TA's and I will monitor Slack regularly, and you should all do so as well. You'll have similar questions as your peers, and you'll likely be able to answer other peoples' questions too.
 
 
-If you would like to speak with me about something that only pertains to *you* (e.g., your grades, academic advice, reading suggestions), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive issue you can email me. Everything else goes in the Slack so that others can see and access help. 
+*If you need one-on-one help you can also reach out to the TAs* to schedule a time to meet. The TAs and their office hours are:
+
+- RyuGyung Park
+- Spencer Kiesel
+
+
+
+*If you would like to speak with me about something that only pertains to you* (e.g., your grades, academic advice), you can sign up for office hours on [Calendly](https://calendly.com/juan-f-tellez). If there's a time-sensitive issue you can email me. Everything else goes in the Slack so that others can see and access help. 
 
 
 ### Honor Code
 
-Be nice. Don't cheat. The Carolinian Creed is in effect in this class and all others at the University. I will treat violations seriously and urge all students to become familiar with its terms set out [here](https://www.sc.edu/about/offices_and_divisions/student_conduct_and_academic_integrity/index.php). If you have doubts, it is your responsibility to ask about the Creed’s application.
-
-
-<!-- ### Cell Phones and Laptops -->
-
-
-<!-- - Please turn off your phones or put them on silent before class.  -->
-<!-- - Be respectful with your laptop use. This course will involve heavy laptop use in class, so it is up to you to avoid distractions.  -->
+Be nice. Don't cheat. The [Code of Academic Conduct](https://ossja.ucdavis.edu/code-academic-conduct) is in effect in this class and all others at the University. I will treat violations seriously. If you have doubts, it is your responsibility to ask about the Code’s application.
 
 
 ### Counseling & Psychiatry Services
 
 
-Life at USC can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [Counseling and Psychiatry Services](https://sc.edu/about/offices_and_divisions/student_health_services/medical-services/counseling-and-psychiatry/index.php) provides *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact CPS for assistance—getting help is a smart and good thing to do.
+Life at Davis can be complicated and challenging. You might feel overwhelmed, experience anxiety or depression, or struggle with relationships or family responsibilities. [UC Davis Counseling Services](https://shcs.ucdavis.edu/services/counseling-services) provide *confidential* support for students who are struggling with mental health and emotional challenges. Please do not hesitate to contact them for assistance—getting help is a smart and good thing to do.
 
 
 
@@ -106,9 +120,10 @@ You can find descriptions for all the assignments on the [assignments page](/ass
 ```{r assignments-grades, include=FALSE}
 assignments <- tribble(
   ~Points, ~Assignment,
-  200  , "Problem sets (10 × 20)",
-  150     , "Midterm",
-  150     , "Final"
+  30, "Class participation",
+  120, "Problem sets (8)",
+  30, "Section participation",
+  120, "Final project"
 ) %>%
   mutate(Percent = Points / sum(Points),
          Percent = scales::percent(Percent))
@@ -127,7 +142,7 @@ grading <- tribble(
 ```{r show-assignments-table, echo=FALSE, results="asis"}
 assignments_total <- tibble(Assignment = "Total",
                                 Points = sum(assignments$Points),
-                                Percent = NA)
+                                Percent = scales::percent(1))
 
 bind_rows(assignments, assignments_total) %>% 
   select(Assignment, Points, Percent) %>% 
@@ -142,10 +157,19 @@ grading %>%
 ```
 
 
+If you think you received the wrong grade, you will need to submit a memo giving specific detail about why the grade should be changed. Please note that I will **only accept grade appeals three days after the posting of a grade**.
+
+
+
 ## Old tech
 
-Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (2 extra credit points; you’ve got until January 18th).
+Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (2 extra credit points; you’ve got until September 28th).
 
 
 <img src="/media/cyber-green.gif" alt="drawing"/>
 
+
+
+## Credits
+
+This course draws on code, content, ideas, inspirations and much more from work by Andrew Heiss, Nick-Ch, Kieran Healy, and others who have made their courses publicly available.
