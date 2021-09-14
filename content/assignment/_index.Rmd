@@ -13,24 +13,45 @@ output:
 
 ## Preparation
 
-You will get the most out of this class if you (1) attend class, (2) do the homework, and (3) engage with the readings.
+You will succeed in this class if you (1) attend lecture, (2) attend section, and (3) do the problem sets.
+
+
+## Lecture participation
+
+
+During lecture I will ask for student input using iClicker. As a function of proportion of time you do iClicker. 
 
 
 ## Problem sets
 
-*To practice coding in R* you will complete problem sets throughout the semester. Feel free to work together on the problem sets but **you must turn in your own answers.** You cannot work in groups of more than **three** people.
-
-
-- ✔+: (*22 out of 20*) Assignment is 100% completed. Every question was attempted and answered correctly. Document is clean and easy to follow. I will not assign these often.
-- ✔: (*20 out of 20*) Assignment is mostly complete and most answers are correct. **This is the expected level of performance.**
-- ✔−: (*10 out of 20*) Assignment is mostly incomplete and/or most answers are incorrect. This indicates that you need to improve next time. 
+To practice coding in R you will complete problem sets throughout the quarter. Feel free to work together on the problem sets but **you must turn in your own answers to Canvas.** You cannot work in groups of more than **three** people.
 
 
 I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 
 
-## Exams
 
-*There will be two exams* covering (1) the first half of the course, especially programming, and (2) the second half of the course, especially causation.
+## Section participation
 
-Make-up exams will be given **only** to students with medical or personal emergencies. If an emergency arises, you will need to contact me **before** the exam or you will receive zero credit.
+
+To keep track of how students are doing in class and what they are getting stuck on, you will complete a **weekly check-in** on Canvas that simply asks you what (if anything) you found confusing from the week's content. TAs will then compile and discuss the top issues in section. 
+
+Section participation points combine this weekly check-in with your participation in section. 
+
+
+## Final project
+
+
+The final project for this class will be an **original** analysis of data that you care about. The project **must** incorporate: 
+
+1. A significant amount of data wrangling
+2. At least one visualization of the main idea in the project
+3. A DAG outlining barriers to causal identification
+4. Other statistics, figures, or details that flesh out the project
+
+
+The primary deliverable will be:
+
+1. a **Powerpoint slide** summarizing and visualizing the main idea in your project
+2. a short memo providing added detail to explain the project
+3. an R script to reproduce your analysis
 

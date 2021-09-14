@@ -18,12 +18,8 @@ editor_options:
 
 
 
-## Getting to know you
-
-<i class="fa fa-external-link-square-alt" aria-hidden="true"></i> If you haven't already done so, go to this [Google form](https://forms.gle/nTJNBi6zgnB8H1U4A) and tell me about yourself.
-
-
 ## Required
 
+- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> If you haven't already done so, go to this [Google form](https://forms.gle/H4pbFScAb78QtPQz7) and tell me about yourself
 - Read the [syllabus](/syllabus/) and [assignments](/assignment/) pages for this class
-- You need to install R and Rstudio^[These are two separate programs!] following [this guide](/reference/install/)
+- You need to install R and Rstudio following [this guide](/reference/install/)

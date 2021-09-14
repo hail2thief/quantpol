@@ -22,10 +22,9 @@ editor_options:
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
+
 [<i class="fas fa-file-archive"></i> `UN Voting Data`](/files/eat-cake.R)
 
-[<i class="fas fa-file-archive"></i> `Basic R Script`](/files/first-r-script.R)
 
-[<i class="fas fa-file-archive"></i> `Basic Rmarkdown Script`](/files/first-rmarkdown.Rmd)
 
 

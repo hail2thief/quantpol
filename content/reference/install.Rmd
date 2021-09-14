@@ -84,6 +84,3 @@ install.packages("name_of_package")
 ```
 
 
-## Install (non-CRAN) packages
-
-Not all R packages are on CRAN. 
