@@ -15,10 +15,10 @@ output:
 <!-- <img src="/media/analog.jpg" alt="analog" width="600"/> -->
 
 
-## Study guides
+<!-- ## Study guides -->
 
 
-You can access the [study guides for the midterm and final here.](study/)
+<!-- You can access the [study guides for the midterm and final here.](study/) -->
 
 
 ## Online help

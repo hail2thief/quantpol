@@ -16,6 +16,7 @@ output:
 <ul>
 <li><a href="#install-r">Install R</a></li>
 <li><a href="#install-rstudio">Install RStudio</a></li>
+<li><a href="#extra-installation-help-video">Extra installation help: video</a></li>
 <li><a href="#install-cran-packages">Install (CRAN) packages</a></li>
 </ul>
 </div>
@@ -25,31 +26,25 @@ output:
 <h2>Install R</h2>
 <p>First you need to install R itself (the engine).</p>
 <ol style="list-style-type: decimal">
-<li><p>Go to the CRAN (Collective R Archive Network)<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> website: <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></p></li>
-<li><p>Click on “Download R for <code>XXX</code>”, where <code>XXX</code> is either Mac or Windows:</p>
-<p><img src="/img/install/install-r-links.png" width="60%" /></p>
-<ul>
-<li><p>If you use macOS, scroll down to the first <code>.pkg</code> file in the list of files (in this picture, it’s <code>R-4.0.0.pkg</code>; as of right now, the current version is also 4.0.0) and download it.</p>
-<p><img src="/img/install/install-r-mac.png" width="100%" /></p></li>
-<li><p>If you use Windows, click “base” (or click on the bolded “install R for the first time” link) and download it.</p>
-<p><img src="/img/install/install-r-windows.png" width="100%" /></p></li>
-</ul></li>
+<li><p>If you have a <strong>WINDOWS</strong>, click here: <a href="https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe">Download R 4.1.1 for Windows</a></p></li>
+<li><p>If you have a <strong>MAC</strong>, click here: <a href="https://cran.r-project.org/bin/macosx/base/R-4.1.1.pkg">Download R 4.1.1 for macOS</a></p></li>
 <li><p>Double click on the downloaded file (check your <code>Downloads</code> folder). Click yes through all the prompts to install like any other program.</p></li>
 <li><p>If you use macOS, <a href="https://www.xquartz.org/">download and install XQuartz</a>. You do not need to do this on Windows.</p></li>
 </ol>
 </div>
 <div id="install-rstudio" class="section level2">
 <h2>Install RStudio</h2>
-<p>Next, you need to install RStudio, the nicer graphical user interface (GUI) for R (the dashboard). Once R and RStudio are both installed, you can ignore R and only use RStudio. RStudio will use R automatically and you won’t ever have to interact with it directly.</p>
+<p>Next, you need to install RStudio, the nicer graphical user interface (GUI) for R (the dashboard). Once R and RStudio are both installed, you can ignore R and only use RStudio. RStudio will use R automatically and you won’t ever have to interact with R directly.</p>
 <ol style="list-style-type: decimal">
-<li><p>Go to the free download location on RStudio’s website: <a href="https://www.rstudio.com/products/rstudio/download/#download" class="uri">https://www.rstudio.com/products/rstudio/download/#download</a></p></li>
-<li><p>The website should automatically detect your operating system (macOS or Windows) and show a big download button for it:</p>
-<p><img src="/img/install/install-r-rstudio1.png" width="50%" /></p>
-<p>If not, scroll down a little to the large table and choose the version of RStudio that matches your operating system.</p>
-<p><img src="/img/install/install-r-rstudio2.png" width="100%" /></p></li>
-<li><p>Double click on the downloaded file (again, check your <code>Downloads</code> folder). Click yes through all the prompts to install like any other program.</p></li>
+<li>If you have a <strong>WINDOWS</strong>, click here: <a href="https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe">Download RStudio for Windows</a></li>
+<li>If you have a <strong>MAC</strong>, click here: <a href="https://download1.rstudio.org/desktop/macos/RStudio-1.4.1717.dmg">Download RStudio for macOS</a></li>
+<li>Double click on the downloaded file (check your <code>Downloads</code> folder). Click yes through all the prompts to install like any other program.</li>
 </ol>
 <p>Double click on RStudio to run it (check your applications folder or start menu).</p>
+</div>
+<div id="extra-installation-help-video" class="section level2">
+<h2>Extra installation help: video</h2>
+<p>Here’s a <a href="https://www.youtube.com/watch?v=9UITYisElZ8">helpful walkthrough from Kieran Healy</a></p>
 </div>
 <div id="install-cran-packages" class="section level2">
 <h2>Install (CRAN) packages</h2>
@@ -57,10 +52,4 @@ output:
 <p><img src="/img/install/install-r-package-panel.png" width="40%" /></p>
 <p>A less tedious way to do this is via the console or in your script (just make sure to delete afterwards!), by running the following code:</p>
 <pre class="r"><code>install.packages(&quot;name_of_package&quot;)</code></pre>
-</div>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p>It’s a goofy name, but CRAN is where most R packages—and R itself—lives.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>

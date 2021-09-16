@@ -28,3 +28,13 @@ Here's the code we'll be using in class. Download it and store it with the rest 
 
 
 
+## using xaringan embed
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+  url = "/slides/first-day.html",
+  ratio = "16:9"
+)
+```
+
+

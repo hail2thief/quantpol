@@ -5,7 +5,7 @@ lessons:
   - title: 'Week 1: Introduction'
     date: "Sep 23"
     reading: "getting-started"
-    #class: "getting-started"
+    class: "getting-started"
     
   - title: 'Week 2: Visualizing data with ggplot<br><i class="fas fa-star"></i> **Assignment 1**'
     date: "Sep 28, Sep 30"

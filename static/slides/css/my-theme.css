@@ -1,0 +1,193 @@
+
+/* 
+Typography
+*/
+.remark-slide-content {
+  font-size: 30px;
+  /* Base font size */
+  padding: 1em 1em 1em 1em;
+}
+
+.remark-slide-content p {
+  margin: 0.5em 0;
+}
+
+.remark-slide-content h1 {
+  font-size: 1.7em;
+  line-height: 1em;
+  margin-top: 0;
+  text-align: relative;
+}
+
+.main-title h1 {
+  font-weight: 900;
+  font-size: 2.8em;
+  line-height: 1.2;
+  margin-bottom: 2em;
+}
+
+
+.huge {
+  font-size: 2.2em;
+}
+
+.large {
+  font-size: 1.7em;
+}
+
+.normal {
+  font-size: 1em;
+}
+
+.medium {
+  font-size: 1.4em;
+}
+
+.SMALL {
+  /* CURSE YOU LATEX */
+  font-size: 0.9em;
+}
+
+.small {
+  font-size: 0.8em;
+}
+
+.tiny {
+  font-size: 0.5em;
+}
+
+.light {
+  font-weight: 300;
+}
+
+
+figure {
+  margin: 15px;
+}
+
+figcaption {
+  font-size: 0.5em;
+}
+
+.pull-left h2,
+.pull-right h2,
+.pull-left-3 h2,
+.pull-middle-3 h2,
+.pull-right-3 h2 {
+  margin-top: 0.3em;
+}
+
+.cell-left {
+  text-align: left;
+}
+
+.cell-right {
+  text-align: right;
+}
+
+.cell-center {
+  text-align: center;
+}
+
+.frame {
+  border: 1px #000000 solid;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.bg-full {
+  background-size: cover;
+}
+
+.bg-90 {
+  background-size: 90%;
+  background-position-y: 30%;
+}
+
+.bg-y-75 {
+  background-position-y: 75%;
+}
+
+.sp-after {
+  margin-bottom: 1em !important;
+}
+
+.sp-after-half {
+  margin-bottom: 0.7em !important;
+}
+
+.remark-code,
+.remark-inline-code {
+  font-size: 0.75em;
+}
+
+/* Side-by-side code/plot stuff https://www.garrickadenbuie.com/blog/decouple-code-and-output-in-xaringan-slides/ */
+.left-code {
+  color: #777;
+  width: 48%;
+  height: 92%;
+  float: left;
+}
+
+.right-plot {
+  width: 50%;
+  float: right;
+  padding-left: 1%;
+}
+
+.left-code .remark-code,
+.left-code .remark-inline-code {
+  font-size: 0.5em;
+}
+
+.small-code .remark-code,
+.small-code .remark-inline-code {
+  font-size: 0.5em;
+}
+
+
+/* 
+Coloring and inverse coloring in title bars and content boxes
+*/
+.box-1 {
+  background-color: #dc354a;
+  color: #FFFFFF;
+  margin: 0em auto;
+  overflow: hidden;
+  padding: 0.1em 0.4em;
+  font-weight: 600;
+  display: table;
+  text-align: center
+}
+
+.box-2 {
+  background-color: #ecb025;
+  color: #FFFFFF;
+  margin: 0em auto;
+  overflow: hidden;
+  padding: 0.1em 0.4em;
+  font-weight: 600;
+  display: table;
+  text-align: center;
+}
+
+.box-3 {
+  background-color: #213772;
+  color: #FFFFFF;
+  margin: 0em auto;
+  overflow: hidden;
+  padding: 0.1em 0.4em;
+  font-weight: 600;
+  display: table;
+  text-align: center
+}
+
+.sp-after {
+  margin-bottom: 1em !important;
+}
+
+.sp-after-half {
+  margin-bottom: 0.7em !important;
+}
+
+

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introductions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Prof. Juan Tellez" />
+    <meta name="date" content="2021-09-15" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Introductions
+
+### *The Scientific Study of Politics*
+
+### Prof. Juan Tellez 
+
+#### University of California, Davis
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[What's this class about?]
+
+--
+.box-2.large.sp-after[Getting to know each other]
+
+--
+.box-3.large.sp-after[UN voting patterns]
+
+---
+
+class: center, middle, inverse
+# What's this class about? 
+
+---
+
+# Strongmen and straw men
+
+.pull-left[
+- 1 cup milk chocolate chips
+
+--
+
+- 2 large eggs
+
+--
+
+- ... more list items...
+]
+.pull-right[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Saddam_Hussein_in_1998.png" width="80%" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+
+
+
+class: center, middle, inverse
+# Who are *you* ? 
+
+???
+Testing, testing
+---
+
+
+
+
+
+
+class: center, middle, inverse
+# Who am *I* ?
+
+---
+
+## Colombia
+
+&lt;img src="images/travel-colombia.png" width="40%" style="display: block; margin: auto 0 auto auto;" /&gt;
+
+---
+
+
+class: middle, left
+background-image: url("images/travel-colombia.png")
+background-size: contain
+background-position: right
+
+## Cali, Colombia
+
+---
+
+
+class: middle, left
+background-image: url("images/florida.jpg")
+background-size: contain
+background-position: right
+
+### Ft. Lauderdale
+### University of Florida
+
+---
+
+
+class: middle, left
+background-image: url("images/nc.jpg")
+background-size: 750px
+background-position: right
+
+### Duke University (PhD)
+### Durham
+
+---
+
+
+# Class philosophy
+
+
+Less of this: 
+
+`$$\sigma^2 = \frac{\sum_{i=1}^{n}(x_i - \mu)^2} {n}$$`
+
+And more of this: 
+
+
+---
+
+
+# Collect the data
+
+
+
+|country | year|government | conflicts|
+|:-------|----:|:----------|---------:|
+|Denmark | 1990|Democracy  |         2|
+|Denmark | 1991|Democracy  |         1|
+|Denmark | 1992|Democracy  |         1|
+|Iraq    | 1990|Autocracy  |        10|
+|Iraq    | 1991|Autocracy  |         5|
+|Iraq    | 1992|Autocracy  |         1|
+---
+
+
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+*ggplot(fake, aes(y = government,
+*                x = conflicts,
+*                fill = government))
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_01_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+* stat_density_ridges(quantile_lines = TRUE,
+*                     quantiles = 2,
+*                     scale = 3,
+*                     color = "white",
+*                     alpha = .9, size = 2)
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_02_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      quantiles = 2,
+                      scale = 3,
+                      color = "white",
+                      alpha = .9, size = 2) +
+* theme_ipsum(base_family = "Fira Sans")
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_03_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      quantiles = 2,
+                      scale = 3,
+                      color = "white",
+                      alpha = .9, size = 2) +
+  theme_ipsum(base_family = "Fira Sans") +
+* scale_x_continuous(limits = c(-2, 20))
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_04_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      quantiles = 2,
+                      scale = 3,
+                      color = "white",
+                      alpha = .9, size = 2) +
+  theme_ipsum(base_family = "Fira Sans") +
+  scale_x_continuous(limits = c(-2, 20)) +
+* labs(y = NULL, x = "Number of conflicts",
+*      title = "Militarized Conflicts and Regime Type")
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_05_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      quantiles = 2,
+                      scale = 3,
+                      color = "white",
+                      alpha = .9, size = 2) +
+  theme_ipsum(base_family = "Fira Sans") +
+  scale_x_continuous(limits = c(-2, 20)) +
+  labs(y = NULL, x = "Number of conflicts",
+       title = "Militarized Conflicts and Regime Type") +
+* theme(legend.position = "none")
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_06_output-1.png" width="100%" /&gt;
+]
+
+---
+count: false
+ 
+
+.panel1-dictator-plot-auto[
+
+```r
+ggplot(fake, aes(y = government,
+                 x = conflicts,
+                 fill = government)) +
+  stat_density_ridges(quantile_lines = TRUE,
+                      quantiles = 2,
+                      scale = 3,
+                      color = "white",
+                      alpha = .9, size = 2) +
+  theme_ipsum(base_family = "Fira Sans") +
+  scale_x_continuous(limits = c(-2, 20)) +
+  labs(y = NULL, x = "Number of conflicts",
+       title = "Militarized Conflicts and Regime Type") +
+  theme(legend.position = "none") +
+* scale_fill_viridis_d(option = "rocket", end = .8)
+```
+]
+ 
+.panel2-dictator-plot-auto[
+&lt;img src="first-day_files/figure-html/dictator-plot_auto_07_output-1.png" width="100%" /&gt;
+]
+
+&lt;style&gt;
+.panel1-dictator-plot-auto {
+  color: black;
+  width: 38.6060606060606%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel2-dictator-plot-auto {
+  color: black;
+  width: 59.3939393939394%;
+  hight: 32%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+.panel3-dictator-plot-auto {
+  color: black;
+  width: NA%;
+  hight: 33%;
+  float: left;
+  padding-left: 1%;
+  font-size: 80%
+}
+&lt;/style&gt;
+
+
+
+
+
+---
+
+class: inverse, middle, center
+
+#  Does this mean having a **dictator** as a leader *causes* a country to be more belligerent?
+
+---
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
