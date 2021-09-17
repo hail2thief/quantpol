@@ -92,8 +92,8 @@ The TA's and I will monitor Slack regularly, and you should all do so as well. Y
 
 *If you need one-on-one help you can also reach out to the TAs* to schedule a time to meet. The TAs and their office hours are:
 
-- RyuGyung Park
-- Spencer Kiesel
+- RyuGyung Park (TBA)
+- Spencer Kiesel (TBA)
 
 
 
@@ -119,14 +119,12 @@ You can find descriptions for all the assignments on the [assignments page](/ass
 
 ```{r assignments-grades, include=FALSE}
 assignments <- tribble(
-  ~Points, ~Assignment,
-  30, "Class participation",
-  120, "Problem sets (8)",
-  30, "Section participation",
-  120, "Final project"
+  ~Percent, ~Assignment,
+  .15, "Weekly check-in",
+  .5, "Problem sets (8)",
+  .35, "Final project"
 ) %>%
-  mutate(Percent = Points / sum(Points),
-         Percent = scales::percent(Percent))
+  mutate(Percent = scales::percent(Percent))
 
 grading <- tribble(
   ~Grade, ~Range, ~Grade1, ~Range1,
@@ -141,12 +139,11 @@ grading <- tribble(
 
 ```{r show-assignments-table, echo=FALSE, results="asis"}
 assignments_total <- tibble(Assignment = "Total",
-                                Points = sum(assignments$Points),
                                 Percent = scales::percent(1))
 
 bind_rows(assignments, assignments_total) %>% 
-  select(Assignment, Points, Percent) %>% 
-  pandoc.table(justify = "lcc", missing = "—")
+  select(Assignment, Percent) %>% 
+  pandoc.table(justify = "lc", missing = "—")
 ```
 
 

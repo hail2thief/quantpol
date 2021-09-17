@@ -46,6 +46,9 @@ Double click on RStudio to run it (check your applications folder or start menu)
 Here's a [helpful walkthrough from Kieran Healy](https://www.youtube.com/watch?v=9UITYisElZ8)
 
 
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9UITYisElZ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+
 ## Install (CRAN) packages
 
 Most R packages are easy to install with RStudio. Select the packages panel, click on "Install," type the name of the package you want to install, and press enter.

@@ -16,10 +16,10 @@ output:
 You will succeed in this class if you (1) attend lecture, (2) attend section, and (3) do the problem sets.
 
 
-## Lecture participation
+## Weekly check-in
 
 
-During lecture I will ask for student input using iClicker. As a function of proportion of time you do iClicker. 
+Every week, while you finish working through the content, I want to hear about what you learned and what questions you still have. To do this, you will fill out a short-response on Canvas that simply asks you what (if anything) you: 1) found interesting or compelling from the content so far; 2) found confusing or muddly from the content so far. TAs will compile and discuss the top issues in section. 
 
 
 ## Problem sets
@@ -29,13 +29,6 @@ To practice coding in R you will complete problem sets throughout the quarter. F
 
 I'll accept problem sets late one day (but you will lose a full letter-grade). Beyond that I won't accept late problem sets. 
 
-
-## Section participation
-
-
-To keep track of how students are doing in class and what they are getting stuck on, you will complete a **weekly check-in** on Canvas that simply asks you what (if anything) you found confusing from the week's content. TAs will then compile and discuss the top issues in section. 
-
-Section participation points combine this weekly check-in with your participation in section. 
 
 
 ## Final project

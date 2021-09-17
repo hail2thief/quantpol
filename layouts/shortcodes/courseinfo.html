@@ -1,12 +1,14 @@
 <div class="row">
     <div class="col-md-4">
-        <h3>Instructor</h3>
+        <h3>Instructors</h3>
 
         <ul class="icon-list">
             <li><i class="fas fa-user"></i> <a href="{{ .Site.Params.instructor.url }}" target="_blank" rel="noopener"> {{ .Site.Params.instructor.name }}</a></li>
             <li><i class="fas fa-university"></i> {{ .Site.Params.instructor.office }}</li>
             <li><i class="fas fa-envelope"></i> <a href="mailto:{{ .Site.Params.instructor.email }}"> {{ .Site.Params.instructor.email }}</a></li>
-            <li><i class="fas fa-calendar-check"></i> <a href="{{ .Site.Params.instructor.appointment_url }}" target="_blank" rel="noopener"> Schedule an appointment</a></li>
+            <li><i class="fas fa-calendar-check"></i> <a href="{{ .Site.Params.instructor.appointment_url }}" target="_blank" rel="noopener"> Meet with Prof. Tellez</a></li>
+            <li><i class="fas fa-user-graduate"></i> TA: Rio Park</li>
+            <li><i class="fas fa-user-graduate"></i> TA: Spencer Kiesel</li>
         </ul>
     </div>
 
@@ -23,7 +25,7 @@
     </div>
 
     <div class="col-md-4 contact-policy">
-        <h3>Contacting me</h3>
+        <h3>Contacting us</h3>
 
         <p>{{ .Site.Params.instructor.contact_policy | markdownify}}</p>
     </div>
