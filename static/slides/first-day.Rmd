@@ -2,7 +2,7 @@
 title: "Introductions"
 subtitle: "The Scientific Study of Politics"  
 author: 
-  - "Prof. Juan Tellez"
+  - "Juan Tellez"
 date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
@@ -23,7 +23,9 @@ editor_options:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
-  fig.width=9, fig.height=3.5, fig.retina=3,
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
   out.width = "100%",
   cache = FALSE,
   echo = FALSE,
@@ -31,21 +33,23 @@ knitr::opts_chunk$set(
   warning = FALSE,
   hiline = TRUE
 )
+```
 
-library(flipbookr)
+
+
+```{r packages}
 library(tidyverse)
+library(haven)
+library(ggrepel)
+library(ggdag)
+
+# dubois colors
+red = "#dc354a"
+yellow = "ecb025"
+blue = "#213772"
 ```
 
-```{r xaringan-themer, include=FALSE, warning=FALSE}
-library(xaringanthemer)
 
-style_mono_accent(
-  base_color = "#dc354a",
-  header_font_google = google_font("Josefin Sans"),
-  text_font_google   = google_font("Montserrat", "300", "300i"),
-  code_font_google   = google_font("Fira Mono")
-)
-```
 
 class: left, middle
 background-image: url("images/dubois-spiral-2.png")
@@ -56,9 +60,10 @@ background-size: contain
 
 ### *`r rmarkdown::metadata$subtitle`*
 
-### `r rmarkdown::metadata$author` 
+### Professor `r rmarkdown::metadata$author` 
 
 #### University of California, Davis
+
 ---
 
 class: center
@@ -82,37 +87,295 @@ class: center, middle, inverse
 
 ---
 
-# Strongmen and straw men
+
+
+# Most wanted lists
+
 
 .pull-left[
-- 1 cup milk chocolate chips
 
---
-
-- 2 large eggs
-
---
-
-- ... more list items...
+- Countries like the US spend lots of resources trying to kill, capture leaders of *non-state armed groups*
+    - Rebel groups, terrorist orgs, organized crime
+    
+    
+- This is known in the literature as **decapitation**
 ]
+
 .pull-right[
-```{r, echo = FALSE, out.width="80%",fig.align='right'}
-knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/9/9a/Saddam_Hussein_in_1998.png")
+```{r}
+knitr::include_graphics("images/wanted.jpg")
 ```
 ]
 
 ---
 
-
-
 class: center, middle, inverse
-# Who are *you* ? 
+# Does **decapitation** work?
 
-???
-Testing, testing
+---
+
+# The data: Milton and Price (2020)
+
+
+```{r decap}
+set.seed(1990)
+df = haven::read_dta("data/MiltonPrice_II_Final.dta") 
+
+df %>% 
+  filter(name %in% c("al-Qaeda", 
+                     "April 19 Movement (M-19)", 
+                     "Loyalist Volunteer Force (LVF)")) %>% 
+  select(Name = name, Year = year, 
+         Decapitated = decap, Failure = failure) %>% 
+  group_by(Name) %>% 
+  slice(1:2) %>% 
+  knitr::kable()
+
+```
+
+---
+
+# The results: a big effect!
+
+
+```{r model}
+m1 = glm(failure ~ decap, data = df)
+pDat = ggeffects::ggeffect(m1, terms = "decap") %>% as_tibble()
+
+
+ggplot(pDat, aes(x = factor(x), 
+                 y = predicted, 
+                 ymin = conf.low, 
+                 ymax = conf.high, 
+                 color = factor(x))) + 
+  geom_pointrange(size = 2, fatten = 2, 
+                  alpha = .8) + 
+  theme_bw(base_size = 15, 
+           base_family = "Fira Sans Condensed") + 
+  scale_y_continuous(labels = scales::percent, 
+                     limits = c(0, .2)) + 
+  scale_x_discrete(breaks = c(0, 1), labels = c("No", "Yes")) + 
+  labs(x = "Was the group decapitated?", 
+       y = "Likelihood of group failure") + 
+  theme(legend.position = "none", 
+        panel.grid.minor = element_blank()) + 
+  scale_color_manual(values = c(red, blue)) + 
+  coord_flip() + 
+  ggrepel::geom_label_repel(aes(label = c("Chance of failure: 2%", "Chance of failure: 10%")), nudge_x = -.2, family = "Fira Sans Condensed")
+```
+
 ---
 
 
+class: center, middle, inverse
+# Does this mean decapitation **causes** break down?
+
+---
+
+class: center, middle
+## Not so fast
+
+--
+
+Groups that **are** decapitated are *different* from groups that **aren't** decapitated
+    
+--
+
+```{r dag, out.width="60%",fig.align='center'}
+confounder_triangle(x = "Decapitate", y = "Failure", 
+                    z = "???") %>% 
+  ggdag_status(text = FALSE, use_labels = "label") + 
+  theme_dag(legend.position = "none") + 
+  scale_color_manual(values = c(red, blue)) + 
+  scale_fill_manual(values = c(red, blue))
+```
+
+--
+
+`???` = Strength, resources, size, location, etc.
+
+--
+
+Ignoring these differences will **confound** our estimates!
+
+---
+
+
+class: center, middle
+# What is this class about?
+
+**Wrangling** data to answer the questions we care about
+
+Using **models** to explore relationships in the political world
+
+Thinking **causally** about the relationships we observe
+
+
+---
+
+class: center, middle
+# An emphasis on **doing**
+
+
+*No readings* or giant, cram-in-one-day exams
+
+--
+
+regular, *sustained* practice with hands-on problem sets
+
+--
+
+*synthesize* what you learn in a final project
+
+---
+
+class: center, middle
+# Programming as a way in
+
+
+```{r,out.width="60%"}
+knitr::include_graphics("images/rstudio.png")
+```
+
+
+10 weeks of focused study in **R**, a powerful and in-demand programming language
+
+
+---
+
+
+# Class philosophy:
+
+
+Little to none of this: 
+
+$$\sigma^2 = \frac{\sum_{i=1}^{n}(x_i - \mu)^2} {n}$$
+
+--
+
+More of this: 
+
+```{r,eval = FALSE,echo = TRUE}
+m1 = glm(failure ~ decap, data = df)
+pDat = ggeffects::ggeffect(m1, terms = "decap") %>%  as_tibble()
+ggplot(pDat, aes(x = factor(x), y = predicted, 
+                 ymin = conf.low, ymax = conf.high, 
+                 color = factor(x))) + 
+  geom_pointrange(size = 2, fatten = 2, 
+                  alpha = .8)
+```
+
+---
+
+# This class is practical
+
+
+This class *could* be a couple lines on a resume:
+
+
+.pull-left[
+- Able to work with data = marketable skill
+
+- R is popular in industry
+
+- Familiarity with R $\rightarrow$ other languages
+
+- Principles learned in R can be applied elsewhere (Excel)
+
+- Problem-solving in Slack
+]
+
+.pull-right[
+
+```{r}
+knitr::include_graphics("images/data-science.png")
+```
+]
+---
+
+
+
+class: center, middle, inverse
+# Let's look at the **website**
+
+---
+
+
+# There's a lot of work, and coding, in this class
+
+.pull-left[
+
+- I warned you!
+
+- Anyone can do it, yes "*even*" you
+
+- you will be surprised at what you can do by the end
+
+- But you have to try your best
+
+- If this doesn't work for you, take another class
+
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/angry-student.png")
+```
+
+]
+
+
+---
+
+
+class: center, middle, inverse
+> It’s easy when you start out programming to get really frustrated and think, “Oh it’s me, I’m really stupid,” or, “I’m not made out to program.” But, that is absolutely not the case. Everyone gets frustrated. I still get frustrated occasionally when writing R code. It’s just a natural part of programming. So, it happens to everyone and gets less and less over time. Don’t blame yourself. Just take a break, do something fun, and then come back and try again later.
+
+Hadley Wickham,
+Chief Data Scientist at RStudio
+
+---
+
+
+class: center, middle, inverse
+# 🚨🚨 Problem sets = 50% 🚨🚨
+
+---
+
+class: center, middle
+# For the love of all that is good
+
+--
+
+**Do** the weekly check-ins; they are free points
+
+--
+
+**Go** to section, ask for help on Slack
+
+--
+
+**Do not** miss homeworks in this class
+
+--
+
+Missing one = leaving a big chunk of your final exam blank
+
+--
+
+I want students who are working hard to do well
+
+--
+
+Half done home work is **strictly better** than no homework
+
+
+---
+
+
+class: center, middle, inverse
+# Try your best and have fun!
+---
 
 
 
@@ -122,13 +385,6 @@ class: center, middle, inverse
 
 ---
 
-## Colombia
-
-```{r, echo = FALSE, out.width = "40%", fig.align='right'}
-knitr::include_graphics("images/travel-colombia.png")
-```
-
----
 
 
 class: middle, left
@@ -136,7 +392,7 @@ background-image: url("images/travel-colombia.png")
 background-size: contain
 background-position: right
 
-## Cali, Colombia
+## Grew up in Cali, Colombia...
 
 ---
 
@@ -146,8 +402,8 @@ background-image: url("images/florida.jpg")
 background-size: contain
 background-position: right
 
-### Ft. Lauderdale
-### University of Florida
+### ...and Ft. Lauderdale
+### Went to UF (go gata)...
 
 ---
 
@@ -157,84 +413,114 @@ background-image: url("images/nc.jpg")
 background-size: 750px
 background-position: right
 
-### Duke University (PhD)
-### Durham
+### ...worked in Durham, NC
+### PhD at Duke University...
 
 ---
 
 
-# Class philosophy
+class: middle, left
+background-image: url("images/cocks.jpg")
+background-size: 750px
+background-position: right
 
-
-Less of this: 
-
-$$\sigma^2 = \frac{\sum_{i=1}^{n}(x_i - \mu)^2} {n}$$
-
-And more of this: 
-
-```{r,eval = FALSE}
-var(foo)
-ggplot(whatever, aes(x = year, y = volume)) + 
-  labs(x = "Tell me")
-```
+## ...Worked at UofSC
 ---
 
 
-# Collect the data
 
+class: center, middle, inverse
+# Who are *you* ? 
 
-```{r,echo = FALSE}
-library(tidyverse)
-library(hrbrthemes)
-library(ggridges)
-
-set.seed(1990)
-n = 200
-fake = tibble(government = sample(x = c("Democracy", "Autocracy"), 
-                           size = n, 
-                           replace = TRUE)) %>% 
-  mutate(conflicts = rpois(n = n, lambda = 2 + 
-                             5*I(government == "Autocracy")))
-
-# fake table
-table = crossing(country = c("Iraq", "Denmark"), 
-         year = c(1990:1992)) %>% 
-  mutate(government = ifelse(country == "Iraq", 
-                             "Autocracy", "Democracy")) %>% 
-  mutate(conflicts = rpois(n = n(), lambda = 2 + 
-                             5*I(government == "Autocracy")))
-knitr::kable(table)
-```
 ---
 
+# What year are you?
 
-`r chunk_reveal("dictator-plot")`
+```{r spreadsheet}
+who = read_csv("/Users/juan/Dropbox/Mac/Downloads/pol51-responses.csv") %>% 
+  janitor::clean_names() %>% 
+  rename(from = where_are_you_from_hometown_use_this_format_if_within_the_us_city_state_if_outside_the_us_city_country)
 
-```{r dictator-plot, include = FALSE}
-ggplot(fake, aes(y = government, 
-                 x = conflicts, 
-                 fill = government)) + 
-  stat_density_ridges(quantile_lines = TRUE, 
-                      quantiles = 2, 
-                      scale = 3, 
-                      color = "white", 
-                      alpha = .9, size = 2) + 
-  theme_ipsum(base_family = "Fira Sans") + 
-  scale_x_continuous(limits = c(-2, 20)) + 
-  labs(y = NULL, x = "Number of conflicts", 
-       title = "Militarized Conflicts and Regime Type") + 
-  theme(legend.position = "none") + 
-  scale_fill_viridis_d(option = "rocket", end = .8)
+who %>% 
+  group_by(what_year_are_you) %>% 
+  tally() %>% 
+  ggplot(aes(x = fct_reorder(what_year_are_you, n), y = n)) + 
+  ggalt::geom_lollipop(size = 1.5, color = red) + 
+  coord_flip() + 
+  theme_light(base_family = "Fira Sans Condensed", 
+           base_size = 14) + 
+  labs(x = NULL, y = NULL)
 ```
 
 ---
 
-class: inverse, middle, center
+# Where are you from?
 
-#  Does this mean having a **dictator** as a leader *causes* a country to be more belligerent?
+.scroll-output[
+```{r}
+knitr::kable(who$from, col.names = "")
+```
+]
+---
+
+
+# Everyone's in the same boat
+
+
+```{r}
+who %>% 
+  select(`Experience coding` = how_much_experience_if_any_do_you_have_with_computer_programming_coding, `Experience data` = how_much_experience_if_any_do_you_have_with_working_with_data) %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name, value) %>% 
+  tally() %>% 
+  ggplot(aes(x = value, y = n)) + 
+  geom_col(fill = red, alpha = .9) + 
+  hrbrthemes::theme_ipsum(base_family = "Fira Sans", 
+                          base_size = 14,
+                          grid = "Y") + 
+  facet_wrap(vars(name)) + 
+  labs(x = NULL, y = NULL)
+```
 
 ---
 
 
+# Same concerns
+
+```{r}
+who %>% 
+  select(what_if_anything_concerns_you_about_this_class) %>% 
+  drop_na() %>% 
+  slice(2, 4, 7, 55, 41) %>% 
+  knitr::kable(col.names = "What are you concerned about?")
+```
 
 
+---
+
+
+# Lots of cool stuff
+
+
+.scroll-output[
+```{r}
+who %>% 
+  select(tell_me_something_cool_about_yourself) %>% 
+  knitr::kable(col.names = "Something cool about you?")
+```
+]
+
+---
+
+
+# Riverdale
+
+
+<iframe width="1000" height="500" src="https://www.youtube.com/embed/wnMEp02P-_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+---
+
+
+class: center, middle, inverse
+# UN Voting
+---

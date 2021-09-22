@@ -3,13 +3,24 @@
 Typography
 */
 .remark-slide-content {
-  font-size: 30px;
+  font-size: 35px;
   /* Base font size */
   padding: 1em 1em 1em 1em;
 }
 
 .remark-slide-content p {
   margin: 0.5em 0;
+}
+
+.emphasis {
+  font-family: 'Bitter';
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+
+.shout { color: #ee5863; 
+font-family: 'Garamond', sans-serif;
+font-weight: bold;
 }
 
 .remark-slide-content h1 {
@@ -188,6 +199,11 @@ Coloring and inverse coloring in title bars and content boxes
 
 .sp-after-half {
   margin-bottom: 0.7em !important;
+}
+
+.scroll-output {
+  height: 90%;
+  overflow-y: scroll;
 }
 
 

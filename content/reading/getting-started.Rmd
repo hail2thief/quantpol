@@ -10,7 +10,7 @@ menu:
 type: docs
 output:
   blogdown::html_page:
-    toc: false
+    toc: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -20,6 +20,26 @@ editor_options:
 
 ## Required
 
+
 - <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> If you haven't already done so, go to this [Google form](https://forms.gle/H4pbFScAb78QtPQz7) and tell me about yourself
 - Read the [syllabus](/syllabus/) and [assignments](/assignment/) pages for this class
 - You need to install R and Rstudio following [this guide](/reference/install/)
+
+
+## Slides
+
+
+Slides would go here, but there are none on the first week of class.
+
+
+
+<!-- ## using xaringan embed -->
+
+<!-- ```{r,echo=FALSE} -->
+<!-- xaringanExtra::embed_xaringan( -->
+<!--   url = "/slides/first-day.html", -->
+<!--   ratio = "16:9" -->
+<!-- ) -->
+<!-- ``` -->
+
+
