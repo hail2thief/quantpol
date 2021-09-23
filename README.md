@@ -1,9 +1,10 @@
-# POLI 301: The Political Science Discipline
+# POL51: The Scientific Study of Politics
 
-![](static/images/POLI301.png)
+<img src="static/media/red-green-computer.gif" width="800">
 
 
-This repo contains code for generating [POLI 301](http://quantf19.juanftellez.com) at The University of South Carolina. 
+
+This repo contains code for [POL51](https://quantpol.juanftellez.com) at The University of California, Davis. 
 
 
 ## Theme
