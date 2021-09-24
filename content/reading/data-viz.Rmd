@@ -6,7 +6,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 menu: 
   readings:
     parent: Readings
-    weight: 3
+    weight: 2
 type: docs
 output:
   blogdown::html_page:
@@ -16,7 +16,7 @@ editor_options:
 ---
 
 
-## Required
+## Optional
 
 - <i class="fas fa-book"></i> [Ch.2 in ModernDive on Data Visualization](https://moderndive.com)
 
@@ -24,6 +24,6 @@ editor_options:
 
 
 
-## Highly recommened
+## Helpful!
 
-- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> print [this](https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf) out and keep it handy while you work
+- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> The [cheatsheet for data visualization with ggplot](https://www.rstudio.com/resources/cheatsheets/) might be a helpful resource

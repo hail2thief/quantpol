@@ -156,12 +156,12 @@ ggplot(pDat, aes(x = factor(x),
                      limits = c(0, .2)) + 
   scale_x_discrete(breaks = c(0, 1), labels = c("No", "Yes")) + 
   labs(x = "Was the group decapitated?", 
-       y = "Likelihood of group failure") + 
+       y = "Likelihood of group failure in any given year") + 
   theme(legend.position = "none", 
         panel.grid.minor = element_blank()) + 
   scale_color_manual(values = c(red, blue)) + 
   coord_flip() + 
-  ggrepel::geom_label_repel(aes(label = c("Chance of failure: 2%", "Chance of failure: 10%")), nudge_x = -.2, family = "Fira Sans Condensed")
+  ggrepel::geom_label_repel(aes(label = c("Chance of failure: 2.2%", "Chance of failure: 9.6%")), nudge_x = -.2, family = "Fira Sans Condensed")
 ```
 
 ---
@@ -202,13 +202,23 @@ Ignoring these differences will **confound** our estimates!
 
 
 class: center, middle
-# What is this class about?
+# **That's** what this class is about
 
-**Wrangling** data to answer the questions we care about
+--
 
-Using **models** to explore relationships in the political world
+**Wrangling** and **visualizing** data to explore the questions we care about
+
+--
+
+Using **models** to describe how one political variable might cause another 
+
+--
 
 Thinking **causally** about the relationships we observe
+
+--
+
+Grappling with **uncertainty** in the relationships we observe
 
 
 ---
@@ -216,6 +226,7 @@ Thinking **causally** about the relationships we observe
 class: center, middle
 # An emphasis on **doing**
 
+--
 
 *No readings* or giant, cram-in-one-day exams
 
@@ -274,11 +285,11 @@ This class *could* be a couple lines on a resume:
 
 
 .pull-left[
-- Able to work with data = marketable skill
+- Ability to work with data ➡️ marketable
 
 - R is popular in industry
 
-- Familiarity with R $\rightarrow$ other languages
+- Familiarity with R ➡️ other languages
 
 - Principles learned in R can be applied elsewhere (Excel)
 
@@ -363,11 +374,7 @@ Missing one = leaving a big chunk of your final exam blank
 
 --
 
-I want students who are working hard to do well
-
---
-
-Half done home work is **strictly better** than no homework
+I want students who are working hard to do well, but I can't save you
 
 
 ---
@@ -437,19 +444,24 @@ class: center, middle, inverse
 # What year are you?
 
 ```{r spreadsheet}
-who = read_csv("/Users/juan/Dropbox/Mac/Downloads/pol51-responses.csv") %>% 
+who = read_csv("/Users/juan/Dropbox/Mac/Downloads/pol51-responses - Form Responses 1-2.csv") %>% 
   janitor::clean_names() %>% 
   rename(from = where_are_you_from_hometown_use_this_format_if_within_the_us_city_state_if_outside_the_us_city_country)
 
 who %>% 
   group_by(what_year_are_you) %>% 
   tally() %>% 
-  ggplot(aes(x = fct_reorder(what_year_are_you, n), y = n)) + 
-  ggalt::geom_lollipop(size = 1.5, color = red) + 
+  mutate(pct = n/sum(n)) %>% 
+  ggplot(aes(x = fct_reorder(what_year_are_you, pct), y = pct, 
+             fill = what_year_are_you)) + 
+  geom_col(alpha = .8, color = "white") + 
   coord_flip() + 
   theme_light(base_family = "Fira Sans Condensed", 
            base_size = 14) + 
-  labs(x = NULL, y = NULL)
+  labs(x = NULL, y = NULL) + 
+  scale_y_continuous(limits = c(0, 1), labels = scales::percent) + 
+  theme(legend.position = "none") + 
+  scale_fill_viridis_d(option = "rocket", end = .8)
 ```
 
 ---
@@ -512,8 +524,15 @@ who %>%
 
 ---
 
+class: middle, left
+background-image: url("images/archie.jpeg")
+background-size: contain
+background-position: right
+# TV consensus: Riverdale
+---
 
-# Riverdale
+
+# But i'm a creep...
 
 
 <iframe width="1000" height="500" src="https://www.youtube.com/embed/wnMEp02P-_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -521,6 +540,9 @@ who %>%
 ---
 
 
+
+
+
+
 class: center, middle, inverse
 # UN Voting
----
