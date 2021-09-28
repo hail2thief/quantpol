@@ -17,28 +17,146 @@ editor_options:
 
 
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
+```
 
-## In-class example
+
+
+# In-class example
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
-[<i class="fas fa-file-archive"></i> `UN Voting`](/files/eat-cake.R)
+[<i class="fas fa-file-archive"></i> `Five graphs`](/files/five-graphs.R)
 
 
 
-
-## Embedding xaringan slides
-
-[Class slides here](/slides/flipbook-themed.html)
+<!-- # Making graphs with ggplot -->
 
 
+<!-- Here we will walk through how to make some of the basic graphs in R.  -->
 
-## using xaringan embed
+<!-- The code chunk below loads our libraries and prepares the data.  -->
 
-```{r,echo=FALSE}
-xaringanExtra::embed_xaringan(
-  url = "/slides/flipbook-themed.html",
-  ratio = "16:9"
-)
-```
+
+<!-- ```{r} -->
+<!-- # load libraries ------------------------------------------------------------------------- -->
+<!-- library(tidyverse) -->
+<!-- library(gapminder) # install this if you don't have it! -->
+<!-- library(ggbeeswarm) # install this if you don't have it! -->
+
+<!-- # clean data ------------------------------------------------------------------------ -->
+
+
+<!-- # subset data to focus on 2007 -->
+<!-- gap_07 =  -->
+<!--   gapminder %>%  -->
+<!--   filter(year == 2007) -->
+
+
+<!-- # calculate average life span by year -->
+<!-- life_yr =  -->
+<!--   gapminder %>%  -->
+<!--   select(year, lifeExp) %>%  -->
+<!--   group_by(year) %>%  -->
+<!--   summarise(avg_yrs = mean(lifeExp)) -->
+
+<!-- # calculate average life expectancy by continent -->
+<!-- life_region =  -->
+<!--   gap_07 %>%  -->
+<!--   group_by(continent) %>%  -->
+<!--   summarise(avg_yrs = mean(lifeExp)) -->
+
+<!-- # calculate average life expectancy by continent-year -->
+<!-- life_region_yr =  -->
+<!--   gapminder %>%  -->
+<!--   group_by(continent, year) %>%  -->
+<!--   summarise(avg_yrs = mean(lifeExp)) -->
+<!-- ``` -->
+
+
+
+<!-- ## The scatterplot -->
+
+
+<!-- The scatterplot puts two variables on the same graph so we can see how they move together:  -->
+
+<!-- ```{r} -->
+<!-- # the fancy, final product -->
+<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,  -->
+<!--                    color = continent, size = pop)) +  -->
+<!--   geom_point() -->
+<!-- ``` -->
+
+
+
+<!-- We can add labels using `labs()` and a `theme` using `theme_bw()`: -->
+
+<!-- ```{r} -->
+<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,  -->
+<!--                    color = continent, size = pop)) +  -->
+<!--   geom_point() + -->
+<!--   labs(x = "GDP per capita ($USD, inflation-adjusted)",  -->
+<!--        y = "Life expectancy (in years)",  -->
+<!--        title = "Wealth and Health Around the World",  -->
+<!--        subtitle = "Data from 2007. Source: gapminder package.") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+
+
+<!-- Note that there are many [more themes out there](https://ggplot2.tidyverse.org/reference/ggtheme.html). -->
+
+
+
+<!-- ## The time series -->
+
+
+<!-- The time series shows you how a variable moves over time, using a line. For this one we will use the `life_yr` data object we constructed above, which looks like this:  -->
+
+<!-- ```{r} -->
+<!-- ## look at the data -->
+<!-- life_yr -->
+<!-- ``` -->
+
+
+<!-- We make the plot below: -->
+
+
+<!-- ```{r} -->
+<!-- # make the plot -->
+<!-- ggplot(life_yr, aes(x = year, y = avg_yrs)) +  -->
+<!--   geom_line() +  -->
+<!--   theme_bw() -->
+
+<!-- ``` -->
+
+
+<!-- ## Multiple time series -->
+
+
+<!-- Sometimes we have data where we observe multiple *units* moving over time, like so:  -->
+
+<!-- ```{r} -->
+<!-- life_region_yr -->
+<!-- ``` -->
+
+
+<!-- We can draw separate time series for each *unit* by either using the `color` aesthetic to separate the lines:  -->
+
+
+<!-- ```{r} -->
+<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, color = continent)) +  -->
+<!--   geom_line() +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+
+
+<!-- Or the `group` aesthetic: -->
+
+
+<!-- ```{r} -->
+<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, group = continent)) +  -->
+<!--   geom_line() +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
 

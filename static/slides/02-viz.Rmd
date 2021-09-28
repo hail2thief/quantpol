@@ -10,7 +10,7 @@ output:
     css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
     seal: false
     nature:
-      highlightStyle: haddock
+      highlightStyle: github
       highlightLanguage: ["r"]
       highlightLines: true
       countIncrementalSlides: false
@@ -40,6 +40,9 @@ knitr::opts_chunk$set(
 
 ```{r packages}
 library(tidyverse)
+library(gapminder)
+library(palmerpenguins)
+library(ggbeeswarm)
 
 
 # dubois colors
@@ -65,12 +68,847 @@ background-size: contain
 
 ---
 
-# Starting point
+class: center
+.large[
+# This week's agenda
+]
 
-Our first function is `ggplot()`
+--
+.box-1.large.sp-after[A quick tour of RStudio]
 
-```{r, eval = FALSE, echo = TRUE}
-ggplot(DATA, aes(x = VAR1, y = VAR2, ...))
+--
+.box-2.large.sp-after[The grammar of graphics]
+
+--
+.box-3.large.sp-after[A graph for every season]
+
+---
+
+# Tortured metaphor 1: R as a car
+
+
+```{r}
+knitr::include_graphics("images/r-car.png")
+```
+
+
+---
+
+# Tortured metaphor 1: R as a car
+
+
+```{r}
+knitr::include_graphics("images/r-icons.png")
+```
+
+
+---
+
+background-image: url("images/cooking-metaphor.jpeg")
+background-size: 800px
+
+# Tortured metaphor 2: Rstudio as a kitchen
+
+
+---
+
+background-image: url("images/rstudio-cook.png")
+background-size: contain
+
+
+???
+
+Pointless to cover every dropdown menu
+---
+
+class: center, middle, inverse
+
+# Look at the UN again
+
+---
+
+
+background-image: url("images/r-apps.png")
+background-size: 800px
+background-position: bottom
+
+# Tortured metaphor 3: RStudio as a phone
+
+
+Packages are where most of our **functions** and **data** live
+
+---
+
+# Installing packages
+
+Check out the [link on the website](https://quantpol.juanftellez.com/reference/install/#install-cran-packages)
+
+
+
+Or type this into the console and hit return/enter (note the quotation marks!):
+
+
+```{r,echo=TRUE,eval=FALSE}
+install.packages("Name of the package")
+```
+
+
+
+---
+
+
+class: center, middle, inverse
+
+# Why **visualize** data?
+
+---
+
+
+class: left, middle
+background-image: url("images/dubois.jpeg")
+background-position: right
+background-size: contain
+
+# WEB Dubois
+(1868 - 1963)
+
+- American sociologist
+
+- historian
+
+- civil rights advocate
+
+- Data visualization specialist?
+
+---
+
+
+background-image: url("images/dubois-income.jpeg")
+background-size: contain
+
+---
+
+background-image: url("images/dubois-graphs.jpeg")
+background-size: contain
+
+---
+
+class: middle, left
+background-image: url("images/dubois-pop.jpeg")
+background-position: right
+background-size: contain
+
+## These are *hand-drawn*
+
+---
+
+
+# Brought back to life
+
+
+.pull-left[
+[**TidyTuesday**](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-02-16/readme.md) challenge to bring his data visualization work back to life
+
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/dubois-twitter.png")
+```
+]
+
+---
+
+
+class: center, middle
+## Why go through the pain of **hand-drawing** graphs?
+
+--
+
+For better or worse, data carries **weight** in our society
+
+--
+
+**Visualizing** data is an effective way to convince, argue (and *mislead*)
+
+
+---
+
+class: center
+## Dataviz to inform
+
+
+```{r,out.width="60%"}
+knitr::include_graphics("images/nyt-good.png")
+```
+
+---
+
+class: center
+## Dataviz to mislead
+
+```{r,out.width="40%"}
+knitr::include_graphics("images/gun-bad.png")
+```
+
+---
+
+class: middle, center, inverse
+# Making graphs in R
+
+---
+
+
+# The Gapminder dataset
+
+.scroll-output[
+```{r}
+knitr::kable(gapminder)
+```
+]
+
+---
+
+
+# The finished product
+
+```{r,echo = FALSE}
+# subset data to focus on 2007
+gap_07 = 
+  gapminder %>% 
+  filter(year == 2007)
+
+
+# calculate average life span by year
+life_yr = 
+  gapminder %>% 
+  select(year, lifeExp) %>% 
+  group_by(year) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent
+life_region = 
+  gap_07 %>% 
+  group_by(continent) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent-year
+life_region_yr = 
+  gapminder %>% 
+  group_by(continent, year) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+
+# plot
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp, 
+                      color = continent, 
+                      size = pop)) + 
+  geom_point() + 
+  labs(x = "GDP per capita ($USD, inflation-adjusted)", 
+       y = "Life expectancy (in years)", 
+       title = "Wealth and Health Around the World", 
+       subtitle = "Data from 2007. Source: gapminder package.") + 
+  theme_bw()
+```
+
+
+???
+What's going on in this graph? What variables are depicted, and how?
+
+---
+
+class: middle, center
+
+# The **grammar** of graphics
+
+--
+
+**Data** = variables in a dataset
+
+--
+
+
+**Aesthetic** = visual property of a graph (position, shape, color, etc.)
+
+--
+
+**Geometry** = representation of an aesthetic (point, line, text, etc.)
+
+
+---
+
+# Mapping data to aesthetics
+
+
+
+```{r}
+df = tribble(~Data, ~Aesthetic, ~Geometry, 
+             "GDP per capita", "Position(x-axis)", "Point", 
+             "Life expectancy", "Position (y-axis)", "Point", 
+             "Continent", "Color", "Point", 
+             "Population", "Size", "Point")
+knitr::kable(df)
+```
+
+
+
+1. Take the **data**, 
+
+2. map it onto an **aesthetic**, 
+
+3. and visualize it with a **geometry**
+
+---
+
+# In R
+
+
+```{r}
+df = tribble(~Data, ~`aes()`, ~`geom_`, 
+             "gdpPercap", "`x`", "`geom_point()`", 
+             "lifeExp", "`y`", "`geom_point()`", 
+             "continent", "`color`", "`geom_point()`", 
+             "pop", "`size`", "`geom_point()`")
+knitr::kable(df)
+```
+
+---
+
+
+
+## `ggplot()`: our first function 😢
+
+```{r, echo = TRUE}
+ggplot() #<<
+```
+
+---
+
+## `ggplot`: specify the data
+
+```{r, echo = TRUE}
+ggplot(data = gap_07) #<<
+```
+
+---
+
+
+## Use `aes()` to map data to aesthetics
+
+```{r,echo=TRUE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp)) #<<
+```
+
+---
+
+
+## add geometries and layers using `+`
+
+```{r,echo=TRUE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point() #<<
+```
+
+---
+
+
+## mapping population to size in `aes()`
+
+```{r,echo=TRUE, out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop)) + #<< 
+  geom_point()
+```
+
+---
+
+## mapping continent to color in `aes()`
+
+```{r,echo=TRUE,out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent)) + #<< 
+  geom_point()
+```
+
+---
+
+
+## Other layers: add the missing titles with `labs()`
+
+```{r,echo = TRUE, out.width="50%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent)) +
+  geom_point() + 
+  labs(x = "GDP per capita", y = "Life expectancy", #<<
+       title = "Global wealth and health in 2007") #<<
+```
+
+
+Notice that text is placed within **quotation marks**!
+
+---
+
+## Other layers: add a theme
+
+```{r,echo = TRUE, out.width="40%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent)) +
+  geom_point() + 
+  labs(x = "GDP per capita", y = "Life expectancy", 
+       title = "Global wealth and health in 2007") + 
+  theme_bw() #<<
+```
+
+
+There are many more, [here are a few](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+
+---
+
+
+## The formula
+
+
+```{r,echo = TRUE, eval = FALSE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent)) +
+  geom_point() + labs(x = "GDP per capita", y = "Life expectancy", 
+       title = "Global wealth and health in 2007") +
+  theme_bw()
+```
+
+
+--
+
+1. Tell `ggplot()` the data we want to plot
+
+--
+
+2. Map all variables onto aesthetics within `aes()`
+
+--
+
+3. Add layers like `geom_point()` and `theme_bw()` using `+`
+
+---
+
+
+## What's that big point on the bottom right? 
+
+
+```{r,echo = FALSE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent)) +
+  geom_point() + 
+  labs(x = "GDP per capita", y = "Life expectancy", 
+       title = "Global wealth and health in 2007") + 
+  theme_bw()
+```
+
+
+
+---
+
+class: center
+## 🚨 Your turn: label the points 🚨
+
+Map country names onto `label` aesthetic within `aes()`
+
+Add `geom_text` layer to your plot
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+
+## Adding labels
+
+```{r, echo = TRUE,out.width="70%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent, 
+                          label = country)) + #<<
+  geom_point()
+```
+
+
+---
+
+## Adding labels
+
+```{r, echo = TRUE,out.width="70%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
+                          size = pop, color = continent, 
+                          label = country)) + 
+  geom_point() + 
+  geom_text() #<<
+```
+
+
+---
+
+## What did we do?
+
+```{r}
+df = tribble(~Data, ~Aesthetic, ~Geometry, 
+             "gdpPercap", "`x`", "`geom_point()`", 
+             "lifeExp", "`y`", "`geom_point()`", 
+             "continent", "`color`", "`geom_point()`", 
+             "pop", "`size`", "`geom_point()`", 
+             "country", "`label`", "`geom_text()`")
+knitr::kable(df)
+```
+
+
+--
+
+Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
+
+
+---
+
+
+## 🐧 palmerpenguins 🐧
+
+
+.scroll-output[
+```{r}
+penguins %>% 
+  head() %>% 
+  knitr::kable()
+```
+]
+
+
+---
+
+class: center, middle
+## 🚨 Your turn 🚨
+
+
+--
+
+Make a plot using the `penguins` dataset
+
+--
+
+flipper length (x-axis) and body mass (y-axis)
+
+--
+
+map penguin *species* to `color` and `shape` aesthetics
+
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+
+## A penguin plot
+
+
+```{r,echo = TRUE,out.width="70%"}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
+                     color = species, shape = species)) + 
+  geom_point() + theme_minimal() + 
+  labs(x = "Flipper length (mm)", y = "Body mass (grams)")
+```
+
+
+---
+
+
+## What did we do?
+
+```{r}
+df = tribble(~Data, ~Aesthetic, ~Geometry, 
+             "flipper_length_mm", "`x`", "`geom_point()`", 
+             "body_mass_g", "`y`", "`geom_point()`", 
+             "species", "`shape`", "`geom_point()`", 
+             "species", "`color`", "`geom_point()`")
+knitr::kable(df)
+```
+
+
+---
+
+class: middle, center, inverse
+# A graph for every season
+
+---
+
+class:middle, center
+
+# A graph for every season
+
+--
+
+There are many graphs out there
+
+--
+
+
+Each one works best in a specific **context**
+
+--
+
+
+Each one combines different **aesthetics** and **geometries**
+
+
+---
+
+## The scatterplot
+
+
+```{r,out.width="80%"}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point() + 
+  theme_bw()
+```
+
+The **scatterplot** puts variables on the x and y-axes (*aesthetics*) and uses points (*geometry*) to show patterns in data
+
+---
+
+
+## The time series
+
+
+```{r,out.width="80%",echo = FALSE}
+ggplot(life_yr, aes(x = year, y = avg_yrs)) + 
+  geom_line() +  #<<
+  theme_bw() + 
+  labs(x = "Year", y = "Average life expectancy (years)", 
+       title = "Global average life expectancy over time")
+```
+
+The **time series** shows you how a variable (y-axis) moves over time (x-axis)
+
+---
+
+
+## Mapping data to aesthetics
+
+.pull-left[
+```{r}
+knitr::kable(life_yr)
+```
+]
+
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`, 
+          "??", "??", "??") %>% 
+  knitr::kable()
+```
+
+]
+
+
+---
+
+
+## Making the time series
+
+.pull-left[
+```{r,echo = TRUE}
+ggplot(life_yr, aes(x = year, 
+                    y = avg_yrs)) + #<<
+  geom_line() +  #<<
+  theme_bw()
+```
+]
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`, 
+          "year", "x", "line", 
+        "avg_yrs", "y", "line") %>% 
+  knitr::kable()
+```
+
+]
+
+---
+
+
+## Multiple time series
+
+
+Sometimes we observe multiple *units* over time; how can we plot these?
+
+
+.scroll-output[
+```{r}
+knitr::kable(life_region_yr)
+```
+]
+
+
+---
+
+
+
+## Start from scratch
+
+```{r,echo =TRUE}
+ggplot(data = life_region_yr) #<<
+```
+
+---
+
+
+## Add aesthetics
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
+```
+
+---
+
+## Add geometry: 🤢
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
+  geom_line()
+```
+
+---
+
+## using `color` to separate lines
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs, 
+                                  color = continent)) + #<<
+  geom_line()
+```
+
+---
+
+
+## using `group` to separate lines
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs, 
+                                  group = continent)) + #<<
+  geom_line()
+```
+
+---
+
+
+## The histogram
+
+
+```{r, echo = FALSE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp)) +
+  geom_histogram() + #<<
+  theme_bw() + 
+  labs(x = "Life expectancy (years)")
+```
+
+A **histogram** maps a variable to the x-axis and uses "bins" to show how data is distributed
+
+---
+
+
+## Making the histogram
+
+
+.pull-left[
+```{r}
+knitr::kable(gap_07)
+```
+]
+
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`, 
+          "??", "??", "??") %>% 
+  knitr::kable()
+```
+
+]
+
+---
+
+
+## Making the histogram
+
+
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp)) + #<<
+  geom_histogram() + #<<
+  theme_bw()
+```
+
+
+Note that a histogram *only* uses the x-axis!
+
+
+---
+
+
+# 🚨 Your turn 🚨
+
+
+Map the continent onto the `fill` aesthetic; what does this do?
+
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp)) +
+  geom_histogram() + 
+  theme_bw()
+```
+
+
+---
+
+
+# Grouped histograms
+
+
+
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp, fill = continent)) + #<<
+  geom_histogram() + 
+  theme_bw()
+```
+
+
+???
+
+What does this show us?
+
+
+---
+
+
+# Compare groups: column plot
+
+
+```{r}
+# the bar plot
+ggplot(life_region, aes(x = continent, y = avg_yrs)) + 
+  geom_col() +
+  labs(y = "Average life expectancy")
+```
+
+
+---
+
+
+# Compare groups (distributions)
+
+
+```{r}
+ggplot(gap_07, aes(x = continent, y = lifeExp)) + 
+  geom_quasirandom()
 ```
 
 
