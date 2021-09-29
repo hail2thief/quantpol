@@ -32,6 +32,9 @@ editor_options:
 ## Slides
 
 
+[Class slides here](/slides/02-viz.html)
+
+
 ```{r,echo=FALSE}
 xaringanExtra::embed_xaringan(
    url = "/slides/02-viz.html",
