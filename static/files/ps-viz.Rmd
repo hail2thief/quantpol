@@ -1,0 +1,209 @@
+---
+title: "Problem set 1: Data visualization"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(babynames) # loads babynames data, needs to install if not yet installed
+```
+
+
+# Task 1: Baby Names
+
+
+The `babynames` package includes data from the Social Security Administration with counts of baby names with at least 5 annual uses between 1880-2015.
+
+Because there are so many names, we'll look at "Elizabeth."
+
+
+```{r load-and-filter-babynames}
+baby_subset <- babynames %>%
+  filter(name == "Elizabeth")
+
+# look at the data
+head(baby_subset)
+```
+
+
+Using `baby_subset`, make a *time-series* that shows how often the name we picked was used for babies categorized as male and as female over time. (Hint: map the `sex` variable to the color aesthetic; also, the `n` variable shows the count per year). 
+
+
+Make the plot below:
+
+
+```{r riley-mf-time}
+
+```
+
+
+**Question 1**: Roughly speaking, when are the three peaks in the use of the name `Elizabeth` for female babies?
+
+
+
+Now, make a similar graph for "Mckinley". Alter the code chunk below so that `baby_subset` contains babies named "Mckinley" instead of "Elizabeth". 
+
+
+```{r mckinley-subset}
+baby_subset <- babynames %>%
+  filter(name == "Elizabeth")
+
+# look at the data
+head(baby_subset)
+```
+
+
+Now make the plot below: 
+
+
+```{r mckinley-mf-time}
+
+
+```
+
+
+**Question 2: which of the following best describes the general pattern?**
+
+- Mckinley has been used at relatively similarly rates for both male and female babies
+- Mckinley was mostly unused for female babies until about the 1990s, and then it became popular
+- Mckinley has been rising in popularity for male babies since the 1950s
+- Mckinley peaked in popularity as a boy's name in about 1980
+
+
+
+
+# Task 2: The Movies
+
+
+Next, let's look at some data about movies. These data are about a selection of films and info about how much they cost, how much they made in theaters, and what rating they received from reviewers. 
+
+
+
+```{r clean-movie-data, message=FALSE, warning=FALSE}
+# read data
+movies = 
+  read_csv("https://www.dropbox.com/s/ti3d62yfqpgtkil/movies.csv?dl=1") %>% 
+  # exclude movies before 1980
+  filter(year >= 1980) %>% 
+  # make decades variable
+  mutate(decade = case_when(year >= 1980 & year < 1990 ~ "80s", 
+                            year >= 1990 & year < 2000 ~ "90s", 
+                            year >= 2000 & year < 2010 ~ "2000s", 
+                            year >= 2010 ~ "2010s"))
+
+
+# look at the data
+head(movies)
+```
+
+
+
+Using `movies`, make a scatterplot that presents a movie's budget (x-axis) against how much it grossed in theaters (y-axis). Color the points by which `decade` the movie was made in. Add titles to the x and y axis and a theme. 
+
+Make the plot below:
+
+
+```{r budget}
+
+```
+
+
+**Question 3: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+ 
+
+
+Look at that outlier point in top-left part of the plot (should be close to 4e+08 on the y-axis, and has the color for "80s"). What movie is this? 
+
+
+Make a new plot that adds labels to each of the points so that you can figure out what that movie is. Hint: look at how we did this with the health and wealth plot from `gapminder`!
+
+Make the plot below:
+
+
+```{r outlier}
+
+
+```
+
+
+**Question 4: What's the outlier movie?**
+
+- ANSWER
+
+**Question 5: What, if anything, does the movie's position on the graph tell us about how profitable it was?**
+
+- the movie grossed a lot more than it cost to make, so it was very profitable
+- the movie grossed much less than it cost to make, so it was very unprofitable
+- the movie had a roughly average profitability
+- we can't know how profitable the movie was based on the graph
+
+
+
+Are movies getting *better* or *worse* over time? Show the distribution of movie ratings using a *histogram*, and map the `fill` aesthetic to `decade` so we can see the distribution within each decade. 
+
+Make the plot below: 
+
+
+```{r ratings-year}
+
+```
+
+
+**Question 6: based on the distribution of ratings across decades, are movies getting better ratings in some decades compared to others?**
+
+
+
+
+Finally, let's look at who are the most/least *profitable* directors. First, we'll make a new dataset that calculates each movie's profit (`gross` - `budget`) and finds the average profit for each director. To make this more manageable, let's look at directors who made at least 8 movies. 
+
+
+```{r summarize-profits-director}
+directors_profit = movies %>% 
+  # calculate profit
+  mutate(profit = gross - budget) %>% 
+  # group by director name
+  group_by(director) %>% 
+  # calculate number of movies each director made, average profit, average rating
+  summarise(n_movies = n(), 
+            avg_profit = mean(profit)) %>% 
+  # exclude directors who made less than 8 movies
+  filter(n_movies > 8)
+
+# look at the data
+head(directors_profit)
+```
+
+
+Now make a barplot, that has `director` on the x-axis and `profit` on the y-axis. Hint: add `coord_flip()` to your code make the plot more readable.
+
+
+Make the plot below:
+
+
+```{r plot-director-profits}
+
+```
+
+
+- **Question 7: Who is the most profitable director?** 
+- **Question 8: Who is the least profitable director?** 
+
+
+# All done!
+

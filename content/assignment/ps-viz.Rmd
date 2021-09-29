@@ -1,9 +1,6 @@
 ---
 title: "Data visualization"
 linktitle: "Data visualization"
-date: "2021-01-26"
-due_date: "2021-01-26"
-due_time: "11:59 PM"
 output:
   blogdown::html_page:
     toc: false
@@ -19,18 +16,18 @@ editor_options:
 ## Instructions
 
 
-- Download this: <i class="far fa-file-archive"></i> [`ps-viz`](/files/ps-viz.zip)
+1. Download this: <i class="far fa-file-archive"></i> [`ps-viz`](/files/ps-viz.Rmd)
+    - right-click, "save/download file as..."
+2. Complete all of the coding tasks in the `.Rmd` file
+3. **Once you are done**, go on Canvas and answer the questions related to the assignment
+4. You will submit your `.Rmd` file in the Canvas assignment
 
-- **unzip** it, then double-click on the `.Rproj` file to open RStudio. Note: if you don't open `Rproj` the code will not work!
+## Tips
 
-- Ensure that you have the needed packages installed on your computer. If you try to run `library(PACKAGE NAME)` and R returns an error that the package is missing, use the “Packages” panel in RStudio to install it
+- Make sure you: 
+    - run all of the code chunks that already have code in them
+    - write your code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
 
-- Replace the `your-name` part of the R Markdown file `your-name_problem-set-1.Rmd` to something that matches your name and open it in RStudio
-
-- Complete the tasks in the R Markdown file. Fill out code in the empty chunks provided and replace FILL YOUR ANSWER HERE with your answers to the questions.
-
-- When you’re all done, click on the “Knit” button at the top of the editing window and create a Word document of your problem set. Submit **only the Word doc** to Blackboard.
-
-
-
-<img src="/images/assignment/knit-button.png" alt="analog" width="500"/>
