@@ -54,6 +54,19 @@ ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
   theme_bw()
 
 
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp, 
+                   color = continent, size = pop, 
+                   label = country)) + 
+  geom_point() + 
+  labs(x = "GDP per capita ($USD, inflation-adjusted)", 
+       y = "Life expectancy (in years)", 
+       title = "Wealth and Health Around the World", 
+       subtitle = "Data from 2007. Source: gapminder package.") + 
+  theme_bw() + geom_text()
+
+
+
+
 
 
 # palmer penguins ---------------------------------------------------------
@@ -64,7 +77,11 @@ penguins
 
 
 # MAKE THE PLOT HERE!!
-
+ggplot(data = penguins, aes(x = flipper_length_mm, 
+                            y = body_mass_g, 
+                            color = species, 
+                            shape = species)) + 
+  geom_point()
 
 
 

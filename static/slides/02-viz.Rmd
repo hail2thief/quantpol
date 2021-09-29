@@ -596,7 +596,7 @@ flipper length (x-axis) and body mass (y-axis)
 
 --
 
-map penguin *species* to `color` and `shape` aesthetics
+map penguin **species** to the `color` and `shape` aesthetics
 
 
 
@@ -607,16 +607,56 @@ countdown::countdown(minutes = 5L)
 ---
 
 
-## A penguin plot
+## Map the x and y axes
+
+
+```{r,echo = TRUE,out.width="70%"}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) #<<
+```
+
+---
+
+## Add a point geometry
+
+
+```{r,echo = TRUE,out.width="70%"}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point() #<<
+```
+
+---
+
+## Add point shape
+
+
+```{r,echo = TRUE,out.width="70%"}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
+                     shape = species)) + #<<
+  geom_point()
+```
+
+---
+
+## Add point color
+
+
+```{r,echo = TRUE,out.width="70%"}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
+                     color = species, shape = species)) + #<<
+  geom_point()
+```
+
+---
+
+## Add a theme and titles
 
 
 ```{r,echo = TRUE,out.width="70%"}
 ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
                      color = species, shape = species)) + 
-  geom_point() + theme_minimal() + 
-  labs(x = "Flipper length (mm)", y = "Body mass (grams)")
+  geom_point()  + theme_minimal() + #<<
+  labs(x = "Flipper length (mm)", y = "Body mass (grams)") #<<
 ```
-
 
 ---
 
@@ -633,283 +673,288 @@ knitr::kable(df)
 ```
 
 
----
-
-class: middle, center, inverse
-# A graph for every season
-
----
-
-class:middle, center
-
-# A graph for every season
-
 --
 
-There are many graphs out there
-
---
-
-
-Each one works best in a specific **context**
-
---
-
-
-Each one combines different **aesthetics** and **geometries**
+Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 
 
 ---
 
-## The scatterplot
+<!-- class: middle, center, inverse -->
+<!-- # A graph for every season -->
 
+<!-- --- -->
 
-```{r,out.width="80%"}
-ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + 
-  geom_point() + 
-  theme_bw()
-```
+<!-- class:middle, center -->
 
-The **scatterplot** puts variables on the x and y-axes (*aesthetics*) and uses points (*geometry*) to show patterns in data
+<!-- # A graph for every season -->
 
----
+<!-- -- -->
 
+<!-- There are many graphs out there -->
 
-## The time series
+<!-- -- -->
 
 
-```{r,out.width="80%",echo = FALSE}
-ggplot(life_yr, aes(x = year, y = avg_yrs)) + 
-  geom_line() +  #<<
-  theme_bw() + 
-  labs(x = "Year", y = "Average life expectancy (years)", 
-       title = "Global average life expectancy over time")
-```
+<!-- Each one works best in a specific **context** -->
 
-The **time series** shows you how a variable (y-axis) moves over time (x-axis)
+<!-- -- -->
 
----
 
+<!-- Each one combines different **aesthetics** and **geometries** -->
 
-## Mapping data to aesthetics
 
-.pull-left[
-```{r}
-knitr::kable(life_yr)
-```
-]
+<!-- --- -->
 
+<!-- ## The scatterplot -->
 
-.pull-right[
-```{r}
-tribble(~Data, ~`aes()`, ~`geom_`, 
-          "??", "??", "??") %>% 
-  knitr::kable()
-```
 
-]
+<!-- ```{r,out.width="80%"} -->
+<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +  -->
+<!--   geom_point() +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
 
+<!-- The **scatterplot** puts variables on the x and y-axes (*aesthetics*) and uses points (*geometry*) to show patterns in data -->
 
----
+<!-- --- -->
 
 
-## Making the time series
+<!-- ## The time series -->
 
-.pull-left[
-```{r,echo = TRUE}
-ggplot(life_yr, aes(x = year, 
-                    y = avg_yrs)) + #<<
-  geom_line() +  #<<
-  theme_bw()
-```
-]
 
-.pull-right[
-```{r}
-tribble(~Data, ~`aes()`, ~`geom_`, 
-          "year", "x", "line", 
-        "avg_yrs", "y", "line") %>% 
-  knitr::kable()
-```
+<!-- ```{r,out.width="80%",echo = FALSE} -->
+<!-- ggplot(life_yr, aes(x = year, y = avg_yrs)) +  -->
+<!--   geom_line() +  #<< -->
+<!--   theme_bw() +  -->
+<!--   labs(x = "Year", y = "Average life expectancy (years)",  -->
+<!--        title = "Global average life expectancy over time") -->
+<!-- ``` -->
 
-]
+<!-- The **time series** shows you how a variable (y-axis) moves over time (x-axis) -->
 
----
+<!-- --- -->
 
 
-## Multiple time series
+<!-- ## Mapping data to aesthetics -->
 
+<!-- .pull-left[ -->
+<!-- ```{r} -->
+<!-- knitr::kable(life_yr) -->
+<!-- ``` -->
+<!-- ] -->
 
-Sometimes we observe multiple *units* over time; how can we plot these?
 
+<!-- .pull-right[ -->
+<!-- ```{r} -->
+<!-- tribble(~Data, ~`aes()`, ~`geom_`,  -->
+<!--           "??", "??", "??") %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
 
-.scroll-output[
-```{r}
-knitr::kable(life_region_yr)
-```
-]
+<!-- ] -->
 
 
----
+<!-- --- -->
 
 
+<!-- ## Making the time series -->
 
-## Start from scratch
+<!-- .pull-left[ -->
+<!-- ```{r,echo = TRUE} -->
+<!-- ggplot(life_yr, aes(x = year,  -->
+<!--                     y = avg_yrs)) + #<< -->
+<!--   geom_line() +  #<< -->
+<!--   theme_bw() -->
+<!-- ``` -->
+<!-- ] -->
 
-```{r,echo =TRUE}
-ggplot(data = life_region_yr) #<<
-```
+<!-- .pull-right[ -->
+<!-- ```{r} -->
+<!-- tribble(~Data, ~`aes()`, ~`geom_`,  -->
+<!--           "year", "x", "line",  -->
+<!--         "avg_yrs", "y", "line") %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
 
----
+<!-- ] -->
 
+<!-- --- -->
 
-## Add aesthetics
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
-```
+<!-- ## Multiple time series -->
 
----
 
-## Add geometry: 🤢
+<!-- Sometimes we observe multiple *units* over time; how can we plot these? -->
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
-  geom_line()
-```
 
----
+<!-- .scroll-output[ -->
+<!-- ```{r} -->
+<!-- knitr::kable(life_region_yr) -->
+<!-- ``` -->
+<!-- ] -->
 
-## using `color` to separate lines
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs, 
-                                  color = continent)) + #<<
-  geom_line()
-```
+<!-- --- -->
 
----
 
 
-## using `group` to separate lines
+<!-- ## Start from scratch -->
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs, 
-                                  group = continent)) + #<<
-  geom_line()
-```
+<!-- ```{r,echo =TRUE} -->
+<!-- ggplot(data = life_region_yr) #<< -->
+<!-- ``` -->
 
----
+<!-- --- -->
 
 
-## The histogram
+<!-- ## Add aesthetics -->
 
+<!-- ```{r,echo=TRUE} -->
+<!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<< -->
+<!-- ``` -->
 
-```{r, echo = FALSE,out.width="60%"}
-ggplot(gap_07, aes(x = lifeExp)) +
-  geom_histogram() + #<<
-  theme_bw() + 
-  labs(x = "Life expectancy (years)")
-```
+<!-- --- -->
 
-A **histogram** maps a variable to the x-axis and uses "bins" to show how data is distributed
+<!-- ## Add geometry: 🤢 -->
 
----
+<!-- ```{r,echo=TRUE} -->
+<!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) + -->
+<!--   geom_line() -->
+<!-- ``` -->
 
+<!-- --- -->
 
-## Making the histogram
+<!-- ## using `color` to separate lines -->
 
+<!-- ```{r,echo=TRUE} -->
+<!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,  -->
+<!--                                   color = continent)) + #<< -->
+<!--   geom_line() -->
+<!-- ``` -->
 
-.pull-left[
-```{r}
-knitr::kable(gap_07)
-```
-]
+<!-- --- -->
 
 
-.pull-right[
-```{r}
-tribble(~Data, ~`aes()`, ~`geom_`, 
-          "??", "??", "??") %>% 
-  knitr::kable()
-```
+<!-- ## using `group` to separate lines -->
 
-]
+<!-- ```{r,echo=TRUE} -->
+<!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,  -->
+<!--                                   group = continent)) + #<< -->
+<!--   geom_line() -->
+<!-- ``` -->
 
----
+<!-- --- -->
 
 
-## Making the histogram
+<!-- ## The histogram -->
 
 
-```{r, echo = TRUE,out.width="60%"}
-ggplot(gap_07, aes(x = lifeExp)) + #<<
-  geom_histogram() + #<<
-  theme_bw()
-```
+<!-- ```{r, echo = FALSE,out.width="60%"} -->
+<!-- ggplot(gap_07, aes(x = lifeExp)) + -->
+<!--   geom_histogram() + #<< -->
+<!--   theme_bw() +  -->
+<!--   labs(x = "Life expectancy (years)") -->
+<!-- ``` -->
 
+<!-- A **histogram** maps a variable to the x-axis and uses "bins" to show how data is distributed -->
 
-Note that a histogram *only* uses the x-axis!
+<!-- --- -->
 
 
----
+<!-- ## Making the histogram -->
 
 
-# 🚨 Your turn 🚨
+<!-- .pull-left[ -->
+<!-- ```{r} -->
+<!-- knitr::kable(gap_07) -->
+<!-- ``` -->
+<!-- ] -->
 
 
-Map the continent onto the `fill` aesthetic; what does this do?
+<!-- .pull-right[ -->
+<!-- ```{r} -->
+<!-- tribble(~Data, ~`aes()`, ~`geom_`,  -->
+<!--           "??", "??", "??") %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
 
-```{r, echo = TRUE,out.width="60%"}
-ggplot(gap_07, aes(x = lifeExp)) +
-  geom_histogram() + 
-  theme_bw()
-```
+<!-- ] -->
 
+<!-- --- -->
 
----
 
+<!-- ## Making the histogram -->
 
-# Grouped histograms
 
+<!-- ```{r, echo = TRUE,out.width="60%"} -->
+<!-- ggplot(gap_07, aes(x = lifeExp)) + #<< -->
+<!--   geom_histogram() + #<< -->
+<!--   theme_bw() -->
+<!-- ``` -->
 
 
-```{r, echo = TRUE,out.width="60%"}
-ggplot(gap_07, aes(x = lifeExp, fill = continent)) + #<<
-  geom_histogram() + 
-  theme_bw()
-```
+<!-- Note that a histogram *only* uses the x-axis! -->
 
 
-???
+<!-- --- -->
 
-What does this show us?
 
+<!-- # 🚨 Your turn 🚨 -->
 
----
 
+<!-- Map the continent onto the `fill` aesthetic; what does this do? -->
 
-# Compare groups: column plot
+<!-- ```{r, echo = TRUE,out.width="60%"} -->
+<!-- ggplot(gap_07, aes(x = lifeExp)) + -->
+<!--   geom_histogram() +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
 
 
-```{r}
-# the bar plot
-ggplot(life_region, aes(x = continent, y = avg_yrs)) + 
-  geom_col() +
-  labs(y = "Average life expectancy")
-```
+<!-- --- -->
 
 
----
+<!-- # Grouped histograms -->
 
 
-# Compare groups (distributions)
 
+<!-- ```{r, echo = TRUE,out.width="60%"} -->
+<!-- ggplot(gap_07, aes(x = lifeExp, fill = continent)) + #<< -->
+<!--   geom_histogram() +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
 
-```{r}
-ggplot(gap_07, aes(x = continent, y = lifeExp)) + 
-  geom_quasirandom()
-```
 
+<!-- ??? -->
 
----
+<!-- What does this show us? -->
+
+
+<!-- --- -->
+
+
+<!-- # Compare groups: column plot -->
+
+
+<!-- ```{r} -->
+<!-- # the bar plot -->
+<!-- ggplot(life_region, aes(x = continent, y = avg_yrs)) +  -->
+<!--   geom_col() + -->
+<!--   labs(y = "Average life expectancy") -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+
+<!-- # Compare groups (distributions) -->
+
+
+<!-- ```{r} -->
+<!-- ggplot(gap_07, aes(x = continent, y = lifeExp)) +  -->
+<!--   geom_quasirandom() -->
+<!-- ``` -->
+
+
+<!-- --- -->

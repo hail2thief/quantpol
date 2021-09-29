@@ -27,3 +27,18 @@ editor_options:
 ## Helpful!
 
 - <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> The [cheatsheet for data visualization with ggplot](https://www.rstudio.com/resources/cheatsheets/) might be a helpful resource
+
+
+## Slides
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/02-viz.html",
+   ratio = "16:9"
+)
+```
+
+
+
+**Tip**: You can navigate through the slides with <kbd>←</kbd> and <kbd>→</kbd>. If you type <kbd>F</kbd> you can go full-screen. 
