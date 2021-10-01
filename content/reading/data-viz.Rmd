@@ -32,6 +32,10 @@ editor_options:
 ## Slides
 
 
+**Tip**: You can navigate through the slides with <kbd>←</kbd> and <kbd>→</kbd>. If you type <kbd>F</kbd> you can go full-screen. 
+
+### Tuesday
+
 [Class slides here](/slides/02-viz.html)
 
 
@@ -44,4 +48,16 @@ xaringanExtra::embed_xaringan(
 
 
 
-**Tip**: You can navigate through the slides with <kbd>←</kbd> and <kbd>→</kbd>. If you type <kbd>F</kbd> you can go full-screen. 
+
+### Thursday
+
+[Class slides here](/slides/03-viz2.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/03-viz2.html",
+   ratio = "16:9"
+)
+```
+

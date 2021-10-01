@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Visualization II</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-09-30" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Visualization II
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[A graph for every season]
+
+--
+.box-2.large.sp-after[The four(-ish) graphs]
+
+--
+.box-3.large.sp-after[Making graphs pretty (or ugly)]
+
+---
+
+
+
+
+
+
+class: middle, center, inverse
+# A graph for every season
+
+---
+
+class:middle, center
+
+# A graph for every season
+
+--
+
+There are many graphs out there
+
+--
+
+
+Each one works best in a specific **context**
+
+--
+
+
+Each one combines different **aesthetics** and **geometries**
+
+
+---
+
+class: center, middle
+# Key plotting questions
+
+--
+
+What am I trying to **show**?
+
+--
+
+(a distribution, a relationship, a comparison)
+
+--
+
+What **kind** of variables do I have? 
+
+--
+
+(continuous, discrete, something in between)
+
+--
+
+What **aesthetics** and **geometries** do I need for this plot? 
+
+--
+
+(x-axis, y-axis, color, size, shape, etc.)
+
+---
+
+
+# What kind of variable do I have? 
+
+--
+
+- Continuous: takes on lots of values (GDP, population, income, age, etc.)
+
+--
+
+
+- Discrete: takes on a few values, often "qualitative" (yes/no, 1/0, race, etc.)
+
+--
+
+
+It all depends on your data! 
+
+
+
+---
+
+## The scatterplot
+
+
+
+.pull-left[
+The **scatterplot** visualizes the relatioship between two **continuous** variables
+
+
+Shows every point in the data, reveals *outliers*
+]
+
+.pull-right[
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+]
+
+
+---
+
+
+## The grammar of scatterplots
+
+
+
+
+```r
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  theme_bw()
+```
+
+
+|Data             |Aesthetic |Geometry       |
+|:----------------|:---------|:--------------|
+|One variable     |`x`       |`geom_point()` |
+|Another variable |`y`       |`geom_point()` |
+
+
+--
+
+
+Typically, we put the **cause** on the x-axis and the **outcome** on the y-axis
+
+--
+
+
+We can add other aesthetics (color, shape, size, etc.)
+
+
+---
+
+
+
+
+## Scatterplots are for *continuous* variables
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-4-1.png" width="80%" /&gt;
+
+--
+
+Plot is mostly uninformative because continent is *discrete* (i.e., a category)
+
+
+---
+
+## The time series
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-5-1.png" width="80%" /&gt;
+
+The **time series** uses a *line* to show you how a variable (y-axis) moves over time (x-axis)
+
+---
+
+
+## Mapping data to aesthetics
+
+.pull-left[
+
+| year|  avg_yrs|
+|----:|--------:|
+| 1952| 49.05762|
+| 1957| 51.50740|
+| 1962| 53.60925|
+| 1967| 55.67829|
+| 1972| 57.64739|
+| 1977| 59.57016|
+| 1982| 61.53320|
+| 1987| 63.21261|
+| 1992| 64.16034|
+| 1997| 65.01468|
+| 2002| 65.69492|
+| 2007| 67.00742|
+]
+
+
+.pull-right[
+
+|Data |aes() |geom_ |
+|:----|:-----|:-----|
+|??   |??    |??    |
+
+]
+
+
+---
+
+
+## Making the time series
+
+.pull-left[
+
+```r
+ggplot(life_yr, aes(x = year,
+*                   y = avg_yrs)) +
+* geom_line() +
+  theme_bw()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+]
+
+.pull-right[
+
+|Data    |aes() |geom_ |
+|:-------|:-----|:-----|
+|year    |x     |line  |
+|avg_yrs |y     |line  |
+
+]
+
+---
+
+
+class: center, middle
+# 🚨 Your turn: Make a time series 🚨
+
+--
+
+Look at the `economics` dataset from the `tidyverse` package
+
+--
+
+Type and run `economics` to see the data
+
+--
+
+Type and run `?economics` to read about the data
+
+--
+
+Make a time series of the mean duration of unemployment over time
+
+--
+
+Can you identify the recessions?
+
+
+--
+
+<div class="countdown" id="timer_61564b11" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">04</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+---
+
+
+## Multiple time series
+
+
+Sometimes we observe multiple *units* over time; how can we visualize these?
+
+
+.scroll-output[
+
+|continent | year|  avg_yrs|
+|:---------|----:|--------:|
+|Africa    | 1952| 39.13550|
+|Africa    | 1957| 41.26635|
+|Africa    | 1962| 43.31944|
+|Africa    | 1967| 45.33454|
+|Africa    | 1972| 47.45094|
+|Africa    | 1977| 49.58042|
+|Africa    | 1982| 51.59287|
+|Africa    | 1987| 53.34479|
+|Africa    | 1992| 53.62958|
+|Africa    | 1997| 53.59827|
+|Africa    | 2002| 53.32523|
+|Africa    | 2007| 54.80604|
+|Americas  | 1952| 53.27984|
+|Americas  | 1957| 55.96028|
+|Americas  | 1962| 58.39876|
+|Americas  | 1967| 60.41092|
+|Americas  | 1972| 62.39492|
+|Americas  | 1977| 64.39156|
+|Americas  | 1982| 66.22884|
+|Americas  | 1987| 68.09072|
+|Americas  | 1992| 69.56836|
+|Americas  | 1997| 71.15048|
+|Americas  | 2002| 72.42204|
+|Americas  | 2007| 73.60812|
+|Asia      | 1952| 46.31439|
+|Asia      | 1957| 49.31854|
+|Asia      | 1962| 51.56322|
+|Asia      | 1967| 54.66364|
+|Asia      | 1972| 57.31927|
+|Asia      | 1977| 59.61056|
+|Asia      | 1982| 62.61794|
+|Asia      | 1987| 64.85118|
+|Asia      | 1992| 66.53721|
+|Asia      | 1997| 68.02052|
+|Asia      | 2002| 69.23388|
+|Asia      | 2007| 70.72848|
+|Europe    | 1952| 64.40850|
+|Europe    | 1957| 66.70307|
+|Europe    | 1962| 68.53923|
+|Europe    | 1967| 69.73760|
+|Europe    | 1972| 70.77503|
+|Europe    | 1977| 71.93777|
+|Europe    | 1982| 72.80640|
+|Europe    | 1987| 73.64217|
+|Europe    | 1992| 74.44010|
+|Europe    | 1997| 75.50517|
+|Europe    | 2002| 76.70060|
+|Europe    | 2007| 77.64860|
+|Oceania   | 1952| 69.25500|
+|Oceania   | 1957| 70.29500|
+|Oceania   | 1962| 71.08500|
+|Oceania   | 1967| 71.31000|
+|Oceania   | 1972| 71.91000|
+|Oceania   | 1977| 72.85500|
+|Oceania   | 1982| 74.29000|
+|Oceania   | 1987| 75.32000|
+|Oceania   | 1992| 76.94500|
+|Oceania   | 1997| 78.19000|
+|Oceania   | 2002| 79.74000|
+|Oceania   | 2007| 80.71950|
+]
+
+
+---
+
+
+
+## Start from scratch
+
+
+```r
+*ggplot(data = life_region_yr)
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+
+---
+
+
+## Add aesthetics
+
+
+```r
+*ggplot(data = life_region_yr, aes(x = year, y = avg_yrs))
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
+
+---
+
+## Add geometry: 🤢
+
+
+```r
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
+  geom_line()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-14-1.png" width="100%" /&gt;
+
+---
+
+## using `color` to separate lines
+
+
+```r
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
+*                                 color = continent)) +
+  geom_line()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-15-1.png" width="100%" /&gt;
+
+---
+
+
+## using `group` to separate lines
+
+
+```r
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
+*                                 group = continent)) +
+  geom_line()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
+
+---
+
+
+
+## Multiple time series
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-17-1.png" width="80%" /&gt;
+
+
+These are useful for comparing **trends** across units (countries, places, people, etc)
+
+
+---
+
+
+## The histogram
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-18-1.png" width="60%" /&gt;
+
+A **histogram** shows you how a continous variable is *distributed*
+
+--
+
+Popular in social sciences -- can tell you a lot about a variable!
+
+---
+
+
+## Interpreting histograms
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-19-1.png" width="100%" /&gt;
+
+???
+
+What do we see here? 
+
+---
+
+
+## Making the histogram
+
+
+.pull-left[
+
+```r
+*ggplot(gap_07, aes(x = lifeExp)) +
+* geom_histogram() +
+  theme_bw()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-20-1.png" width="60%" /&gt;
+]
+
+.pull-right[
+
+|Data             |aes() |geom_     |
+|:----------------|:-----|:---------|
+|Variable we want |x     |histogram |
+]
+
+
+Note that a histogram *only* uses the x-axis!
+
+
+---
+
+
+
+
+## Histograms are for *continuous* variables 🤢
+
+
+
+```r
+*ggplot(gap_07, aes(x = year)) +
+  geom_histogram() +
+  theme_bw()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-22-1.png" width="60%" /&gt;
+
+
+---
+
+
+
+# Grouped histograms
+
+
+
+```r
+*ggplot(gap_07, aes(x = lifeExp, fill = continent)) +
+  geom_histogram() + theme_bw()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-23-1.png" width="60%" /&gt;
+
+--
+
+Just like with the grouped time series, we can do grouped histograms
+
+--
+
+Allows us to compare distributions of different *groups* or units
+
+
+???
+What does this plot show us? 
+
+---
+
+
+class: center, middle
+# 🚨 Your turn: histograms 🚨
+
+
+--
+
+Grab the penguins dataset again 🐧
+
+--
+
+Make a histogram of a variable of your choice
+
+--
+
+Now, make a grouped histogram, where groups are defined by **species**
+
+--
+
+What happens if instead of using `fill` you use `color`?
+
+--
+
+
+<div class="countdown" id="timer_61564b1a" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+
+
+
+# Compare groups: barplots
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-25-1.png" width="80%" /&gt;
+
+
+Barplots place a *category* (place, country, person, etc) on one axis and a *value* (amount, average, median, etc.) on another
+
+--
+
+Useful for making comparisons, highlighting differences
+
+???
+
+Causal difference between married and widowed? 
+
+---
+
+# Mapping the barplot
+
+
+.pull-left[
+
+|marital       |       tv|
+|:-------------|--------:|
+|No answer     | 2.555556|
+|Never married | 3.105175|
+|Separated     | 3.549618|
+|Divorced      | 3.085407|
+|Widowed       | 3.912000|
+|Married       | 2.650425|
+]
+
+.pull-right[
+
+|Data    |aes() |geom_ |
+|:-------|:-----|:-----|
+|marital |x     |col   |
+|tv      |y     |col   |
+
+]
+
+---
+
+# Making the barplot
+
+
+
+```r
+*ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+*        geom_col()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-28-1.png" width="100%" /&gt;
+
+
+---
+
+
+## Flip the coordinates with `coord_flip()` for cleaner view
+
+
+
+```r
+ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+         geom_col() + 
+* coord_flip()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-29-1.png" width="80%" /&gt;
+
+
+---
+
+
+# Barplot: too many groups 🤢
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-30-1.png" width="60%" /&gt;
+
+
+Barplots are good for comparing averages, medians, etc., across a *small* number of units
+
+
+---
+
+
+# The four(-ish) graphs
+
+
+
+|Graph       |aes()                    |geom_       |Purpose       |
+|:-----------|:------------------------|:-----------|:-------------|
+|Scatterplot |x = cause, y = effect    |point()     |Relationships |
+|Time series |x = date, y = variable   |line()      |Trends        |
+|Histogram   |x = variable             |histogram() |Distributions |
+|Barplot     |x = category, y = amount |col()       |Comparison    |
+
+
+Know how and when to use which!
+
+
+---
+
+
+class: center, middle, inverse
+# Making graphs pretty (or ugly)
+
+---
+
+
+class: center, middle
+# Making graphs pretty (or ugly)
+
+--
+
+There's a million other aesthetics, geometries, and layers in `ggplot()`
+
+--
+
+Some can make graphs better, others worse
+
+--
+
+Here are some of my favorite ones
+
+---
+
+
+## Uncluttering graphs using `facet_wrap()`
+
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-32-1.png" width="80%" /&gt;
+
+
+You can break out a plot into multiple panels using the `facet_wrap()` layer
+
+---
+
+## Using facet_wrap
+
+
+```r
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_minimal()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-33-1.png" width="60%" /&gt;
+
+---
+
+## Using facet_wrap
+
+
+```r
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_minimal() +
+* facet_wrap(vars(year))
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-34-1.png" width="60%" /&gt;
+
+
+Make sure the facetting variable is wrapped in `vars()`!
+
+
+---
+
+
+## Make aesthetics static within the geometries
+
+
+
+```r
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
+* geom_point(size = 3, color = "orange", shape = 2, alpha = .5)
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-35-1.png" width="60%" /&gt;
+
+
+Take your aesthetics out of `aes()` and into `geom()` to make them *static*
+
+
+---
+
+## Show a trend-line using `geom_smooth()`
+
+
+
+```r
+ggplot(evals, aes(x = age, y = score)) + 
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+* geom_smooth()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-36-1.png" width="60%" /&gt;
+
+Trend lines can reveal patterns in "clumpy" data
+
+---
+
+
+## Show *separate* trend-lines
+
+
+
+```r
+*ggplot(evals, aes(x = age, y = score, color = gender)) +
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+* geom_smooth()
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-37-1.png" width="60%" /&gt;
+
+
+Relationships can look different *within* groups
+
+
+---
+
+
+
+
+# Use different color and fill scales
+
+
+
+```r
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+* scale_fill_brewer(palette = "Blues")
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-38-1.png" width="60%" /&gt;
+
+
+`fill_brewer()` for `fill`, `color_brewer` for `color`
+
+
+---
+
+
+## My favorite scale
+
+
+```r
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+* scale_fill_viridis_d(option = "magma")
+```
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-39-1.png" width="60%" /&gt;
+
+
+`_d` for *discrete* variables, `_c` for continuous
+
+
+---
+
+
+## Many other themes
+
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-40-1.png" width="80%" /&gt;
+
+`theme_spongeBob()` from `tvthemes` package, many more online
+
+
+---
+
+
+class: middle, center
+# 🚨 Your turn 🚨
+
+
+--
+
+Make the **ugliest** or **prettiest** graph you can
+
+--
+
+Use as many or as few of the aesthetics, layers, and geometries as you want
+
+--
+
+Post a screencap in the Slack so we can see
+
+
+<div class="countdown" id="timer_61564a81" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+---
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

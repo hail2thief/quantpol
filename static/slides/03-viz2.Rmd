@@ -1,0 +1,866 @@
+---
+title: "Visualization II"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(gapminder)
+library(palmerpenguins)
+library(moderndive)
+
+
+# dubois colors
+red = "#dc354a"
+yellow = "ecb025"
+blue = "#213772"
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[A graph for every season]
+
+--
+.box-2.large.sp-after[The four(-ish) graphs]
+
+--
+.box-3.large.sp-after[Making graphs pretty (or ugly)]
+
+---
+
+
+```{r gapminder,echo = FALSE}
+# subset data to focus on 2007
+gap_07 = 
+  gapminder %>% 
+  filter(year == 2007)
+
+
+# calculate average life span by year
+life_yr = 
+  gapminder %>% 
+  select(year, lifeExp) %>% 
+  group_by(year) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent
+life_region = 
+  gap_07 %>% 
+  group_by(continent) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent-year
+life_region_yr = 
+  gapminder %>% 
+  group_by(continent, year) %>% 
+  summarise(avg_yrs = mean(lifeExp))
+```
+
+
+
+class: middle, center, inverse
+# A graph for every season
+
+---
+
+class:middle, center
+
+# A graph for every season
+
+--
+
+There are many graphs out there
+
+--
+
+
+Each one works best in a specific **context**
+
+--
+
+
+Each one combines different **aesthetics** and **geometries**
+
+
+---
+
+class: center, middle
+# Key plotting questions
+
+--
+
+What am I trying to **show**?
+
+--
+
+(a distribution, a relationship, a comparison)
+
+--
+
+What **kind** of variables do I have? 
+
+--
+
+(continuous, discrete, something in between)
+
+--
+
+What **aesthetics** and **geometries** do I need for this plot? 
+
+--
+
+(x-axis, y-axis, color, size, shape, etc.)
+
+---
+
+
+# What kind of variable do I have? 
+
+--
+
+- Continuous: takes on lots of values (GDP, population, income, age, etc.)
+
+--
+
+
+- Discrete: takes on a few values, often "qualitative" (yes/no, 1/0, race, etc.)
+
+--
+
+
+It all depends on your data! 
+
+
+
+---
+
+## The scatterplot
+
+
+
+.pull-left[
+The **scatterplot** visualizes the relatioship between two **continuous** variables
+
+
+Shows every point in the data, reveals *outliers*
+]
+
+.pull-right[
+```{r,out.width="100%"}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  theme_bw()
+```
+]
+
+
+---
+
+
+## The grammar of scatterplots
+
+
+
+```{r, echo = TRUE, eval = FALSE}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  theme_bw()
+```
+
+```{r}
+df = tribble(~Data, ~Aesthetic, ~Geometry, 
+             "One variable", "`x`", "`geom_point()`", 
+             "Another variable", "`y`", "`geom_point()`")
+knitr::kable(df)
+```
+
+
+--
+
+
+Typically, we put the **cause** on the x-axis and the **outcome** on the y-axis
+
+--
+
+
+We can add other aesthetics (color, shape, size, etc.)
+
+
+---
+
+
+
+
+## Scatterplots are for *continuous* variables
+
+
+```{r,out.width="80%"}
+ggplot(gap_07, aes(x = continent, y = pop)) +
+  geom_point() +
+  theme_bw()
+```
+
+--
+
+Plot is mostly uninformative because continent is *discrete* (i.e., a category)
+
+
+---
+
+## The time series
+
+
+```{r,out.width="80%",echo = FALSE}
+ggplot(life_yr, aes(x = year, y = avg_yrs)) +
+  geom_line() +  #<<
+  theme_bw(base_family = "Fira Sans") +
+  labs(x = "Year", y = "Average life expectancy (years)",
+       title = "Global average life expectancy over time")
+```
+
+The **time series** uses a *line* to show you how a variable (y-axis) moves over time (x-axis)
+
+---
+
+
+## Mapping data to aesthetics
+
+.pull-left[
+```{r}
+knitr::kable(life_yr)
+```
+]
+
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`,
+          "??", "??", "??") %>%
+  knitr::kable()
+```
+
+]
+
+
+---
+
+
+## Making the time series
+
+.pull-left[
+```{r,echo = TRUE}
+ggplot(life_yr, aes(x = year,
+                    y = avg_yrs)) + #<<
+  geom_line() +  #<<
+  theme_bw()
+```
+]
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`,
+          "year", "x", "line",
+        "avg_yrs", "y", "line") %>%
+  knitr::kable()
+```
+
+]
+
+---
+
+
+class: center, middle
+# 🚨 Your turn: Make a time series 🚨
+
+--
+
+Look at the `economics` dataset from the `tidyverse` package
+
+--
+
+Type and run `economics` to see the data
+
+--
+
+Type and run `?economics` to read about the data
+
+--
+
+Make a time series of the mean duration of unemployment over time
+
+--
+
+Can you identify the recessions?
+
+
+--
+
+```{r}
+countdown::countdown(minutes = 4L)
+```
+
+
+---
+
+
+## Multiple time series
+
+
+Sometimes we observe multiple *units* over time; how can we visualize these?
+
+
+.scroll-output[
+```{r}
+knitr::kable(life_region_yr)
+```
+]
+
+
+---
+
+
+
+## Start from scratch
+
+```{r,echo =TRUE}
+ggplot(data = life_region_yr) #<<
+```
+
+---
+
+
+## Add aesthetics
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
+```
+
+---
+
+## Add geometry: 🤢
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
+  geom_line()
+```
+
+---
+
+## using `color` to separate lines
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
+                                  color = continent)) + #<<
+  geom_line()
+```
+
+---
+
+
+## using `group` to separate lines
+
+```{r,echo=TRUE}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
+                                  group = continent)) + #<<
+  geom_line()
+```
+
+---
+
+
+
+## Multiple time series
+
+```{r,out.width="80%"}
+ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
+                                  color = continent)) + 
+  geom_line() + theme_bw(base_family = "Fira Sans")
+```
+
+
+These are useful for comparing **trends** across units (countries, places, people, etc)
+
+
+---
+
+
+## The histogram
+
+
+```{r, echo = FALSE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp)) +
+  geom_histogram() + #<<
+  theme_bw(base_family = "Fira Sans") +
+  labs(x = "Life expectancy (years)")
+```
+
+A **histogram** shows you how a continous variable is *distributed*
+
+--
+
+Popular in social sciences -- can tell you a lot about a variable!
+
+---
+
+
+## Interpreting histograms
+
+
+```{r}
+gap_07 %>% 
+  select(lifeExp, gdpPercap, pop) %>% 
+  pivot_longer(everything()) %>% 
+  ggplot(aes(x = value, fill = name)) + 
+  geom_histogram(color = "white") + 
+  facet_wrap(vars(name), scales = "free") + 
+  theme_bw(base_family = "Fira Sans") + 
+  theme(legend.position = "none")
+```
+
+???
+
+What do we see here? 
+
+---
+
+
+## Making the histogram
+
+
+.pull-left[
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp)) + #<<
+  geom_histogram() + #<<
+  theme_bw()
+```
+]
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`,
+          "Variable we want", "x", "histogram") %>%
+  knitr::kable()
+```
+]
+
+
+Note that a histogram *only* uses the x-axis!
+
+
+---
+
+
+
+
+## Histograms are for *continuous* variables 🤢
+
+
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = year)) + #<<
+  geom_histogram() +
+  theme_bw()
+```
+
+
+---
+
+
+
+# Grouped histograms
+
+
+```{r, echo = TRUE,out.width="60%"}
+ggplot(gap_07, aes(x = lifeExp, fill = continent)) + #<<
+  geom_histogram() + theme_bw()
+```
+
+--
+
+Just like with the grouped time series, we can do grouped histograms
+
+--
+
+Allows us to compare distributions of different *groups* or units
+
+
+???
+What does this plot show us? 
+
+---
+
+
+class: center, middle
+# 🚨 Your turn: histograms 🚨
+
+
+--
+
+Grab the penguins dataset again 🐧
+
+--
+
+Make a histogram of a variable of your choice
+
+--
+
+Now, make a grouped histogram, where groups are defined by **species**
+
+--
+
+What happens if instead of using `fill` you use `color`?
+
+--
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+
+
+
+# Compare groups: barplots
+
+
+```{r,out.width="80%"}
+tv = gss_cat %>% 
+  group_by(marital) %>% 
+  summarise(tv = mean(tvhours, na.rm = TRUE)) 
+
+ggplot(tv, aes(x = fct_reorder(marital, tv), y = tv)) + 
+  geom_col() + 
+  labs(y = "Average hours of tv watched per day", 
+       x = NULL, title = "TV and marriage in the USA") + 
+  theme_bw(base_family = "Fira Sans")
+```
+
+
+Barplots place a *category* (place, country, person, etc) on one axis and a *value* (amount, average, median, etc.) on another
+
+--
+
+Useful for making comparisons, highlighting differences
+
+???
+
+Causal difference between married and widowed? 
+
+---
+
+# Mapping the barplot
+
+
+.pull-left[
+```{r}
+knitr::kable(tv)
+```
+]
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`,
+          "marital", "x", "col",
+        "tv", "y", "col") %>%
+  knitr::kable()
+```
+
+]
+
+---
+
+# Making the barplot
+
+
+```{r,echo = TRUE}
+ggplot(life_region, aes(x = continent, y = avg_yrs)) + #<<
+         geom_col() #<<
+```
+
+
+---
+
+
+## Flip the coordinates with `coord_flip()` for cleaner view
+
+
+```{r,echo = TRUE, out.width="80%"}
+ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+         geom_col() + 
+  coord_flip() #<<
+```
+
+
+---
+
+
+# Barplot: too many groups 🤢
+
+
+```{r, out.width="60%"}
+ggplot(gap_07, aes(x = country, y = lifeExp)) + 
+  geom_col()
+```
+
+
+Barplots are good for comparing averages, medians, etc., across a *small* number of units
+
+
+---
+
+
+# The four(-ish) graphs
+
+
+```{r}
+tribble(~Graph, ~`aes()`, ~`geom_`, ~Purpose,
+        "Scatterplot", "x = cause, y = effect", "point()", "Relationships",
+        "Time series", "x = date, y = variable", "line()", "Trends",
+        "Histogram", "x = variable", "histogram()", "Distributions",
+        "Barplot", "x = category, y = amount", "col()", "Comparison") %>% 
+  knitr::kable()
+```
+
+
+Know how and when to use which!
+
+
+---
+
+
+class: center, middle, inverse
+# Making graphs pretty (or ugly)
+
+---
+
+
+class: center, middle
+# Making graphs pretty (or ugly)
+
+--
+
+There's a million other aesthetics, geometries, and layers in `ggplot()`
+
+--
+
+Some can make graphs better, others worse
+
+--
+
+Here are some of my favorite ones
+
+---
+
+
+## Uncluttering graphs using `facet_wrap()`
+
+
+```{r, out.width="80%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  facet_wrap(vars(year)) +  #<<
+  theme_minimal()
+```
+
+
+You can break out a plot into multiple panels using the `facet_wrap()` layer
+
+---
+
+## Using facet_wrap
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_minimal()
+```
+
+---
+
+## Using facet_wrap
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_minimal() +
+  facet_wrap(vars(year)) #<<
+```
+
+
+Make sure the facetting variable is wrapped in `vars()`!
+
+
+---
+
+
+## Make aesthetics static within the geometries
+
+
+```{r,echo = TRUE, out.width="60%"}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
+  geom_point(size = 3, color = "orange", shape = 2, alpha = .5) #<<
+```
+
+
+Take your aesthetics out of `aes()` and into `geom()` to make them *static*
+
+
+---
+
+## Show a trend-line using `geom_smooth()`
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(evals, aes(x = age, y = score)) + 
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+  geom_smooth() #<<
+```
+
+Trend lines can reveal patterns in "clumpy" data
+
+---
+
+
+## Show *separate* trend-lines
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(evals, aes(x = age, y = score, color = gender)) + #<<
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+  geom_smooth() #<<
+```
+
+
+Relationships can look different *within* groups
+
+
+---
+
+
+
+
+# Use different color and fill scales
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  scale_fill_brewer(palette = "Blues") #<<
+```
+
+
+`fill_brewer()` for `fill`, `color_brewer` for `color`
+
+
+---
+
+
+## My favorite scale
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  scale_fill_viridis_d(option = "magma") #<<
+```
+
+
+`_d` for *discrete* variables, `_c` for continuous
+
+
+---
+
+
+## Many other themes
+
+```{r,out.width="80%"}
+library(tvthemes)
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_spongeBob() + labs(title = "Horrible") + 
+  scale_fill_spongeBob()
+```
+
+`theme_spongeBob()` from `tvthemes` package, many more online
+
+
+---
+
+
+class: middle, center
+# 🚨 Your turn 🚨
+
+
+--
+
+Make the **ugliest** or **prettiest** graph you can
+
+--
+
+Use as many or as few of the aesthetics, layers, and geometries as you want
+
+--
+
+Post a screencap in the Slack so we can see
+
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
+
+
+---
+

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Visualization</title>
+    <title>Visualization I</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
     <meta name="date" content="2021-09-29" />
@@ -29,7 +29,7 @@ background-image: url("images/dubois-spiral-2.png")
 background-position: right
 background-size: contain
 
-# Visualization
+# Visualization I
 
 ### *The Scientific Study of Politics*
 
@@ -2161,7 +2161,7 @@ Map country names onto `label` aesthetic within `aes()`
 Add `geom_text` layer to your plot
 
 
-<div class="countdown" id="timer_615487ca" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61549e15" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2255,7 +2255,7 @@ map penguin **species** to the `color` and `shape` aesthetics
 
 
 
-<div class="countdown" id="timer_61548681" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_61549dc6" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2345,288 +2345,6 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g,
 --
 
 Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
-
-
----
-
-&lt;!-- class: middle, center, inverse --&gt;
-&lt;!-- # A graph for every season --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- class:middle, center --&gt;
-
-&lt;!-- # A graph for every season --&gt;
-
-&lt;!-- -- --&gt;
-
-&lt;!-- There are many graphs out there --&gt;
-
-&lt;!-- -- --&gt;
-
-
-&lt;!-- Each one works best in a specific **context** --&gt;
-
-&lt;!-- -- --&gt;
-
-
-&lt;!-- Each one combines different **aesthetics** and **geometries** --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## The scatterplot --&gt;
-
-
-&lt;!-- ```{r,out.width="80%"} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +  --&gt;
-&lt;!--   geom_point() +  --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- The **scatterplot** puts variables on the x and y-axes (*aesthetics*) and uses points (*geometry*) to show patterns in data --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## The time series --&gt;
-
-
-&lt;!-- ```{r,out.width="80%",echo = FALSE} --&gt;
-&lt;!-- ggplot(life_yr, aes(x = year, y = avg_yrs)) +  --&gt;
-&lt;!--   geom_line() +  #&lt;&lt; --&gt;
-&lt;!--   theme_bw() +  --&gt;
-&lt;!--   labs(x = "Year", y = "Average life expectancy (years)",  --&gt;
-&lt;!--        title = "Global average life expectancy over time") --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- The **time series** shows you how a variable (y-axis) moves over time (x-axis) --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Mapping data to aesthetics --&gt;
-
-&lt;!-- .pull-left[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- knitr::kable(life_yr) --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-
-&lt;!-- .pull-right[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- tribble(~Data, ~`aes()`, ~`geom_`,  --&gt;
-&lt;!--           "??", "??", "??") %&gt;%  --&gt;
-&lt;!--   knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- ] --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Making the time series --&gt;
-
-&lt;!-- .pull-left[ --&gt;
-&lt;!-- ```{r,echo = TRUE} --&gt;
-&lt;!-- ggplot(life_yr, aes(x = year,  --&gt;
-&lt;!--                     y = avg_yrs)) + #&lt;&lt; --&gt;
-&lt;!--   geom_line() +  #&lt;&lt; --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-&lt;!-- .pull-right[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- tribble(~Data, ~`aes()`, ~`geom_`,  --&gt;
-&lt;!--           "year", "x", "line",  --&gt;
-&lt;!--         "avg_yrs", "y", "line") %&gt;%  --&gt;
-&lt;!--   knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- ] --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Multiple time series --&gt;
-
-
-&lt;!-- Sometimes we observe multiple *units* over time; how can we plot these? --&gt;
-
-
-&lt;!-- .scroll-output[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- knitr::kable(life_region_yr) --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-
-&lt;!-- ## Start from scratch --&gt;
-
-&lt;!-- ```{r,echo =TRUE} --&gt;
-&lt;!-- ggplot(data = life_region_yr) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Add aesthetics --&gt;
-
-&lt;!-- ```{r,echo=TRUE} --&gt;
-&lt;!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## Add geometry: 🤢 --&gt;
-
-&lt;!-- ```{r,echo=TRUE} --&gt;
-&lt;!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) + --&gt;
-&lt;!--   geom_line() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- ## using `color` to separate lines --&gt;
-
-&lt;!-- ```{r,echo=TRUE} --&gt;
-&lt;!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,  --&gt;
-&lt;!--                                   color = continent)) + #&lt;&lt; --&gt;
-&lt;!--   geom_line() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## using `group` to separate lines --&gt;
-
-&lt;!-- ```{r,echo=TRUE} --&gt;
-&lt;!-- ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,  --&gt;
-&lt;!--                                   group = continent)) + #&lt;&lt; --&gt;
-&lt;!--   geom_line() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## The histogram --&gt;
-
-
-&lt;!-- ```{r, echo = FALSE,out.width="60%"} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = lifeExp)) + --&gt;
-&lt;!--   geom_histogram() + #&lt;&lt; --&gt;
-&lt;!--   theme_bw() +  --&gt;
-&lt;!--   labs(x = "Life expectancy (years)") --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- A **histogram** maps a variable to the x-axis and uses "bins" to show how data is distributed --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Making the histogram --&gt;
-
-
-&lt;!-- .pull-left[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- knitr::kable(gap_07) --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-
-&lt;!-- .pull-right[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- tribble(~Data, ~`aes()`, ~`geom_`,  --&gt;
-&lt;!--           "??", "??", "??") %&gt;%  --&gt;
-&lt;!--   knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- ] --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- ## Making the histogram --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE,out.width="60%"} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = lifeExp)) + #&lt;&lt; --&gt;
-&lt;!--   geom_histogram() + #&lt;&lt; --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- Note that a histogram *only* uses the x-axis! --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # 🚨 Your turn 🚨 --&gt;
-
-
-&lt;!-- Map the continent onto the `fill` aesthetic; what does this do? --&gt;
-
-&lt;!-- ```{r, echo = TRUE,out.width="60%"} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = lifeExp)) + --&gt;
-&lt;!--   geom_histogram() +  --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Grouped histograms --&gt;
-
-
-
-&lt;!-- ```{r, echo = TRUE,out.width="60%"} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = lifeExp, fill = continent)) + #&lt;&lt; --&gt;
-&lt;!--   geom_histogram() +  --&gt;
-&lt;!--   theme_bw() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- ??? --&gt;
-
-&lt;!-- What does this show us? --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Compare groups: column plot --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- # the bar plot --&gt;
-&lt;!-- ggplot(life_region, aes(x = continent, y = avg_yrs)) +  --&gt;
-&lt;!--   geom_col() + --&gt;
-&lt;!--   labs(y = "Average life expectancy") --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Compare groups (distributions) --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- ggplot(gap_07, aes(x = continent, y = lifeExp)) +  --&gt;
-&lt;!--   geom_quasirandom() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
