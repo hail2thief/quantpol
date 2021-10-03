@@ -16,12 +16,12 @@ editor_options:
 ---
 
 
-## Required
+## Optional
 
 - <i class="fas fa-book"></i> [Ch. 3 in ModernDive](https://moderndive.com/)
 - <i class="fas fa-book"></i> [Ch. 5 in R for Data Science](https://r4ds.had.co.nz/transform.html)
 
 
-## Highly recommended
+## Recommended
 
 - Print out this [cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf) and have it somewhere handy while you're doing work in this course

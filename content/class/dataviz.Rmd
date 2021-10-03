@@ -31,132 +31,240 @@ Here's the code we'll be using in class. Download it and store it with the rest 
 
 
 
-<!-- # Making graphs with ggplot -->
+# Making graphs with ggplot
 
 
-<!-- Here we will walk through how to make some of the basic graphs in R.  -->
+Here we will walk through how to make some of the basic graphs in R.
 
-<!-- The code chunk below loads our libraries and prepares the data.  -->
-
-
-<!-- ```{r} -->
-<!-- # load libraries ------------------------------------------------------------------------- -->
-<!-- library(tidyverse) -->
-<!-- library(gapminder) # install this if you don't have it! -->
-<!-- library(ggbeeswarm) # install this if you don't have it! -->
-
-<!-- # clean data ------------------------------------------------------------------------ -->
+The code chunk below loads our libraries and prepares the data.
 
 
-<!-- # subset data to focus on 2007 -->
-<!-- gap_07 =  -->
-<!--   gapminder %>%  -->
-<!--   filter(year == 2007) -->
+```{r}
+# load libraries -------------------------------------------------------------------------
+library(tidyverse)
+library(gapminder) # install this if you don't have it!
+library(ggbeeswarm) # install this if you don't have it!
+library(moderndive)
+
+# clean data ------------------------------------------------------------------------
 
 
-<!-- # calculate average life span by year -->
-<!-- life_yr =  -->
-<!--   gapminder %>%  -->
-<!--   select(year, lifeExp) %>%  -->
-<!--   group_by(year) %>%  -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-
-<!-- # calculate average life expectancy by continent -->
-<!-- life_region =  -->
-<!--   gap_07 %>%  -->
-<!--   group_by(continent) %>%  -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-
-<!-- # calculate average life expectancy by continent-year -->
-<!-- life_region_yr =  -->
-<!--   gapminder %>%  -->
-<!--   group_by(continent, year) %>%  -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-<!-- ``` -->
+# subset data to focus on 2007
+gap_07 =
+  gapminder %>%
+  filter(year == 2007)
 
 
+# calculate average life span by year
+life_yr =
+  gapminder %>%
+  select(year, lifeExp) %>%
+  group_by(year) %>%
+  summarise(avg_yrs = mean(lifeExp))
 
-<!-- ## The scatterplot -->
+# calculate average life expectancy by continent
+life_region =
+  gap_07 %>%
+  group_by(continent) %>%
+  summarise(avg_yrs = mean(lifeExp))
 
-
-<!-- The scatterplot puts two variables on the same graph so we can see how they move together:  -->
-
-<!-- ```{r} -->
-<!-- # the fancy, final product -->
-<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,  -->
-<!--                    color = continent, size = pop)) +  -->
-<!--   geom_point() -->
-<!-- ``` -->
+# calculate average life expectancy by continent-year
+life_region_yr =
+  gapminder %>%
+  group_by(continent, year) %>%
+  summarise(avg_yrs = mean(lifeExp))
+```
 
 
 
-<!-- We can add labels using `labs()` and a `theme` using `theme_bw()`: -->
-
-<!-- ```{r} -->
-<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,  -->
-<!--                    color = continent, size = pop)) +  -->
-<!--   geom_point() + -->
-<!--   labs(x = "GDP per capita ($USD, inflation-adjusted)",  -->
-<!--        y = "Life expectancy (in years)",  -->
-<!--        title = "Wealth and Health Around the World",  -->
-<!--        subtitle = "Data from 2007. Source: gapminder package.") +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
+## The scatterplot
 
 
-<!-- Note that there are many [more themes out there](https://ggplot2.tidyverse.org/reference/ggtheme.html). -->
+The scatterplot puts two variables on the same graph so we can see how they move together:
+
+```{r}
+# the fancy, final product
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
+                   color = continent, size = pop)) +
+  geom_point()
+```
 
 
 
-<!-- ## The time series -->
+We can add labels using `labs()` and a `theme` using `theme_bw()`:
+
+```{r}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
+                   color = continent, size = pop)) +
+  geom_point() +
+  labs(x = "GDP per capita ($USD, inflation-adjusted)",
+       y = "Life expectancy (in years)",
+       title = "Wealth and Health Around the World",
+       subtitle = "Data from 2007. Source: gapminder package.") +
+  theme_bw()
+```
 
 
-<!-- The time series shows you how a variable moves over time, using a line. For this one we will use the `life_yr` data object we constructed above, which looks like this:  -->
-
-<!-- ```{r} -->
-<!-- ## look at the data -->
-<!-- life_yr -->
-<!-- ``` -->
+Note that there are many [more themes out there](https://ggplot2.tidyverse.org/reference/ggtheme.html).
 
 
-<!-- We make the plot below: -->
+
+## The time series
 
 
-<!-- ```{r} -->
-<!-- # make the plot -->
-<!-- ggplot(life_yr, aes(x = year, y = avg_yrs)) +  -->
-<!--   geom_line() +  -->
-<!--   theme_bw() -->
+The time series shows you how a variable moves over time, using a line. For this one we will use the `life_yr` data object we constructed above, which looks like this:
 
-<!-- ``` -->
-
-
-<!-- ## Multiple time series -->
+```{r}
+## look at the data
+life_yr
+```
 
 
-<!-- Sometimes we have data where we observe multiple *units* moving over time, like so:  -->
-
-<!-- ```{r} -->
-<!-- life_region_yr -->
-<!-- ``` -->
+We make the plot below:
 
 
-<!-- We can draw separate time series for each *unit* by either using the `color` aesthetic to separate the lines:  -->
+```{r}
+# make the plot
+ggplot(life_yr, aes(x = year, y = avg_yrs)) +
+  geom_line() +
+  theme_bw()
+
+```
 
 
-<!-- ```{r} -->
-<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, color = continent)) +  -->
-<!--   geom_line() +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
+## Multiple time series
 
 
-<!-- Or the `group` aesthetic: -->
+Sometimes we have data where we observe multiple *units* moving over time, like so:
+
+```{r}
+life_region_yr
+```
 
 
-<!-- ```{r} -->
-<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, group = continent)) +  -->
-<!--   geom_line() +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
+We can draw separate time series for each *unit* by either using the `color` aesthetic to separate the lines:
 
+
+```{r}
+ggplot(life_region_yr, aes(x = year, y = avg_yrs, color = continent)) +
+  geom_line() +
+  theme_bw()
+```
+
+
+Or the `group` aesthetic:
+
+
+```{r}
+ggplot(life_region_yr, aes(x = year, y = avg_yrs, group = continent)) +
+  geom_line() +
+  theme_bw()
+```
+
+
+## Histogram with `geom_histogram()`
+
+
+```{r}
+ggplot(gap_07, aes(x = lifeExp)) + 
+  geom_histogram() + 
+  theme_bw()
+```
+
+
+## Grouped histogram
+
+
+```{r}
+ggplot(gap_07, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  theme_bw()
+```
+
+
+## Barplot with `geom_col()`
+
+
+```{r}
+ggplot(life_region_yr, aes(x = continent, y = avg_yrs)) + 
+  geom_col()
+```
+
+
+
+# Other layers and features
+
+
+## Multi-panel plots with `facet_wrap()`
+
+```{r}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  facet_wrap(vars(year)) +
+  theme_minimal()
+```
+
+
+
+## Make aesthetics static within the geometries
+
+
+```{r,echo = TRUE, out.width="60%"}
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
+  geom_point(size = 3, color = "orange", shape = 2, alpha = .5) #<<
+```
+
+
+Take your aesthetics out of `aes()` and into `geom()` to make them *static*
+
+
+
+## Show a trend-line using `geom_smooth()`
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(evals, aes(x = age, y = score)) + 
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+  geom_smooth() #<<
+```
+
+Trend lines can reveal patterns in "clumpy" data
+
+
+## Show *separate* trend-lines
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(evals, aes(x = age, y = score, color = gender)) + #<<
+  geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") + 
+  geom_smooth() #<<
+```
+
+
+Relationships can look different *within* groups
+
+
+## Use different color and fill scales
+
+
+```{r, echo = TRUE, out.width="60%"}
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + 
+  scale_fill_brewer(palette = "Blues") #<<
+```
+
+
+`fill_brewer()` for `fill`, `color_brewer` for `color`
+
+
+
+## Many other themes
+
+```{r,out.width="80%"}
+library(tvthemes)
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+  geom_histogram() + theme_spongeBob() + labs(title = "Horrible") + 
+  scale_fill_spongeBob()
+```
+
+`theme_spongeBob()` from `tvthemes` package, many more online
