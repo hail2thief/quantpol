@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Wrangling I</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-10-04" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Wrangling I
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[The pipe]
+
+--
+.box-2.large.sp-after[`filter()` and logical operators]
+
+--
+.box-3.large.sp-after[Objects]
+
+---
+
+
+class: center, middle
+# The new starting point
+
+--
+
+Before, I  *wrangled* data and you plotted the finished product
+
+--
+
+Step 1 of all your code was `ggplot()`
+
+
+--
+
+Now, **you** will wrangle the data 
+
+--
+
+Step 1 is *the data object*
+
+---
+
+
+# Step two: the pipe
+
+
+
+```r
+# code from homework
+movies `%&gt;%`
+  # exclude movies before 1980
+  filter(year &gt;= 1980) `%&gt;%`
+  # make decades variable
+  mutate(decade = case_when(year &gt;= 1980 &amp; year &lt; 1990 ~ "80s", 
+                            year &gt;= 1990 &amp; year &lt; 2000 ~ "90s", 
+                            year &gt;= 2000 &amp; year &lt; 2010 ~ "2000s", 
+                            year &gt;= 2010 ~ "2010s"))
+```
+
+
+---
+
+
+# What are pipes? 
+
+
+.pull-left[
+- **Pipes** are a programming tool to string a series of functions on an object
+
+- They look like this in R: ` %&gt;% `
+
+- OSX: &lt;kbd&gt;Cmd&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;M&lt;/kbd&gt; 
+- Windows: &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;M&lt;/kbd&gt; 
+]
+
+.pull-right[
+&lt;img src="images/not-pipe.jpeg" width="100%" /&gt;
+]
+
+---
+
+# Why pipes? 
+
+
+
+With pipes: 😍
+
+
+```r
+penguins %&gt;% 
+  filter(species == "Adelie") %&gt;% 
+  mutate(body_mass_kg = body_mass_g / 1000) %&gt;% 
+  select(body_mass_kg)
+```
+
+
+
+
+
+Without pipes: 🤢
+
+
+```r
+select(mutate(filter(penguins, species == "Adelie"), body_mass_kg = body_mass_g / 1000), body_mass_kg)
+```
+
+
+
+---
+
+# Making sense of pipes: "and then..."
+
+
+
+```r
+# code from homework
+movies `%&gt;%`
+  # exclude movies before 1980
+  filter(year &gt;= 1980) `%&gt;%`
+  # make decades variable
+  mutate(decade = case_when(year &gt;= 1980 &amp; year &lt; 1990 ~ "80s", 
+                            year &gt;= 1990 &amp; year &lt; 2000 ~ "90s", 
+                            year &gt;= 2000 &amp; year &lt; 2010 ~ "2000s", 
+                            year &gt;= 2010 ~ "2010s"))
+```
+
+&gt; Take the object movies, AND THEN filter such that year is greater than or equal to 1980, AND THEN...
+
+
+---
+
+# The formula
+
+
+
+```r
+THE DATA %&gt;% 
+  FIRST FUNCTION %&gt;% 
+  ANOTHER FUNCTION %&gt;% 
+  YET ANOTHER FUNCTION
+```
+
+
+
+---
+
+
+class: center
+# Our first wrangling function: `filter()`
+
+--
+
+`filter()` **subsets** data objects based on **rules**
+
+
+
+&lt;img src="images/filter.png" width="60%" /&gt;
+
+
+--
+
+
+```r
+baby_subset &lt;- babynames %&gt;%
+  filter(name == "Elizabeth")
+```
+
+Subset `babynames` to only babies named `Elizabeth`
+
+---
+
+# Using `filter()`
+
+
+To use `filter()`, we need to tell R which **observations** we want to include (or exclude) using rules
+
+--
+
+
+```r
+baby_subset &lt;- babynames %&gt;%
+  filter(name == "Elizabeth")
+```
+
+
+&gt; take `babynames` and return all observations where the `name` variable *is equal to* "Elizabeth"
+
+
+---
+
+# Setting up rules: logical operators
+
+
+.pull-left[
+Filtering rules rely on **logical operators**
+
+We filter data based on whether **variables** meet certain criteria
+
+Equal to, not equal to, less than, more than, included in, etc.
+
+
+]
+
+.pull-right[
+&lt;img src="images/ben.jpeg" width="100%" /&gt;
+]
+
+---
+
+# The logical operators
+
+
+
+|Operator |meaning                  |
+|:--------|:------------------------|
+|==       |equal to                 |
+|!=       |not equal to             |
+|&gt;        |greater than             |
+|&lt;        |less than                |
+|&gt;=       |greater than or equal to |
+|&lt;=       |less than or equal to    |
+|%in%     |is among the set         |
+
+???
+Why double equal sign?
+
+---
+
+# Using `filter()`
+
+
+|name         |color | pounds|sweet |
+|:------------|:-----|------:|:-----|
+|Fuji         |red   |      2|TRUE  |
+|Gala         |green |      4|TRUE  |
+|Macintosh    |green |      8|FALSE |
+|Granny Smith |red   |      3|FALSE |
+
+---
+
+# Green and unsweet apples
+
+
+```r
+apples %&gt;% 
+* filter(color == "green")
+```
+
+```
+## # A tibble: 2 × 4
+##   name      color pounds sweet
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Gala      green      4 TRUE 
+## 2 Macintosh green      8 FALSE
+```
+
+
+
+---
+
+# Green and unsweet apples
+
+
+```r
+apples %&gt;% 
+  filter(color == "green") %&gt;% 
+* filter(sweet == FALSE)
+```
+
+```
+## # A tibble: 1 × 4
+##   name      color pounds sweet
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Macintosh green      8 FALSE
+```
+
+
+Same as:
+
+
+
+```r
+apples %&gt;% 
+* filter(color == "green", sweet == FALSE)
+```
+
+---
+
+
+
+# Apples that are at least 4 pounds
+
+
+```r
+apples %&gt;% 
+  filter(pounds &gt;= 4)
+```
+
+```
+## # A tibble: 2 × 4
+##   name      color pounds sweet
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Gala      green      4 TRUE 
+## 2 Macintosh green      8 FALSE
+```
+
+---
+
+## Apples that are either Fuji or Gala and weigh more than two pounds
+
+
+```r
+apples %&gt;% 
+  filter(name %in% c("Fuji", "Gala")) %&gt;% 
+  filter(pounds &gt; 2)
+```
+
+```
+## # A tibble: 1 × 4
+##   name  color pounds sweet
+##   &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Gala  green      4 TRUE
+```
+
+&gt; Notice how "lists" of things are wrapped in `c()`
+
+---
+
+## Combining rules
+
+You can combine multiple rules using the AND (`&amp;`) operator
+
+"Observations where either *this* is true **AND** *that* is true"
+
+
+
+```r
+# apples that are red AND sweet
+apples %&gt;% 
+  filter(color == "red" `&amp;` sweet == TRUE)
+```
+
+
+Same as:
+
+
+
+```r
+# apples that are red AND sweet
+apples %&gt;% 
+  filter(color == "red") %&gt;% 
+  filter(sweet == TRUE)
+```
+
+
+---
+
+## The OR operator
+
+
+The `|` allows you to combine **mutually exclusive** conditions
+
+"Observations where either *this* is true **OR** *that* is true"
+
+
+```r
+# apples that are red and sweet OR green and sour
+apples %&gt;% 
+  filter(color == "red" &amp; sweet == TRUE | 
+           color == "green" &amp; sweet == FALSE)
+```
+
+```
+## # A tibble: 2 × 4
+##   name      color pounds sweet
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Fuji      red        2 TRUE 
+## 2 Macintosh green      8 FALSE
+```
+
+
+---
+
+# 🚨 Your turn: find the flights 🚨
+
+.scroll-output[
+
+| year| month| day| dep_time| sched_dep_time| dep_delay| arr_time| sched_arr_time| arr_delay|carrier | flight|tailnum |origin |dest | air_time| distance| hour| minute|time_hour           |
+|----:|-----:|---:|--------:|--------------:|---------:|--------:|--------------:|---------:|:-------|------:|:-------|:------|:----|--------:|--------:|----:|------:|:-------------------|
+| 2013|     1|   1|      517|            515|         2|      830|            819|        11|UA      |   1545|N14228  |EWR    |IAH  |      227|     1400|    5|     15|2013-01-01 05:00:00 |
+| 2013|     1|   1|      533|            529|         4|      850|            830|        20|UA      |   1714|N24211  |LGA    |IAH  |      227|     1416|    5|     29|2013-01-01 05:00:00 |
+| 2013|     1|   1|      542|            540|         2|      923|            850|        33|AA      |   1141|N619AA  |JFK    |MIA  |      160|     1089|    5|     40|2013-01-01 05:00:00 |
+| 2013|     1|   1|      544|            545|        -1|     1004|           1022|       -18|B6      |    725|N804JB  |JFK    |BQN  |      183|     1576|    5|     45|2013-01-01 05:00:00 |
+| 2013|     1|   1|      554|            600|        -6|      812|            837|       -25|DL      |    461|N668DN  |LGA    |ATL  |      116|      762|    6|      0|2013-01-01 06:00:00 |
+| 2013|     1|   1|      554|            558|        -4|      740|            728|        12|UA      |   1696|N39463  |EWR    |ORD  |      150|      719|    5|     58|2013-01-01 05:00:00 |
+| 2013|     1|   1|      555|            600|        -5|      913|            854|        19|B6      |    507|N516JB  |EWR    |FLL  |      158|     1065|    6|      0|2013-01-01 06:00:00 |
+| 2013|     1|   1|      557|            600|        -3|      709|            723|       -14|EV      |   5708|N829AS  |LGA    |IAD  |       53|      229|    6|      0|2013-01-01 06:00:00 |
+| 2013|     1|   1|      557|            600|        -3|      838|            846|        -8|B6      |     79|N593JB  |JFK    |MCO  |      140|      944|    6|      0|2013-01-01 06:00:00 |
+| 2013|     1|   1|      558|            600|        -2|      753|            745|         8|AA      |    301|N3ALAA  |LGA    |ORD  |      138|      733|    6|      0|2013-01-01 06:00:00 |
+]
+
+---
+
+
+# 🚨 Your turn: find the flights 🚨
+
+--
+
+Using the `flights_small` object, find the following:
+
+
+--
+
+1. Flights to Fort Lauderdale or Miami, in April
+
+--
+
+2. Flights in the winter that took off between 8:13am and 12:59pm
+
+--
+
+3. How many flights arrived late on Thanksgiving Day or Christmas Eve?
+
+
+
+<div class="countdown" id="timer_615b65dd" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+# The last step: creating objects
+
+
+Step 1-2: the data, the pipe, the wrangling functions
+
+
+
+```r
+flights_small %&gt;% 
+  filter(dest == "FLL")
+```
+
+Step 3: store the subsetted data as a new **object** for later use
+
+
+```r
+miami_flights = flights_small %&gt;% 
+  filter(dest == "MIA")
+```
+
+---
+
+# Objects
+
+In programming, **objects** can be used to store all sorts of stuff for later use: data, functions, values. We create objects using `=`
+
+Like this: 
+
+
+```r
+new_object = stuff %&gt;% filter(year == 1999)
+```
+
+
+Or like this: 
+
+
+```r
+new_object = 
+  stuff %&gt;% filter(year == 1999)
+```
+
+---
+
+
+# Naming objects
+
+&gt; There are only two hard things in Computer Science: cache invalidation and naming things.
+-- Phil Karlton
+
+
+Few rules: can't start with a number; use `_` to separate words
+
+
+```r
+# Good
+day_one
+day_1
+
+# Bad
+DayOne
+dayone
+first_day_of_the_month
+```
+
+---
+
+# The formula
+
+--
+
+1. *Wrangle* the data until you're satisfied with the output: 
+
+
+```r
+apples %&gt;% 
+  filter(sweet == FALSE)
+```
+
+
+--
+
+
+2. Store the output as a new object: 
+
+
+```r
+sour_apples = apples %&gt;% 
+  filter(sweet == FALSE)
+```
+
+
+--
+
+3. Use the new object (e.g., plotting):
+
+
+```r
+ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
+```
+
+
+---
+
+# 🚨 Your turn: election analyst 🚨
+
+Using the `elections` dataset:
+
+
+1. Identify the worst place I've ever lived: Donald Trump won by more than 53% of the vote, median household income is less than $45,000, it's either in the South or the Northeast, and the population is between 155,000 and 156,000. What county is it?
+
+2. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020.
+
+3. Make a (nice-looking!) barplot of 2020 results for a subset of your choosing and post on the Slack. 
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -2,6 +2,20 @@
 /* 
 Typography
 */
+
+kbd {
+    background-color: #000000;
+    border: 1px solid #b4b4b4;
+    color: #fff;
+    display: inline-block;
+    font-size: .85em;
+    font-weight: 700;
+    line-height: 1;
+    padding: 2px 4px;
+    white-space: nowrap;
+   }
+
+
 .remark-slide-content {
   font-size: 35px;
   /* Base font size */
