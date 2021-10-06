@@ -1,0 +1,433 @@
+---
+title: "Wrangling II"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(nycflights13)
+library(socviz)
+
+# dubois colors
+red = "#dc354a"
+yellow = "ecb025"
+blue = "#213772"
+
+
+# flights 
+flights_small = 
+  flights %>% 
+  select(month, day, dep_time, sched_dep_time, arr_time, sched_arr_time, 
+         origin, dest, air_time, distance)
+
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+<!-- class: center -->
+<!-- .large[ -->
+<!-- # Today's agenda -->
+<!-- ] -->
+
+<!-- -- -->
+<!-- .box-1.large.sp-after[Making amends] -->
+
+<!-- -- -->
+<!-- .box-2.large.sp-after[Creating new variables] -->
+
+<!-- -- -->
+<!-- .box-3.large.sp-after[Slicing, selecting, arranging] -->
+
+<!-- --- -->
+
+
+<!-- # The logical operators -->
+
+
+<!-- ```{r,echo = FALSE} -->
+<!-- tribble(~Operator, ~meaning,  -->
+<!--         "==", "equal to",  -->
+<!--         "!=", "not equal to",  -->
+<!--         ">", "greater than",  -->
+<!--         "<", "less than",  -->
+<!--         ">=", "greater than or equal to",  -->
+<!--         "<=", "less than or equal to",  -->
+<!--         "%in%", "is among the set",  -->
+<!--         "%", "AND (both conditions true)",  -->
+<!--         "|", "OR (either condition is true)") %>%  -->
+<!--   knitr::kable(align = "cc") -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # 🚨 Your turn: again 🚨 -->
+
+
+<!-- 1. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.  -->
+
+<!-- 2. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.  -->
+
+<!-- 3. Which counties in California did Romney beat Obama by more than 20 percentage points? Make a plot of your choosing about these counties.  -->
+
+
+<!-- ```{r} -->
+<!-- countdown::countdown(minutes = 5L) -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+
+<!-- # The formula -->
+
+<!-- -- -->
+
+<!-- - *Wrangle* the data until you're satisfied with the output:  -->
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- apples %>%  -->
+<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
+<!-- ``` -->
+
+
+<!-- -- -->
+
+
+<!-- - Store the output as a new object:  -->
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- sour_apples = apples %>% #<< -->
+<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
+<!-- ``` -->
+
+
+<!-- -- -->
+
+<!-- - Use the new object (e.g., plotting): -->
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col() -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+
+<!-- class: center, middle -->
+<!-- # Other wrangling functions -->
+
+<!-- -- -->
+
+<!-- There are many ways to **wrangle** data -->
+
+<!-- -- -->
+
+<!-- We will focus on a few of the most important ones -->
+
+<!-- --- -->
+
+
+<!-- # Keeping only a few columns with `select()` -->
+
+
+<!-- `select()` lets you keep (or get rid of) variables you don't want -->
+
+
+<!-- ```{r, out.width="60%"} -->
+<!-- knitr::include_graphics("images/select.png") -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+<!-- Keep only the year, month, and day:  -->
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights %>%  -->
+<!--   select(year, month, day) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Remember to store as an object! -->
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- flight_dates = flights %>% #<< -->
+<!--   select(year, month, day) -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Making new variables with `mutate()` -->
+
+
+<!-- `mutate()` **adds** new variables to data -->
+
+
+<!-- ```{r, out.width="60%"} -->
+<!-- knitr::include_graphics("images/mutate.png") -->
+<!-- ``` -->
+
+<!-- --- -->
+
+
+<!-- class: center, middle, inverse -->
+<!-- # How late are flights in departing? -->
+<!-- --- -->
+
+
+<!-- # How late are flights in departing?  -->
+
+
+<!-- .scroll-output[ -->
+<!-- ```{r} -->
+<!-- knitr::kable(sample_n(flights_small, 20)) -->
+<!-- ``` -->
+<!-- ] -->
+
+<!-- --- -->
+
+<!-- # How late? Calculate delay -->
+
+<!-- The difference between when they depart vs. were scheduled to depart = lateness -->
+
+<!-- .scroll-output[ -->
+<!-- ```{r, echo = TRUE} -->
+<!-- tiny_flights %>%  -->
+<!--   mutate(how_late = dep_time - sched_dep_time) #<< -->
+<!-- ``` -->
+<!-- ] -->
+
+<!-- --- -->
+
+<!-- # How late? Convert to hours -->
+
+<!-- scroll-output[ -->
+<!-- ```{r, echo = TRUE} -->
+<!-- tiny_flights %>%  -->
+<!--   mutate(how_late = dep_time - sched_dep_time) %>%  -->
+<!--   mutate(how_late_hrs = how_late/60) #<< -->
+<!-- ``` -->
+<!-- ] -->
+
+
+
+<!-- # Save your work! -->
+
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights_delay = tiny_flights %>% #<< -->
+<!--   mutate(how_late = dep_time - sched_dep_time) %>%  -->
+<!--   mutate(how_late_hrs = how_late/60) -->
+<!-- ``` -->
+
+
+<!-- Notice that the original `tiny_flights` does not have either of these new variables! -->
+
+<!-- --- -->
+
+
+<!-- # Look at the distribution of lateness -->
+
+
+
+<!-- ```{r, echo = TRUE} -->
+<!-- ggplot(flights_delay, aes(x = how_late_hrs)) +  -->
+<!--   geom_histogram() -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # 🚨 Your turn: using `elections` 🚨 -->
+
+
+<!-- 1. Calculate the difference in vote share between Dems and Republicans in 2016. Plot the distribution of this variable as a histogram.  -->
+
+<!-- 2.  -->
+
+
+<!-- ```{r} -->
+<!-- countdown::countdown(minutes = 5L) -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Creating categorical variables using `case_when()` -->
+
+
+<!-- Sometimes we want to create **categorical variables**  -->
+
+<!-- We can use `case_when()`, a special function that goes **within** mutate -->
+
+<!-- Like `filter()`, `case_when()` also relies on logical operators -->
+
+<!-- --- -->
+
+<!-- # Are flights late, on time, or early? -->
+
+<!-- scroll-output[ -->
+<!-- ```{r} -->
+<!-- flights_delay %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
+<!-- ] -->
+
+<!-- --- -->
+
+<!-- # Are flights late, on time, or early? -->
+
+
+<!-- ```{r} -->
+<!-- flights_delay %>%  -->
+<!--   mutate(late_status = case_when()) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Are flights late, on time, or early? -->
+
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- flights_delay %>%  -->
+<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late")) #<< -->
+<!-- ``` -->
+
+<!-- Read: if "how_late_hrs" is greater than zero, categorize as "Late" -->
+
+<!-- --- -->
+
+<!-- # Are flights late, on time, or early? -->
+
+
+<!-- ```{r} -->
+<!-- flights_delay %>%  -->
+<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late",  -->
+<!--                                  how_late_hrs == 0 ~ "On time")) #<< -->
+<!-- ``` -->
+
+
+<!-- Read: if "how_late_hrs" is equal to zero, categorize as "On time" -->
+
+
+<!-- --- -->
+
+<!-- # Are flights late, on time, or early? -->
+
+
+<!-- ```{r} -->
+<!-- flights_delay %>%  -->
+<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late",  -->
+<!--                                  how_late_hrs == 0 ~ "On time",  -->
+<!--                                  how_late_hrs < 0 ~ "Early")) #<< -->
+<!-- ``` -->
+
+
+<!-- Read: if "how_late_hrs" is greater than zero, categorize as "Early" -->
+
+
+<!-- --- -->
+
+
+<!-- # Store as object! -->
+
+
+<!-- ```{r} -->
+<!-- flight_status = flights_delay %>%  -->
+<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late",  -->
+<!--                                  how_late_hrs == 0 ~ "On time",  -->
+<!--                                  how_late_hrs < 0 ~ "Early")) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+
+<!-- # Now we can plot -->
+
+<!-- ```{r} -->
+<!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) +  -->
+<!--   geom_histogram() -->
+<!-- ``` -->
+
+<!-- --- -->
+
+
+<!-- # 🚨 Your turn: again 🚨 -->
+
+
+<!-- 1. Who won each county in 2020? Create a variable that tells you who won.  -->
+
+<!-- 2.  -->
+
+
+<!-- ```{r} -->
+<!-- countdown::countdown(minutes = 5L) -->
+<!-- ``` -->
+
+
+<!-- --- -->

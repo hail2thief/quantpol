@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Wrangling II</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-10-06" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Wrangling II
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+&lt;!-- class: center --&gt;
+&lt;!-- .large[ --&gt;
+&lt;!-- # Today's agenda --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- -- --&gt;
+&lt;!-- .box-1.large.sp-after[Making amends] --&gt;
+
+&lt;!-- -- --&gt;
+&lt;!-- .box-2.large.sp-after[Creating new variables] --&gt;
+
+&lt;!-- -- --&gt;
+&lt;!-- .box-3.large.sp-after[Slicing, selecting, arranging] --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # The logical operators --&gt;
+
+
+&lt;!-- ```{r,echo = FALSE} --&gt;
+&lt;!-- tribble(~Operator, ~meaning,  --&gt;
+&lt;!--         "==", "equal to",  --&gt;
+&lt;!--         "!=", "not equal to",  --&gt;
+&lt;!--         "&gt;", "greater than",  --&gt;
+&lt;!--         "&lt;", "less than",  --&gt;
+&lt;!--         "&gt;=", "greater than or equal to",  --&gt;
+&lt;!--         "&lt;=", "less than or equal to",  --&gt;
+&lt;!--         "%in%", "is among the set",  --&gt;
+&lt;!--         "%", "AND (both conditions true)",  --&gt;
+&lt;!--         "|", "OR (either condition is true)") %&gt;%  --&gt;
+&lt;!--   knitr::kable(align = "cc") --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # 🚨 Your turn: again 🚨 --&gt;
+
+
+&lt;!-- 1. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.  --&gt;
+
+&lt;!-- 2. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.  --&gt;
+
+&lt;!-- 3. Which counties in California did Romney beat Obama by more than 20 percentage points? Make a plot of your choosing about these counties.  --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- countdown::countdown(minutes = 5L) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # The formula --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - *Wrangle* the data until you're satisfied with the output:  --&gt;
+
+&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
+&lt;!-- apples %&gt;%  --&gt;
+&lt;!--   filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- - Store the output as a new object:  --&gt;
+
+&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
+&lt;!-- sour_apples = apples %&gt;% #&lt;&lt; --&gt;
+&lt;!--   filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- -- --&gt;
+
+&lt;!-- - Use the new object (e.g., plotting): --&gt;
+
+&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
+&lt;!-- ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col() --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- class: center, middle --&gt;
+&lt;!-- # Other wrangling functions --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- There are many ways to **wrangle** data --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- We will focus on a few of the most important ones --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # Keeping only a few columns with `select()` --&gt;
+
+
+&lt;!-- `select()` lets you keep (or get rid of) variables you don't want --&gt;
+
+
+&lt;!-- ```{r, out.width="60%"} --&gt;
+&lt;!-- knitr::include_graphics("images/select.png") --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Using `select()` --&gt;
+
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- flights --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Using `select()` --&gt;
+
+&lt;!-- Keep only the year, month, and day:  --&gt;
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- flights %&gt;%  --&gt;
+&lt;!--   select(year, month, day) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Remember to store as an object! --&gt;
+
+&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
+&lt;!-- flight_dates = flights %&gt;% #&lt;&lt; --&gt;
+&lt;!--   select(year, month, day) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Making new variables with `mutate()` --&gt;
+
+
+&lt;!-- `mutate()` **adds** new variables to data --&gt;
+
+
+&lt;!-- ```{r, out.width="60%"} --&gt;
+&lt;!-- knitr::include_graphics("images/mutate.png") --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- class: center, middle, inverse --&gt;
+&lt;!-- # How late are flights in departing? --&gt;
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # How late are flights in departing?  --&gt;
+
+
+&lt;!-- .scroll-output[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- knitr::kable(sample_n(flights_small, 20)) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # How late? Calculate delay --&gt;
+
+&lt;!-- The difference between when they depart vs. were scheduled to depart = lateness --&gt;
+
+&lt;!-- .scroll-output[ --&gt;
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- tiny_flights %&gt;%  --&gt;
+&lt;!--   mutate(how_late = dep_time - sched_dep_time) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # How late? Convert to hours --&gt;
+
+&lt;!-- scroll-output[ --&gt;
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- tiny_flights %&gt;%  --&gt;
+&lt;!--   mutate(how_late = dep_time - sched_dep_time) %&gt;%  --&gt;
+&lt;!--   mutate(how_late_hrs = how_late/60) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+
+
+&lt;!-- # Save your work! --&gt;
+
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- flights_delay = tiny_flights %&gt;% #&lt;&lt; --&gt;
+&lt;!--   mutate(how_late = dep_time - sched_dep_time) %&gt;%  --&gt;
+&lt;!--   mutate(how_late_hrs = how_late/60) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- Notice that the original `tiny_flights` does not have either of these new variables! --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # Look at the distribution of lateness --&gt;
+
+
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- ggplot(flights_delay, aes(x = how_late_hrs)) +  --&gt;
+&lt;!--   geom_histogram() --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # 🚨 Your turn: using `elections` 🚨 --&gt;
+
+
+&lt;!-- 1. Calculate the difference in vote share between Dems and Republicans in 2016. Plot the distribution of this variable as a histogram.  --&gt;
+
+&lt;!-- 2.  --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- countdown::countdown(minutes = 5L) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Creating categorical variables using `case_when()` --&gt;
+
+
+&lt;!-- Sometimes we want to create **categorical variables**  --&gt;
+
+&lt;!-- We can use `case_when()`, a special function that goes **within** mutate --&gt;
+
+&lt;!-- Like `filter()`, `case_when()` also relies on logical operators --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Are flights late, on time, or early? --&gt;
+
+&lt;!-- scroll-output[ --&gt;
+&lt;!-- ```{r} --&gt;
+&lt;!-- flights_delay %&gt;%  --&gt;
+&lt;!--   knitr::kable() --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Are flights late, on time, or early? --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- flights_delay %&gt;%  --&gt;
+&lt;!--   mutate(late_status = case_when()) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Are flights late, on time, or early? --&gt;
+
+
+&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
+&lt;!-- flights_delay %&gt;%  --&gt;
+&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late")) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- Read: if "how_late_hrs" is greater than zero, categorize as "Late" --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Are flights late, on time, or early? --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- flights_delay %&gt;%  --&gt;
+&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late",  --&gt;
+&lt;!--                                  how_late_hrs == 0 ~ "On time")) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- Read: if "how_late_hrs" is equal to zero, categorize as "On time" --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Are flights late, on time, or early? --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- flights_delay %&gt;%  --&gt;
+&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late",  --&gt;
+&lt;!--                                  how_late_hrs == 0 ~ "On time",  --&gt;
+&lt;!--                                  how_late_hrs &lt; 0 ~ "Early")) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- Read: if "how_late_hrs" is greater than zero, categorize as "Early" --&gt;
+
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # Store as object! --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- flight_status = flights_delay %&gt;%  --&gt;
+&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late",  --&gt;
+&lt;!--                                  how_late_hrs == 0 ~ "On time",  --&gt;
+&lt;!--                                  how_late_hrs &lt; 0 ~ "Early")) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # Now we can plot --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) +  --&gt;
+&lt;!--   geom_histogram() --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # 🚨 Your turn: again 🚨 --&gt;
+
+
+&lt;!-- 1. Who won each county in 2020? Create a variable that tells you who won.  --&gt;
+
+&lt;!-- 2.  --&gt;
+
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- countdown::countdown(minutes = 5L) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

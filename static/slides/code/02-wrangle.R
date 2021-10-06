@@ -1,6 +1,7 @@
 # load libraries
 library(tidyverse)
 library(nycflights13)
+library(socviz)
 
 
 # make a smaller version of the flights dataset
@@ -14,11 +15,8 @@ flights_small =
 # do your work here!
 
 
-
-
-
 # elections data
-elections = read_rds(url("https://www.dropbox.com/s/2ne4v0yhfgnw1wd/elections.rds?dl=1"))
+elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl=1")
 
 
 

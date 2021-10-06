@@ -23,5 +23,5 @@ merged = left_join(elec_2020, county_small, by = "fips") %>%
   relocate(c(per_gop_2020, per_dem_2020), .after = last_col()) 
 
 
-write_rds(merged, "/Users/juan/Dropbox/websites/poli-301/static/files/elections.rds")
+write_csv(merged, "/Users/juan/Dropbox/websites/poli-301/static/files/elections.csv")
 
