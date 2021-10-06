@@ -74,7 +74,7 @@ class: center
 ]
 
 --
-.box-1.large.sp-after[The pipe]
+.box-1.large.sp-after[Wrangling and pipes]
 
 --
 .box-2.large.sp-after[`filter()` and logical operators]
@@ -94,7 +94,7 @@ Before, I  *wrangled* data and you plotted the finished product
 
 --
 
-Step 1 of all your code was `ggplot()`
+First step of all your code was `ggplot()`
 
 
 --
@@ -103,12 +103,23 @@ Now, **you** will wrangle the data
 
 --
 
-Step 1 is *the data object*
+First step is now *the data object*
+
+---
+
+class: center, middle
+# What is data-wrangling?
+
+--
+
+
+>  ...the process of transforming and mapping data from one "raw" data form into another format with the intent of making it more appropriate and valuable for a variety of downstream purposes such as analytics... **Data analysts typically spend the majority of their time in the process of data wrangling compared to the actual analysis of the data.** -- Wikipedia
+
 
 ---
 
 
-# Step two: the pipe
+# Pipes: connecting data to functions
 
 
 ```{r, echo = TRUE, eval = FALSE}
@@ -123,6 +134,7 @@ movies `%>%`
                             year >= 2010 ~ "2010s"))
 ```
 
+You've seen these before...
 
 ---
 
@@ -131,7 +143,7 @@ movies `%>%`
 
 
 .pull-left[
-- **Pipes** are a programming tool to string a series of functions on an object
+- **Pipes** allow you to string together a series of function calls on an object
 
 - They look like this in R: ` %>% `
 
@@ -150,6 +162,8 @@ knitr::include_graphics("images/not-pipe.jpeg")
 # Why pipes? 
 
 
+--
+
 
 With pipes: 😍
 
@@ -161,6 +175,7 @@ penguins %>%
 ```
 
 
+--
 
 
 
@@ -189,24 +204,11 @@ movies `%>%`
                             year >= 2010 ~ "2010s"))
 ```
 
-> Take the object movies, AND THEN filter such that year is greater than or equal to 1980, AND THEN...
+> Take the object `movies`, AND THEN `filter` such that year is greater than or equal to 1980, AND THEN `mutate` so that...
 
 
 ---
 
-# The formula
-
-
-```{r,echo = TRUE, eval = FALSE}
-THE DATA %>% 
-  FIRST FUNCTION %>% 
-  ANOTHER FUNCTION %>% 
-  YET ANOTHER FUNCTION
-```
-
-
-
----
 
 
 class: center
@@ -234,10 +236,27 @@ Subset `babynames` to only babies named `Elizabeth`
 
 ---
 
+class: center, middle
+# Why filter? 
+
+--
+
+Lots of real-world **applications**: finding flights, addresses, IDs, etc.
+
+--
+
+Sometimes we want to focus on a specific **subset** of data: the South, Latin America, etc.
+
+--
+
+Deal with common problems: outliers, missing data, strange responses
+
+---
+
 # Using `filter()`
 
 
-To use `filter()`, we need to tell R which **observations** we want to include (or exclude) using rules
+To use `filter()`, we need to tell R which **observations** we want to include (or exclude) using *rules*
 
 --
 
@@ -247,26 +266,26 @@ baby_subset <- babynames %>%
 ```
 
 
-> take `babynames` and return all observations where the `name` variable *is equal to* "Elizabeth"
+Rule: return all observations from `babynames` where the `name` variable **is equal to** "Elizabeth"
 
 
 ---
 
-# Setting up rules: logical operators
+# Making the rules: logical operators
 
 
 .pull-left[
-Filtering rules rely on **logical operators**
+Rules filter data based on whether **variables** meet certain criteria
 
-We filter data based on whether **variables** meet certain criteria
+Rules rely on **logical operators**:
 
-Equal to, not equal to, less than, more than, included in, etc.
+  - Equal to, not equal to, less than, more than, included in, etc.
 
 
 ]
 
 .pull-right[
-```{r}
+```{r, out.width="90%"}
 knitr::include_graphics("images/ben.jpeg")
 ```
 ]
@@ -284,8 +303,10 @@ tribble(~Operator, ~meaning,
         "<", "less than", 
         ">=", "greater than or equal to", 
         "<=", "less than or equal to", 
-        "%in%", "is among the set") %>% 
-  knitr::kable()
+        "%in%", "is among the set", 
+        "%", "AND (both conditions true)", 
+        "|", "OR (either condition is true)") %>% 
+  knitr::kable(align = "cc")
 ```
 
 ???
@@ -315,7 +336,7 @@ apples %>%
   filter(color == "green") #<<
 ```
 
-
+Notice words are in quotations!
 
 ---
 
@@ -327,29 +348,38 @@ apples %>%
   filter(sweet == FALSE) #<<
 ```
 
+Notice TRUE/FALSE are all-caps!
+
+--
 
 Same as:
 
 
 ```{r,echo = TRUE, eval = FALSE}
-apples %>% 
-  filter(color == "green", sweet == FALSE) #<<
+apples %>% filter(color == "green", sweet == FALSE) #<<
 ```
 
 ---
 
 
 
-# Apples that are at least 4 pounds
+# At least 4 pounds but less than 6
 
 ```{r,echo = TRUE}
 apples %>% 
-  filter(pounds >= 4)
+  filter(pounds >= 4, pounds < 6)
 ```
+
+
+Notice that *at least* implies *greater than or equal to*
+
 
 ---
 
-## Apples that are either Fuji or Gala and weigh more than two pounds
+# Using `%in%`
+
+
+Apples named either Fuji or Gala and weigh more than 2 pounds:
 
 ```{r,echo = TRUE}
 apples %>% 
@@ -357,22 +387,26 @@ apples %>%
   filter(pounds > 2)
 ```
 
-> Notice how "lists" of things are wrapped in `c()`
+Notice how "lists" of things are wrapped in `c()`
 
 ---
 
-## Combining rules
+# Combinations: the AND operator (&)
 
-You can combine multiple rules using the AND (`&`) operator
 
-"Observations where either *this* is true **AND** *that* is true"
+The `&` operator can be used to combine rules
 
+Returns observations where *both* rules are true
+
+--
 
 ```{r, echo = TRUE, eval = FALSE}
 # apples that are red AND sweet
 apples %>% 
   filter(color == "red" `&` sweet == TRUE)
 ```
+
+--
 
 
 Same as:
@@ -388,10 +422,8 @@ apples %>%
 
 ---
 
-## The OR operator
+# Combinations: The OR (|) operator
 
-
-The `|` allows you to combine **mutually exclusive** conditions
 
 "Observations where either *this* is true **OR** *that* is true"
 
@@ -403,6 +435,8 @@ apples %>%
 ```
 
 
+The <kbd>|</kbd>  should be above your Return/Enter key!
+
 ---
 
 # 🚨 Your turn: find the flights 🚨
@@ -410,7 +444,8 @@ apples %>%
 .scroll-output[
 ```{r}
 flights %>% 
-  slice(1:10) %>% 
+  select(month, day, origin, dest, carrier, dep_time, arr_time) %>% 
+  sample_n(20) %>% 
   knitr::kable()
 ```
 ]
@@ -427,16 +462,17 @@ Using the `flights_small` object, find the following:
 
 --
 
-1. Flights to Fort Lauderdale or Miami, in April
+1. Flights in the winter that took off between 8:13am and 12:59pm
 
 --
 
-2. Flights in the winter that took off between 8:13am and 12:59pm
+2. How many flights arrived late on Thanksgiving Day or Christmas Eve?
 
 --
 
-3. How many flights arrived late on Thanksgiving Day or Christmas Eve?
+3. Spring break flights to Fort Lauderdale or Miami from JFK, in April
 
+--
 
 
 ```{r}
@@ -447,6 +483,8 @@ countdown::countdown(minutes = 10L)
 
 # The last step: creating objects
 
+--
+
 
 Step 1-2: the data, the pipe, the wrangling functions
 
@@ -455,6 +493,8 @@ Step 1-2: the data, the pipe, the wrangling functions
 flights_small %>% 
   filter(dest == "FLL")
 ```
+
+--
 
 Step 3: store the subsetted data as a new **object** for later use
 
@@ -502,6 +542,7 @@ day_1
 # Bad
 DayOne
 dayone
+1day
 first_day_of_the_month
 ```
 
@@ -511,7 +552,7 @@ first_day_of_the_month
 
 --
 
-1. *Wrangle* the data until you're satisfied with the output: 
+- *Wrangle* the data until you're satisfied with the output: 
 
 ```{r, echo = TRUE, eval = FALSE}
 apples %>% 
@@ -522,7 +563,7 @@ apples %>%
 --
 
 
-2. Store the output as a new object: 
+- Store the output as a new object: 
 
 ```{r, echo = TRUE, eval = FALSE}
 sour_apples = apples %>% 
@@ -532,7 +573,7 @@ sour_apples = apples %>%
 
 --
 
-3. Use the new object (e.g., plotting):
+- Use the new object (e.g., plotting):
 
 ```{r, echo = TRUE, eval = FALSE}
 ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
@@ -545,11 +586,20 @@ ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
 
 Using the `elections` dataset:
 
+.small[
+1. Find the worst place I've lived: Trump won with more than 53% of the vote, median income is less than $45,000, either in the South or the Northeast, and the population is between 155k and 156k. What county is it?
 
-1. Identify the worst place I've ever lived: Donald Trump won by more than 53% of the vote, median household income is less than $45,000, it's either in the South or the Northeast, and the population is between 155,000 and 156,000. What county is it?
+2. Make a histogram of Democratic performance in the South in 2020, excluding Florida.
 
-2. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020.
+3. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020. Make a plot of your choosing about these counties.
 
-3. Make a (nice-looking!) barplot of 2020 results for a subset of your choosing and post on the Slack. 
+4. Identify the counties where Trump outperformed Romney by 15 points. Make a (nice) barplot of these counties and their vote shares. 
+]
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
 
 ---
+
+

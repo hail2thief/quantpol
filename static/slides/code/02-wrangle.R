@@ -19,3 +19,7 @@ flights_small =
 
 # elections data
 elections = read_rds(url("https://www.dropbox.com/s/2ne4v0yhfgnw1wd/elections.rds?dl=1"))
+
+
+
+# do your work here!

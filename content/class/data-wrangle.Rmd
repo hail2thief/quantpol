@@ -17,306 +17,314 @@ editor_options:
 
 
 
+## In-class example
 
-## Filtering
 
-Often, we have a big dataset that covers lots of stuff (say, all flights coming out of NYC in 2013) but we're only interested in a *subset* of those things (say, flights that arrived late over that time period). The `filter()` function is a way to subset operations that match some rule or set of rules (e.g., rule = "flights that arrived late"). We define these rules using [logical operators](https://www.statmethods.net/management/operators.html). 
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as..."
 
+[<i class="fas fa-file-archive"></i> `data-wrangle.R`](/slides/code/02-wrangle.R)
 
-### Examples
 
 
-Let's load the libraries. 
+<!-- ## Filtering -->
 
-```{r, message=F,warning=F}
-# libraries
-library(tidyverse)
-library(nycflights13)
-```
+<!-- Often, we have a big dataset that covers lots of stuff (say, all flights coming out of NYC in 2013) but we're only interested in a *subset* of those things (say, flights that arrived late over that time period). The `filter()` function is a way to subset operations that match some rule or set of rules (e.g., rule = "flights that arrived late"). We define these rules using [logical operators](https://www.statmethods.net/management/operators.html).  -->
 
 
-Remember you can look at the data like this. 
+<!-- ### Examples -->
 
-```{r, eval=F}
-# look at the data
-View(flights) # open data in viewer
-?flights # read data documentation
-```
 
+<!-- Let's load the libraries.  -->
 
-Let's look at flights from February.
+<!-- ```{r, message=F,warning=F} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- library(nycflights13) -->
+<!-- ``` -->
 
-```{r}
-# look at fights, but only from February
-flights %>% 
-  filter(month == 2)
-```
 
+<!-- Remember you can look at the data like this.  -->
 
-Let's look at flights on Valentine's Day. 
+<!-- ```{r, eval=F} -->
+<!-- # look at the data -->
+<!-- View(flights) # open data in viewer -->
+<!-- ?flights # read data documentation -->
+<!-- ``` -->
 
-```{r}
-# now let's look at flights on Valentine's Day
-flights %>% 
-  filter(month == 2) %>% 
-  filter(day == 14)
-```
 
+<!-- Let's look at flights from February. -->
 
-Let's try the OR logical operator by looking at flights going to ATL or SFO.
+<!-- ```{r} -->
+<!-- # look at fights, but only from February -->
+<!-- flights %>%  -->
+<!--   filter(month == 2) -->
+<!-- ``` -->
 
-```{r}
-# try one using text and the OR symbol
-# look at fights going to ATL or SFO
-flights %>% 
-  filter(dest == "ATL" | dest == "SFO")
 
-```
+<!-- Let's look at flights on Valentine's Day.  -->
 
+<!-- ```{r} -->
+<!-- # now let's look at flights on Valentine's Day -->
+<!-- flights %>%  -->
+<!--   filter(month == 2) %>%  -->
+<!--   filter(day == 14) -->
+<!-- ``` -->
 
-Let's look at flights between noon and 5pm.
 
-```{r}
-# try one using greater than or less than
-# look at flights departing between 12pm and 5pm
-flights %>% 
-  filter(dep_time >= 1200) %>% 
-  filter(dep_time <= 1700)
+<!-- Let's try the OR logical operator by looking at flights going to ATL or SFO. -->
 
-```
+<!-- ```{r} -->
+<!-- # try one using text and the OR symbol -->
+<!-- # look at fights going to ATL or SFO -->
+<!-- flights %>%  -->
+<!--   filter(dest == "ATL" | dest == "SFO") -->
 
-Let's look at how many flights arrived late on christmas day.
+<!-- ``` -->
 
-```{r}
-## how many flights arrived LATE, on christmas day?
-late_xmas = flights %>% 
-  filter(arr_time > sched_arr_time) %>% 
-  filter(month == 12, day == 25)
 
-```
+<!-- Let's look at flights between noon and 5pm. -->
 
+<!-- ```{r} -->
+<!-- # try one using greater than or less than -->
+<!-- # look at flights departing between 12pm and 5pm -->
+<!-- flights %>%  -->
+<!--   filter(dep_time >= 1200) %>%  -->
+<!--   filter(dep_time <= 1700) -->
 
-Let's look up the flight that Alex told us about.
+<!-- ``` -->
 
-```{r}
-## alex search terms: 
-## flight was in august
-## at least 15 minutes late in departing
-## headed to BOSTON
-flights %>% 
-  filter(dest == "BOS") %>% 
-  filter(month == 8) %>% 
-  filter(dep_delay >= 15)
-```
+<!-- Let's look at how many flights arrived late on christmas day. -->
 
+<!-- ```{r} -->
+<!-- ## how many flights arrived LATE, on christmas day? -->
+<!-- late_xmas = flights %>%  -->
+<!--   filter(arr_time > sched_arr_time) %>%  -->
+<!--   filter(month == 12, day == 25) -->
 
+<!-- ``` -->
 
-## Mutating 
 
-Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this. 
+<!-- Let's look up the flight that Alex told us about. -->
 
+<!-- ```{r} -->
+<!-- ## alex search terms:  -->
+<!-- ## flight was in august -->
+<!-- ## at least 15 minutes late in departing -->
+<!-- ## headed to BOSTON -->
+<!-- flights %>%  -->
+<!--   filter(dest == "BOS") %>%  -->
+<!--   filter(month == 8) %>%  -->
+<!--   filter(dep_delay >= 15) -->
+<!-- ``` -->
 
-Let's convert arrival delay from minutes to hours. 
 
-```{r}
-## convert arrival_delay to hours
-new_flights = flights %>% 
-  mutate(arr_delay_hrs = arr_delay/60)
-```
 
-If you look in the dataset you will see a new variable called `arr_delay_hrs`. 
+<!-- ## Mutating  -->
 
+<!-- Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this.  -->
 
-Let's convert distance traveled from miles to thousands of miles. 
 
-```{r}
-## convert distance to thousands of miles
-new_flights2 = flights %>% 
-  mutate(dist_miles = distance/1000)
-```
+<!-- Let's convert arrival delay from minutes to hours.  -->
 
+<!-- ```{r} -->
+<!-- ## convert arrival_delay to hours -->
+<!-- new_flights = flights %>%  -->
+<!--   mutate(arr_delay_hrs = arr_delay/60) -->
+<!-- ``` -->
 
-### Creating categorical variables
+<!-- If you look in the dataset you will see a new variable called `arr_delay_hrs`.  -->
 
-Sometimes we want to create more complicated variables. Here's where [case_when](https://dplyr.tidyverse.org/reference/case_when.html) comes into play. 
 
+<!-- Let's convert distance traveled from miles to thousands of miles.  -->
 
-Let's create a variable that tells us what season a flight took off in. 
+<!-- ```{r} -->
+<!-- ## convert distance to thousands of miles -->
+<!-- new_flights2 = flights %>%  -->
+<!--   mutate(dist_miles = distance/1000) -->
+<!-- ``` -->
 
-```{r}
-## create a new variable called season
-## that tells me if flight departed
-## in summer, winter, fall, or spring
-new_flights = flights %>% 
-  mutate(seasons = case_when(month == 6 ~ "Summer", 
-                             month == 7 ~ "Summer",
-                             month == 8 ~ "Summer", 
-                             month == 9 ~ "Fall", 
-                             month == 10 ~ "Fall", 
-                             month == 11 ~ "Fall", 
-                             month == 12 ~ "Winter", 
-                             month == 1 ~ "Winter", 
-                             month == 2 ~ "Winter", 
-                             month == 3 ~ "Spring", 
-                             month == 4 ~ "Spring", 
-                             month == 5 ~ "Spring"))
 
-```
+<!-- ### Creating categorical variables -->
 
+<!-- Sometimes we want to create more complicated variables. Here's where [case_when](https://dplyr.tidyverse.org/reference/case_when.html) comes into play.  -->
 
-We can then plot the distribution of arrival delays by season, below. 
 
-```{r}
-# plot histogram of arrival delay
-# separate it by season
-ggplot(new_flights, aes(x = arr_delay, fill = seasons)) + 
-  geom_histogram() + 
-  facet_wrap(vars(seasons))
-```
+<!-- Let's create a variable that tells us what season a flight took off in.  -->
 
+<!-- ```{r} -->
+<!-- ## create a new variable called season -->
+<!-- ## that tells me if flight departed -->
+<!-- ## in summer, winter, fall, or spring -->
+<!-- new_flights = flights %>%  -->
+<!--   mutate(seasons = case_when(month == 6 ~ "Summer",  -->
+<!--                              month == 7 ~ "Summer", -->
+<!--                              month == 8 ~ "Summer",  -->
+<!--                              month == 9 ~ "Fall",  -->
+<!--                              month == 10 ~ "Fall",  -->
+<!--                              month == 11 ~ "Fall",  -->
+<!--                              month == 12 ~ "Winter",  -->
+<!--                              month == 1 ~ "Winter",  -->
+<!--                              month == 2 ~ "Winter",  -->
+<!--                              month == 3 ~ "Spring",  -->
+<!--                              month == 4 ~ "Spring",  -->
+<!--                              month == 5 ~ "Spring")) -->
 
-Let's say we wanted to categorize flights by how late they are. See an example, below. 
+<!-- ``` -->
 
-```{r}
-new_flights = flights %>% 
-  mutate(time_flight = case_when(arr_delay >= 120 ~ "very late",
-                                 arr_delay > 0 & arr_delay < 120 ~ "a little late", 
-                                 arr_delay == 0 ~ "on time", 
-                                 arr_delay < 0 & arr_delay > -120 ~ "a little early", 
-                                 arr_delay <=-120 ~ "very early"))
 
-```
+<!-- We can then plot the distribution of arrival delays by season, below.  -->
 
+<!-- ```{r} -->
+<!-- # plot histogram of arrival delay -->
+<!-- # separate it by season -->
+<!-- ggplot(new_flights, aes(x = arr_delay, fill = seasons)) +  -->
+<!--   geom_histogram() +  -->
+<!--   facet_wrap(vars(seasons)) -->
+<!-- ``` -->
 
-## Summarize
 
+<!-- Let's say we wanted to categorize flights by how late they are. See an example, below.  -->
 
-Say we want to take the average of a variable in our dataset. `summarize()` can help us do that. 
+<!-- ```{r} -->
+<!-- new_flights = flights %>%  -->
+<!--   mutate(time_flight = case_when(arr_delay >= 120 ~ "very late", -->
+<!--                                  arr_delay > 0 & arr_delay < 120 ~ "a little late",  -->
+<!--                                  arr_delay == 0 ~ "on time",  -->
+<!--                                  arr_delay < 0 & arr_delay > -120 ~ "a little early",  -->
+<!--                                  arr_delay <=-120 ~ "very early")) -->
 
+<!-- ``` -->
 
-Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been? 
 
-```{r}
-## on average, how late are flights in departing? 
-flights %>% 
-  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
-            most_late = max(dep_delay, na.rm = TRUE))
-```
+<!-- ## Summarize -->
 
 
-Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. 
+<!-- Say we want to take the average of a variable in our dataset. `summarize()` can help us do that.  -->
 
 
-## Summarize + group_by()
+<!-- Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been?  -->
 
+<!-- ```{r} -->
+<!-- ## on average, how late are flights in departing?  -->
+<!-- flights %>%  -->
+<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE),  -->
+<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
+<!-- ``` -->
 
-Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`.
 
+<!-- Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations.  -->
 
-```{r}
-# what if we wanted to know these statistics
-## for each month in our dataset? 
-carrier_late = flights %>% 
-  group_by(carrier) %>% 
-  summarise(avg_late = mean(dep_delay, na.rm = TRUE), 
-            most_late = max(dep_delay, na.rm = TRUE))
 
+<!-- ## Summarize + group_by() -->
 
-# make a plot
-ggplot(carrier_late, aes(x = carrier, y = avg_late)) + 
-  geom_col() + 
-  coord_flip()
-```
 
+<!-- Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`. -->
 
 
-## Activity
+<!-- ```{r} -->
+<!-- # what if we wanted to know these statistics -->
+<!-- ## for each month in our dataset?  -->
+<!-- carrier_late = flights %>%  -->
+<!--   group_by(carrier) %>%  -->
+<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE),  -->
+<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
 
 
-Copy this into RStudio. You will need to install `socviz`.
+<!-- # make a plot -->
+<!-- ggplot(carrier_late, aes(x = carrier, y = avg_late)) +  -->
+<!--   geom_col() +  -->
+<!--   coord_flip() -->
+<!-- ``` -->
 
-```{r}
-# load the libraries
-library(tidyverse)
-library(socviz)
 
 
-# get the data
-election = county_data %>% 
-  select(name, state, pop, female, white, black, 
-         land_area, hh_income, travel_time,
-         votes_dem_2016, votes_gop_2016, total_votes_2016, 
-         per_dem_2012, per_gop_2012)
-```
+<!-- ## Activity -->
 
 
-### Question 1: 
+<!-- Copy this into RStudio. You will need to install `socviz`. -->
 
-Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results. 
+<!-- ```{r} -->
+<!-- # load the libraries -->
+<!-- library(tidyverse) -->
+<!-- library(socviz) -->
 
 
-```{r}
-# question 1
-state_dems = election %>% 
-  filter(state == "AL" | state == "NC" | state == "SC" | state == "FL") %>% 
-  group_by(state) %>% 
-  summarise(total_dem = sum(votes_dem_2016, na.rm = TRUE), 
-            total_votes = sum(total_votes_2016, na.rm = TRUE)) %>% 
-  mutate(pct_dem = total_dem/total_votes)
+<!-- # get the data -->
+<!-- election = county_data %>%  -->
+<!--   select(name, state, pop, female, white, black,  -->
+<!--          land_area, hh_income, travel_time, -->
+<!--          votes_dem_2016, votes_gop_2016, total_votes_2016,  -->
+<!--          per_dem_2012, per_gop_2012) -->
+<!-- ``` -->
 
-ggplot(state_dems, aes(x = state, y = pct_dem)) + geom_col() + coord_flip()
-```
 
+<!-- ### Question 1:  -->
 
+<!-- Find the percent of votes DEM won in each state in THE SOUTH in 2016, and make a barplot of the results.  -->
 
 
-###  question 2:
+<!-- ```{r} -->
+<!-- # question 1 -->
+<!-- state_dems = election %>%  -->
+<!--   filter(state == "AL" | state == "NC" | state == "SC" | state == "FL") %>%  -->
+<!--   group_by(state) %>%  -->
+<!--   summarise(total_dem = sum(votes_dem_2016, na.rm = TRUE),  -->
+<!--             total_votes = sum(total_votes_2016, na.rm = TRUE)) %>%  -->
+<!--   mutate(pct_dem = total_dem/total_votes) -->
 
-Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers. 
+<!-- ggplot(state_dems, aes(x = state, y = pct_dem)) + geom_col() + coord_flip() -->
+<!-- ``` -->
 
 
-```{r}
-new_election = election %>% 
-  mutate(per_dem_2016 = votes_dem_2016/total_votes_2016) %>% 
-  # where did dems improve?
-  mutate(improved = case_when(per_dem_2016 > per_dem_2012 ~ "Yes", 
-                              TRUE ~ "No"))
 
 
-ggplot(new_election, aes(x = per_dem_2012, 
-                         y = per_dem_2016, 
-                         color = improved)) + geom_point() + 
-  labs(x = "Democrat vote share in 2012", 
-       y = "Democrat vote share in 2016", 
-       title = "Comparison of 2016 and 2012 Presidential Election Performance",
-       color = "Did Dems improve?") + 
-  theme_light() + 
-  scale_y_continuous(labels = scales::percent) + 
-  scale_x_continuous(labels = scales::percent) + 
-  theme(legend.position = "bottom")
-```
+<!-- ###  question 2: -->
 
+<!-- Figure out the percent of the vote DEMS got in 2016, by county. Plot the relationship between 2012 and 2016 vote share as a scatterplot. Identify outliers and describe why they are outliers.  -->
 
 
+<!-- ```{r} -->
+<!-- new_election = election %>%  -->
+<!--   mutate(per_dem_2016 = votes_dem_2016/total_votes_2016) %>%  -->
+<!--   # where did dems improve? -->
+<!--   mutate(improved = case_when(per_dem_2016 > per_dem_2012 ~ "Yes",  -->
+<!--                               TRUE ~ "No")) -->
 
-### Question 3:
 
-Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same? 
+<!-- ggplot(new_election, aes(x = per_dem_2012,  -->
+<!--                          y = per_dem_2016,  -->
+<!--                          color = improved)) + geom_point() +  -->
+<!--   labs(x = "Democrat vote share in 2012",  -->
+<!--        y = "Democrat vote share in 2016",  -->
+<!--        title = "Comparison of 2016 and 2012 Presidential Election Performance", -->
+<!--        color = "Did Dems improve?") +  -->
+<!--   theme_light() +  -->
+<!--   scale_y_continuous(labels = scales::percent) +  -->
+<!--   scale_x_continuous(labels = scales::percent) +  -->
+<!--   theme(legend.position = "bottom") -->
+<!-- ``` -->
 
 
-```{r}
-flips = election %>% 
-  mutate(winner_2016 = case_when(votes_dem_2016 > votes_gop_2016 ~ "D", 
-                                 votes_dem_2016 < votes_gop_2016 ~ "R",
-                                 votes_dem_2016 == votes_gop_2016 ~ "Tie")) %>% 
-  mutate(winner_2012 = case_when(per_dem_2012 > per_gop_2012 ~ "D", 
-                                 per_dem_2012 < per_gop_2012 ~ "R",
-                                 per_dem_2012 == per_gop_2012 ~ "Tie")) %>% 
-  mutate(flipped = case_when(winner_2016 != winner_2012 ~ "Flipped", 
-                             winner_2016 == winner_2012 ~ "Didn't Flip"))
 
 
-flips %>% 
-  count(flipped)
-```
+<!-- ### Question 3: -->
+
+<!-- Create a variable that tells you who won each county in 2016 and in 2012. Then construct a variable that tells you whether a county flipped from one party to the other. How many counties flipped? How many stayed the same?  -->
+
+
+<!-- ```{r} -->
+<!-- flips = election %>%  -->
+<!--   mutate(winner_2016 = case_when(votes_dem_2016 > votes_gop_2016 ~ "D",  -->
+<!--                                  votes_dem_2016 < votes_gop_2016 ~ "R", -->
+<!--                                  votes_dem_2016 == votes_gop_2016 ~ "Tie")) %>%  -->
+<!--   mutate(winner_2012 = case_when(per_dem_2012 > per_gop_2012 ~ "D",  -->
+<!--                                  per_dem_2012 < per_gop_2012 ~ "R", -->
+<!--                                  per_dem_2012 == per_gop_2012 ~ "Tie")) %>%  -->
+<!--   mutate(flipped = case_when(winner_2016 != winner_2012 ~ "Flipped",  -->
+<!--                              winner_2016 == winner_2012 ~ "Didn't Flip")) -->
+
+
+<!-- flips %>%  -->
+<!--   count(flipped) -->
+<!-- ``` -->
 

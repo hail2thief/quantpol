@@ -25,3 +25,19 @@ editor_options:
 ## Recommended
 
 - Print out this [cheat sheet](https://github.com/rstudio/cheatsheets/blob/master/data-transformation.pdf) and have it somewhere handy while you're doing work in this course
+
+
+## Slides
+
+### Tuesday
+
+[Class slides here](/slides/04-wrangle1.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/04-wrangle1.html",
+   ratio = "16:9"
+)
+```
+

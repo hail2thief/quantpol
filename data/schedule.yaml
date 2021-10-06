@@ -19,7 +19,7 @@ lessons:
     
   - title: 'Week 3: Data wrangling<br><i class="fas fa-star"></i> **Assignment 2**'
     date: "Oct 5, Oct 7"
-    #class: "data-wrangle"
+    class: "data-wrangle"
     reading: "data-wrangle"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 2**'
