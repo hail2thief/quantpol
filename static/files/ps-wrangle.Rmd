@@ -1,0 +1,165 @@
+---
+title: "Problem set 2: Data wrangling"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(socviz)
+```
+
+
+
+# Task 1: Pokemon
+
+
+First we'll look at data on pokemon. Let's load it below and look at it.
+
+
+```{r load-pokemon}
+pokemon = 
+  read_csv("https://www.dropbox.com/s/wyzwoe0gfw3p34o/pokemon.csv?dl=1") %>% 
+  mutate(capture_rate = as.numeric(capture_rate))
+pokemon
+```
+
+
+Using `filter()`, tell me which Pokemon: 
+
+- has a capture rate higher than the average capture rate
+- is under 2.5m tall and weighs more than 90 kg
+- is not first or second generation
+- their second type is *flying*
+
+
+```{r find-pokemon}
+
+
+```
+
+
+**Q1: Who's that Pokemon?**
+
+
+Now, look at Pokemon that: 
+
+- are taller than they weigh
+- are not legendary
+
+```{r}
+
+
+```
+
+**Q2: What type1 do these Pokemon share in common?** 
+
+
+
+Next, look at Pokemon that are: 
+
+- either grass or bug type1
+- are better at defense than attacking
+- have an HP that is at most 40
+
+```{r}
+
+
+```
+
+**Q3: How many Pokemon fit this description?** 
+
+
+
+Finally, let's create a new variable and do some plotting. Construct a variable called `total_power` that is the sum of `hp`, `attack`, `defense`, and `speed`.
+
+```{r}
+
+
+```
+
+
+Make a histogram plot of the distribution of total power, but facetting over the Pokemon's primary type (`type1`). Include a theme and axes titles. Hint: look at how we used `facet_wrap` in lecture last week!
+
+```{r}
+
+
+```
+
+
+**Question 4: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+
+## Task 2: Opiate deaths
+
+
+Let's look at data on deaths related to opiate use in the US, from the `socviz` package. 
+
+
+```{r}
+opiates
+```
+
+
+First, make a barplot of opiate deaths (y-axis) by state (x-axis) but only for one year, 2010. Use `coord_flip()` so we can see the state names better. 
+
+
+```{r}
+
+```
+
+
+**Question 5: What's the top state in terms of opiate deaths in 2010?** 
+
+
+The plot lets you compare the number of opiate deaths across states, but there's a problem: some states have a lot more people, and will therefore have *more* deaths even if the opiate crisis isn't necessarily worse there. 
+
+
+To account for this, construct a new variable gives you the death *rate* per 100,000 residents. To get the rate: 
+
+- divides deaths by population 
+- multiply that number by 100,000
+- call it `deaths_per_100`
+
+
+Do that here:
+
+```{r}
+
+```
+
+
+
+This gives you the death *rate* per 100,000 residents. Now, make the same barplot of state opiate deaths as above but this time with your new *rate* variable on the y-axis:
+
+```{r}
+
+
+```
+
+**Question 6: Which state has the worst opiate death rate?** 
+
+
+**Question 7: Which of the following is closest to the meaning of this state having the highest opiate death rate:**
+
+- this state has the most deaths overall in 2014
+- this state has the most deaths relative to it's population in 2014
+- this state has the highest year-to-year increase in opiate deaths in 2014
+- the rate of opiate deaths in this state has been increasing over time 
+
+
+# All done!

@@ -43,6 +43,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(nycflights13)
 library(socviz)
+library(covdata)
 
 # dubois colors
 red = "#dc354a"
@@ -55,6 +56,10 @@ flights_small =
   flights %>% 
   select(month, day, dep_time, sched_dep_time, arr_time, sched_arr_time, 
          origin, dest, air_time, distance)
+
+
+# elections
+elections = read_csv("../files/elections.csv")
 
 
 ```
@@ -76,194 +81,252 @@ background-size: contain
 
 ---
 
-<!-- class: center -->
-<!-- .large[ -->
-<!-- # Today's agenda -->
-<!-- ] -->
+class: center
+.large[
+# Today's agenda
+]
 
-<!-- -- -->
-<!-- .box-1.large.sp-after[Making amends] -->
+--
+.box-1.large.sp-after[Making amends]
 
-<!-- -- -->
-<!-- .box-2.large.sp-after[Creating new variables] -->
+--
+.box-2.large.sp-after[Mutating new variables]
 
-<!-- -- -->
-<!-- .box-3.large.sp-after[Slicing, selecting, arranging] -->
+--
+.box-3.large.sp-after[In case when...]
 
-<!-- --- -->
+---
 
 
-<!-- # The logical operators -->
+# The logical operators
 
 
-<!-- ```{r,echo = FALSE} -->
-<!-- tribble(~Operator, ~meaning,  -->
-<!--         "==", "equal to",  -->
-<!--         "!=", "not equal to",  -->
-<!--         ">", "greater than",  -->
-<!--         "<", "less than",  -->
-<!--         ">=", "greater than or equal to",  -->
-<!--         "<=", "less than or equal to",  -->
-<!--         "%in%", "is among the set",  -->
-<!--         "%", "AND (both conditions true)",  -->
-<!--         "|", "OR (either condition is true)") %>%  -->
-<!--   knitr::kable(align = "cc") -->
-<!-- ``` -->
+```{r,echo = FALSE}
+tribble(~Operator, ~meaning,
+        "==", "equal to",
+        "!=", "not equal to",
+        ">", "greater than",
+        "<", "less than",
+        ">=", "greater than or equal to",
+        "<=", "less than or equal to",
+        "%in%", "is among the set",
+        "%", "AND (both conditions true)",
+        "|", "OR (either condition is true)") %>%
+  knitr::kable(align = "cc")
+```
 
 
-<!-- --- -->
+---
 
-<!-- # 🚨 Your turn: again 🚨 -->
+# 🚨 Your turn: again 🚨
 
+Using `elections`:
 
-<!-- 1. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.  -->
 
-<!-- 2. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.  -->
+1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.
 
-<!-- 3. Which counties in California did Romney beat Obama by more than 20 percentage points? Make a plot of your choosing about these counties.  -->
+2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
 
+3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
 
-<!-- ```{r} -->
-<!-- countdown::countdown(minutes = 5L) -->
-<!-- ``` -->
 
+```{r}
+countdown::countdown(minutes = 5L)
+```
 
-<!-- --- -->
+---
 
 
-<!-- # The formula -->
+# Breaking (3) down: the data
 
-<!-- -- -->
 
-<!-- - *Wrangle* the data until you're satisfied with the output:  -->
+```{r, echo = TRUE}
+elections
+```
 
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- apples %>%  -->
-<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
-<!-- ``` -->
+---
 
+# Breaking (3) down: counties in California
 
-<!-- -- -->
 
+```{r, echo = TRUE}
+elections %>% 
+  filter(state == "CA") #<<
+```
 
-<!-- - Store the output as a new object:  -->
+---
 
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- sour_apples = apples %>% #<< -->
-<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
-<!-- ``` -->
+## Breaking (3) down: where Romney beat Obama
 
+```{r, echo = TRUE}
+elections %>% 
+  filter(state == "CA") %>% 
+  filter(per_gop_2012 > per_dem_2012) #<<
+```
 
-<!-- -- -->
+---
 
-<!-- - Use the new object (e.g., plotting): -->
+## Breaking (3) down: by more than 20 points...
 
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col() -->
-<!-- ``` -->
+```{r, echo = TRUE}
+elections %>% 
+  filter(state == "CA") %>% 
+  filter(per_gop_2012 - per_dem_2012 > .2) #<<
+```
 
+---
 
-<!-- --- -->
+## Breaking (3) down: store as an object
 
+```{r, echo = TRUE}
+romney_ca = elections %>% #<<
+  filter(state == "CA") %>% 
+  filter(per_gop_2012 - per_dem_2012 > .2)
+```
 
-<!-- class: center, middle -->
-<!-- # Other wrangling functions -->
 
-<!-- -- -->
+---
 
-<!-- There are many ways to **wrangle** data -->
 
-<!-- -- -->
+## Breaking (3) down: make the plot
 
-<!-- We will focus on a few of the most important ones -->
 
-<!-- --- -->
+```{r, echo = TRUE, out.width="80%"}
+ggplot(romney_ca, aes(x = name, y = per_gop_2012)) + 
+  geom_col() + coord_flip() + 
+  labs(y = "2012 GOP vote share (%)", x = "County")
+```
 
 
-<!-- # Keeping only a few columns with `select()` -->
+---
 
 
-<!-- `select()` lets you keep (or get rid of) variables you don't want -->
+# The formula
 
+--
 
-<!-- ```{r, out.width="60%"} -->
-<!-- knitr::include_graphics("images/select.png") -->
-<!-- ``` -->
+- *Wrangle* the data until you're satisfied with the output:
 
+```{r, echo = TRUE, eval = FALSE}
+apples %>%
+  filter(sweet == FALSE) %>% filter(pounds < 2)
+```
 
-<!-- --- -->
 
-<!-- # Using `select()` -->
+--
 
 
-<!-- ```{r, echo = TRUE} -->
-<!-- flights -->
-<!-- ``` -->
+- Store the output as a new object:
 
-<!-- --- -->
+```{r, echo = TRUE, eval = FALSE}
+sour_apples = apples %>% #<<
+  filter(sweet == FALSE) %>% filter(pounds < 2)
+```
 
-<!-- # Using `select()` -->
 
-<!-- Keep only the year, month, and day:  -->
+--
 
-<!-- ```{r, echo = TRUE} -->
-<!-- flights %>%  -->
-<!--   select(year, month, day) #<< -->
-<!-- ``` -->
+- Use the new object (e.g., plotting):
 
-<!-- --- -->
+```{r, echo = TRUE, eval = FALSE}
+ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
+```
 
-<!-- # Remember to store as an object! -->
 
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- flight_dates = flights %>% #<< -->
-<!--   select(year, month, day) -->
-<!-- ``` -->
+---
 
 
-<!-- --- -->
+class: center, middle
+# Making new variables with `mutate()`
 
-<!-- # Making new variables with `mutate()` -->
 
+`mutate()` **adds** new variables to data
 
-<!-- `mutate()` **adds** new variables to data -->
 
+```{r, out.width="60%"}
+knitr::include_graphics("images/mutate.png")
+```
 
-<!-- ```{r, out.width="60%"} -->
-<!-- knitr::include_graphics("images/mutate.png") -->
-<!-- ``` -->
+---
 
-<!-- --- -->
+# Using mutate
 
 
-<!-- class: center, middle, inverse -->
-<!-- # How late are flights in departing? -->
-<!-- --- -->
+```{r}
+apples = tribble(~name, ~color, ~pounds, ~sweet,
+        "Fuji", "red", 2, TRUE,
+        "Gala", "green", 4, TRUE,
+        "Macintosh", "green", 8, FALSE,
+        "Granny Smith", "red", 3, FALSE)
 
 
-<!-- # How late are flights in departing?  -->
+apples %>% knitr::kable()
+```
 
+---
 
-<!-- .scroll-output[ -->
-<!-- ```{r} -->
-<!-- knitr::kable(sample_n(flights_small, 20)) -->
-<!-- ``` -->
-<!-- ] -->
+# Create an "ounces" variable
 
-<!-- --- -->
+```{r,echo = TRUE}
+apples %>% 
+  mutate() #<<
+```
 
-<!-- # How late? Calculate delay -->
 
-<!-- The difference between when they depart vs. were scheduled to depart = lateness -->
+---
 
-<!-- .scroll-output[ -->
-<!-- ```{r, echo = TRUE} -->
-<!-- tiny_flights %>%  -->
-<!--   mutate(how_late = dep_time - sched_dep_time) #<< -->
-<!-- ``` -->
-<!-- ] -->
+# Create an "ounces" variable
 
-<!-- --- -->
+```{r,echo = TRUE, eval = FALSE}
+apples %>% 
+  mutate(ounces = pounds * 16) #<<
+```
+
+
+The new variable ounces is *pounds* times 16 (16 oz in a pound)
+
+We multiply using *
+---
+
+# Create an "ounces" variable
+
+```{r,echo = TRUE, eval = TRUE}
+apples %>% 
+  mutate(ounces = pounds * 16) #<<
+```
+
+
+---
+
+
+class: center, middle, inverse
+# How late are flights in departing?
+---
+
+
+# How late are flights in departing?
+
+
+```{r}
+flights_small
+```
+
+---
+
+# How late? Calculate delay
+
+The difference between when they depart vs. were scheduled to depart = lateness
+
+.scroll-output[
+```{r, echo = TRUE}
+flights_small %>%
+  mutate(how_late = dep_time - sched_dep_time) #<<
+```
+]
+
+---
+
+
 
 <!-- # How late? Convert to hours -->
 
@@ -427,6 +490,65 @@ background-size: contain
 
 <!-- ```{r} -->
 <!-- countdown::countdown(minutes = 5L) -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+
+
+<!-- class: center, middle -->
+<!-- # Other wrangling functions -->
+
+<!-- -- -->
+
+<!-- There are many ways to **wrangle** data -->
+
+<!-- -- -->
+
+<!-- We will focus on a few of the most important ones -->
+
+<!-- --- -->
+
+
+<!-- # Keeping only a few columns with `select()` -->
+
+
+<!-- `select()` lets you keep (or get rid of) variables you don't want -->
+
+
+<!-- ```{r, out.width="60%"} -->
+<!-- knitr::include_graphics("images/select.png") -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+<!-- Keep only the year, month, and day:  -->
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights %>%  -->
+<!--   select(year, month, day) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Remember to store as an object! -->
+
+<!-- ```{r, echo = TRUE, eval = FALSE} -->
+<!-- flight_dates = flights %>% #<< -->
+<!--   select(year, month, day) -->
 <!-- ``` -->
 
 
