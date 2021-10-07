@@ -40,7 +40,7 @@ pokemon
 
 Using `filter()`, tell me which Pokemon: 
 
-- has a capture rate higher than the average capture rate (Hint: to find the average of capture rate, use the `mean()` function within `filter()`)
+- has a capture rate higher than the average capture rate (average is 98.76125)
 - is under 2.5m tall and weighs more than 90 kg
 - is not first or second generation
 - their second type is *flying*
