@@ -156,9 +156,9 @@ This gives you the death *rate* per 100,000 residents. Now, make the same barplo
 
 **Question 7: Which of the following is closest to the meaning of this state having the highest opiate death rate:**
 
-- this state has the most deaths overall in 2014
-- this state has the most deaths relative to it's population in 2014
-- this state has the highest year-to-year increase in opiate deaths in 2014
+- this state has the most deaths overall in 2010
+- this state has the most deaths relative to it's population in 2010
+- this state has the highest year-to-year increase in opiate deaths in 2010
 - the rate of opiate deaths in this state has been increasing over time 
 
 
