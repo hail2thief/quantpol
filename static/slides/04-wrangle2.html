@@ -7,6 +7,8 @@
     <meta name="date" content="2021-10-07" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
     <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
   </head>
@@ -49,7 +51,68 @@ class: center
 .box-2.large.sp-after[Mutating new variables]
 
 --
-.box-3.large.sp-after[In case when...]
+.box-3.large.sp-after[Selecting and arranging]
+
+---
+
+class: center, middle
+# Weekly check-in
+
+So far, you: 
+
+--
+
+somehow do not know how to make every graph from scratch based solely off memory
+
+--
+
+are confused about errors you are seeing for the first time in a computer program you've never used before
+
+--
+
+are unable to re-type all the code I am presenting on slides into your notes at what would be a rate on par with a professional court stenographer
+
+
+---
+
+# And yet...
+
+
+&lt;img src="images/ps1-grades.png" width="100%" /&gt;
+
+
+---
+
+class: center, middle
+# Weekly check-in
+
+
+You are *confused* and *unsure* of yourselves
+
+--
+
+But you are doing **well**
+
+--
+
+You've only been coding for two weeks
+
+--
+
+You just need to know how to piece together answers from notes + slides
+
+--
+
+You will **slowly** get better at coding, and dealing with errors (be patient!)
+
+
+---
+
+class: middle
+background-image: url("images/buddha.jpeg")
+background-position: center
+background-size: cover
+# Please calm down
 
 ---
 
@@ -73,277 +136,636 @@ class: center
 
 ---
 
-&lt;!-- # 🚨 Your turn: again 🚨 --&gt;
+# 🚨 Your turn: again 🚨
+
+Using `elections`:
+
+.small[
+1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.
+
+2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
+
+3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. **I'll do this one**.
+]
+
+<div class="countdown" id="timer_615f8240" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+# Breaking (3) down: the puzzle
+
+&gt; Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
+
+Can be overwhelming at first but think about it in "chunks": 
+
+--
+
+1. Counties in California...
+
+--
+
+2. ...Romney beat Obama
+
+--
+
+3. ...By more than 20 points
+
+
+---
+
+
+# Breaking (3) down: the data
+
+
+
+```r
+elections
+```
+
+```
+## # A tibble: 3,152 × 17
+##    fips  name    state census_region    pop female white black travel_time land_area hh_income
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 01001 Autaug… AL    South          55395   51.5  78.1  18.4        26.2      594.     53682
+##  2 01003 Baldwi… AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221
+##  3 01005 Barbou… AL    South          26887   46.5  50.2  47.6        24.6      885.     32911
+##  4 01007 Bibb C… AL    South          22506   46    76.3  22.1        27.6      623.     36447
+##  5 01009 Blount… AL    South          57719   50.6  96     1.8        33.9      645.     44145
+##  6 01011 Bulloc… AL    South          10764   45.2  27.2  69.9        26.9      623.     32033
+##  7 01013 Butler… AL    South          20296   53.4  54.3  43.6        24        777.     29918
+##  8 01015 Calhou… AL    South         115916   51.7  76    20.9        22.5      606.     39962
+##  9 01017 Chambe… AL    South          34076   52    58.8  39.1        24.6      597.     32402
+## 10 01019 Cherok… AL    South          26037   50.4  93.2   4.5        26.9      554.     34907
+## # … with 3,142 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+```
+
+---
+
+# Breaking (3) down: counties in California
+
+
+
+```r
+elections %&gt;%
+* filter(state == "CA")
+```
+
+```
+## # A tibble: 58 × 17
+##    fips  name    state census_region    pop female white black travel_time land_area hh_income
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 06001 Alamed… CA    West          1.61e6   51    52    12.4        28.8      739.     72112
+##  2 06003 Alpine… CA    West          1.12e3   47.4  71.8   0.4        23.7      738.     58636
+##  3 06005 Amador… CA    West          3.67e4   46.9  90.9   2.1        30        595.     53684
+##  4 06007 Butte … CA    West          2.24e5   50.4  87     1.8        20.3     1636.     43752
+##  5 06009 Calave… CA    West          4.46e4   50    92.1   1          35.5     1020.     55295
+##  6 06011 Colusa… CA    West          2.14e4   48.3  91.6   1.2        21.2     1151.     52158
+##  7 06013 Contra… CA    West          1.11e6   51.2  67.9   9.6        33.3      716.     78756
+##  8 06015 Del No… CA    West          2.72e4   44.6  78.6   3.7        14.2     1006.     37909
+##  9 06017 El Dor… CA    West          1.83e5   50    90.1   0.9        28.8     1708.     69297
+## 10 06019 Fresno… CA    West          9.66e5   50    77.4   5.9        22.1     5958.     45563
+## # … with 48 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+```
+
+---
+
+# Breaking (3) down: where Romney beat Obama
+
+
+```r
+elections %&gt;%
+  filter(state == "CA") %&gt;%
+* filter(per_gop_2012 &gt; per_dem_2012)
+```
+
+```
+## # A tibble: 29 × 17
+##    fips  name    state census_region    pop female white black travel_time land_area hh_income
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 06005 Amador… CA    West           36742   46.9  90.9   2.1        30        595.     53684
+##  2 06007 Butte … CA    West          224241   50.4  87     1.8        20.3     1636.     43752
+##  3 06009 Calave… CA    West           44624   50    92.1   1          35.5     1020.     55295
+##  4 06011 Colusa… CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158
+##  5 06015 Del No… CA    West           27212   44.6  78.6   3.7        14.2     1006.     37909
+##  6 06017 El Dor… CA    West          183087   50    90.1   0.9        28.8     1708.     69297
+##  7 06019 Fresno… CA    West          965974   50    77.4   5.9        22.1     5958.     45563
+##  8 06021 Glenn … CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023
+##  9 06027 Inyo C… CA    West           18410   49.8  81.7   0.9        14.8    10181.     44796
+## 10 06029 Kern C… CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552
+## # … with 19 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+```
+
+---
+
+# Breaking (3) down: by more than 20 points...
+
+
+Tricky!
+
+
+```r
+elections %&gt;%
+  filter(state == "CA") %&gt;%
+* filter(per_gop_2012 - per_dem_2012 &gt; .2)
+```
+
+```
+## # A tibble: 10 × 17
+##    fips  name    state census_region    pop female white black travel_time land_area hh_income
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 06011 Colusa… CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158
+##  2 06021 Glenn … CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023
+##  3 06029 Kern C… CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552
+##  4 06035 Lassen… CA    West           31749   36.6  81.8   8.5        19.4     4541.     53107
+##  5 06049 Modoc … CA    West            9023   49.6  88.9   1.1        16.9     3918.     36212
+##  6 06061 Placer… CA    West          371694   51.2  86.3   1.7        26.9     1407.     72725
+##  7 06089 Shasta… CA    West          179804   50.9  88.8   1          20.1     3775.     44651
+##  8 06091 Sierra… CA    West            3003   49.7  94.7   0.4        27.5      953.     39009
+##  9 06101 Sutter… CA    West           95847   50.2  74.5   2.4        27.4      602.     50408
+## 10 06103 Tehama… CA    West           63067   50.2  90.9   0.9        23.3     2950.     41924
+## # … with 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;,
+## #   per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+```
+
+---
+
+# Breaking (3) down: store as an object
+
+
+```r
+*romney_ca = elections %&gt;%
+  filter(state == "CA") %&gt;%
+  filter(per_gop_2012 - per_dem_2012 &gt; .2)
+```
+
+
+--
+
+Storing objects is very important! The original `elections` dataset remains unchanged!
+
+
+
+```r
+elections
+```
+
+```
+## # A tibble: 3,152 × 17
+##    fips  name    state census_region    pop female white black travel_time land_area hh_income
+##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1 01001 Autaug… AL    South          55395   51.5  78.1  18.4        26.2      594.     53682
+##  2 01003 Baldwi… AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221
+##  3 01005 Barbou… AL    South          26887   46.5  50.2  47.6        24.6      885.     32911
+##  4 01007 Bibb C… AL    South          22506   46    76.3  22.1        27.6      623.     36447
+##  5 01009 Blount… AL    South          57719   50.6  96     1.8        33.9      645.     44145
+##  6 01011 Bulloc… AL    South          10764   45.2  27.2  69.9        26.9      623.     32033
+##  7 01013 Butler… AL    South          20296   53.4  54.3  43.6        24        777.     29918
+##  8 01015 Calhou… AL    South         115916   51.7  76    20.9        22.5      606.     39962
+##  9 01017 Chambe… AL    South          34076   52    58.8  39.1        24.6      597.     32402
+## 10 01019 Cherok… AL    South          26037   50.4  93.2   4.5        26.9      554.     34907
+## # … with 3,142 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+```
+
+
+
+---
+
+
+# Breaking (3) down: make the plot
+
+
+
+```r
+ggplot(romney_ca, aes(x = name, y = per_gop_2012)) +
+  geom_col() + coord_flip() +
+  labs(y = "2012 GOP vote share (%)", x = "County") + theme_light()
+```
+
+&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-10-1.png" width="80%" /&gt;
+
+
+---
+
+
+# The formula
+
+--
+
+- *Wrangle* the data until you're satisfied with the output:
+
+
+```r
+apples %&gt;%
+  filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2)
+```
+
+
+--
+
+
+- Store the output as a new object:
+
+
+```r
+*sour_apples = apples %&gt;%
+  filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2)
+```
+
+
+--
+
+- Use the new object (e.g., plotting):
+
+
+```r
+ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
+```
+
+
+---
+
+
+class: center, middle
+# Making new variables with `mutate()`
+
+
+`mutate()` **adds** new variables to data
+
+
+&lt;img src="images/mutate.png" width="60%" /&gt;
+
+---
+
+# Using mutate
+
+
+Say I want a new variable that gives me the apple weight in **pounds**
+
+
+
+|name         |color | pounds|sweet |
+|:------------|:-----|------:|:-----|
+|Fuji         |red   |      2|TRUE  |
+|Gala         |green |      4|TRUE  |
+|Macintosh    |green |      8|FALSE |
+|Granny Smith |red   |      3|FALSE |
+
+???
+How to convert pounds to ounces
+---
+
+# Create an "ounces" variable
+
+
+```r
+apples %&gt;%
+* mutate()
+```
+
+```
+## # A tibble: 4 × 4
+##   name         color pounds sweet
+##   &lt;chr&gt;        &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;
+## 1 Fuji         red        2 TRUE 
+## 2 Gala         green      4 TRUE 
+## 3 Macintosh    green      8 FALSE
+## 4 Granny Smith red        3 FALSE
+```
+
+
+---
+
+# Create an "ounces" variable
+
+--
+
+The new variable, ounces, is going to equal *pounds* multiplied by 16 (16 oz in a pound)
+
+
+--
+
+
+
+```r
+apples %&gt;%
+* mutate(ounces = pounds * 16)
+```
+
+```
+## # A tibble: 4 × 5
+##   name         color pounds sweet ounces
+##   &lt;chr&gt;        &lt;chr&gt;  &lt;dbl&gt; &lt;lgl&gt;  &lt;dbl&gt;
+## 1 Fuji         red        2 TRUE      32
+## 2 Gala         green      4 TRUE      64
+## 3 Macintosh    green      8 FALSE    128
+## 4 Granny Smith red        3 FALSE     48
+```
+
+
+---
+
+# Another example: back to flights
+
+
+Say I want to know how many **hours** late a flight is in departing
+
+
+
+| month| day| dep_time| sched_dep_time| arr_time| sched_arr_time|origin |dest | air_time| distance|
+|-----:|---:|--------:|--------------:|--------:|--------------:|:------|:----|--------:|--------:|
+|     1|   1|      517|            515|      830|            819|EWR    |IAH  |      227|     1400|
+|     1|   1|      533|            529|      850|            830|LGA    |IAH  |      227|     1416|
+|     1|   1|      542|            540|      923|            850|JFK    |MIA  |      160|     1089|
+|     1|   1|      544|            545|     1004|           1022|JFK    |BQN  |      183|     1576|
+|     1|   1|      554|            600|      812|            837|LGA    |ATL  |      116|      762|
+|     1|   1|      554|            558|      740|            728|EWR    |ORD  |      150|      719|
+
+---
+
+# How late? Calculate delay
+
+Lateness = difference between when they depart vs. were scheduled to depart
+
+--
+
+
+
+```r
+flights_small %&gt;%
+* mutate(how_late = dep_time - sched_dep_time)
+```
+
+
+```
+## # A tibble: 6 × 5
+##   month   day dep_time sched_dep_time how_late
+##   &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;int&gt;
+## 1     1     1      517            515        2
+## 2     1     1      533            529        4
+## 3     1     1      542            540        2
+## 4     1     1      544            545       -1
+## 5     1     1      554            600      -46
+## 6     1     1      554            558       -4
+```
+
+???
+Notice this is in minutes!
+
+---
+
+
+
+# How late? Convert to hours
+
+
+
+```r
+flights_small %&gt;%
+  mutate(how_late = dep_time - sched_dep_time) %&gt;%
+* mutate(how_late_hrs = how_late / 60)
+```
+
+
+```
+## # A tibble: 336,776 × 6
+##    month   day dep_time sched_dep_time how_late how_late_hrs
+##    &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;int&gt;        &lt;dbl&gt;
+##  1     1     1      517            515        2       0.0333
+##  2     1     1      533            529        4       0.0667
+##  3     1     1      542            540        2       0.0333
+##  4     1     1      544            545       -1      -0.0167
+##  5     1     1      554            600      -46      -0.767 
+##  6     1     1      554            558       -4      -0.0667
+##  7     1     1      555            600      -45      -0.75  
+##  8     1     1      557            600      -43      -0.717 
+##  9     1     1      557            600      -43      -0.717 
+## 10     1     1      558            600      -42      -0.7   
+## # … with 336,766 more rows
+```
+
+
+---
+
+
+# Save your work!
+
+
+
+```r
+*flights_delay = flights_small %&gt;%
+  mutate(how_late = dep_time - sched_dep_time) %&gt;%
+  mutate(how_late_hrs = how_late / 60)
+```
+
+--
+
+Notice that the original `flights_small` does not have either of these new variables!
+
+
+
+```r
+flights_small %&gt;% names()
+```
+
+```
+##  [1] "month"          "day"            "dep_time"       "sched_dep_time" "arr_time"      
+##  [6] "sched_arr_time" "origin"         "dest"           "air_time"       "distance"
+```
+
+
+
+---
+
+
+# Look at the distribution of lateness
+
+
+
+
+```r
+ggplot(flights_delay, aes(x = how_late_hrs)) +
+  geom_histogram()
+```
+
+&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-25-1.png" width="80%" /&gt;
+
+---
+
+# Math on computers
+
+
+
+|Math     |Keyboard |
+|:--------|:--------|
+|Add      |`+`      |
+|Subtract |`-`      |
+|Multiply |`*`      |
+|Divide   |`/`      |
+
+
+
+---
+
+# 🚨 Your turn: using `elections` 🚨
+
+--
+
+.small[
+1. Create a variable that tells you how densely populated the county is. What's the least and most densely populated county?
+
+2. Construct a variable that tells you the percent of the population in a county that is neither Black nor white (so: other race/ethnic groups). Make a plot of some kind with this data.
+
+3. Using either `elections` or `flights` make a plot of something you're interested in! Ideally uses `filter` and `mutate` but not necessary. Post it on the Slack so we can see.  
+
+4. 🔥Challenge🔥: Create a variable that tells you whether a county **flipped** from 2016 to 2020 (e.g., Dems won it in 2016, Reps won it in 2020). 
+]
+
+<div class="countdown" id="timer_615f810d" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+---
+
+# Back to the weekly check-in
+
+
+- UGH: `ggplot()` or ` %&gt;% ` or whatever not found
+
+--
+
+- where is my .rmd file?
+
+--
+
+- trouble remembering what goes in `aes()` versus gets added on as a layer
+
+--
+
+- Where are the library datasets coming from? The internet? 
+
+--
+
+- do you need to add `data = ` to ggplot?
+
+---
+
+
+
+&lt;!-- # Identifying flipped counties --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- elections %&gt;%  --&gt;
+&lt;!--   mutate(gop_won_12 = per_gop_2012 &gt; per_dem_2012) %&gt;%  --&gt;
+&lt;!--   mutate(gop_won_16 = per_gop_2016 &gt; per_dem_2016) %&gt;%  --&gt;
+&lt;!--   mutate(flipped = gop_won_12 != gop_won_16) %&gt;%  --&gt;
+&lt;!--   select(name, state, gop_won_12, gop_won_16, flipped) --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- class: center, middle --&gt;
+&lt;!-- # Keeping only a few columns with `select()` --&gt;
+
+
+&lt;!-- `select()` lets you keep (or get rid of) variables you don't want --&gt;
+
+
+&lt;!-- ```{r, out.width="60%"} --&gt;
+&lt;!-- knitr::include_graphics("images/select.png") --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Using `select()` --&gt;
+
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- flights --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Using `select()` --&gt;
+
+&lt;!-- Keep only the year, month, and day: --&gt;
+
+&lt;!-- ```{r, echo = TRUE} --&gt;
+&lt;!-- flights %&gt;% --&gt;
+&lt;!--   select(year, month, day) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+
+&lt;!-- # Sorting data with `arrange()` --&gt;
+
+
+&lt;!-- You can sort a dataframe by a variable with `arrange()` --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- Where did the GOP perform **worst** in 2016?  --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- ```{r,echo = TRUE} --&gt;
+&lt;!-- elections %&gt;%  --&gt;
+&lt;!--   select(name, state, per_gop_2016) %&gt;%  --&gt;
+&lt;!--   arrange(per_gop_2016) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Sorting data with `arrange()` --&gt;
+
+
+&lt;!-- Where did the GOP perform **best** in 2016? --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- You can add `desc()` to arrange to sort in **descending** order --&gt;
+
+
+&lt;!-- ```{r,echo = TRUE} --&gt;
+&lt;!-- elections %&gt;%  --&gt;
+&lt;!--   select(name, state, per_gop_2016) %&gt;%  --&gt;
+&lt;!--   arrange(desc(per_gop_2016)) #&lt;&lt; --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+&lt;!-- class: center, middle --&gt;
+&lt;!-- # 🚨 Your turn 🚨 --&gt;
+
 
 &lt;!-- Using `elections`: --&gt;
 
 
-&lt;!-- 1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white. --&gt;
+&lt;!-- Use today's functions in some way and make a plot of your choosing --&gt;
 
-&lt;!-- 2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these. --&gt;
-
-&lt;!-- 3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. --&gt;
+&lt;!-- Post on Slack so we can see! --&gt;
 
 
 &lt;!-- ```{r} --&gt;
 &lt;!-- countdown::countdown(minutes = 5L) --&gt;
 &lt;!-- ``` --&gt;
 
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Breaking (3) down: the data --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- elections --&gt;
-&lt;!-- ``` --&gt;
 
 &lt;!-- --- --&gt;
 
-&lt;!-- # Breaking (3) down: counties in California --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   filter(state == "CA") #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Breaking (3) down: where Romney beat Obama --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   filter(state == "CA") %&gt;%  --&gt;
-&lt;!--   filter(per_gop_2012 &gt; per_dem_2012) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Breaking (3) down: by more than 20 points... --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   filter(state == "CA") %&gt;%  --&gt;
-&lt;!--   filter(per_gop_2012 - per_dem_2012 &gt; .2) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Breaking (3) down: store as an object --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- romney_ca = elections %&gt;% #&lt;&lt; --&gt;
-&lt;!--   filter(state == "CA") %&gt;%  --&gt;
-&lt;!--   filter(per_gop_2012 - per_dem_2012 &gt; .2) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Breaking (3) down: make the plot --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE, out.width="80%"} --&gt;
-&lt;!-- ggplot(romney_ca, aes(x = name, y = per_gop_2012)) +  --&gt;
-&lt;!--   geom_col() + coord_flip() +  --&gt;
-&lt;!--   labs(y = "2012 GOP vote share (%)", x = "County") --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # The formula --&gt;
-
-&lt;!-- -- --&gt;
-
-&lt;!-- - *Wrangle* the data until you're satisfied with the output: --&gt;
-
-&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- apples %&gt;% --&gt;
-&lt;!--   filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- -- --&gt;
-
-
-&lt;!-- - Store the output as a new object: --&gt;
-
-&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- sour_apples = apples %&gt;% #&lt;&lt; --&gt;
-&lt;!--   filter(sweet == FALSE) %&gt;% filter(pounds &lt; 2) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- -- --&gt;
-
-&lt;!-- - Use the new object (e.g., plotting): --&gt;
-
-&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- class: center, middle --&gt;
-&lt;!-- # Making new variables with `mutate()` --&gt;
-
-
-&lt;!-- `mutate()` **adds** new variables to data --&gt;
-
-
-&lt;!-- ```{r, out.width="60%"} --&gt;
-&lt;!-- knitr::include_graphics("images/mutate.png") --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Using mutate --&gt;
-
-
-&lt;!-- Say I want a new variable that gives me the apple weight in **pounds** --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- apples = tribble(~name, ~color, ~pounds, ~sweet, --&gt;
-&lt;!--         "Fuji", "red", 2, TRUE, --&gt;
-&lt;!--         "Gala", "green", 4, TRUE, --&gt;
-&lt;!--         "Macintosh", "green", 8, FALSE, --&gt;
-&lt;!--         "Granny Smith", "red", 3, FALSE) --&gt;
-
-
-&lt;!-- apples %&gt;% knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Create an "ounces" variable --&gt;
-
-&lt;!-- ```{r,echo = TRUE} --&gt;
-&lt;!-- apples %&gt;%  --&gt;
-&lt;!--   mutate() #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Create an "ounces" variable --&gt;
-
-&lt;!-- ```{r,echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- apples %&gt;%  --&gt;
-&lt;!--   mutate(ounces = pounds * 16) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- The new variable `ounces` = *pounds* times 16 (16 oz in a pound) --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Create an "ounces" variable --&gt;
-
-&lt;!-- ```{r,echo = TRUE, eval = TRUE} --&gt;
-&lt;!-- apples %&gt;%  --&gt;
-&lt;!--   mutate(ounces = pounds * 16) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- Note: We multiply using * --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- class: center, middle, inverse --&gt;
-&lt;!-- # How late are flights in departing? --&gt;
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # How late are flights in departing? --&gt;
-
-
-&lt;!-- Say I want to know how many **hours** late a flight is in departing --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- flights_small --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # How late? Calculate delay --&gt;
-
-&lt;!-- The difference between when they depart vs. were scheduled to depart = lateness --&gt;
-
-&lt;!-- .scroll-output[ --&gt;
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights_small %&gt;% --&gt;
-&lt;!--   mutate(how_late = dep_time - sched_dep_time) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-&lt;!-- --- --&gt;
-
-
-
-&lt;!-- # How late? Convert to hours --&gt;
-
-&lt;!-- scroll-output[ --&gt;
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights_small %&gt;% --&gt;
-&lt;!--   mutate(how_late = dep_time - sched_dep_time) %&gt;% --&gt;
-&lt;!--   mutate(how_late_hrs = how_late/60) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
-
-
-
-&lt;!-- # Save your work! --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights_delay = flights_small %&gt;% #&lt;&lt; --&gt;
-&lt;!--   mutate(how_late = dep_time - sched_dep_time) %&gt;% --&gt;
-&lt;!--   mutate(how_late_hrs = how_late/60) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- Notice that the original `flights_small` does not have either of these new variables! --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Look at the distribution of lateness --&gt;
-
-
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- ggplot(flights_delay, aes(x = how_late_hrs)) + --&gt;
-&lt;!--   geom_histogram() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # 🚨 Your turn: using `elections` 🚨 --&gt;
-
-
-&lt;!-- 1. Calculate the difference in vote share between Dems and Republicans in 2016 and convert it to a **percent**. Plot the distribution of this variable as a histogram. --&gt;
-
-&lt;!-- 2. Construct a variable that tells you the percent of the population in a county that is neither Black nor white. Make a plot of some kind with this data. --&gt;
-
-&lt;!-- 3. Construct a variable that measures a county's population *density* (population divided by area). What is the most and least densely populated county in the country?  --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- countdown::countdown(minutes = 10L) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
 
 &lt;!-- # Creating categorical variables using `case_when()` --&gt;
 
@@ -434,14 +856,14 @@ class: center
 &lt;!-- --- --&gt;
 
 
-&lt;!-- # Now we can plot --&gt;
+&lt;!-- &lt;!-- # Now we can plot --&gt; --&gt;
 
-&lt;!-- ```{r} --&gt;
-&lt;!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + --&gt;
-&lt;!--   geom_histogram() --&gt;
-&lt;!-- ``` --&gt;
+&lt;!-- &lt;!-- ```{r} --&gt; --&gt;
+&lt;!-- &lt;!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + --&gt; --&gt;
+&lt;!-- &lt;!--   geom_histogram() --&gt; --&gt;
+&lt;!-- &lt;!-- ``` --&gt; --&gt;
 
-&lt;!-- --- --&gt;
+&lt;!-- &lt;!-- --- --&gt; --&gt;
 
 
 &lt;!-- # 🚨 Your turn: again 🚨 --&gt;
@@ -461,62 +883,6 @@ class: center
 
 
 
-&lt;!-- class: center, middle --&gt;
-&lt;!-- # Other wrangling functions --&gt;
-
-&lt;!-- -- --&gt;
-
-&lt;!-- There are many ways to **wrangle** data --&gt;
-
-&lt;!-- -- --&gt;
-
-&lt;!-- We will focus on a few of the most important ones --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Keeping only a few columns with `select()` --&gt;
-
-
-&lt;!-- `select()` lets you keep (or get rid of) variables you don't want --&gt;
-
-
-&lt;!-- ```{r, out.width="60%"} --&gt;
-&lt;!-- knitr::include_graphics("images/select.png") --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Using `select()` --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Using `select()` --&gt;
-
-&lt;!-- Keep only the year, month, and day: --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights %&gt;% --&gt;
-&lt;!--   select(year, month, day) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Remember to store as an object! --&gt;
-
-&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- flight_dates = flights %&gt;% #&lt;&lt; --&gt;
-&lt;!--   select(year, month, day) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -24,6 +24,7 @@ editor_options:
 <ul>
 <li><a href="#examples">Examples</a></li>
 </ul></li>
+<li><a href="#mutating">Mutating</a></li>
 </ul>
 </div>
 
@@ -134,21 +135,20 @@ flights %&gt;%
 late_xmas = flights %&gt;%
   filter(arr_time &gt; sched_arr_time) %&gt;%
   filter(month == 12, day == 25)</code></pre>
-<!-- ## Mutating  -->
-<!-- Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this.  -->
-<!-- Let's convert arrival delay from minutes to hours.  -->
-<!-- ```{r} -->
-<!-- ## convert arrival_delay to hours -->
-<!-- new_flights = flights %>%  -->
-<!--   mutate(arr_delay_hrs = arr_delay/60) -->
-<!-- ``` -->
-<!-- If you look in the dataset you will see a new variable called `arr_delay_hrs`.  -->
-<!-- Let's convert distance traveled from miles to thousands of miles.  -->
-<!-- ```{r} -->
-<!-- ## convert distance to thousands of miles -->
-<!-- new_flights2 = flights %>%  -->
-<!--   mutate(dist_miles = distance/1000) -->
-<!-- ``` -->
+</div>
+</div>
+<div id="mutating" class="section level2">
+<h2>Mutating</h2>
+<p>Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The <code>mutate()</code> function is one way of doing this.</p>
+<p>Let’s convert arrival delay from minutes to hours.</p>
+<pre class="r"><code>## convert arrival_delay to hours
+new_flights = flights %&gt;%
+  mutate(arr_delay_hrs = arr_delay/60)</code></pre>
+<p>If you look in the dataset you will see a new variable called <code>arr_delay_hrs</code>.</p>
+<p>Let’s convert distance traveled from miles to thousands of miles.</p>
+<pre class="r"><code>## convert distance to thousands of miles
+new_flights2 = flights %&gt;%
+  mutate(dist_miles = distance/1000)</code></pre>
 <!-- ### Creating categorical variables -->
 <!-- Sometimes we want to create more complicated variables. Here's where [case_when](https://dplyr.tidyverse.org/reference/case_when.html) comes into play.  -->
 <!-- Let's create a variable that tells us what season a flight took off in.  -->
@@ -271,5 +271,4 @@ late_xmas = flights %&gt;%
 <!-- flips %>%  -->
 <!--   count(flipped) -->
 <!-- ``` -->
-</div>
 </div>

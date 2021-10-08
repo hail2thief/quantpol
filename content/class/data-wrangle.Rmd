@@ -106,29 +106,29 @@ late_xmas = flights %>%
 
 
 
-<!-- ## Mutating  -->
+## Mutating
 
-<!-- Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this.  -->
-
-
-<!-- Let's convert arrival delay from minutes to hours.  -->
-
-<!-- ```{r} -->
-<!-- ## convert arrival_delay to hours -->
-<!-- new_flights = flights %>%  -->
-<!--   mutate(arr_delay_hrs = arr_delay/60) -->
-<!-- ``` -->
-
-<!-- If you look in the dataset you will see a new variable called `arr_delay_hrs`.  -->
+Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this.
 
 
-<!-- Let's convert distance traveled from miles to thousands of miles.  -->
+Let's convert arrival delay from minutes to hours.
 
-<!-- ```{r} -->
-<!-- ## convert distance to thousands of miles -->
-<!-- new_flights2 = flights %>%  -->
-<!--   mutate(dist_miles = distance/1000) -->
-<!-- ``` -->
+```{r}
+## convert arrival_delay to hours
+new_flights = flights %>%
+  mutate(arr_delay_hrs = arr_delay/60)
+```
+
+If you look in the dataset you will see a new variable called `arr_delay_hrs`.
+
+
+Let's convert distance traveled from miles to thousands of miles.
+
+```{r}
+## convert distance to thousands of miles
+new_flights2 = flights %>%
+  mutate(dist_miles = distance/1000)
+```
 
 
 <!-- ### Creating categorical variables -->

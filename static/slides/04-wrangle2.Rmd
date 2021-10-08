@@ -93,7 +93,70 @@ class: center
 .box-2.large.sp-after[Mutating new variables]
 
 --
-.box-3.large.sp-after[In case when...]
+.box-3.large.sp-after[Selecting and arranging]
+
+---
+
+class: center, middle
+# Weekly check-in
+
+So far, you: 
+
+--
+
+somehow do not know how to make every graph from scratch based solely off memory
+
+--
+
+are confused about errors you are seeing for the first time in a computer program you've never used before
+
+--
+
+are unable to re-type all the code I am presenting on slides into your notes at what would be a rate on par with a professional court stenographer
+
+
+---
+
+# And yet...
+
+
+```{r}
+knitr::include_graphics("images/ps1-grades.png")
+```
+
+
+---
+
+class: center, middle
+# Weekly check-in
+
+
+You are *confused* and *unsure* of yourselves
+
+--
+
+But you are doing **well**
+
+--
+
+You've only been coding for two weeks
+
+--
+
+You just need to know how to piece together answers from notes + slides
+
+--
+
+You will **slowly** get better at coding, and dealing with errors (be patient!)
+
+
+---
+
+class: middle
+background-image: url("images/buddha.jpeg")
+background-position: center
+background-size: cover
+# Please calm down
 
 ---
 
@@ -118,277 +181,485 @@ tribble(~Operator, ~meaning,
 
 ---
 
-<!-- # 🚨 Your turn: again 🚨 -->
+# 🚨 Your turn: again 🚨
+
+Using `elections`:
+
+.small[
+1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.
+
+2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
+
+3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. **I'll do this one**.
+]
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+# Breaking (3) down: the puzzle
+
+> Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
+
+Can be overwhelming at first but think about it in "chunks": 
+
+--
+
+1. Counties in California...
+
+--
+
+2. ...Romney beat Obama
+
+--
+
+3. ...By more than 20 points
+
+
+---
+
+
+# Breaking (3) down: the data
+
+
+```{r, echo = TRUE}
+elections
+```
+
+---
+
+# Breaking (3) down: counties in California
+
+
+```{r, echo = TRUE}
+elections %>%
+  filter(state == "CA") #<<
+```
+
+---
+
+# Breaking (3) down: where Romney beat Obama
+
+```{r, echo = TRUE}
+elections %>%
+  filter(state == "CA") %>%
+  filter(per_gop_2012 > per_dem_2012) #<<
+```
+
+---
+
+# Breaking (3) down: by more than 20 points...
+
+
+Tricky!
+
+```{r, echo = TRUE}
+elections %>%
+  filter(state == "CA") %>%
+  filter(per_gop_2012 - per_dem_2012 > .2) #<<
+```
+
+---
+
+# Breaking (3) down: store as an object
+
+```{r, echo = TRUE}
+romney_ca = elections %>% #<<
+  filter(state == "CA") %>%
+  filter(per_gop_2012 - per_dem_2012 > .2)
+```
+
+
+--
+
+Storing objects is very important! The original `elections` dataset remains unchanged!
+
+
+```{r, echo = TRUE}
+elections
+```
+
+
+
+---
+
+
+# Breaking (3) down: make the plot
+
+
+```{r, echo = TRUE, out.width="80%"}
+ggplot(romney_ca, aes(x = name, y = per_gop_2012)) +
+  geom_col() + coord_flip() +
+  labs(y = "2012 GOP vote share (%)", x = "County") + theme_light()
+```
+
+
+---
+
+
+# The formula
+
+--
+
+- *Wrangle* the data until you're satisfied with the output:
+
+```{r, echo = TRUE, eval = FALSE}
+apples %>%
+  filter(sweet == FALSE) %>% filter(pounds < 2)
+```
+
+
+--
+
+
+- Store the output as a new object:
+
+```{r, echo = TRUE, eval = FALSE}
+sour_apples = apples %>% #<<
+  filter(sweet == FALSE) %>% filter(pounds < 2)
+```
+
+
+--
+
+- Use the new object (e.g., plotting):
+
+```{r, echo = TRUE, eval = FALSE}
+ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
+```
+
+
+---
+
+
+class: center, middle
+# Making new variables with `mutate()`
+
+
+`mutate()` **adds** new variables to data
+
+
+```{r, out.width="60%"}
+knitr::include_graphics("images/mutate.png")
+```
+
+---
+
+# Using mutate
+
+
+Say I want a new variable that gives me the apple weight in **pounds**
+
+
+```{r}
+apples = tribble(~name, ~color, ~pounds, ~sweet,
+        "Fuji", "red", 2, TRUE,
+        "Gala", "green", 4, TRUE,
+        "Macintosh", "green", 8, FALSE,
+        "Granny Smith", "red", 3, FALSE)
+
+
+apples %>% knitr::kable()
+```
+
+???
+How to convert pounds to ounces
+---
+
+# Create an "ounces" variable
+
+```{r,echo = TRUE}
+apples %>%
+  mutate() #<<
+```
+
+
+---
+
+# Create an "ounces" variable
+
+--
+
+The new variable, ounces, is going to equal *pounds* multiplied by 16 (16 oz in a pound)
+
+
+--
+
+
+```{r,echo = TRUE, eval = TRUE}
+apples %>%
+  mutate(ounces = pounds * 16) #<<
+```
+
+
+---
+
+# Another example: back to flights
+
+
+Say I want to know how many **hours** late a flight is in departing
+
+
+```{r}
+flights_small %>%
+  head() %>% 
+  knitr::kable()
+```
+
+---
+
+# How late? Calculate delay
+
+Lateness = difference between when they depart vs. were scheduled to depart
+
+--
+
+
+```{r, echo = TRUE, eval = FALSE}
+flights_small %>%
+  mutate(how_late = dep_time - sched_dep_time) #<<
+```
+
+```{r}
+flights_small %>%
+  mutate(how_late = dep_time - sched_dep_time) %>%
+  select(month, day, dep_time, sched_dep_time, how_late) %>% 
+  head()
+```
+
+???
+Notice this is in minutes!
+
+---
+
+
+
+# How late? Convert to hours
+
+
+```{r, echo = TRUE, eval = FALSE}
+flights_small %>%
+  mutate(how_late = dep_time - sched_dep_time) %>%
+  mutate(how_late_hrs = how_late / 60) #<<
+```
+
+```{r, echo = FALSE, eval = TRUE}
+flights_small %>%
+  mutate(how_late = dep_time - sched_dep_time) %>%
+  mutate(how_late_hrs = how_late / 60) %>%
+  select(month, day, dep_time, sched_dep_time, how_late, how_late_hrs)
+```
+
+
+---
+
+
+# Save your work!
+
+
+```{r, echo = TRUE}
+flights_delay = flights_small %>% #<<
+  mutate(how_late = dep_time - sched_dep_time) %>%
+  mutate(how_late_hrs = how_late / 60)
+```
+
+--
+
+Notice that the original `flights_small` does not have either of these new variables!
+
+
+```{r, echo = TRUE}
+flights_small %>% names()
+```
+
+
+
+---
+
+
+# Look at the distribution of lateness
+
+
+
+```{r, echo = TRUE, out.width="80%"}
+ggplot(flights_delay, aes(x = how_late_hrs)) +
+  geom_histogram()
+```
+
+---
+
+# Math on computers
+
+
+```{r}
+tribble(~Math, ~Keyboard, 
+        "Add", "`+`",
+        "Subtract", "`-`",
+        "Multiply", "`*`",
+        "Divide", "`/`") %>% 
+  knitr::kable()
+```
+
+
+
+---
+
+# 🚨 Your turn: using `elections` 🚨
+
+--
+
+.small[
+1. Create a variable that tells you how densely populated the county is. What's the least and most densely populated county?
+
+2. Construct a variable that tells you the percent of the population in a county that is neither Black nor white (so: other race/ethnic groups). Make a plot of some kind with this data.
+
+3. Using either `elections` or `flights` make a plot of something you're interested in! Ideally uses `filter` and `mutate` but not necessary. Post it on the Slack so we can see.  
+
+4. 🔥Challenge🔥: Create a variable that tells you whether a county **flipped** from 2016 to 2020 (e.g., Dems won it in 2016, Reps won it in 2020). 
+]
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
+
+
+---
+
+# Back to the weekly check-in
+
+
+- UGH: `ggplot()` or ` %>% ` or whatever not found
+
+--
+
+- where is my .rmd file?
+
+--
+
+- trouble remembering what goes in `aes()` versus gets added on as a layer
+
+--
+
+- Where are the library datasets coming from? The internet? 
+
+--
+
+- do you need to add `data = ` to ggplot?
+
+---
+
+
+
+<!-- # Identifying flipped counties -->
+
+<!-- ```{r} -->
+<!-- elections %>%  -->
+<!--   mutate(gop_won_12 = per_gop_2012 > per_dem_2012) %>%  -->
+<!--   mutate(gop_won_16 = per_gop_2016 > per_dem_2016) %>%  -->
+<!--   mutate(flipped = gop_won_12 != gop_won_16) %>%  -->
+<!--   select(name, state, gop_won_12, gop_won_16, flipped) -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- --- -->
+
+<!-- class: center, middle -->
+<!-- # Keeping only a few columns with `select()` -->
+
+
+<!-- `select()` lets you keep (or get rid of) variables you don't want -->
+
+
+<!-- ```{r, out.width="60%"} -->
+<!-- knitr::include_graphics("images/select.png") -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- # Using `select()` -->
+
+<!-- Keep only the year, month, and day: -->
+
+<!-- ```{r, echo = TRUE} -->
+<!-- flights %>% -->
+<!--   select(year, month, day) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+
+<!-- # Sorting data with `arrange()` -->
+
+
+<!-- You can sort a dataframe by a variable with `arrange()` -->
+
+<!-- -- -->
+
+<!-- Where did the GOP perform **worst** in 2016?  -->
+
+<!-- -- -->
+
+<!-- ```{r,echo = TRUE} -->
+<!-- elections %>%  -->
+<!--   select(name, state, per_gop_2016) %>%  -->
+<!--   arrange(per_gop_2016) #<< -->
+<!-- ``` -->
+
+
+
+<!-- --- -->
+
+<!-- # Sorting data with `arrange()` -->
+
+
+<!-- Where did the GOP perform **best** in 2016? -->
+
+<!-- -- -->
+
+<!-- You can add `desc()` to arrange to sort in **descending** order -->
+
+
+<!-- ```{r,echo = TRUE} -->
+<!-- elections %>%  -->
+<!--   select(name, state, per_gop_2016) %>%  -->
+<!--   arrange(desc(per_gop_2016)) #<< -->
+<!-- ``` -->
+
+<!-- --- -->
+
+<!-- class: center, middle -->
+<!-- # 🚨 Your turn 🚨 -->
+
 
 <!-- Using `elections`: -->
 
 
-<!-- 1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white. -->
+<!-- Use today's functions in some way and make a plot of your choosing -->
 
-<!-- 2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these. -->
-
-<!-- 3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. -->
+<!-- Post on Slack so we can see! -->
 
 
 <!-- ```{r} -->
 <!-- countdown::countdown(minutes = 5L) -->
 <!-- ``` -->
 
-<!-- --- -->
-
-
-<!-- # Breaking (3) down: the data -->
-
-
-<!-- ```{r, echo = TRUE} -->
-<!-- elections -->
-<!-- ``` -->
 
 <!-- --- -->
 
-<!-- # Breaking (3) down: counties in California -->
-
-
-<!-- ```{r, echo = TRUE} -->
-<!-- elections %>%  -->
-<!--   filter(state == "CA") #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Breaking (3) down: where Romney beat Obama -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- elections %>%  -->
-<!--   filter(state == "CA") %>%  -->
-<!--   filter(per_gop_2012 > per_dem_2012) #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Breaking (3) down: by more than 20 points... -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- elections %>%  -->
-<!--   filter(state == "CA") %>%  -->
-<!--   filter(per_gop_2012 - per_dem_2012 > .2) #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Breaking (3) down: store as an object -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- romney_ca = elections %>% #<< -->
-<!--   filter(state == "CA") %>%  -->
-<!--   filter(per_gop_2012 - per_dem_2012 > .2) -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-
-<!-- # Breaking (3) down: make the plot -->
-
-
-<!-- ```{r, echo = TRUE, out.width="80%"} -->
-<!-- ggplot(romney_ca, aes(x = name, y = per_gop_2012)) +  -->
-<!--   geom_col() + coord_flip() +  -->
-<!--   labs(y = "2012 GOP vote share (%)", x = "County") -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-
-<!-- # The formula -->
-
-<!-- -- -->
-
-<!-- - *Wrangle* the data until you're satisfied with the output: -->
-
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- apples %>% -->
-<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
-<!-- ``` -->
-
-
-<!-- -- -->
-
-
-<!-- - Store the output as a new object: -->
-
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- sour_apples = apples %>% #<< -->
-<!--   filter(sweet == FALSE) %>% filter(pounds < 2) -->
-<!-- ``` -->
-
-
-<!-- -- -->
-
-<!-- - Use the new object (e.g., plotting): -->
-
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col() -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-
-<!-- class: center, middle -->
-<!-- # Making new variables with `mutate()` -->
-
-
-<!-- `mutate()` **adds** new variables to data -->
-
-
-<!-- ```{r, out.width="60%"} -->
-<!-- knitr::include_graphics("images/mutate.png") -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Using mutate -->
-
-
-<!-- Say I want a new variable that gives me the apple weight in **pounds** -->
-
-
-<!-- ```{r} -->
-<!-- apples = tribble(~name, ~color, ~pounds, ~sweet, -->
-<!--         "Fuji", "red", 2, TRUE, -->
-<!--         "Gala", "green", 4, TRUE, -->
-<!--         "Macintosh", "green", 8, FALSE, -->
-<!--         "Granny Smith", "red", 3, FALSE) -->
-
-
-<!-- apples %>% knitr::kable() -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Create an "ounces" variable -->
-
-<!-- ```{r,echo = TRUE} -->
-<!-- apples %>%  -->
-<!--   mutate() #<< -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-<!-- # Create an "ounces" variable -->
-
-<!-- ```{r,echo = TRUE, eval = FALSE} -->
-<!-- apples %>%  -->
-<!--   mutate(ounces = pounds * 16) #<< -->
-<!-- ``` -->
-
-
-<!-- The new variable `ounces` = *pounds* times 16 (16 oz in a pound) -->
-
-
-<!-- --- -->
-
-<!-- # Create an "ounces" variable -->
-
-<!-- ```{r,echo = TRUE, eval = TRUE} -->
-<!-- apples %>%  -->
-<!--   mutate(ounces = pounds * 16) #<< -->
-<!-- ``` -->
-
-<!-- Note: We multiply using * -->
-
-<!-- --- -->
-
-
-<!-- class: center, middle, inverse -->
-<!-- # How late are flights in departing? -->
-<!-- --- -->
-
-
-<!-- # How late are flights in departing? -->
-
-
-<!-- Say I want to know how many **hours** late a flight is in departing -->
-
-
-<!-- ```{r} -->
-<!-- flights_small -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # How late? Calculate delay -->
-
-<!-- The difference between when they depart vs. were scheduled to depart = lateness -->
-
-<!-- .scroll-output[ -->
-<!-- ```{r, echo = TRUE} -->
-<!-- flights_small %>% -->
-<!--   mutate(how_late = dep_time - sched_dep_time) #<< -->
-<!-- ``` -->
-<!-- ] -->
-
-<!-- --- -->
-
-
-
-<!-- # How late? Convert to hours -->
-
-<!-- scroll-output[ -->
-<!-- ```{r, echo = TRUE} -->
-<!-- flights_small %>% -->
-<!--   mutate(how_late = dep_time - sched_dep_time) %>% -->
-<!--   mutate(how_late_hrs = how_late/60) #<< -->
-<!-- ``` -->
-<!-- ] -->
-
-
-
-<!-- # Save your work! -->
-
-
-<!-- ```{r, echo = TRUE} -->
-<!-- flights_delay = flights_small %>% #<< -->
-<!--   mutate(how_late = dep_time - sched_dep_time) %>% -->
-<!--   mutate(how_late_hrs = how_late/60) -->
-<!-- ``` -->
-
-
-<!-- Notice that the original `flights_small` does not have either of these new variables! -->
-
-<!-- --- -->
-
-
-<!-- # Look at the distribution of lateness -->
-
-
-
-<!-- ```{r, echo = TRUE} -->
-<!-- ggplot(flights_delay, aes(x = how_late_hrs)) + -->
-<!--   geom_histogram() -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # 🚨 Your turn: using `elections` 🚨 -->
-
-
-<!-- 1. Calculate the difference in vote share between Dems and Republicans in 2016 and convert it to a **percent**. Plot the distribution of this variable as a histogram. -->
-
-<!-- 2. Construct a variable that tells you the percent of the population in a county that is neither Black nor white. Make a plot of some kind with this data. -->
-
-<!-- 3. Construct a variable that measures a county's population *density* (population divided by area). What is the most and least densely populated county in the country?  -->
-
-
-<!-- ```{r} -->
-<!-- countdown::countdown(minutes = 10L) -->
-<!-- ``` -->
-
-
-<!-- --- -->
 
 <!-- # Creating categorical variables using `case_when()` -->
 
@@ -479,14 +750,14 @@ tribble(~Operator, ~meaning,
 <!-- --- -->
 
 
-<!-- # Now we can plot -->
+<!-- <!-- # Now we can plot --> -->
 
-<!-- ```{r} -->
-<!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + -->
-<!--   geom_histogram() -->
-<!-- ``` -->
+<!-- <!-- ```{r} --> -->
+<!-- <!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + --> -->
+<!-- <!--   geom_histogram() --> -->
+<!-- <!-- ``` --> -->
 
-<!-- --- -->
+<!-- <!-- --- --> -->
 
 
 <!-- # 🚨 Your turn: again 🚨 -->
@@ -506,59 +777,3 @@ tribble(~Operator, ~meaning,
 
 
 
-<!-- class: center, middle -->
-<!-- # Other wrangling functions -->
-
-<!-- -- -->
-
-<!-- There are many ways to **wrangle** data -->
-
-<!-- -- -->
-
-<!-- We will focus on a few of the most important ones -->
-
-<!-- --- -->
-
-
-<!-- # Keeping only a few columns with `select()` -->
-
-
-<!-- `select()` lets you keep (or get rid of) variables you don't want -->
-
-
-<!-- ```{r, out.width="60%"} -->
-<!-- knitr::include_graphics("images/select.png") -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-<!-- # Using `select()` -->
-
-
-<!-- ```{r, echo = TRUE} -->
-<!-- flights -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Using `select()` -->
-
-<!-- Keep only the year, month, and day: -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- flights %>% -->
-<!--   select(year, month, day) #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Remember to store as an object! -->
-
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- flight_dates = flights %>% #<< -->
-<!--   select(year, month, day) -->
-<!-- ``` -->
-
-
-<!-- --- -->
