@@ -1,0 +1,66 @@
+---
+title: "Summarizing Data"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 4
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#in-class-example">In-class example</a></li>
+<li><a href="#summarize">Summarize</a></li>
+<li><a href="#summarize-group_by">Summarize + group_by()</a></li>
+</ul>
+</div>
+
+<div id="in-class-example" class="section level2">
+<h2>In-class example</h2>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”</p>
+</div>
+<div id="summarize" class="section level2">
+<h2>Summarize</h2>
+<p>Let’s load the libraries.</p>
+<pre class="r"><code># libraries
+library(tidyverse)
+library(nycflights13)</code></pre>
+<p>Say we want to take the average of a variable in our dataset. <code>summarize()</code> can help us do that.</p>
+<p>Say we wanted to know how late in departure is the <em>average</em> flight in our dataset and what’s the latest a flight has ever been?</p>
+<pre class="r"><code>## on average, how late are flights in departing?
+flights %&gt;%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 × 2
+##   avg_late most_late
+##      &lt;dbl&gt;     &lt;dbl&gt;
+## 1     12.6      1301</code></pre>
+<p>Not the <code>na.rm = TRUE</code> above and what happens if you remove it. The problem is there are missing values (<code>NA</code>) in our data, and R can’t take the average of a bunch of numbers where some are missing. <code>na.rm = TRUE</code> tells R to ignore those missing numbers and use only the complete observations.</p>
+</div>
+<div id="summarize-group_by" class="section level2">
+<h2>Summarize + group_by()</h2>
+<p>Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining <code>group_by()</code> and <code>summarise()</code>.</p>
+<pre class="r"><code># what if we wanted to know these statistics
+## for each month in our dataset?
+carrier_late = flights %&gt;%
+  group_by(carrier) %&gt;%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))
+
+
+# make a plot
+ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
+  geom_col() +
+  coord_flip()</code></pre>
+<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>

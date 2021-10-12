@@ -1,0 +1,76 @@
+---
+title: "Summarizing Data"
+citeproc: true
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
+menu: 
+  class:
+    parent: Class
+    weight: 4
+type: docs
+output:
+  blogdown::html_page:
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+
+
+## In-class example
+
+
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as..."
+
+
+
+
+## Summarize
+
+
+Let's load the libraries.
+
+```{r, message=F,warning=F}
+# libraries
+library(tidyverse)
+library(nycflights13)
+```
+
+
+Say we want to take the average of a variable in our dataset. `summarize()` can help us do that.
+
+
+Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been?
+
+```{r}
+## on average, how late are flights in departing?
+flights %>%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))
+```
+
+
+Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations.
+
+
+## Summarize + group_by()
+
+
+Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`.
+
+
+```{r}
+# what if we wanted to know these statistics
+## for each month in our dataset?
+carrier_late = flights %>%
+  group_by(carrier) %>%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))
+
+
+# make a plot
+ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
+  geom_col() +
+  coord_flip()
+```

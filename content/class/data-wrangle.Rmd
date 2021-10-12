@@ -183,46 +183,6 @@ new_flights2 = flights %>%
 <!-- ``` -->
 
 
-<!-- ## Summarize -->
-
-
-<!-- Say we want to take the average of a variable in our dataset. `summarize()` can help us do that.  -->
-
-
-<!-- Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been?  -->
-
-<!-- ```{r} -->
-<!-- ## on average, how late are flights in departing?  -->
-<!-- flights %>%  -->
-<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE),  -->
-<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
-<!-- ``` -->
-
-
-<!-- Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations.  -->
-
-
-<!-- ## Summarize + group_by() -->
-
-
-<!-- Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`. -->
-
-
-<!-- ```{r} -->
-<!-- # what if we wanted to know these statistics -->
-<!-- ## for each month in our dataset?  -->
-<!-- carrier_late = flights %>%  -->
-<!--   group_by(carrier) %>%  -->
-<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE),  -->
-<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
-
-
-<!-- # make a plot -->
-<!-- ggplot(carrier_late, aes(x = carrier, y = avg_late)) +  -->
-<!--   geom_col() +  -->
-<!--   coord_flip() -->
-<!-- ``` -->
-
 
 
 <!-- ## Activity -->

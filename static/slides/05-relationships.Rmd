@@ -1,0 +1,740 @@
+---
+title: "Relationships"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+
+
+# elections
+pokemon = read_csv("../files/pokemon.csv")
+
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Data, objects, variables]
+
+--
+.box-2.large.sp-after[Mean, median, variance]
+
+--
+.box-3.large.sp-after[Summarizing data]
+
+---
+
+
+# Data, objects, variables
+
+
+Objects are one of the most confusing parts of coding for new programmers
+
+--
+
+An **object** is a "thing" that lives in R that we can use; think of the pantry metaphor!
+
+--
+
+In this class, 99.99% of objects are just **data** we are using
+
+--
+
+Data has **variables** which are represented as columns
+
+
+---
+
+# Example: pokemon
+
+Once you load the `pokemon` data in your homework, it becomes an object; you can tell it's an object because: 
+
+--
+
+1. it shows up in the top-right screen (the "environment")
+2. when you type it out and run it in R you can see the contents
+
+--
+
+```{r, echo = TRUE}
+pokemon
+```
+
+---
+
+
+# Objects have variables
+
+
+Columns like `type1` are *variables*
+
+
+```{r, echo = TRUE}
+pokemon
+```
+
+---
+
+
+# Objects
+
+You can do stuff to objects, like subset based on rules (using `filter()`), creating new **variables** (with `mutate()`), etc. 
+
+```{r, echo = TRUE}
+pokemon %>% 
+  filter(type1 == "grass") %>% 
+  mutate(height_mm = height_m * 1000)
+```
+
+
+---
+
+# Objects
+
+
+But notice that the original pokemon data remains unchanged!
+
+```{r, echo = TRUE}
+pokemon
+```
+
+---
+
+
+# Why? 
+
+--
+
+The reason is because we did not *store* the changes we made as a new **object**
+
+--
+
+```{r, echo = TRUE}
+grass_pokemon = pokemon %>% 
+  filter(type1 == "grass") %>% 
+  mutate(height_mm = height_m * 1000)
+```
+
+
+---
+
+
+# Storing our changes as objects
+
+Whenever we want to *alter* an object and *keep track* of those changes, we have to store them as a new object
+
+```{r, echo = TRUE}
+grass_pokemon
+```
+
+---
+
+
+# Confused by the name
+
+--
+
+Objects are **different** from variables! Objects **contain** variables!
+
+--
+
+```{r, echo = TRUE, eval = FALSE}
+total_power = pokemon %>% 
+  mutate(total_power = hp + attack + defense + speed)
+```
+
+Here, there is an **object** called "total_power" that contains a variable called "total_power"
+
+--
+
+So confusing! Don't do this! Choose a different name!
+
+--
+
+If a HW problem says "make a variable called Joe" don't store the changes as an object called "Joe"!
+
+
+---
+
+# Tortured metaphor: making a movie
+
+
+.pull-left[
+
+- Coding is like making a movie
+
+- You can write a movie script ("code") that has all the steps to produce a scene ("data analysis"): 
+    - stand here, say this, move there, wear that
+    - filter this, mutate that
+- But if you don't hit **record** ("store as an object") you won't capture any of it
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/movies.jpeg")
+```
+]
+
+---
+
+
+class: center, middle, inverse
+# Summarizing data
+---
+
+
+# Summarizing data
+
+--
+A lot of times, with data, we want to **compare** things
+
+--
+
+Are democracies more peaceful than autocracies? Does early-voting increase turnout? Are decapitated terrorist groups weaker?
+
+--
+
+To do this, we often rely on **summaries** of our data: 
+
+--
+
+Means, medians, minimums, maximums, variances
+
+---
+
+# Means, medians, mins, maxes
+
+
+- The *mean*: 3, 4, 8 ➡️ (3 + 4 + 8) / 3 = 5
+
+- The *median*: 3, **4**, 8 ➡️ 4
+
+- The *min*: **3**, 4, 8 ➡️ 3
+
+- The *mean*: 3, 4, **8** ➡️ 8
+
+
+---
+
+
+# Example: an experiment
+
+
+Some counties let people vote **early**; others don't
+
+--
+
+Do counties with early provisions have **higher** turnout? 
+
+---
+
+
+# The data
+
+.scroll-output[
+```{r}
+set.seed(1990)
+fake = tibble(`Vote early?` = sample(x = c("Yes", "No"), size = 3000, 
+                              replace = TRUE)) %>% 
+  mutate(`Turnout (%)` = rnorm(n = 3000, mean = 40 + 10*I(`Vote early?` == "Yes"), sd = 5))
+
+knitr::kable(head(fake, n = 100), align = "cc")
+```
+]
+
+
+---
+
+
+# Making comparisons
+
+
+We can compare the *averages* of counties that do have early voting against those that don't:
+
+```{r}
+fake %>% 
+  group_by(`Vote early?`) %>% 
+  summarise(`Average turnout` = mean(`Turnout (%)`)) %>% 
+  knitr::kable()
+```
+
+
+Counties with early voting have, **on average**, 10 percentage points higher turnout
+
+
+---
+
+# Mean vs. median
+
+
+We almost always compare averages, but medians are helpful in some cases:
+
+```{r, out.width = "80%"}
+set.seed(1990)
+fake = tibble(income = rexp(n = 500, rate = .005)) %>% 
+  mutate(income = income * 1000)
+
+ggplot(fake, aes(x = income)) + 
+  geom_histogram(color = "white", fill = red, alpha = .8) + 
+  theme_bw(base_family = "Fira Sans") + 
+  labs(title = "Fake distribution of household income in the US", 
+       x = NULL, y = NULL) + 
+  scale_x_continuous(labels = scales::dollar) + 
+  geom_vline(xintercept = mean(fake$income), 
+             lty = 2, 
+             size = 2, 
+             color = yellow) + 
+  geom_vline(xintercept = median(fake$income), 
+             lty = 2, 
+             size = 2, 
+             color = blue) + 
+  geom_text(aes(x = 500000, y = 75,
+                label = glue::glue("median: {scales::dollar(round(median(fake$income), 0))}")), 
+            color = blue, family = "Fira Sans", size = 5) + 
+  geom_text(aes(x = 500000, y = 65,
+                label = glue::glue("median: {scales::dollar(round(mean(fake$income), 0))}")), 
+            color = yellow, family = "Fira Sans", size = 5)
+```
+
+???
+What's happening here?
+
+---
+
+# One more stat: variation
+
+--
+
+Another way that data can vary is by how **wide** the distribution is
+
+--
+
+Some distributions are very narrow, others are very wide
+
+--
+
+Narrow = observations are similar; wide = observations are not similar
+
+---
+
+# Measuring variation: the standard deviation
+
+
+If you're interested in the formula here it is: 
+
+$$ s^2 = \sqrt{\sum_{i=1}^n (x_i - \bar{x})^2}$$
+
+-- 
+
+But in human terms, the *bigger* the standard deviation the *wider* the distribution
+
+---
+
+
+
+# Variation
+
+
+Same average (~$50,000) different **standard deviations**
+
+
+```{r}
+fake = tibble(`narrow, sd = $5,000` = rnorm(n = 200, mean = 50, sd = 5), 
+              `wide, sd = $10,000` = rnorm(n = 200, mean = 50, sd = 10), 
+              `very wide, sd = $20,000` = rnorm(n = 200, mean = 50, sd = 20)) %>% 
+  pivot_longer(everything()) %>% 
+  mutate(value = value * 10000, 
+         name = factor(name, levels = c("narrow, sd = $5,000", 
+                                        "wide, sd = $10,000",
+                                        "very wide, sd = $20,000")))
+
+ggplot(fake, aes(x = value, fill = name)) + 
+  geom_histogram(color = "white", alpha = .8) + 
+  facet_wrap(vars(name)) + 
+  scale_x_continuous(labels = scales::comma) + 
+  theme_bw(base_family = "Fira Sans", base_size = 14) + 
+  theme(legend.position = "none") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  labs(x = "Household income", y = NULL)
+```
+
+---
+
+
+
+class: center, middle
+# Summary statistics with `summarize()`
+
+
+We can use `summarize()` to **calculate** things like the mean, median, etc.
+
+
+```{r, out.width="60%"}
+knitr::include_graphics("images/summarize.png")
+```
+
+---
+
+# Using `summarize()`
+
+
+Say I want to know the average life expectancy in the world in 2007:
+
+--
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) #<<
+```
+
+---
+
+
+# Using `summarize()`
+
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  summarize() #<<
+```
+
+---
+
+# Using `summarize()`
+
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  summarize(avg_life = mean(lifeExp)) #<<
+```
+
+
+Notice! how the data has been *summarized*: only one row!
+
+
+---
+
+# Using `summarize()`
+
+
+What if I also wanted to know the **median** life expectancy?
+
+--
+
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  summarize(avg_life = mean(lifeExp), 
+            med_life = median(lifeExp)) #<<
+```
+
+
+Notice! how similar this looks to `mutate()`
+
+---
+
+# Using `summarize()`
+
+
+What if I also wanted to know the **min** and **max** life expectancy?
+
+--
+
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  summarize(avg_life = mean(lifeExp), 
+            med_life = median(lifeExp), 
+            min_life = min(lifeExp), 
+            max_life = max(lifeExp))
+```
+
+---
+
+# Using `summarize()`
+
+
+```{r, echo = TRUE, eval = FALSE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  summarize(avg_life = mean(lifeExp), #<<
+            med_life = median(lifeExp), #<<
+            min_life = min(lifeExp), #<<
+            max_life = max(lifeExp)) #<<
+```
+
+--
+
+`summarize()` is like `mutate()` in that you are creating *new variables*
+
+--
+
+So note that you have to *name* the new variables!
+
+
+---
+
+# Bane of my existence: missing data
+
+
+In life, sometimes data is **missing**: respondent doesn't answer a question, no one knows how much wheat England produced in 1823, etc.
+
+R represents missing data as **NA**
+
+```{r}
+pokemon %>% 
+  filter(is.na(height_m)) %>% 
+  sample_n(10) %>% 
+  knitr::kable()
+```
+
+---
+
+# Bane of my existence: missing data
+
+
+If you try to *summarize* data that has missing values, R will return `NA`:
+
+
+```{r, echo = TRUE}
+pokemon %>% 
+  summarise(average_height = mean(height_m))
+```
+
+---
+
+# Bane of my existence: missing data
+
+There are whole classes on what to do with missing data
+
+but here we will tell R to ignore missing observations, by adding `na.rm = TRUE` to our summary function
+
+```{r, echo = TRUE}
+pokemon %>% 
+  summarise(average_height = mean(height_m, na.rm = TRUE)) #<<
+```
+
+---
+
+# Bane of my existence: missing data
+
+
+If you're trying to calculate a summary statistic and keep getting `NA`...
+
+99.99999% of the time you need to add `na.rm = TRUE` to your function!
+
+```{r, echo = TRUE, eval = TRUE}
+pokemon %>% 
+  summarise(average_height = mean(height_m, na.rm = TRUE)) #<<
+```
+
+---
+
+# 🚨 Your turn: elections 🚨
+
+
+1. What is the average, minimum, and maximum percent of the vote that Democrats won in 2016? Bonus: where was that min and max? 
+
+--
+
+2. How many people live in the median county in Florida? 
+
+--
+
+3. Which region has the biggest variation in the land area of its counties?
+
+--
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+# Relationships
+
+`summarize()` lets us calculate the min, max, median, mean, sd, etc., across the whole dataset
+
+But what if we want to do this for different *groups** within the data? 
+
+This is at the heart of making **comparisons**!
+
+---
+
+
+# The brutal way
+
+```{r}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(continent == "Oceania") %>% 
+  summarise(avg_life = mean(lifeExp))
+
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(continent == "Africa") %>% 
+  summarise(avg_life = mean(lifeExp))
+
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(continent == "Americas") %>% 
+  summarise(avg_life = mean(lifeExp))
+```
+
+
+---
+
+
+# Using `group_by()`
+
+
+We can use `group_by()` to calculate some stat **by** a categorical variable in the data: 
+
+```{r}
+gapminder %>% 
+  group_by(year) %>% #<<
+  summarise(avg_life = mean(lifeExp))
+```
+
+---
+
+# Using `group_by()`
+
+
+Like with anything else, we can store our results as a new object: 
+
+
+```{r}
+life_year = gapminder %>%
+  group_by(year) %>% #<<
+  summarise(avg_life = mean(lifeExp))
+```
+
+---
+
+# Life expectancy over time
+
+And use our object to make plots:
+
+```{r}
+ggplot(life_year, aes(x = year, y = avg_life)) + 
+  geom_line(size = 2, color = blue, alpha = .8) + 
+  labs(x = "Year", y = "Average life expectancy") + 
+  theme_bw(base_family = "Fira Sans", base_size = 14)
+```
+
+
+---
+
+# Using `group_by()`
+
+
+We can even `group_by()` multiple variables 🤯: 
+
+```{r}
+gapminder %>%
+  group_by(year, continent) %>% #<<
+  summarise(avg_life = mean(lifeExp))
+```
+
+---
+
+# Using `group_by()`
+
+
+We can even `group_by()` multiple variables 🤯: 
+
+```{r}
+life_continent_year = gapminder %>%
+  group_by(year, continent) %>% #<<
+  summarise(avg_life = mean(lifeExp))
+```
+
+---
+
+# Using `group_by()`
+
+
+```{r}
+ggplot(life_continent_year, aes(x = year, y = avg_life, 
+                                color = continent)) + 
+  geom_line(size = 2, alpha = .8) + 
+  labs(x = "Year", y = "Average life expectancy") + 
+  theme_bw(base_family = "Fira Sans", base_size = 14) + 
+  theme(legend.position = "bottom") + 
+  scale_color_viridis_d(option = "rocket", end = .8)
+```
+
+---
+
+

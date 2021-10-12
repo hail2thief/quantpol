@@ -26,8 +26,8 @@ lessons:
 
   - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
     date: "Oct 12, Oct 14"
-    #class: "data-tidy"
-    #reading: "data-import"
+    class: "data-summary"
+    reading: "data-summary"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 3**'
   #   #date: "Feb 9, Tue"

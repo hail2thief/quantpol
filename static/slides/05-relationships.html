@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Relationships</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-10-11" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Relationships
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Data, objects, variables]
+
+--
+.box-2.large.sp-after[Mean, median, variance]
+
+--
+.box-3.large.sp-after[Summarizing data]
+
+---
+
+
+# Data, objects, variables
+
+
+Objects are one of the most confusing parts of coding for new programmers
+
+--
+
+An **object** is a "thing" that lives in R that we can use; think of the pantry metaphor!
+
+--
+
+In this class, 99.99% of objects are just **data** we are using
+
+--
+
+Data has **variables** which are represented as columns
+
+
+---
+
+# Example: pokemon
+
+Once you load the `pokemon` data in your homework, it becomes an object; you can tell it's an object because: 
+
+--
+
+1. it shows up in the top-right screen (the "environment")
+2. when you type it out and run it in R you can see the contents
+
+--
+
+
+```r
+pokemon
+```
+
+```
+## # A tibble: 801 × 14
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
+```
+
+---
+
+
+# Objects have variables
+
+
+Columns like `type1` are *variables*
+
+
+
+```r
+pokemon
+```
+
+```
+## # A tibble: 801 × 14
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
+```
+
+---
+
+
+# Objects
+
+You can do stuff to objects, like subset based on rules (using `filter()`), creating new **variables** (with `mutate()`), etc. 
+
+
+```r
+pokemon %&gt;% 
+  filter(type1 == "grass") %&gt;% 
+  mutate(height_mm = height_m * 1000)
+```
+
+```
+## # A tibble: 78 × 15
+##    name       type1 type2   height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison       0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison       1        13             45    60     62      63
+##  3 Venusaur   grass poison       2       100             45    80    100     123
+##  4 Oddish     grass poison       0.5       5.4          255    45     50      55
+##  5 Gloom      grass poison       0.8       8.6          120    60     65      70
+##  6 Vileplume  grass poison       1.2      18.6           45    75     80      85
+##  7 Bellsprout grass poison       0.7       4            255    50     75      35
+##  8 Weepinbell grass poison       1         6.4          120    65     90      50
+##  9 Victreebel grass poison       1.7      15.5           45    80    105      65
+## 10 Exeggcute  grass psychic      0.4       2.5           90    60     40      80
+## # … with 68 more rows, and 6 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
+```
+
+
+---
+
+# Objects
+
+
+But notice that the original pokemon data remains unchanged!
+
+
+```r
+pokemon
+```
+
+```
+## # A tibble: 801 × 14
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
+```
+
+---
+
+
+# Why? 
+
+--
+
+The reason is because we did not *store* the changes we made as a new **object**
+
+--
+
+
+```r
+grass_pokemon = pokemon %&gt;% 
+  filter(type1 == "grass") %&gt;% 
+  mutate(height_mm = height_m * 1000)
+```
+
+
+---
+
+
+# Storing our changes as objects
+
+Whenever we want to *alter* an object and *keep track* of those changes, we have to store them as a new object
+
+
+```r
+grass_pokemon
+```
+
+```
+## # A tibble: 78 × 15
+##    name       type1 type2   height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison       0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison       1        13             45    60     62      63
+##  3 Venusaur   grass poison       2       100             45    80    100     123
+##  4 Oddish     grass poison       0.5       5.4          255    45     50      55
+##  5 Gloom      grass poison       0.8       8.6          120    60     65      70
+##  6 Vileplume  grass poison       1.2      18.6           45    75     80      85
+##  7 Bellsprout grass poison       0.7       4            255    50     75      35
+##  8 Weepinbell grass poison       1         6.4          120    65     90      50
+##  9 Victreebel grass poison       1.7      15.5           45    80    105      65
+## 10 Exeggcute  grass psychic      0.4       2.5           90    60     40      80
+## # … with 68 more rows, and 6 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
+```
+
+---
+
+
+# Confused by the name
+
+--
+
+Objects are **different** from variables! Objects **contain** variables!
+
+--
+
+
+```r
+total_power = pokemon %&gt;% 
+  mutate(total_power = hp + attack + defense + speed)
+```
+
+Here, there is an **object** called "total_power" that contains a variable called "total_power"
+
+--
+
+So confusing! Don't do this! Choose a different name!
+
+--
+
+If a HW problem says "make a variable called Joe" don't store the changes as an object called "Joe"!
+
+
+---
+
+# Tortured metaphor: making a movie
+
+
+.pull-left[
+
+- Coding is like making a movie
+
+- You can write a movie script ("code") that has all the steps to produce a scene ("data analysis"): 
+    - stand here, say this, move there, wear that
+    - filter this, mutate that
+- But if you don't hit **record** ("store as an object") you won't capture any of it
+]
+
+
+.pull-right[
+&lt;img src="images/movies.jpeg" width="100%" /&gt;
+]
+
+---
+
+
+class: center, middle, inverse
+# Summarizing data
+---
+
+
+# Summarizing data
+
+--
+A lot of times, with data, we want to **compare** things
+
+--
+
+Are democracies more peaceful than autocracies? Does early-voting increase turnout? Are decapitated terrorist groups weaker?
+
+--
+
+To do this, we often rely on **summaries** of our data: 
+
+--
+
+Means, medians, minimums, maximums, variances
+
+---
+
+# Means, medians, mins, maxes
+
+
+- The *mean*: 3, 4, 8 ➡️ (3 + 4 + 8) / 3 = 5
+
+- The *median*: 3, **4**, 8 ➡️ 4
+
+- The *min*: **3**, 4, 8 ➡️ 3
+
+- The *mean*: 3, 4, **8** ➡️ 8
+
+
+---
+
+
+# Example: an experiment
+
+
+Some counties let people vote **early**; others don't
+
+--
+
+Do counties with early provisions have **higher** turnout? 
+
+---
+
+
+# The data
+
+.scroll-output[
+
+| Vote early? | Turnout (%) |
+|:-----------:|:-----------:|
+|     Yes     |  54.70134   |
+|     Yes     |  56.67198   |
+|     No      |  37.31486   |
+|     No      |  44.06075   |
+|     No      |  40.63343   |
+|     No      |  38.63640   |
+|     Yes     |  46.67237   |
+|     No      |  35.41287   |
+|     Yes     |  51.79616   |
+|     Yes     |  50.12574   |
+|     No      |  40.17593   |
+|     No      |  42.54710   |
+|     No      |  35.36897   |
+|     Yes     |  57.26803   |
+|     No      |  38.85047   |
+|     Yes     |  56.61632   |
+|     Yes     |  51.07639   |
+|     No      |  35.85320   |
+|     No      |  38.11851   |
+|     No      |  30.52118   |
+|     No      |  51.95092   |
+|     Yes     |  49.71536   |
+|     Yes     |  47.49626   |
+|     Yes     |  51.07212   |
+|     Yes     |  41.18409   |
+|     Yes     |  49.49645   |
+|     Yes     |  40.40468   |
+|     No      |  43.20250   |
+|     Yes     |  53.19389   |
+|     Yes     |  41.04148   |
+|     No      |  39.35379   |
+|     Yes     |  47.22530   |
+|     No      |  42.57996   |
+|     Yes     |  47.76984   |
+|     Yes     |  50.87737   |
+|     Yes     |  45.21528   |
+|     Yes     |  54.17120   |
+|     No      |  36.20884   |
+|     No      |  43.14378   |
+|     No      |  43.83159   |
+|     Yes     |  50.70266   |
+|     No      |  48.48301   |
+|     No      |  32.47768   |
+|     Yes     |  45.95059   |
+|     No      |  42.84139   |
+|     No      |  33.07566   |
+|     Yes     |  50.13676   |
+|     Yes     |  44.96485   |
+|     Yes     |  51.88326   |
+|     No      |  36.11839   |
+|     Yes     |  52.59222   |
+|     Yes     |  40.94262   |
+|     Yes     |  45.30368   |
+|     No      |  42.19874   |
+|     Yes     |  50.47779   |
+|     No      |  48.96177   |
+|     Yes     |  53.67831   |
+|     Yes     |  52.99498   |
+|     No      |  34.71113   |
+|     Yes     |  55.48655   |
+|     Yes     |  45.82999   |
+|     No      |  38.22289   |
+|     Yes     |  51.25093   |
+|     Yes     |  46.78065   |
+|     No      |  34.54275   |
+|     Yes     |  51.20002   |
+|     Yes     |  41.39924   |
+|     Yes     |  47.18552   |
+|     Yes     |  55.27661   |
+|     No      |  38.00701   |
+|     Yes     |  60.83595   |
+|     No      |  43.21247   |
+|     No      |  41.63833   |
+|     No      |  40.85854   |
+|     Yes     |  45.38418   |
+|     No      |  40.12842   |
+|     Yes     |  57.44979   |
+|     No      |  39.44250   |
+|     Yes     |  51.32060   |
+|     Yes     |  53.08293   |
+|     Yes     |  51.58609   |
+|     No      |  52.63084   |
+|     No      |  44.78796   |
+|     No      |  40.25306   |
+|     Yes     |  51.99692   |
+|     No      |  31.67287   |
+|     No      |  39.59996   |
+|     No      |  32.95036   |
+|     Yes     |  47.02116   |
+|     Yes     |  51.62761   |
+|     No      |  43.98223   |
+|     No      |  44.68915   |
+|     Yes     |  60.98289   |
+|     No      |  38.12647   |
+|     No      |  48.73251   |
+|     Yes     |  51.91453   |
+|     Yes     |  44.15774   |
+|     No      |  34.74711   |
+|     No      |  47.97507   |
+|     No      |  43.51998   |
+]
+
+
+---
+
+
+# Making comparisons
+
+
+We can compare the *averages* of counties that do have early voting against those that don't:
+
+
+|Vote early? | Average turnout|
+|:-----------|---------------:|
+|No          |        40.07617|
+|Yes         |        50.24075|
+
+
+Counties with early voting have, **on average**, 10 percentage points higher turnout
+
+
+---
+
+# Mean vs. median
+
+
+We almost always compare averages, but medians are helpful in some cases:
+
+&lt;img src="05-relationships_files/figure-html/unnamed-chunk-11-1.png" width="80%" /&gt;
+
+???
+What's happening here?
+
+---
+
+# One more stat: variation
+
+--
+
+Another way that data can vary is by how **wide** the distribution is
+
+--
+
+Some distributions are very narrow, others are very wide
+
+--
+
+Narrow = observations are similar; wide = observations are not similar
+
+---
+
+# Measuring variation: the standard deviation
+
+
+If you're interested in the formula here it is: 
+
+$$ s^2 = \sqrt{\sum_{i=1}^n (x_i - \bar{x})^2}$$
+
+-- 
+
+But in human terms, the *bigger* the standard deviation the *wider* the distribution
+
+---
+
+
+
+# Variation
+
+
+Same average (~$50,000) different **standard deviations**
+
+
+&lt;img src="05-relationships_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+
+---
+
+
+
+class: center, middle
+# Summary statistics with `summarize()`
+
+
+We can use `summarize()` to **calculate** things like the mean, median, etc.
+
+
+&lt;img src="images/summarize.png" width="60%" /&gt;
+
+---
+
+# Using `summarize()`
+
+
+Say I want to know the average life expectancy in the world in 2007:
+
+--
+
+
+```r
+gapminder %&gt;% 
+* filter(year == 2007)
+```
+
+```
+## # A tibble: 142 × 6
+##    country     continent  year lifeExp       pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;     &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       2007    43.8  31889923      975.
+##  2 Albania     Europe     2007    76.4   3600523     5937.
+##  3 Algeria     Africa     2007    72.3  33333216     6223.
+##  4 Angola      Africa     2007    42.7  12420476     4797.
+##  5 Argentina   Americas   2007    75.3  40301927    12779.
+##  6 Australia   Oceania    2007    81.2  20434176    34435.
+##  7 Austria     Europe     2007    79.8   8199783    36126.
+##  8 Bahrain     Asia       2007    75.6    708573    29796.
+##  9 Bangladesh  Asia       2007    64.1 150448339     1391.
+## 10 Belgium     Europe     2007    79.4  10392226    33693.
+## # … with 132 more rows
+```
+
+---
+
+
+# Using `summarize()`
+
+
+
+```r
+gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+* summarize()
+```
+
+```
+## # A tibble: 1 × 0
+```
+
+---
+
+# Using `summarize()`
+
+
+
+```r
+gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+* summarize(avg_life = mean(lifeExp))
+```
+
+```
+## # A tibble: 1 × 1
+##   avg_life
+##      &lt;dbl&gt;
+## 1     67.0
+```
+
+
+Notice! how the data has been *summarized*: only one row!
+
+
+---
+
+# Using `summarize()`
+
+
+What if I also wanted to know the **median** life expectancy?
+
+--
+
+
+
+```r
+gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+  summarize(avg_life = mean(lifeExp), 
+*           med_life = median(lifeExp))
+```
+
+```
+## # A tibble: 1 × 2
+##   avg_life med_life
+##      &lt;dbl&gt;    &lt;dbl&gt;
+## 1     67.0     71.9
+```
+
+
+Notice! how similar this looks to `mutate()`
+
+---
+
+# Using `summarize()`
+
+
+What if I also wanted to know the **min** and **max** life expectancy?
+
+--
+
+
+
+```r
+gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+  summarize(avg_life = mean(lifeExp), 
+            med_life = median(lifeExp), 
+            min_life = min(lifeExp), 
+            max_life = max(lifeExp))
+```
+
+```
+## # A tibble: 1 × 4
+##   avg_life med_life min_life max_life
+##      &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1     67.0     71.9     39.6     82.6
+```
+
+---
+
+# Using `summarize()`
+
+
+
+```r
+gapminder %&gt;% 
+  filter(year == 2007) %&gt;% 
+* summarize(avg_life = mean(lifeExp),
+*           med_life = median(lifeExp),
+*           min_life = min(lifeExp),
+*           max_life = max(lifeExp))
+```
+
+--
+
+`summarize()` is like `mutate()` in that you are creating *new variables*
+
+--
+
+So note that you have to *name* the new variables!
+
+
+---
+
+# Bane of my existence: missing data
+
+
+In life, sometimes data is **missing**: respondent doesn't answer a question, no one knows how much wheat England produced in 1823, etc.
+
+R represents missing data as **NA**
+
+
+|name      |type1    |type2    | height_m| weight_kg| capture_rate| hp| attack| defense| sp_attack| sp_defense| speed| generation| is_legendary|
+|:---------|:--------|:--------|--------:|---------:|------------:|--:|------:|-------:|---------:|----------:|-----:|----------:|------------:|
+|Vulpix    |fire     |ice      |       NA|        NA|          190| 38|     41|      40|        50|         65|    65|          1|            0|
+|Dugtrio   |ground   |ground   |       NA|        NA|           50| 35|    100|      60|        50|         70|   110|          1|            0|
+|Persian   |normal   |dark     |       NA|        NA|           90| 65|     60|      60|        75|         65|   115|          1|            0|
+|Lycanroc  |rock     |NA       |       NA|        NA|           90| 85|    115|      75|        55|         75|    82|          7|            0|
+|Sandshrew |ground   |ice      |       NA|        NA|          255| 50|     75|      90|        10|         35|    40|          1|            0|
+|Golem     |rock     |ground   |       NA|        NA|           45| 80|    120|     130|        55|         65|    45|          1|            0|
+|Geodude   |rock     |ground   |       NA|        NA|          255| 40|     80|     100|        30|         30|    20|          1|            0|
+|Diglett   |ground   |ground   |       NA|        NA|          255| 10|     55|      30|        35|         45|    90|          1|            0|
+|Sandslash |ground   |ice      |       NA|        NA|           90| 75|    100|     120|        25|         65|    65|          1|            0|
+|Raichu    |electric |electric |       NA|        NA|           75| 60|     85|      50|        95|         85|   110|          1|            0|
+
+---
+
+# Bane of my existence: missing data
+
+
+If you try to *summarize* data that has missing values, R will return `NA`:
+
+
+
+```r
+pokemon %&gt;% 
+  summarise(average_height = mean(height_m))
+```
+
+```
+## # A tibble: 1 × 1
+##   average_height
+##            &lt;dbl&gt;
+## 1             NA
+```
+
+---
+
+# Bane of my existence: missing data
+
+There are whole classes on what to do with missing data
+
+but here we will tell R to ignore missing observations, by adding `na.rm = TRUE` to our summary function
+
+
+```r
+pokemon %&gt;% 
+* summarise(average_height = mean(height_m, na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 × 1
+##   average_height
+##            &lt;dbl&gt;
+## 1           1.16
+```
+
+---
+
+# Bane of my existence: missing data
+
+
+If you're trying to calculate a summary statistic and keep getting `NA`...
+
+99.99999% of the time you need to add `na.rm = TRUE` to your function!
+
+
+```r
+pokemon %&gt;% 
+* summarise(average_height = mean(height_m, na.rm = TRUE))
+```
+
+```
+## # A tibble: 1 × 1
+##   average_height
+##            &lt;dbl&gt;
+## 1           1.16
+```
+
+---
+
+# 🚨 Your turn: elections 🚨
+
+
+1. What is the average, minimum, and maximum percent of the vote that Democrats won in 2016? Bonus: where was that min and max? 
+
+--
+
+2. How many people live in the median county in Florida? 
+
+--
+
+3. Which region has the biggest variation in the land area of its counties?
+
+--
+
+
+<div class="countdown" id="timer_6164c497" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+# Relationships
+
+`summarize()` lets us calculate the min, max, median, mean, sd, etc., across the whole dataset
+
+But what if we want to do this for different *groups** within the data? 
+
+This is at the heart of making **comparisons**!
+
+---
+
+
+# The brutal way
+
+
+```
+## # A tibble: 1 × 1
+##   avg_life
+##      &lt;dbl&gt;
+## 1     80.7
+```
+
+```
+## # A tibble: 1 × 1
+##   avg_life
+##      &lt;dbl&gt;
+## 1     54.8
+```
+
+```
+## # A tibble: 1 × 1
+##   avg_life
+##      &lt;dbl&gt;
+## 1     73.6
+```
+
+
+---
+
+
+# Using `group_by()`
+
+
+We can use `group_by()` to calculate some stat **by** a categorical variable in the data: 
+
+
+```
+## # A tibble: 12 × 2
+##     year avg_life
+##    &lt;int&gt;    &lt;dbl&gt;
+##  1  1952     49.1
+##  2  1957     51.5
+##  3  1962     53.6
+##  4  1967     55.7
+##  5  1972     57.6
+##  6  1977     59.6
+##  7  1982     61.5
+##  8  1987     63.2
+##  9  1992     64.2
+## 10  1997     65.0
+## 11  2002     65.7
+## 12  2007     67.0
+```
+
+---
+
+# Using `group_by()`
+
+
+Like with anything else, we can store our results as a new object: 
+
+
+
+
+---
+
+# Life expectancy over time
+
+And use our object to make plots:
+
+&lt;img src="05-relationships_files/figure-html/unnamed-chunk-28-1.png" width="100%" /&gt;
+
+
+---
+
+# Using `group_by()`
+
+
+We can even `group_by()` multiple variables 🤯: 
+
+
+```
+## # A tibble: 60 × 3
+## # Groups:   year [12]
+##     year continent avg_life
+##    &lt;int&gt; &lt;fct&gt;        &lt;dbl&gt;
+##  1  1952 Africa        39.1
+##  2  1952 Americas      53.3
+##  3  1952 Asia          46.3
+##  4  1952 Europe        64.4
+##  5  1952 Oceania       69.3
+##  6  1957 Africa        41.3
+##  7  1957 Americas      56.0
+##  8  1957 Asia          49.3
+##  9  1957 Europe        66.7
+## 10  1957 Oceania       70.3
+## # … with 50 more rows
+```
+
+---
+
+# Using `group_by()`
+
+
+We can even `group_by()` multiple variables 🤯: 
+
+
+
+---
+
+# Using `group_by()`
+
+
+&lt;img src="05-relationships_files/figure-html/unnamed-chunk-31-1.png" width="100%" /&gt;
+
+---
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
