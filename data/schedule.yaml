@@ -28,6 +28,7 @@ lessons:
     date: "Oct 12, Oct 14"
     class: "data-summary"
     reading: "data-summary"
+    assignment: "ps-summary"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 3**'
   #   #date: "Feb 9, Tue"

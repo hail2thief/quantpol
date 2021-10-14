@@ -1,6 +1,6 @@
 # libraries
 library(tidyverse)
-
+library(fivethirtyeight)
 
 
 # elections data
@@ -15,3 +15,15 @@ therm = read_csv("https://www.dropbox.com/s/h1pwngoku0ttrgo/voter-files-therm.cs
 
 
 # do your work here!
+
+
+# bob ross data
+bob_ross
+
+
+# do your work here!
+
+
+# flight etiquette data
+flying
+

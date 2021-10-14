@@ -45,19 +45,27 @@ therm_2017 = df_2017 %>%
 write_csv(therm_2017, "../files/voter-files-therm.csv")
 
 # issues
-df %>% 
+issues = df %>% 
   select(birth_year = birthyr_2019, sex = gender_2019, 
          race = race_2019, party_id = pid3_2019, 
          crime = imiss_a_2019, economy = imiss_b_2019, 
-         immigration = imiss_c_2019, environment = imiss_d_2019, 
-         religious_liberty = imiss_e_2019, 
+         immigration = imiss_c_2019, 
+         family_medical_leave = imiss_i_2019,
+         abortion = imiss_t_2019,
          gay_rights = imiss_f_2019, 
          health_care = imiss_j_2019) %>% 
   mutate(sex = as_factor(sex), 
          race = as_factor(race), 
          party_id = as_factor(party_id)) %>% 
-  mutate(across(crime:health_care, ~ifelse(. == 8, NA, .))) %>% 
-  drop_na()
+  mutate(across(crime:health_care, ~ifelse(. > 4, NA, .))) %>% 
+  # reverse code
+  mutate(across(crime:health_care, ~5-.)) %>% 
+  drop_na(sex)
+
+
+# save for class
+write_csv(issues, "../files/voter-files-issues.csv")
+
 
 
 

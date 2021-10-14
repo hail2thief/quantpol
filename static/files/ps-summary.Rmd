@@ -1,0 +1,129 @@
+---
+title: "Problem set 3: Relationships"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(socviz)
+```
+
+
+# Task 1: The issues
+
+
+Let's look at data on which political and social issues are most important to Americans, from a survey in 2019.  Respondents gave an answer from 1 to 4 on all of these issues, where: 
+
+4: Very important
+3: Somewhat important
+2: Not very important
+1: Unimportant
+
+
+See the data here: 
+
+```{r}
+issues = read_csv("https://www.dropbox.com/s/x5xncajqsz0q09l/voter-files-issues.csv?dl=1")
+
+issues
+```
+
+
+
+Calculate the *average* level of importance for all the issues:
+
+```{r}
+
+
+```
+**Q1: which issue is, on average, most important to Americans?** 
+**Q2: which issue is, on average, least important to Americans?** 
+
+
+This is true for everyone in the sample, but what happens when we compare Democrats and Republicans? Calculate the same averages as above but *broken down by party*. 
+
+```{r}
+
+
+```
+
+**Q3: What's the most important issue to Democrats?**: 
+**Q4: What's the most important issue to Republicans?**: 
+
+
+Now, I want you to compare how male and female respondents of different race groups feel about crime. Calculate the average importance of crime, broken down by race and sex. 
+
+```{r}
+
+
+```
+
+
+Make a barplot using what you calculated, with race on the x-axis, average importance of crime on the y-axis, and filling the color of the bars by sex. Add labels and a theme. 
+
+```{r}
+
+
+```
+
+**Q5: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+**Q6: Which racial group has the biggest gender gap in attitudes towards crime?** 
+
+
+## Task 2: Categories
+
+
+Now let's look at a survey of Americans, `gss_sm` from the `socviz` package. 
+
+```{r}
+gss_sm
+```
+
+
+What's the religious ID breakdown of this sample? Calculate the percent of respondents in each religious group. 
+
+```{r}
+
+
+```
+
+**Q7: Rounding to two decimal places, what percent of the sample is Catholic?**
+
+
+
+Next: how does each religion feel about legalizing marijuana (`grass`)? Copy your code from above and modify it so that it also tells you the percent of respondents who support and don't support marijuana legalization within each religious group. 
+
+```{r}
+
+
+```
+**Q8: Which group is most pro-legalization?**
+
+
+
+
+Finally: does a person's zodiac sign tell you anything about how they vote? Calculate the proportion of respondents who voted for Obama for **each** zodiac sign. Note that Obama is a dummy variable: 1, 0. 1 = voted for Obama, 0 = did not vote for Obama. 
+
+```{r}
+
+
+```
+**Q9: Which zodiac sign is least likely to have voted for Obama?**
+
+
+All done!
