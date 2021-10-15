@@ -36,6 +36,7 @@ Let's load the libraries.
 # libraries
 library(tidyverse)
 library(nycflights13)
+library(fivethirtyeight)
 ```
 
 
@@ -75,3 +76,23 @@ ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
   geom_col() +
   coord_flip()
 ```
+
+
+
+## The Bob Ross example
+
+
+```{r}
+
+```
+
+
+
+## The flying etiquette example
+
+
+```{r}
+
+```
+
+

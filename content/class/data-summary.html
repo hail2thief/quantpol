@@ -22,6 +22,8 @@ editor_options:
 <li><a href="#in-class-example">In-class example</a></li>
 <li><a href="#summarize">Summarize</a></li>
 <li><a href="#summarize-group_by">Summarize + group_by()</a></li>
+<li><a href="#the-bob-ross-example">The Bob Ross example</a></li>
+<li><a href="#the-flying-etiquette-example">The flying etiquette example</a></li>
 </ul>
 </div>
 
@@ -35,7 +37,8 @@ editor_options:
 <p>Let’s load the libraries.</p>
 <pre class="r"><code># libraries
 library(tidyverse)
-library(nycflights13)</code></pre>
+library(nycflights13)
+library(fivethirtyeight)</code></pre>
 <p>Say we want to take the average of a variable in our dataset. <code>summarize()</code> can help us do that.</p>
 <p>Say we wanted to know how late in departure is the <em>average</em> flight in our dataset and what’s the latest a flight has ever been?</p>
 <pre class="r"><code>## on average, how late are flights in departing?
@@ -64,4 +67,10 @@ ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
   geom_col() +
   coord_flip()</code></pre>
 <p><img src="/class/data-summary_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="the-bob-ross-example" class="section level2">
+<h2>The Bob Ross example</h2>
+</div>
+<div id="the-flying-etiquette-example" class="section level2">
+<h2>The flying etiquette example</h2>
 </div>
