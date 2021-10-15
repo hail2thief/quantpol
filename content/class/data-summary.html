@@ -70,7 +70,63 @@ ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
 </div>
 <div id="the-bob-ross-example" class="section level2">
 <h2>The Bob Ross example</h2>
+<p>Happy tree?</p>
+<pre class="r"><code>bob_ross %&gt;% 
+  summarise(prop_tree = mean(tree, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   prop_tree
+##       &lt;dbl&gt;
+## 1     0.896</code></pre>
+<p>Clouds over time?</p>
+<pre class="r"><code>bob_clouds = bob_ross %&gt;% 
+  group_by(season) %&gt;% 
+  summarise(prop_clouds = mean(clouds, na.rm = TRUE))
+
+ggplot(bob_clouds, aes(x = season, y = prop_clouds)) + geom_line()</code></pre>
+<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>snowy mountain?</p>
+<pre class="r"><code>bob_ross %&gt;% 
+  filter(mountain == 1) %&gt;% 
+  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   snowiness
+##       &lt;dbl&gt;
+## 1     0.681</code></pre>
+<pre class="r"><code>bob_ross %&gt;% 
+  group_by(mountain) %&gt;% 
+  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   mountain snowiness
+##      &lt;int&gt;     &lt;dbl&gt;
+## 1        0     0    
+## 2        1     0.681</code></pre>
+<p>Steve ross?</p>
+<pre class="r"><code>bob_ross %&gt;% 
+  group_by(steve_ross) %&gt;% 
+  summarise(lake_chance = mean(lake, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   steve_ross lake_chance
+##        &lt;int&gt;       &lt;dbl&gt;
+## 1          0       0.339
+## 2          1       0.909</code></pre>
 </div>
 <div id="the-flying-etiquette-example" class="section level2">
 <h2>The flying etiquette example</h2>
+<p>Middle arm rest?</p>
+<pre class="r"><code>middle_arm_rests = flying %&gt;% 
+  group_by(two_arm_rests) %&gt;% 
+  tally() %&gt;% 
+  mutate(percent = n/sum(n))
+
+ggplot(middle_arm_rests, aes(x = percent, y = two_arm_rests)) + 
+  geom_col()</code></pre>
+<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Unruly children?</p>
+<pre class="r"><code>nasty_kids = flying %&gt;% 
+  group_by(children_under_18, unruly_child) %&gt;% 
+  tally() %&gt;% 
+  mutate(p_unruly = n/sum(n))
+
+ggplot(nasty_kids, aes(x = unruly_child, y = p_unruly, fill = children_under_18)) + geom_col(position = &quot;dodge&quot;)</code></pre>
+<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>

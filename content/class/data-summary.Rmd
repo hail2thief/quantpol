@@ -81,18 +81,72 @@ ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
 
 ## The Bob Ross example
 
+Happy tree?
 
 ```{r}
+bob_ross %>% 
+  summarise(prop_tree = mean(tree, na.rm = TRUE))
+```
 
+
+Clouds over time?
+
+```{r}
+bob_clouds = bob_ross %>% 
+  group_by(season) %>% 
+  summarise(prop_clouds = mean(clouds, na.rm = TRUE))
+
+ggplot(bob_clouds, aes(x = season, y = prop_clouds)) + geom_line()
+```
+
+
+snowy mountain?
+
+```{r}
+bob_ross %>% 
+  filter(mountain == 1) %>% 
+  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))
+
+
+bob_ross %>% 
+  group_by(mountain) %>% 
+  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))
+
+```
+
+Steve ross?
+
+```{r}
+bob_ross %>% 
+  group_by(steve_ross) %>% 
+  summarise(lake_chance = mean(lake, na.rm = TRUE))
 ```
 
 
 
 ## The flying etiquette example
 
+Middle arm rest?
 
 ```{r}
+middle_arm_rests = flying %>% 
+  group_by(two_arm_rests) %>% 
+  tally() %>% 
+  mutate(percent = n/sum(n))
 
+ggplot(middle_arm_rests, aes(x = percent, y = two_arm_rests)) + 
+  geom_col()
 ```
 
+
+Unruly children?
+
+```{r}
+nasty_kids = flying %>% 
+  group_by(children_under_18, unruly_child) %>% 
+  tally() %>% 
+  mutate(p_unruly = n/sum(n))
+
+ggplot(nasty_kids, aes(x = unruly_child, y = p_unruly, fill = children_under_18)) + geom_col(position = "dodge")
+```
 
