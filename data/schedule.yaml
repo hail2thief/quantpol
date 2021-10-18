@@ -29,15 +29,11 @@ lessons:
     class: "data-summary"
     reading: "data-summary"
     assignment: "ps-summary"
-    
-  # - title: '<i class="fas fa-star"></i> **Assignment 3**'
-  #   #date: "Feb 9, Tue"
-  #   #assignment: "ps-tidy"
 
-  - title: 'Week 5: Intro to regression<br><i class="fas fa-star"></i> **Assignment 4**'
+  - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
     date: "Oct 19, Oct 21"
     #class: "regression"
-    #reading: "intro-reg"
+    reading: "intro-reg"
   #   
   # - title: '<i class="fas fa-star"></i> **Assignment 4**'
   #   #date: "Feb 16, Tue"
