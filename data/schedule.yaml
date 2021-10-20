@@ -32,7 +32,7 @@ lessons:
 
   - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
     date: "Oct 19, Oct 21"
-    #class: "regression"
+    class: "regression"
     reading: "intro-reg"
   #   
   # - title: '<i class="fas fa-star"></i> **Assignment 4**'

@@ -1,0 +1,1029 @@
+---
+title: "Modeling I"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(socviz)
+library(faux)
+library(fivethirtyeight)
+library(patchwork)
+library(kableExtra)
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+
+# pokemon
+pokemon = read_csv("../files/pokemon.csv")
+
+
+## thermometer
+therm = read_csv("../files/voter-files-therm.csv")
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Correlations]
+
+--
+.box-2.large.sp-after[Models and lines]
+
+--
+.box-3.large.sp-after[How to draw a line]
+
+---
+
+class: left, middle
+background-image: url("images/pattern.jpeg")
+background-position: right
+background-size: 600px
+# Patterns in the data
+
+.pull-left[
+* So far: wrangling and visualizing data
+* Looking for **patterns** (hopefully real)
+* Examples?
+]
+
+
+
+---
+
+
+background-image: url("images/correlation.png")
+background-position: bottom
+background-size: 600px
+# Patterns and correlations
+
+
+A useful way to talk about these patterns is in terms of **correlations**
+
+--
+
+When we see a pattern between two (or more) variables, we say they are **correlated**; when we don't see one, we say they are **uncorrelated**
+
+--
+
+Correlations can be **strong** or **weak**, **positive** or **negative**
+
+
+---
+
+# Correlations: strength
+
+When two variables "move together", the correlation is **strong**
+
+When they don't "move together", the correlation is **weak**
+
+```{r}
+p1 = county_data %>% 
+  select(travel_time, per_dem_2016) %>% 
+  mutate(group = "Weak correlation") %>% 
+  ggplot(aes(x = travel_time, y = per_dem_2016)) + 
+  geom_point(alpha = .7, color = red) + 
+  theme_fancy + 
+  labs(x = "Mean travel time to work (minutes)", 
+       y = "Democratic Presidential vote, 2016") + 
+  scale_y_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 = county_data %>% 
+  select(per_dem_2012, per_dem_2016) %>% 
+  mutate(group = "Strong correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_dem_2016)) + 
+  geom_point(alpha = .7, color = red) + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p1 + p2
+```
+
+---
+
+# Correlations: strength
+
+.small[
+Better heuristic: knowing about one variable tells you *something* about the other
+
+**Strong**: if you know how a county voted in 2012, you have a good guess for how they'll vote in 2016
+
+**Weak**: if you know how a long it takes to drive to work in a county, you know almost nothing about how it voted
+]
+
+
+```{r, out.width="80%"}
+p1 = county_data %>% 
+  select(travel_time, per_dem_2016) %>% 
+  mutate(group = "Weak correlation") %>% 
+  ggplot(aes(x = travel_time, y = per_dem_2016)) + 
+  geom_point(alpha = .7, color = red) + 
+  theme_fancy + 
+  labs(x = "Mean travel time to work (minutes)", 
+       y = "Democratic Presidential vote, 2016") + 
+  scale_y_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 = county_data %>% 
+  select(per_dem_2012, per_dem_2016) %>% 
+  mutate(group = "Strong correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_dem_2016)) + 
+  geom_point(alpha = .7, color = red) + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p1 + p2
+```
+
+---
+
+# Correlation: strength
+
+We also talk (informally) about correlations that include **categorical** variables
+
+Big gaps between groups $\rightarrow$ strength
+
+
+```{r}
+p1 = therm %>% 
+  filter(party_id %in% c("Democrat", "Republican")) %>% 
+  group_by(party_id) %>% 
+  summarise(avg = mean(ft_muslim_2017, na.rm = TRUE)) %>% 
+  mutate(group = "Muslims") %>% 
+  ggplot(aes(x = party_id, y = avg, fill = party_id)) + 
+  geom_col(alpha = .8, color = "white") + 
+  theme_fancy + 
+  scale_fill_brewer(palette = "Set1", direction = -1) + 
+  theme(legend.position = "none") + 
+  facet_wrap(vars(group)) + 
+  labs(x = NULL, y = "Average thermometer") + 
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+p2 = therm %>% 
+  filter(party_id %in% c("Democrat", "Republican")) %>% 
+  group_by(party_id) %>% 
+  summarise(avg = mean(ft_jew_2017, na.rm = TRUE)) %>% 
+  mutate(group = "Jewish people") %>% 
+  ggplot(aes(x = party_id, y = avg, fill = party_id)) + 
+  geom_col(alpha = .8, color = "white") + 
+  theme_fancy + 
+  scale_fill_brewer(palette = "Set1", direction = -1) + 
+  theme(legend.position = "none") + 
+  facet_wrap(vars(group)) + 
+  labs(x = NULL, y = "Average thermometer") + 
+  scale_y_continuous(labels = scales::percent_format(scale = 1))
+
+p1 + p2
+```
+
+---
+
+# Correlation: direction
+
+
+➕: When two variables move "in the same direction"
+
+➖: When two variables move "in opposite directions"
+
+
+```{r}
+p1 = county_data %>%
+  mutate(group = "Negative correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_gop_2012)) + 
+  geom_point(fill = red, shape = 21, color = "white") + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = "Republican Presidential vote, 2012") + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 = county_data %>% 
+  mutate(group = "Positive correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_dem_2016)) + 
+  geom_point(fill = red, shape = 21, color = "white") + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = "Democratic Presidential vote, 2016") + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 + p1
+```
+
+---
+
+# Correlation: direction
+
+.small[
+➕: counties where Dems did well in 2012 are also the counties where the Dems did well in 2016
+
+➖: counties where Dems did well in 2012 are the counties where the Reps did poorly in 2012
+]
+
+```{r}
+p1 = county_data %>%
+  mutate(group = "Negative correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_gop_2012)) + 
+  geom_point(fill = red, shape = 21, color = "white") + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = "Republican Presidential vote, 2012") + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 = county_data %>% 
+  mutate(group = "Positive correlation") %>% 
+  ggplot(aes(x = per_dem_2012, y = per_dem_2016)) + 
+  geom_point(fill = red, shape = 21, color = "white") + 
+  theme_fancy + 
+  labs(x = "Democratic Presidential vote, 2012", 
+       y = "Democratic Presidential vote, 2016") + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  facet_wrap(vars(group))
+
+p2 + p1
+```
+
+
+---
+
+# Quantifying correlation
+
+When the two variables are continuous, we can quantify the correlation
+--
+
+$$r =
+  \frac{ \sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y}) }{\sqrt{\sum_{i=1}^{n}(x_i-\bar{x})^2}\sqrt{\sum_{i=1}^{n}(y_i-\bar{y})^2}}$$
+
+--
+
+**r**: 
+
+ranges from -1 to 1, 
+
+perfectly correlated = 1, 
+
+perfectly uncorrelated = 0
+
+
+---
+
+
+# Interpreting R
+
+
+.pull-left[
+```{r}
+tribble(~`Correlation coefficient`, ~`Rough meaning`, 
+        "+/- 0.1 - 0.3", "Modest", 
+        "+/- 0.3 - 0.5", "Moderate", 
+        "+/- 0.5 - 0.8", "Strong", 
+        "+/- 0.8 - 0.9", "Very strong") %>% 
+  knitr::kable()
+```
+
+]
+.pull-right[
+```{r correlation-grid, echo=FALSE, fig.dim=c(4.8, 4.2), out.width="100%"}
+make_correlated_data <- function(r, n = 200) {
+  MASS::mvrnorm(n = n, 
+                mu = c(0, 0), 
+                Sigma = matrix(c(1, r, r, 1), nrow = 2), 
+                empirical = TRUE) %>% 
+    magrittr::set_colnames(c("x", "y")) %>% 
+    as_tibble()
+}
+cor_grid <- tibble(r = c(0.2, 0.4, 0.75, 0.9)) %>% 
+  mutate(data = map(r, make_correlated_data)) %>% 
+  unnest(data)
+ggplot(cor_grid, aes(x = x, y = y)) +
+  geom_point(size = 2, color = "white", fill = "black", pch = 21) +
+  facet_wrap(vars(r), labeller = label_both) +
+  # theme_minimal() +
+  theme(strip.text = element_text(face = "bold", size = rel(1.3), hjust = 0))
+```
+
+]
+
+---
+
+class: center, middle
+# [Guess the correlation](http://guessthecorrelation.com)
+
+
+
+
+
+---
+
+# Correlation coefficient: just a number
+
+--
+
+It's useful in a **narrow** range of situations 
+
+--
+
+The underlying **concepts** are more broadly applicable
+
+--
+
+```{r}
+tribble(~Strength, ~Direction, ~Meaning, 
+        "Strong", "Positve", "As X goes up, Y goes up *a lot*", 
+        "Strong", "Negative", "As X goes up, Y goes down *a lot*", 
+        "Weak", "Positve", "As X goes up, Y goes up *a little*", 
+        "Weak", "Negative", "As X goes up, Y goes down *a little*") %>% 
+  kbl(format = "markdown") %>% 
+  kable_material(c("striped", "hover"))
+```
+
+---
+
+# 🚨 Your turn: correlations 🚨
+
+
+1. Pick a dataset we've worked with and use the code I gave you to examine correlations between variables. 
+
+2. Interpret the correlation between any pair of variables.
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+
+---
+
+
+
+
+class: center, middle, inverse
+# Models
+---
+
+background-image: url("images/models.jpeg")
+background-position: right
+background-size: 600px
+# Model talk
+
+.pull-left[
+Models are ways of describing relationships (or correlations) between variables
+
+In the social sciences, we are interested in describing how an **outcome** changes in response to a **treatment**
+
+]
+
+---
+
+# Speaking the language
+
+
+```{r}
+tribble(~Y, ~X,
+        "Outcome variable", "Treatment variable",
+        "Response variable", "Explanatory variable",
+        "Dependent variable", "Independent variable",
+        "What is being changed", "What is causing the change in Y") %>%
+  kbl() %>% 
+  row_spec(1, background = "yellow") %>% 
+  kable_material(c("striped", "hover"))
+```
+
+---
+
+# 🚨Your turn🚨 Identify the parts
+
+Identify the **treatment** and the **outcome** in each example below:
+
+* A car company wants to know how changing the weight of a car will impact its fuel efficiency
+
+* A pollster wants to predict vote choice in a county based on race, income, past voting
+
+* Does having a friend vote make you more likely to vote? 
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+
+---
+
+
+# Model cars
+
+Say we want to model how changing a car's **weight** (treatment) impacts its **fuel efficiency** (outcome)
+
+--
+
+.scroll-output[
+```{r}
+mtcars %>% 
+  select(mpg:carb) %>% 
+  knitr::kable()
+```
+]
+
+---
+
+# Modeling weight and fuel efficiency
+
+
+Strong, negative relationship (r = -.9), *heavier* cars have  *lower* fuel efficiency
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)")
+```
+
+
+---
+
+# Why a model?
+
+Graph + correlation just gives us direction and strength of relationship
+
+--
+
+But what if we wanted to know what fuel efficiency to expect if a car weighs 3 tons, or 6? or 4.215?
+
+--
+
+```{r, out.width="80%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)")
+```
+
+---
+
+# Lines as models
+
+The simplest model is the **line of best fit**
+
+--
+
+The **line of best fit** describes how fuel efficiency changes as weight changes
+
+--
+
+```{r, out.width="90%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm")
+```
+
+---
+
+# Lines as models
+
+The *slope* of the line tells us about the **strength** of the relationship
+
+Slope here is: -5.3 $\rightarrow$ for every ton of weight you add to a car, you lose 5 miles per gallon
+
+```{r, out.width="90%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm")
+```
+
+---
+
+# Lines as models
+
+It also gives us a "best guess" for the level of fuel efficiency for a given weight, even where we have *less* data
+
+Best guess for 4.5 tons $\rightarrow$ 13 miles per gallon
+
+```{r, out.width="90%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm") + 
+  annotate(geom = "rect", xmin = 4.1, xmax = 5.2, ymin = -Inf,ymax = Inf, 
+           fill = "orange", alpha = .3)
+```
+
+---
+
+# Lines as models
+
+We can add a trend-line to a graph using `geom_smooth()`
+
+The argument `method = "lm"` makes the line **straight**
+
+---
+
+# Lines as models
+
+
+```{r, out.width="80%", echo= TRUE}
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point(color = blue, alpha = .8) + 
+  labs(x = "Weight (1000 lbs)", y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm") #<<
+```
+
+---
+
+
+# Where does the line come from? 
+
+We could draw so many lines through data; which is **best**?
+
+--
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  geom_abline(intercept = 36, slope = -6, color = "orange", size = 1.5) + 
+  geom_abline(intercept = 37, slope = -5, color = "green", size = 1.5)
+```
+
+---
+
+class: center, middle
+# The line of best fit algorithm
+
+--
+
+Draw a line through the data
+
+--
+
+See how far each point is from the line (distance = the *residual*)
+
+--
+
+Add up all the (squared) residuals
+
+--
+
+Rinse, repeat: the line with the *smallest* sum of residuals is the line of best fit
+
+
+---
+
+# Strawman comparison
+
+Which line fits the data better? 
+
+
+```{r}
+p1 = ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE)
+
+p2 = ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_hline(yintercept = mean(mtcars$mpg), color = "blue")
+
+p1 + p2
+```
+
+---
+
+
+# First candidate: the line
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+---
+
+# First candidate: the residuals
+
+How far is each point from the line?  This is the **residual**
+
+
+```{r}
+# plot with residuals
+mpg_model = lm(mpg ~ wt, data = mtcars)
+
+mtcars$predicted = predict(mpg_model)   # Save the predicted values
+mtcars$residuals = residuals(mpg_model) # Save the residual values
+
+
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  geom_segment(aes(xend = wt, yend = predicted), 
+               color = "orange") +  # alpha to fade lines
+  geom_point(aes(y = predicted), shape = 1)
+```
+
+
+???
+What does a big line mean? What does a line above the point mean? 
+
+---
+
+# The residuals
+
+Sum of squared residuals: 278
+
+.scroll-output[
+```{r}
+mtcars %>% 
+  select(`miles per gallon` = mpg, `the line` = predicted, `the residual` = residuals) %>% 
+  knitr::kable()
+```
+]
+
+---
+
+
+# Second candidate: the line
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_hline(yintercept = mean(mtcars$mpg), color = "blue")
+```
+
+---
+
+# Second candidate: the residuals
+
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_hline(yintercept = mean(mtcars$mpg), color = "blue") + 
+  geom_segment(aes(xend = wt, yend = mean(mtcars$mpg)), 
+               color = "orange") +  # alpha to fade lines
+  geom_point(aes(y = mean(mtcars$mpg)), shape = 1)
+```
+
+---
+
+# The residuals
+
+Sum of residuals: **1126**
+
+.scroll-output[
+```{r}
+mtcars %>% 
+  mutate(bad_pred = 20.09) %>% 
+  mutate(resid_bad = mpg - bad_pred) %>% 
+  select(`miles per gallon` = mpg, `the line` = bad_pred, 
+         `the residual` = resid_bad) %>% 
+  knitr::kable()
+```
+]
+
+---
+
+class: center, middle
+# The best line
+
+--
+
+This is what `geom_smooth()` is doing under-the-hood (sorry)
+
+--
+
+It's using math to figure out which line fits the data best
+
+--
+
+**Conceptual** best = the line that is closest to all the points
+
+--
+
+**Mathy** best = the smallest sum of squared residuals
+
+--
+
+Understand the intuition of **both**
+
+---
+
+class: middle, center, inverse
+# How to draw a line
+---
+
+
+# What do we want with this line?
+
+We don't just want to look at it; the line is a **model**
+
+We want to extract the model from the line, so we can use it for stuff
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+---
+
+# 6th grade algebra
+
+Oh the horror, remember:
+
+.pull-left[
+$Y = b + mx$
+
+Y = a number
+
+x = a number
+
+m = the slope $\frac{rise}{run}$
+
+b = the intercept
+]
+
+.pull-right[
+```{r, fig.dim=c(4.8, 4.2), out.width="100%"}
+ggplot() + geom_abline(intercept = 6, slope = -2, size = 1) + 
+  scale_x_continuous(limits = c(-10, 10)) + 
+  scale_y_continuous(limits = c(-10, 10)) + 
+  geom_hline(yintercept = 0, lty = 2) + 
+  geom_vline(xintercept = 0, lty = 2) + 
+  labs(x = "x", y = "y", title = "Y = 6 - 2x") + 
+  theme_fancy
+```
+
+]
+
+---
+
+# 🚨Your turn🚨 Draw the lines
+
+Using pen and paper, sketch the following lines: 
+
+* Y = 1 + 2x
+* Y = 6x + 3
+* Y = 1x - 7
+* Y = x - 1
+
+Then confirm your intuition with the R code
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+
+---
+
+# What we want (and it's disgusting)
+
+
+We want the $Y = b + mx$ of this graph:
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+---
+
+
+# From algebra to stats
+
+Except we use different terms:
+
+.pull-left[
+
+🍼🍼🍼
+
+$Y = b + mx$
+
+Y = a number
+
+x = a number
+
+m = the slope $\frac{rise}{run}$
+
+b = the intercept
+]
+
+--
+
+.pull-right[
+
+🧐🧐🧐
+
+$Y = \beta_0 + \beta1x_1$
+
+$Y$ = Outcome
+
+$x1$ = Treatment
+
+$\beta_1$ = the slope $\frac{rise}{run}$
+
+$\beta_0$ = the intercept
+]
+
+
+---
+
+# Modeling weight and fuel efficiency
+
+
+.pull-left[
+$Y = b + mx$
+
+
+$Y = \beta_0 + \beta1x_1$
+
+
+$mpg = \beta_0 + \beta1 \times weight$
+
+
+$mpg = 37 + -5 \times weight$
+]
+
+
+.pull-right[
+```{r, fig.dim=c(4.8, 4.2)}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+]
+
+
+---
+
+
+# What does this model get us?
+
+
+$$mpg = 37 + -5weight$$
+--
+
+A lot:
+
+
+
+--
+We can describe the overall rate of change with the **slope**
+  * for every ton of weight we add to a car we **lose** 5 miles per gallon
+
+--
+
+
+We can plug in whatever weight we want and get an estimate of fuel efficiency
+  * weight = 3.1415 tons $\rightarrow$ $mpg = 37 + -5 \times 3.1415 = 21.2$
+
+---
+
+
+# Modeling in a nutshell
+
+.pull-left[
+
+You want to see how some *outcome* responds to some *treatment*
+
+Fit a line (or something else!) to the variables
+
+Extract the underlying **model**
+
+Use the model to make **inferences** about the world
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/model2.jpeg")
+```
+
+]
+
+
+---
+
+# 🚨 Your turn: convincing yourself 🚨
+
+
+1. Using the fake dataset `df`, make a scatterplot and include a line of best fit. 
+
+2. Now using the function I made, `line_of_best_fit()`, try out different combinations of intercepts and slopes and see how the sum of squared residuals varies. 
+
+3. Convince yourself the line of best fit (in `true`) is the best. 
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+
+---

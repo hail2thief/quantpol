@@ -19,155 +19,24 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#the-problem-with-objects">The problem with objects</a></li>
-<li><a href="#drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a>
-<ul>
-<li><a href="#why-not-just-take-an-average">Why not just take an average?</a></li>
-</ul></li>
-<li><a href="#regression-models-lm">Regression models (lm)</a>
-<ul>
-<li><a href="#continuous-number-variables">continuous (number) variables</a></li>
-<li><a href="#categorical-word-variables">categorical (word) variables</a></li>
-</ul></li>
+<li><a href="#in-class-example">In-class example</a></li>
+<li><a href="#drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a></li>
 </ul>
 </div>
 
-<div id="the-problem-with-objects" class="section level2">
-<h2>The problem with objects</h2>
-<p>Most of the time in R, we are taking a data object and doing stuff to it with mutate, group_by, summarise, etc. This alters our data in different ways; to <em>store</em> these changes, we need to create a new object. See some examples below:</p>
-<pre class="r"><code># load the libraries
-library(tidyverse)
-library(socviz)
-
-
-# if you don&#39;t store what you&#39;ve done to your data, you can&#39;t retrieve it!
-gss_cat %&gt;% 
-  group_by(year) %&gt;% 
-  summarise(ave_tvhours = mean(tvhours, na.rm = TRUE))
-
-
-# see? error
-ggplot(gss_cat, aes(x = year, y = ave_tvhours)) + geom_col()
-
-
-# you can store as a new OBJECT
-tv_time = gss_cat %&gt;% 
-  group_by(year) %&gt;% 
-  summarise(ave_tvhours = mean(tvhours, na.rm = TRUE))
-
-# or as the original object
-gss_cat = gss_cat %&gt;% 
-  group_by(year) %&gt;% 
-  summarise(ave_tvhours = mean(tvhours, na.rm = TRUE))
-# but note this OVERWRITES the original object
-
-# same with mutate
-gss_cat %&gt;% 
-  mutate(tv_mins = tvhours*60)
-
-# see? error
-gss_cat %&gt;% 
-  select(tv_mins)
-
-# you can store as new object
-gss_new = gss_cat %&gt;% 
-  mutate(tv_mins = tvhours*60)
-
-# or overwrite existing (better)
-gss_cat = gss_cat %&gt;% 
-  mutate(tv_mins = tvhours*60)</code></pre>
+<div id="in-class-example" class="section level2">
+<h2>In-class example</h2>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”</p>
+<p><a href="/slides/code/04-models.R"><i class="fas fa-file-archive"></i> <code>04-models.R</code></a></p>
 </div>
 <div id="drawing-lines-geom_smooth" class="section level2">
 <h2>Drawing lines (geom_smooth)</h2>
 <p>Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using <code>geom_smooth</code>, as below. Notice <code>method = "lm"</code>.</p>
 <pre class="r"><code># libraries
 library(tidyverse)
-library(moderndive)
 
 # mtcars
 ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
   geom_smooth(method = &quot;lm&quot;)</code></pre>
-<p><img src="/class/regression_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
-<div id="why-not-just-take-an-average" class="section level3">
-<h3>Why not just take an average?</h3>
-<p>Compare, for instance, against simply taking the average of every wt value. Weakness here is that we only have exact guesses for values of X for which we have data. No exact guess, for example, for a car that weighs exactly 2 tons:</p>
-<pre class="r"><code># manually
-mtcars %&gt;% 
-  group_by(wt) %&gt;% 
-  summarise(ave_mpg = mean(mpg, na.rm = TRUE)) </code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre><code>## # A tibble: 29 x 2
-##       wt ave_mpg
-##    &lt;dbl&gt;   &lt;dbl&gt;
-##  1  1.51    30.4
-##  2  1.62    30.4
-##  3  1.84    33.9
-##  4  1.94    27.3
-##  5  2.14    26  
-##  6  2.2     32.4
-##  7  2.32    22.8
-##  8  2.46    21.5
-##  9  2.62    21  
-## 10  2.77    19.7
-## # … with 19 more rows</code></pre>
-</div>
-</div>
-<div id="regression-models-lm" class="section level2">
-<h2>Regression models (lm)</h2>
-<div id="continuous-number-variables" class="section level3">
-<h3>continuous (number) variables</h3>
-<p>If we want to find the “math-y” parts of the line (the y-intercept, the slope), we can fit a regression model using <code>lm()</code> and interpret the output using <code>get_regression_table()</code>.</p>
-<pre class="r"><code># finding the math-y parts of the line
-# what is the y-intercept? 
-# what is the slope? 
-# lm(Y ~ X, data = DATA) # TEMPLATE
-weight_m = lm(mpg ~ wt, data = mtcars)
-get_regression_table(weight_m)</code></pre>
-<pre><code>## # A tibble: 2 x 7
-##   term      estimate std_error statistic p_value lower_ci upper_ci
-##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 intercept    37.3      1.88      19.9        0    33.4     41.1 
-## 2 wt           -5.34     0.559     -9.56       0    -6.49    -4.20</code></pre>
-</div>
-<div id="categorical-word-variables" class="section level3">
-<h3>categorical (word) variables</h3>
-<p>Sometimes we want to use explanatory variables that are not numbers, like car weight above, but categories (e.g., men vs. women). We can use them as below:</p>
-<pre class="r"><code># let&#39;s look at rank
-mod_rank = lm(score ~ rank, data = evals)
-get_regression_table(mod_rank)</code></pre>
-<pre><code>## # A tibble: 3 x 7
-##   term             estimate std_error statistic p_value lower_ci upper_ci
-##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 intercept           4.28      0.054     79.9    0        4.18     4.39 
-## 2 ranktenure track   -0.13      0.075     -1.73   0.084   -0.277    0.017
-## 3 ranktenured        -0.145     0.064     -2.28   0.023   -0.27    -0.02</code></pre>
-<p>Interpreting is a bit tricky here. It helps to compare these coefficients to the average values of the outcome for the different categories.</p>
-<pre class="r"><code># take the average score across ranks
-evals %&gt;% 
-  group_by(rank) %&gt;% 
-  summarise(ave_score = mean(score, na.rm = TRUE))</code></pre>
-<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
-<pre><code>## # A tibble: 3 x 2
-##   rank         ave_score
-##   &lt;fct&gt;            &lt;dbl&gt;
-## 1 teaching          4.28
-## 2 tenure track      4.15
-## 3 tenured           4.14</code></pre>
-<p>Notice the correspondence: intercept above is the average eval score for teaching faculty; <code>ranktenure track</code> is the <em>difference</em> between teaching faculty and tenure track faculty (4.28 - .13 = 4.15); <code>ranktenured</code> is the <em>difference</em> between teaching faculty and tenure track faculty (4.28 - .145 = 4.14) [with some rounding].</p>
-<p>The coefficients are all differences relative to the baseline. What if we want to change the baseline? Here’s where factors come in. The baseline in <code>lm</code> is just the lowest factor level for the variable. So we can use <code>factor</code> to change the baseline by reordering the levels, as below :</p>
-<pre class="r"><code>new_evals = 
-  evals %&gt;% 
-  mutate(rank = factor(rank, levels = c(&quot;tenured&quot;, &quot;tenure track&quot;, &quot;teaching&quot;)))
-
-# let&#39;s look at rank
-mod_rank = lm(score ~ rank, data = new_evals)
-get_regression_table(mod_rank)</code></pre>
-<pre><code>## # A tibble: 3 x 7
-##   term             estimate std_error statistic p_value lower_ci upper_ci
-##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-## 1 intercept           4.14      0.034   122.      0        4.07     4.21 
-## 2 ranktenure track    0.015     0.062     0.249   0.804   -0.107    0.138
-## 3 rankteaching        0.145     0.064     2.28    0.023    0.02     0.27</code></pre>
-<p>Notice the new baseline = tenured because it’s the first one on line 151.</p>
-</div>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 </div>
