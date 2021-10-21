@@ -21,6 +21,9 @@ editor_options:
 <ul>
 <li><a href="#in-class-example">In-class example</a></li>
 <li><a href="#drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a></li>
+<li><a href="#ggcorrplot">ggcorrplot</a></li>
+<li><a href="#draw-the-line">Draw the line</a></li>
+<li><a href="#convince-yourself">Convince yourself</a></li>
 </ul>
 </div>
 
@@ -39,4 +42,66 @@ library(tidyverse)
 ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
   geom_smooth(method = &quot;lm&quot;)</code></pre>
 <p><img src="/class/regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="ggcorrplot" class="section level2">
+<h2>ggcorrplot</h2>
+<pre class="r"><code># libraries
+library(tidyverse)
+library(socviz)
+library(fivethirtyeight)
+library(gapminder)
+library(nycflights13)
+library(ggcorrplot)
+
+# load data
+therm = read_csv(&quot;../../static/files/voter-files-therm.csv&quot;)
+
+issues = read_csv(&quot;../../static/files/voter-files-issues.csv&quot;)</code></pre>
+<p>Look at the correlations:</p>
+<pre class="r"><code># switch out gapminder with a dataset you want below
+therm %&gt;% 
+  # correlation only works with numeric columns; keep only those
+  select(where(is.numeric)) %&gt;% 
+  # the cor() function doesn&#39;t take NA; drop them all
+  drop_na() %&gt;% 
+  # get the correlation
+  cor() %&gt;% 
+  # plot the correlation
+  ggcorrplot(lab = TRUE)</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="draw-the-line" class="section level2">
+<h2>Draw the line</h2>
+<pre class="r"><code># draw a line: alter the intercept and slope in geom_abline()
+# to draw the line
+  ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) + 
+  # change the limits on the x and y-axis
+  scale_x_continuous(limits = c(-10, 10)) + 
+  scale_y_continuous(limits = c(-10, 10)) + 
+  # add a vertical and horizontal line at 0
+  geom_hline(yintercept = 0, lty = 2) + 
+  geom_vline(xintercept = 0, lty = 2) + 
+  theme_bw()</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="convince-yourself" class="section level2">
+<h2>Convince yourself</h2>
+<p>Make the scatterplot:</p>
+<pre class="r"><code># convince yourself about the line of best fit: run this code below
+# set the seed
+set.seed(1990)
+
+# make the fake data
+df = tibble(x = rnorm(50, mean = 10), 
+            y = 3 + 2*x + rnorm(50))
+
+# line of best fit?
+model = lm(y ~ x, df)
+true = tibble(true_intercept = coef(model)[1], 
+              true_slope = coef(model)[2])
+
+ggplot(data = df, aes(x = x, y = y)) + 
+  geom_point() + 
+  geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>

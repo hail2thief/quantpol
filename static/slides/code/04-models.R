@@ -5,6 +5,7 @@ library(fivethirtyeight)
 library(gapminder)
 library(nycflights13)
 library(ggcorrplot)
+library(broom)
 
 
 # load data
@@ -17,7 +18,7 @@ issues = read_csv("https://www.dropbox.com/s/x5xncajqsz0q09l/voter-files-issues.
 
 
 # switch out gapminder with a dataset you want below
-issues %>% 
+gapminder %>% 
   # correlation only works with numeric columns; keep only those
   select(where(is.numeric)) %>% 
   # the cor() function doesn't take NA; drop them all
@@ -34,7 +35,7 @@ issues %>%
 
 # draw a line: alter the intercept and slope in geom_abline()
 # to draw the line
-ggplot() + geom_abline(intercept = 6, slope = -2, size = 1) + 
+  ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) + 
   # change the limits on the x and y-axis
   scale_x_continuous(limits = c(-10, 10)) + 
   scale_y_continuous(limits = c(-10, 10)) + 
@@ -83,7 +84,7 @@ line_of_best_fit = function(intercept, slope)
 
 
 ## HERE: using the line_of_best_fit function, try out different intercepts and slopes
-line_of_best_fit(intercept = 1.24242, slope = 2.19)
+line_of_best_fit(intercept = 3, slope = 5)
 
 # the best intercept and slope, according to the line of best fit
 line_of_best_fit(intercept = true$true_intercept, slope = true$true_slope)

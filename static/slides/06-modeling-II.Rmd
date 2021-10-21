@@ -1,0 +1,786 @@
+---
+title: "Modeling II"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(socviz)
+library(fivethirtyeight)
+library(patchwork)
+library(gapminder)
+library(broom)
+library(equatiomatic)
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+
+# pokemon
+pokemon = read_csv("../files/pokemon.csv")
+
+# elections
+elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl=1")
+
+
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Modeling with continuous variables]
+
+--
+.box-2.large.sp-after[Modeling with categorical variables]
+
+--
+.box-3.large.sp-after[Dummy outcomes]
+
+---
+
+
+class: center, middle, inverse
+# Modeling with continuous variables
+---
+
+
+# Extracting the line
+
+Remember, we want the underlying model from this line
+
+$mpg = \beta_0 + \beta1 \times weight$
+
+
+```{r, out.width="80%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8) + 
+  theme_fancy + labs(x = "Weight (1000 lbs)", 
+                     y = "Miles/gallon (mpg)") + 
+  geom_smooth(method = "lm", fullrange = TRUE)
+```
+
+---
+
+
+# Modeling in R
+
+--
+
+We can use the `lm()` function to create models in R, using this formula:
+
+> lm(Y ~ X1, data = DATA)
+
+
+--
+
+```{r,echo = TRUE}
+weight_model = lm(mpg ~ wt, data = mtcars) #<<
+```
+
+Notice! Saved as a model object
+
+---
+
+
+# Extract the model
+
+We can extract the model equation with `tidy()`, from the `broom` package
+
+```{r,echo = TRUE}
+tidy(weight_model)
+```
+
+---
+
+# Making sense of the table
+
+
+$mpg = \beta_0 + \beta_1 \times weight$
+
+```{r,echo = TRUE}
+tidy(weight_model)
+```
+
+--
+
+The `estimate` column gives us $\beta_0$ (intercept) and $\beta_1$ (slope for weight)
+
+--
+
+Note! We only care about the first two columns of `tidy()` so far
+
+---
+
+
+# Extract the model
+
+
+$mpg = \beta_0 + \beta_1 \times weight$
+
+
+```{r}
+tidy(weight_model) %>%
+  knitr::kable(digits = 2)
+```
+
+--
+
+The intercept ( $\beta_0$ ) = 37.29
+
+--
+
+The slope ( $\beta_1$ ) = -5.3
+
+--
+
+The model: $mpg = 37.29 + -5.3 \times weight$
+
+---
+
+
+# Interpretation: continuous variables
+
+
+.pull-left[
+As you turn the dimmer (*treatment variable*) the light (*outcome variable*) changes
+
+Turn the dimmer up, the light increases by SLOPE amount
+
+Turn the dimmer down, the light decreases by SLOPE amount
+
+The change is **gradual**
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/dimmer.jpeg")
+```
+]
+
+---
+
+# Interpretation: the slope
+
+$mpg = 37.2 + -5.3 \times weight$
+
+
+
+```{r}
+tidy(weight_model) %>%
+  knitr::kable(digits = 2)
+```
+
+--
+
+Weight is **continuous**
+
+--
+
+**General**: for every *unit increase* in X (weight), Y (mpg) changes by $\beta_1$ *units*
+
+--
+
+**Specific**: for every *ton of weight* you add to a car, you lose 5.3 *miles per gallon* of fuel efficiency
+
+
+---
+
+
+# Interpretation: the intercept
+
+
+$mpg = 37.2 + -5.3 \times weight$
+
+
+Remember that the Y-intercept is the *value of Y when X = 0*
+
+
+$$
+\begin{aligned}
+Y = 6 + 2x \\
+X = 0 \\
+Y = 6 + 2 \times 0 \\
+Y = 6
+\end{aligned}
+$$
+---
+
+
+# Interpretation: the intercept
+
+
+Take the formula: $mpg = 37.2 + -5.3 \times weight$
+
+--
+
+Set X (weight) equal to 0: $37.2 + (-5.3 \times 0) = 37.2$
+
+--
+
+
+**General**: The average value of Y (mpg), when X (weight) equals zero, is $\beta_0$ units
+
+--
+
+**Specific**: The average fuel efficiency for a car that weighs *0 tons* is 37.2 miles per gallon
+
+---
+
+
+# Spot the intercept
+
+$mpg = 37.29 + -5.3 \times weight$
+
+```{r, out.width="80%"}
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  coord_cartesian(xlim = c(0, 7), ylim = c(0, 40)) +
+  geom_point(color = blue, alpha = .8) +
+  theme_fancy + labs(x = "Weight (1000 lbs)",
+                     y = "Miles/gallon (mpg)") +
+  geom_smooth(method = "lm", fullrange = TRUE) +
+  geom_abline(data = NULL, intercept = coef(weight_model)[1],
+              slope = coef(weight_model)[2], lty = 2, color = "black")
+```
+
+We can confirm we're not crazy if we zoom out
+
+---
+
+
+# Nonsense intercepts
+
+
+$mpg = 37.2 + -5.3 \times weight$
+
+
+Interpretation of the intercept:
+
+> The average fuel efficiency for a car that weighs nothing is 37.2 miles per gallon
+
+--
+
+Note that this is **nonsense**: a car cannot weigh zero tons
+
+--
+
+You will run into this often: the intercept will rarely be useful on its own
+
+--
+
+But we **need** it to draw the line!
+
+
+---
+
+
+# Another example: gapminder
+
+
+Say we want to estimate the relationship between **GDP per capita** and **life expectancy**
+
+
+```{r}
+ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point(color = red, alpha = .8) + theme_fancy
+```
+
+---
+
+
+# The model
+
+We fit the model using `lm()`
+
+```{r,echo = TRUE}
+wealth_mod = lm(lifeExp ~ gdpPercap, data = gapminder)
+```
+
+--
+
+
+We extract the coefficient estimates using `tidy()`
+
+```{r, echo = TRUE}
+tidy(wealth_mod)
+```
+
+
+
+---
+
+# Interpreting the model
+
+$LifeExp = \beta_0 + \beta1 \times gdpPercap$
+
+```{r}
+tidy(wealth_mod)
+```
+
+--
+
+$\beta_1$, the slope = for every additional dollar of GDP, a country's life expectancy rises by .0007 years
+
+--
+
+$\beta_0$, the intercept = the average life expectancy for a country with no economic activity (GDP = 0) is 54 years
+
+---
+
+
+# The scale of the coefficients
+
+
+$LifeExp = 54 + .0007 \times gdpPercap$
+
+
+Slope: for every **dollar** increase in GDP, life expectancy increases by 0.0007 years
+
+--
+
+Tiny! Does this mean a country's wealth has little to do with their health?
+
+--
+
+No! It is a problem with the **scale** that GDP is in; one dollar differences in GDP are tiny
+
+
+---
+
+# Variable scales
+
+
+We can rescale GDP so that it's in 10s of thousands of dollars:
+
+```{r,echo = TRUE}
+gapminder = gapminder %>%
+  mutate(gdp_10k = gdpPercap/10000)
+```
+
+---
+
+
+# Variable scales
+
+Note the variable is the same; only thing that has changed is the scale!
+
+```{r}
+gapminder %>%
+  select(gdpPercap, gdp_10k) %>%
+  pivot_longer(everything()) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(fill = red, alpha = .8, color = "white", bins = 30) +
+  facet_wrap(vars(name), scales = "free") +
+  theme_fancy + scale_x_continuous(labels = scales::dollar)
+```
+
+---
+
+
+# Re-fit the model
+
+
+Using our new variable
+
+```{r,echo = TRUE}
+wealth_mod_10k = lm(lifeExp ~ gdp_10k, data = gapminder)
+tidy(wealth_mod_10k)
+```
+
+--
+
+That's more like it: for every additional $10,000 of GDP, a country gains about 7 years of life expectancy
+
+
+---
+
+# 🚨 Your turn: again 🚨
+
+
+1. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these. 
+
+2. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white. 
+
+3. Which counties in California did Romney beat Obama by more than 20 percentage points? Make a plot of your choosing about these counties. 
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+
+---
+
+
+
+class: center, middle, inverse
+# Regression with categorical variables
+---
+
+
+# Categorical variables
+
+
+We can also use categorical variables in our regressions
+
+--
+
+The simplest categorical variable is a *dummy variable*, 1 = yes, 0 = no
+
+--
+
+Let's say I had a dummy variable for whether a country is in the Americas
+
+---
+
+
+# Creating dummies with `ifelse()`
+
+We can create that dummy using `ifelse()` and logical operators:
+
+```{r, echo = TRUE}
+gap_dummies = gapminder %>%
+  mutate(is_americas = ifelse(continent == "Americas", 1, 0))
+```
+
+--
+
+Read: "IF the observation's continent equals "Americas", assign a 1, otherwise 0"
+
+---
+
+
+# Dummy variables
+
+```{r}
+set.seed(1990)
+gap_dummies %>%
+  sample_n(10) %>%
+  select(country, year, is_americas) %>%
+  knitr::kable()
+```
+
+---
+
+
+# Dummy variables in models
+
+
+I can include the dummy in a regression model:
+
+```{r, echo = TRUE}
+americas_mod = lm(lifeExp ~ is_americas, data = gap_dummies)
+```
+
+--
+
+And look at the output:
+
+```{r}
+tidy(americas_mod)
+```
+
+---
+
+# Interpretation: categorical variables
+
+
+.pull-left[
+
+Turn the light on (`is_america = 1`), the light *increases* by SLOPE
+
+Turn the light off (`is_america = 0`), the light *decreases* by SLOPE
+
+You are comparing **groups**
+
+The change is **instant**
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/switch.jpeg")
+```
+]
+
+---
+
+# Categorical variables
+
+
+```{r}
+ggplot(gap_dummies, aes(x = factor(is_americas), y = lifeExp)) + 
+  geom_jitter(width = .05)
+
+```
+
+---
+
+# Interpreting dummies
+
+
+```{r}
+tidy(americas_mod)
+```
+
+.small[
+The slope:
+
+Countries that are *in the Americas* have, on average, 6.3 years more of life expectancy than countries *not in the Americas* (i.e., in Africa, Europe, Asia, Oceania)
+
+]
+
+--
+
+.small[
+The intercept, set `is_americas = 0`:
+
+Countries not in the Americas (i.e., in Africa, Europe, Asia, Oceania) have an average life expectancy of 58.4 years
+]
+
+
+---
+
+
+# What if I have more than one dummy?
+
+
+Say I go back and create a dummy for each continent:
+
+
+```{r}
+gap_dummies = gapminder %>%
+  mutate(is_africa = ifelse(continent == "Africa", 1, 0),
+         is_europe = ifelse(continent == "Europe", 1, 0),
+         is_asia = ifelse(continent == "Asia", 1, 0),
+         is_oceania = ifelse(continent == "Oceania", 1, 0),
+         is_americas = ifelse(continent == "Americas", 1, 0))
+```
+
+
+---
+
+# Multiple dummies
+
+
+I can include more than one dummy in a regression:
+
+```{r, echo = TRUE}
+dummy_mod2 = lm(lifeExp ~ is_americas + is_europe, data = gap_dummies)
+
+tidy(dummy_mod2)
+```
+
+---
+
+
+# Multiple dummies
+
+
+```{r}
+tidy(dummy_mod2)
+```
+
+.small[
+* `is_americas` = countries in the Americas have, on average, 11 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
+
+* `is_europe` = countries in Europe have, on average, 18 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
+
+* `intercept` = set `is_americas` and `is_europe` equal to 0. Countries in Africa, Oceania, and Asia (not in Americas or Europe) have an average life expectancy of 53.7 years
+]
+
+---
+
+# One last time
+
+
+```{r, echo = TRUE}
+dummy_mod3 = lm(lifeExp ~ is_americas + is_europe + is_asia + is_oceania, 
+                data = gap_dummies)
+
+tidy(dummy_mod3)
+```
+
+---
+
+
+# One last time
+
+```{r}
+tidy(dummy_mod3)
+
+```
+
+.small[
+* `is_americas` = countries in the Americas have, on average, 15 years more of life expectancy than countries not in the Americas **or Europe or Asia or Oceania** (Africa)
+
+* `is_europe` = countries in Europe have, on average, 23 years more of life expectancy than countries not in the Americas **or Europe or Asia or Oceania** (Africa)
+
+* `is_asia` = countries in Asia have, on average, 11 years more of life expectancy than countries not in the Americas **or Europe or Asia or Oceania** (Africa)
+
+]
+
+---
+
+# One last time
+
+
+```{r}
+tidy(dummy_mod3)
+
+```
+
+
+.small[
+
+* `is_oceania` = countries in Oceania have, on average, 25 years more of life expectancy than countries not in the Americas **or Europe or Asia or Oceania** (Africa)
+
+* `intercept` = countries in Africa (not in Americas or Europe or Asia or Oceania) have an average life expectancy of 48.9 years
+]
+
+
+---
+
+# R does this automatically
+
+If you fit a model with a categorical variable, R will automatically break it up into dummies
+
+```{r, echo = TRUE}
+continent_model = lm(lifeExp ~ continent, data = gapminder)
+
+tidy(continent_model)
+```
+
+
+---
+
+# Compare
+
+
+.pull-left[
+```{r,echo = TRUE}
+lm(lifeExp ~ continent, data = gapminder) %>% tidy()
+```
+]
+
+.pull-right[
+```{r, echo = TRUE}
+lm(lifeExp ~ is_americas + is_europe + is_asia + is_oceania,
+   data = gap_dummies) %>% tidy()
+```
+]
+
+
+---
+
+
+
+<!-- # Can't fit every dummy -->
+
+
+<!-- ```{r} -->
+<!-- lm(lifeExp ~ is_africa + is_europe + is_asia +  -->
+<!--      is_oceania + is_americas, data = gap_dummies) %>% tidy() -->
+<!-- ``` -->
+
+<!-- --- -->
+
+
+
+
+
+<!-- # Outcome is a dummy variable -->
+
+
+<!-- We can also estimate models when the outcome is a dummy variable -->
+
+
+<!-- From `gss_sm`: does having more children make you more or less likely to have voted for Obama?  -->
+
+<!-- ```{r} -->
+<!-- gss_sm %>%  -->
+<!--   select(year, id, childs, obama) %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Outcome is a dummy variable -->
+
+<!-- ```{r, echo = TRUE} -->
+<!-- obama_kids = lm(obama ~ childs, data = gss_sm) -->
+<!-- tidy(obama_kids) -->
+<!-- ``` -->
+
+<!-- For every additional child a person has, the probability they vote for Obama decreases by 1.7 percentage points -->
+
+<!-- --- -->
+
+
+

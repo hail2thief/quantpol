@@ -1,0 +1,159 @@
+---
+title: "Problem set 4: Models"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(socviz)
+library(broom)
+library(palmerpenguins)
+library(ggcorrplot)
+library(fivethirtyeight)
+```
+
+
+
+# Task 1: Correlations
+
+
+Look at the following example of a data analysis task: 
+
+
+> Amazon using your past browsing history to recommend new purchases. 
+
+
+**Q1: Identify the treatment and outcome variable in this example**
+
+
+
+
+Now, look at the correlation below: 
+
+
+```{r}
+penguins %>% 
+  # correlation only works with numeric columns; keep only those
+  select(where(is.numeric)) %>% 
+  # the cor() function doesn't take NA; drop them all
+  drop_na() %>% 
+  # get the correlation
+  cor() %>% 
+  # plot the correlation
+  ggcorrplot(lab = TRUE)
+```
+
+**Q2: Interpret the correlation between body mass (in grams), and bill depth (in millimeters)**
+
+
+
+
+# Task 2: Aid and conflict
+
+
+
+One of the big questions in international relations is whether giving aid to countries that are experiencing civil wars can help reduce conflict or, instead, [make things worse](https://www.independent.co.uk/voices/syria-sick-children-cancer-humanitarian-aid-bashar-al-assad-putin-war-worse-a8132056.html). Does foreign aid make a country more peaceful or more violent?
+
+
+
+Let's look at some data I made-up to simulate this claim. Each row is a country, and `conflict` is the amount of violence that country is experiencing in a given year (combat deaths per 100,000 people). `funding` is how much money, in millions of dollars, that country receives. `corruption` tells you whether country scores high or low on corruption. 
+
+
+```{r}
+aid_conf = read_csv("https://www.dropbox.com/s/l3oyr6knrv5myvp/sim-aid-conflict.csv?dl=1")
+aid_conf
+```
+
+
+Fit a model to explore whether changes in foreign aid are associated with changes in conflict. 
+
+```{r}
+lm(conflict ~ funding, data = aid_conf) %>% tidy()
+```
+
+**Q3: rounding to the first decimal place, what is the coefficient on aid?** 
+
+
+This is the overall relationship, across all countries, but countries are different in many ways and the effect of aid might differ across different kinds of countries. 
+
+
+Fit the same model as above, except this time you will do it **separately** for low corruption and high corruption countries (so: two models total). 
+
+```{r}
+lm(conflict ~ funding,
+   data = filter(aid_conf, corruption == "Low Corruption")) %>% tidy()
+
+lm(conflict ~ funding,
+   data = filter(aid_conf, corruption == "High Corruption")) %>% tidy()
+```
+
+**Q4: Interpret the coefficient on aid for LOW corruption countries**
+
+
+
+
+**Q5: Interpret the coefficient on aid for HIGH corruption countries**
+
+
+
+
+Finally, make a scatterplot of the relationship between `conflict` and `funding`, with a trend line so you can see the general pattern. Use `facet_wrap` to create separate plots for countries with low and high corruption. Add labels and a theme. 
+
+```{r}
+ggplot(aid_conf, aes(x = funding, y = conflict))  + 
+  facet_wrap(vars(corruption), scales = "free") + 
+  theme_bw() + 
+  geom_point() + 
+  geom_smooth(method = "lm")
+```
+
+
+**Q6: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+
+**Q7: What does the difference in pattern across high and low corruption countries tell you about the relationship between aid and conflict?**
+
+
+
+
+
+# Task 3: Regressing with categories
+
+
+Look at the `county_data` dataset from `socviz`, which provides county-level information on vote results and other variables. 
+
+
+```{r}
+county_data = county_data %>% 
+  drop_na(per_dem_2016)
+
+county_data
+```
+
+
+Run a regression where you try to explain GOP performance in 2016 using the region of the country that the county is in. Note: to see what values a specific variable takes on, you can use: `data %>% distinct(variable)`
+
+```{r}
+lm(per_gop_2016 ~ census_region, data = county_data) %>% 
+  tidy()
+```
+
+**Q8: Using SPECIFIC language, interpret the coefficient estimate for the intercept (i.e., you need to identify the region)**
+
+
+
+**Q9: Based on the above, in which region did Republicans perform the worst?**

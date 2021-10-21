@@ -34,12 +34,13 @@ lessons:
     date: "Oct 19, Oct 21"
     class: "regression"
     reading: "intro-reg"
+    assignment: "ps-reg"
   #   
   # - title: '<i class="fas fa-star"></i> **Assignment 4**'
   #   #date: "Feb 16, Tue"
   #   #assignment: "ps-reg"
     
-  - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
+  - title: 'Week 6: Prediction<br>(**no class Tuesday, Thursday lecture online**)<br><br><i class="fas fa-star"></i> **Assignment 5**'
     date: "Oct 26, Oct 28"
     #class: "06-class"
     #class: "prediction"
