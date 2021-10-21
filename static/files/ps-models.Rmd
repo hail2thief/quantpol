@@ -81,7 +81,7 @@ aid_conf
 Fit a model to explore whether changes in foreign aid are associated with changes in conflict. 
 
 ```{r}
-lm(conflict ~ funding, data = aid_conf) %>% tidy()
+
 ```
 
 **Q3: rounding to the first decimal place, what is the coefficient on aid?** 
@@ -93,11 +93,7 @@ This is the overall relationship, across all countries, but countries are differ
 Fit the same model as above, except this time you will do it **separately** for low corruption and high corruption countries (so: two models total). 
 
 ```{r}
-lm(conflict ~ funding,
-   data = filter(aid_conf, corruption == "Low Corruption")) %>% tidy()
 
-lm(conflict ~ funding,
-   data = filter(aid_conf, corruption == "High Corruption")) %>% tidy()
 ```
 
 **Q4: Interpret the coefficient on aid for LOW corruption countries**
@@ -113,11 +109,7 @@ lm(conflict ~ funding,
 Finally, make a scatterplot of the relationship between `conflict` and `funding`, with a trend line so you can see the general pattern. Use `facet_wrap` to create separate plots for countries with low and high corruption. Add labels and a theme. 
 
 ```{r}
-ggplot(aid_conf, aes(x = funding, y = conflict))  + 
-  facet_wrap(vars(corruption), scales = "free") + 
-  theme_bw() + 
-  geom_point() + 
-  geom_smooth(method = "lm")
+
 ```
 
 
@@ -148,8 +140,7 @@ county_data
 Run a regression where you try to explain GOP performance in 2016 using the region of the country that the county is in. Note: to see what values a specific variable takes on, you can use: `data %>% distinct(variable)`
 
 ```{r}
-lm(per_gop_2016 ~ census_region, data = county_data) %>% 
-  tidy()
+
 ```
 
 **Q8: Using SPECIFIC language, interpret the coefficient estimate for the intercept (i.e., you need to identify the region)**
