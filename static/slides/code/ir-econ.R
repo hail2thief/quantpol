@@ -20,4 +20,4 @@ ir_econ = create_stateyears() %>%
   mutate(across(c(gdp, pop, percent_mountain), exp))
 
 
-write_csv(ir_econ, "/Users/juan/Dropbox/websites/poli-301/static/files/ir-econ.csv")
+write_csv(ir_econ, "/Users/juan/Dropbox/websites/poli-301/static/files/ir_econ.csv")

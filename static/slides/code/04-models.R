@@ -6,6 +6,7 @@ library(gapminder)
 library(nycflights13)
 library(ggcorrplot)
 library(broom)
+library(palmerpenguins)
 
 
 # load data
@@ -88,4 +89,22 @@ line_of_best_fit(intercept = 3, slope = 5)
 
 # the best intercept and slope, according to the line of best fit
 line_of_best_fit(intercept = true$true_intercept, slope = true$true_slope)
+
+
+
+
+# Modeling continuous -----------------------------------------------------
+
+
+# load the data
+ir_econ = read_csv("https://www.dropbox.com/s/5emig5psz1cpnjf/ir_econ.csv?dl=1")
+
+
+
+
+
+# Modeling categorical ----------------------------------------------------
+
+
+# WORK HERE
 
