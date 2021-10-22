@@ -60,9 +60,12 @@ library(nycflights13)
 library(ggcorrplot)
 
 # load data
-therm = read_csv("../../static/files/voter-files-therm.csv")
+therm = read_csv("static/files/voter-files-therm.csv")
 
-issues = read_csv("../../static/files/voter-files-issues.csv")
+issues = read_csv("static/files/voter-files-issues.csv")
+
+ir_econ = read_csv("static/files/ir_econ.csv")
+
 ```
 
 
@@ -122,4 +125,65 @@ ggplot(data = df, aes(x = x, y = y)) +
   geom_point() + 
   geom_smooth(method = "lm")
 ```
+
+
+
+## IR Econ
+
+
+The plot
+
+```{r}
+ir_1959 = ir_econ %>% 
+  filter(year == 2008)
+
+
+ggplot(ir_1959, aes(x = imports, y = exports, 
+                    label = country)) + geom_point() + geom_smooth(method = "lm") + 
+  geom_text()
+
+```
+
+Estimate a model, and interpret:
+
+```{r}
+library(broom)
+
+igo_pop = lm(exports ~ pop, data = ir_econ)
+
+tidy(igo_pop)
+```
+
+
+
+Penguins regression: 
+
+```{r}
+penguins_model = lm(body_mass_g ~ species, 
+                    data = penguins)
+
+tidy(penguins_model)
+```
+
+Interpretation: 
+
+* Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins. 
+* Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins. 
+* Adelie penguins weigh, on average, 3,700 grams. 
+
+
+
+
+another one:
+
+```{r}
+lm(tvhours ~ race, data = gss_cat) %>% 
+  tidy()
+```
+
+Interpretation: 
+
+* Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as "Other". 
+* White respondents watch .009 more hours of tv, on average, than respondents who identify as "Other". 
+* Respondents who identify as "Other" watch, on average, 2.76 hours of TV. 
 
