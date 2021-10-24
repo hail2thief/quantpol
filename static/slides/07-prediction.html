@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Prediction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-10-24" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Prediction
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Review of modeling]
+
+--
+.box-2.large.sp-after[Why predict?]
+
+--
+.box-3.large.sp-after[Prediction in R]
+
+---
+
+class: middle, center, inverse
+# What are we doing?
+---
+
+
+# Modeling
+
+We're using models to estimate the relationship between one variable (the treatment) and another (the outcome)
+
+--
+
+We follow this formula, using `lm` and `tidy`
+
+--
+
+Estimate the model:
+
+
+```r
+example_model = lm(outcome ~ treatment, data = data_where_these_variables_live)
+```
+
+
+Examine the output: 
+
+
+```r
+tidy(example_model)
+```
+
+---
+
+# How to make sense of the output?
+
+There are two scenarios: 
+
+--
+
+1. The treatment variable is **continuous** (takes on many, numerical values, like age)
+
+--
+
+2. The treatment variable is **categorical** (takes on a few, "text" values, like race)
+
+---
+
+
+# Scenario 1: the treatment variable is continuous
+
+
+If the treatment variable is **continous**, we interpret the coefficient estimate like so: 
+&gt;For every UNIT INCREASE in X, there is an associated COEFFICIENT ESTIMATE change in Y
+
+The coefficient estimate is the *rate of change* in Y as X increases or decreases
+
+Things to figure out: 
+
+* What does a "one unit increase in X" mean in your particular example? e.g., what does it mean for X to increase by one? The same for Y: what units is it in? 
+
+---
+
+# Scenario 1: Example
+
+The relationship between age and how much tv people watch:
+
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   1.99     0.0698       28.5 4.67e-173
+## 2 age           0.0210   0.00139      15.1 4.69e- 51
+```
+
+* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per week (this is the unit of Y!)
+
+* Intercept = the model estimates that the average person who is zero years old watches about 2 hours of tv
+
+---
+
+# Scenario 2: the treatment variable is categorical
+
+
+If the treatment variable is **categorical**, we interpret the coefficient estimate like so: 
+
+&gt;Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
+
+The coefficient estimate is the *sudden difference across groups* in Y, comparing X to the category intercept
+
+Things to figure out: 
+
+* What are the categories that X takes on? And which is the baseline/intercept category? 
+* What units is Y in?
+
+
+---
+
+# Scenario 2: Example
+
+Estimating the relationship between tv consumption and marital status: 
+
+What values does `marital` take on?
+
+
+```
+## # A tibble: 6 × 1
+##   marital      
+##   &lt;fct&gt;        
+## 1 Never married
+## 2 Divorced     
+## 3 Widowed      
+## 4 Married      
+## 5 Separated    
+## 6 No answer
+```
+
+
+Estimate the model:
+
+
+```
+## # A tibble: 6 × 5
+##   term                 estimate std.error statistic p.value
+##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)            2.56       0.853     2.99  0.00275
+## 2 maritalNever married   0.550      0.855     0.643 0.520  
+## 3 maritalSeparated       0.994      0.863     1.15  0.249  
+## 4 maritalDivorced        0.530      0.855     0.619 0.536  
+## 5 maritalWidowed         1.36       0.857     1.58  0.114  
+## 6 maritalMarried         0.0949     0.854     0.111 0.912
+```
+
+By comparing the values X takes on with the output, we can see that the "Intercept" is "No answer"
+
+This means that each coefficient estimate will be interpreted *relative to* respondents who did not answer the question about whether they were married
+
+---
+
+# Scenario 2: Example
+
+
+```
+## # A tibble: 6 × 5
+##   term                 estimate std.error statistic p.value
+##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept)            2.56       0.853     2.99  0.00275
+## 2 maritalNever married   0.550      0.855     0.643 0.520  
+## 3 maritalSeparated       0.994      0.863     1.15  0.249  
+## 4 maritalDivorced        0.530      0.855     0.619 0.536  
+## 5 maritalWidowed         1.36       0.857     1.58  0.114  
+## 6 maritalMarried         0.0949     0.854     0.111 0.912
+```
+
+* Never married: respondents who never married watch, on average, .54 more hours of tv a day than respondents who did not answer
+* Separated: respondents who are separated watch, on average, 1 hour more of tv a day than respondents who did not answer
+* And so on...
+* The intercept = the average amount of tv watched by respondents who did not answer the question is about 2.5 hours a day
+
+---
+
+
+class: center, middle, inverse
+# Why predict?
+---
+
+# Why predict?
+
+.pull-left[
+Companies, policymakers, and academics want to predict: 
+- who will win an election
+- whether UN peacekeepers can reduce conflict
+- whether you'll get the vaccine or not
+
+At stake is what decision to take under uncertainty about the future
+]
+
+.pull-right[
+&lt;img src="images/prediction.png" width="100%" /&gt;
+]
+
+---
+
+# Making predictions
+
+The basics of prediction are pretty straightforward:
+
+* Take/collect existing data
+* Fit a model to it
+* Use model output to produce estimates
+
+---
+
+# Prediction (by hand)
+
+
+```r
+weight_model = lm(mpg ~ wt, data = mtcars)
+```
+
+Remeber our model is an equation: 
+
+`\(\widehat{mpg} = 37.29 - 5.34(wt)\)`
+
+To get an estimate of `mpg`, we simply plug in the value of "weight" we are interested in:
+
+Estimate for weight = 3.25
+
+`\(\widehat{mpg} = 37.29 - 5.34 \times 3.25 = 19.935\)`
+
+---
+
+# Prediction (in R)
+
+To make predictions in R, we first **define the scenario** we want a prediction for, using the `crossing()` function
+
+
+```
+## # A tibble: 1 × 1
+##      wt
+##   &lt;dbl&gt;
+## 1  3.25
+```
+
+Note that `crossing` creates a dataframe
+
+The variables in `crossing` have to have the exact same name as the variables in the model
+
+---
+
+# Prediction (in R)
+
+We can then combine our scenario with our model using the function `augment()`:
+
+
+```
+## # A tibble: 1 × 2
+##      wt .fitted
+##   &lt;dbl&gt;   &lt;dbl&gt;
+## 1  3.25    19.9
+```
+
+
+Note that we tell `augment` what our new scenario is using the `newdata = ` argument
+
+Note too that we got the same answer as when we did it by hand
+
+---
+
+# Prediction (in R)
+
+We can also look at multiple scenarios, maybe a light, medium, and heavy car:
+
+
+```
+## # A tibble: 3 × 1
+##      wt
+##   &lt;dbl&gt;
+## 1   1.5
+## 2   3  
+## 3   5
+```
+
+```
+## # A tibble: 3 × 2
+##      wt .fitted
+##   &lt;dbl&gt;   &lt;dbl&gt;
+## 1   1.5    29.3
+## 2   3      21.3
+## 3   5      10.6
+```
+
+---
+
+# Trivial
+
+Do we really need a model to predict MPG when weight = 3.25? Probably not
+
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Multiple regression
+
+The real power of modeling and prediction comes with using multiple explanatory variables
+
+Many factors influence a car's fuel efficiency; we can use that information to make more precise predictions
+
+We can use `?mtcars` look at the variables and what they mean
+
+.scroll-output[
+
+|                    |  mpg| cyl|  disp|  hp| drat|    wt|  qsec| vs| am| gear| carb|
+|:-------------------|----:|---:|-----:|---:|----:|-----:|-----:|--:|--:|----:|----:|
+|Mazda RX4           | 21.0|   6| 160.0| 110| 3.90| 2.620| 16.46|  0|  1|    4|    4|
+|Mazda RX4 Wag       | 21.0|   6| 160.0| 110| 3.90| 2.875| 17.02|  0|  1|    4|    4|
+|Datsun 710          | 22.8|   4| 108.0|  93| 3.85| 2.320| 18.61|  1|  1|    4|    1|
+|Hornet 4 Drive      | 21.4|   6| 258.0| 110| 3.08| 3.215| 19.44|  1|  0|    3|    1|
+|Hornet Sportabout   | 18.7|   8| 360.0| 175| 3.15| 3.440| 17.02|  0|  0|    3|    2|
+|Valiant             | 18.1|   6| 225.0| 105| 2.76| 3.460| 20.22|  1|  0|    3|    1|
+|Duster 360          | 14.3|   8| 360.0| 245| 3.21| 3.570| 15.84|  0|  0|    3|    4|
+|Merc 240D           | 24.4|   4| 146.7|  62| 3.69| 3.190| 20.00|  1|  0|    4|    2|
+|Merc 230            | 22.8|   4| 140.8|  95| 3.92| 3.150| 22.90|  1|  0|    4|    2|
+|Merc 280            | 19.2|   6| 167.6| 123| 3.92| 3.440| 18.30|  1|  0|    4|    4|
+|Merc 280C           | 17.8|   6| 167.6| 123| 3.92| 3.440| 18.90|  1|  0|    4|    4|
+|Merc 450SE          | 16.4|   8| 275.8| 180| 3.07| 4.070| 17.40|  0|  0|    3|    3|
+|Merc 450SL          | 17.3|   8| 275.8| 180| 3.07| 3.730| 17.60|  0|  0|    3|    3|
+|Merc 450SLC         | 15.2|   8| 275.8| 180| 3.07| 3.780| 18.00|  0|  0|    3|    3|
+|Cadillac Fleetwood  | 10.4|   8| 472.0| 205| 2.93| 5.250| 17.98|  0|  0|    3|    4|
+|Lincoln Continental | 10.4|   8| 460.0| 215| 3.00| 5.424| 17.82|  0|  0|    3|    4|
+|Chrysler Imperial   | 14.7|   8| 440.0| 230| 3.23| 5.345| 17.42|  0|  0|    3|    4|
+|Fiat 128            | 32.4|   4|  78.7|  66| 4.08| 2.200| 19.47|  1|  1|    4|    1|
+|Honda Civic         | 30.4|   4|  75.7|  52| 4.93| 1.615| 18.52|  1|  1|    4|    2|
+|Toyota Corolla      | 33.9|   4|  71.1|  65| 4.22| 1.835| 19.90|  1|  1|    4|    1|
+|Toyota Corona       | 21.5|   4| 120.1|  97| 3.70| 2.465| 20.01|  1|  0|    3|    1|
+|Dodge Challenger    | 15.5|   8| 318.0| 150| 2.76| 3.520| 16.87|  0|  0|    3|    2|
+|AMC Javelin         | 15.2|   8| 304.0| 150| 3.15| 3.435| 17.30|  0|  0|    3|    2|
+|Camaro Z28          | 13.3|   8| 350.0| 245| 3.73| 3.840| 15.41|  0|  0|    3|    4|
+|Pontiac Firebird    | 19.2|   8| 400.0| 175| 3.08| 3.845| 17.05|  0|  0|    3|    2|
+|Fiat X1-9           | 27.3|   4|  79.0|  66| 4.08| 1.935| 18.90|  1|  1|    4|    1|
+|Porsche 914-2       | 26.0|   4| 120.3|  91| 4.43| 2.140| 16.70|  0|  1|    5|    2|
+|Lotus Europa        | 30.4|   4|  95.1| 113| 3.77| 1.513| 16.90|  1|  1|    5|    2|
+|Ford Pantera L      | 15.8|   8| 351.0| 264| 4.22| 3.170| 14.50|  0|  1|    5|    4|
+|Ferrari Dino        | 19.7|   6| 145.0| 175| 3.62| 2.770| 15.50|  0|  1|    5|    6|
+|Maserati Bora       | 15.0|   8| 301.0| 335| 3.54| 3.570| 14.60|  0|  1|    5|    8|
+|Volvo 142E          | 21.4|   4| 121.0| 109| 4.11| 2.780| 18.60|  1|  1|    4|    2|
+]
+
+---
+
+# Multiple regression
+
+Here, a car's fuel efficiency is a function of its weight (`wt`), number of cylinders (`cyl`), horse power (`hp`), and whether its transmission is manual or automatic (`am`)
+
+
+```r
+big_model = lm(mpg ~ wt + cyl + hp + am, data = mtcars)
+```
+
+---
+
+# Interpretation
+
+
+```
+## # A tibble: 5 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  36.1       3.10       11.6  4.94e-12
+## 2 wt           -2.61      0.920      -2.83 8.60e- 3
+## 3 cyl          -0.745     0.583      -1.28 2.12e- 1
+## 4 hp           -0.0250    0.0136     -1.83 7.86e- 2
+## 5 am            1.48      1.44        1.03 3.14e- 1
+```
+
+* wt = every additional ton of weight is associate with a 2.61 decrease in mpg
+* cyl = every additional cylinder is associated with a .7 decrease in mpg
+* hp = every additional unit of horse power is associated with a .02 decrease in mpg
+* am = on average, cars with manual transmissions (`am = 1`) have 1.48 more mpg than cars with automatic transmissions (`am = 0`) [Note this is a dummy variable!] 
+
+---
+
+# Prediction
+
+We can make predictions just as before, only adding more variables to our scenario
+
+For example: a car that weighs 3 tons, has 4 cylinders, 120 horse power, and has a manual transmission
+
+
+```
+## # A tibble: 1 × 5
+##      wt   cyl    hp    am .fitted
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1     3     4   120     1    23.8
+```
+
+---
+
+# Prediction
+
+We can also look at what happens when one variable changes a lot, while the others stay the same, using the `seq()` function
+
+
+
+
+```r
+varying_hp = crossing(wt = 3, 
+                      cyl = 4, 
+                      hp = seq(from = 50, to = 340, by = 5),
+                      am = 1)
+
+augment(big_model, newdata = varying_hp)
+```
+
+```
+## # A tibble: 59 × 5
+##       wt   cyl    hp    am .fitted
+##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+##  1     3     4    50     1    25.6
+##  2     3     4    55     1    25.5
+##  3     3     4    60     1    25.3
+##  4     3     4    65     1    25.2
+##  5     3     4    70     1    25.1
+##  6     3     4    75     1    25.0
+##  7     3     4    80     1    24.8
+##  8     3     4    85     1    24.7
+##  9     3     4    90     1    24.6
+## 10     3     4    95     1    24.5
+## # … with 49 more rows
+```
+
+---
+
+# Prediction
+
+We could then store our estimate, and use it for plotting our estimated MPG as horse power changes:
+
+
+```r
+hp_pred = augment(big_model, newdata = varying_hp)
+
+ggplot(hp_pred, aes(x = hp, y = .fitted)) + geom_point() + theme_bw() + 
+  labs(x = "Horsepower", y = "Predicted fuel efficiency")
+```
+
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-18-1.png" width="100%" /&gt;
+
+---
+
+# Prediction
+
+Note that your scenario needs to include every variable in your model, otherwise you will get an error
+
+The one below is missing cylinders, and won't run:
+
+
+```r
+bad_scenario = crossing(wt = 3, 
+                      hp = 120,
+                      am = 1)
+
+augment(big_model, newdata = bad_scenario)
+```
+
+---
+
+
+# Pick scenarios that make sense
+
+Note that to make predictions that make sense, we have to look through our data and see what values are plausible for the variables
+
+For example, a 20 cylinder car doesn't make sense; neither does setting `am` = 3, since `am` is a dummy variable that takes two values (0 = automatic, 1 = manual)
+
+But R doesn't know that, and will give you (nonsensical) estimates:
+
+
+```
+## # A tibble: 1 × 5
+##      wt   cyl    hp    am .fitted
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+## 1     3    20   120     3    14.9
+```
+
+---
+
+# One more example: Gapminder
+
+Say we wanted to predict a country's life expectancy, using population, GDP per capita, the year, and what continent it is in:
+
+
+```
+## # A tibble: 8 × 5
+##   term              estimate std.error statistic   p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)       -5.18e+2   1.99e+1    -26.1  3.25e-126
+## 2 gdpPercap          2.98e-4   2.00e-5     14.9  2.52e- 47
+## 3 pop                1.79e-9   1.63e-9      1.10 2.73e-  1
+## 4 year               2.86e-1   1.01e-2     28.5  4.80e-146
+## 5 continentAmericas  1.43e+1   4.95e-1     28.9  1.18e-149
+## 6 continentAsia      9.38e+0   4.72e-1     19.9  3.80e- 79
+## 7 continentEurope    1.94e+1   5.18e-1     37.4  2.03e-223
+## 8 continentOceania   2.06e+1   1.47e+0     14.0  3.39e- 42
+```
+
+---
+
+# Predicting health
+
+What if we wanted to predict the life expectancy of a country with a GDP per capita of $7,000, a population of 20 million, in the year 2005, in Asia?
+
+
+```
+## # A tibble: 1 × 5
+##   gdpPercap      pop  year continent .fitted
+##       &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+## 1      7000 20000000  2005 Asia         67.0
+```
+
+---
+
+
+# Predicting health
+
+We could go further, and vary GDP per capita as the other values stay the same:
+
+
+```
+## # A tibble: 20 × 5
+##    gdpPercap      pop  year continent .fitted
+##        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1      5000 20000000  2005 Asia         66.4
+##  2     10000 20000000  2005 Asia         67.9
+##  3     15000 20000000  2005 Asia         69.4
+##  4     20000 20000000  2005 Asia         70.9
+##  5     25000 20000000  2005 Asia         72.4
+##  6     30000 20000000  2005 Asia         73.9
+##  7     35000 20000000  2005 Asia         75.4
+##  8     40000 20000000  2005 Asia         76.8
+##  9     45000 20000000  2005 Asia         78.3
+## 10     50000 20000000  2005 Asia         79.8
+## 11     55000 20000000  2005 Asia         81.3
+## 12     60000 20000000  2005 Asia         82.8
+## 13     65000 20000000  2005 Asia         84.3
+## 14     70000 20000000  2005 Asia         85.8
+## 15     75000 20000000  2005 Asia         87.3
+## 16     80000 20000000  2005 Asia         88.8
+## 17     85000 20000000  2005 Asia         90.3
+## 18     90000 20000000  2005 Asia         91.8
+## 19     95000 20000000  2005 Asia         93.3
+## 20    100000 20000000  2005 Asia         94.8
+```
+
+---
+
+# Predicting health
+
+We could go *even* further, and also vary the continent the country is in: 
+
+
+```
+## # A tibble: 80 × 5
+##    gdpPercap      pop  year continent .fitted
+##        &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1      5000 20000000  2005 Africa       57.0
+##  2      5000 20000000  2005 Americas     71.3
+##  3      5000 20000000  2005 Asia         66.4
+##  4      5000 20000000  2005 Europe       76.4
+##  5     10000 20000000  2005 Africa       58.5
+##  6     10000 20000000  2005 Americas     72.8
+##  7     10000 20000000  2005 Asia         67.9
+##  8     10000 20000000  2005 Europe       77.9
+##  9     15000 20000000  2005 Africa       60.0
+## 10     15000 20000000  2005 Americas     74.3
+## # … with 70 more rows
+```
+
+
+---
+
+# Predicting health
+
+We can then save our predictions as an object, and plot them: 
+
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

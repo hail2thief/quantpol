@@ -47,14 +47,14 @@ First we fit a model and look at the output.
 ```{r}
 # fitting a model of mpg ~ weight
 mod = lm(mpg ~ wt, data = mtcars)
-get_regression_table(mod)
+tidy(mod)
 ```
 
 
 Next, we define a scenario we want a prediction for. For example, what MPG should we expect with a car that weighs 1.05 tons? 
 
 ```{r}
-scenario = tibble(wt = 1.05)
+scenario = crossing(wt = 1.05)
 ```
 
 
@@ -75,7 +75,7 @@ We can make more complicated predictions. For example, predicted MPG for cars wi
 ```{r}
 # what is the predicted mpg, for a car with: 
 # wt = 1, 2, 3, 4, 5 tons?
-scenario = tibble(wt = c(1, 2, 3, 4, 5))
+scenario = crossing(wt = c(1, 2, 3, 4, 5))
 
 # get prediction (i saved as data object to plot below)
 preds_wt = augment(mod, newdata = scenario)
@@ -102,7 +102,7 @@ The real power of modeling is in using more than one explanatory variable. Below
 
 ```{r}
 mod = lm(mpg ~ wt + cyl + hp + vs, data = mtcars)
-get_regression_table(mod)
+tidy(mod)
 ```
 
 
@@ -110,7 +110,7 @@ We can then make use of these explanatory variables to make (hopefully) more pre
 
 ```{r}
 # set scenario
-scen = tibble(wt = 3, 
+scen = crossing(wt = 3, 
               cyl = 4, 
               hp = 160, 
               vs = 0)
@@ -126,34 +126,12 @@ I can also get predictions where I vary the values one variable takes on and lea
 ```{r}
 # i have a car that weighs 1 ton, hp = 100, vs = 0, 
 # what does fuel efficiency look like, if I have 4, 6, 8?
-scenario = tibble(wt = 1, 
+scenario = crossing(wt = 1, 
                   hp = 100, 
                   vs = 0, 
                   cyl = c(4, 6, 8))
 
 augment(mod, newdata = scenario)
-```
-
-
-Here's a different example, using a model of housing prices: 
-
-```{r}
-mod_prices = lm(price ~ sqft_living + bedrooms + bathrooms + waterfront, 
-                data = house_prices)
-get_regression_table(mod_prices)
-```
-
-
-How much should we expect a house with 4 bedrooms, 2 bathrooms, 2000 square feet, and a waterfront view to cost? Note that `waterfront` variable is coded as either TRUE or FALSE in the original data. 
-
-
-```{r}
-scenario = tibble(bedrooms = 4, 
-                  bathrooms = 2, 
-                  sqft_living = 2000, 
-                  waterfront = TRUE)
-
-augment(mod_prices, newdata = scenario)
 ```
 
 
@@ -179,7 +157,7 @@ And the template for interpreting the *intercept* is the following:
 So with our model above: 
 
 ```{r}
-get_regression_table(mod)
+tidy(mod)
 ```
 
 
@@ -195,7 +173,7 @@ Here's a different example, using the `evals` dataset:
 ```{r}
 # fit model
 mod_evals = lm(score ~ age + bty_avg + gender + rank, data = evals)
-get_regression_table(mod_evals)
+tidy(mod_evals)
 ```
 
 - `age` = for every ADDITIONAL YEAR OF AGE of a professor, there is an associated **.008** decrease in their STUDENT EVALUATION SCORE (continuous)
