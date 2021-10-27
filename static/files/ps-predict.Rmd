@@ -1,0 +1,198 @@
+---
+title: "Problem set 5: Prediction"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(socviz)
+library(broom)
+library(moderndive)
+```
+
+
+
+# Task 1: Zillow model
+
+
+Let's look at data from `moderndive` which contains information on house prices and house characteristics from 2014-2015, in King's County, Washington state, which includes Seattle. 
+
+```{r}
+house_prices
+```
+
+Remember, you can use `?dataset_name` with datasets that come from packages to look at the codebook.
+
+
+A seller wants to know: how much should I expect to sell my house for? Fit a model that predicts a house's price based on its: number of bedrooms, number of bathrooms, the square footage of the living area, square footage of the lot, number of floors, whether it is on the waterfront, and the year it was built. 
+
+```{r}
+
+
+```
+
+
+Now, using the model, answer the following questions. 
+
+What is the estimated price for the seller's house, which has 2 beds, 2 baths, 1,100 sq ft, a 3,000 sq ft lot, 1 floor, no waterfront view, and which was built in 1980? 
+
+```{r}
+
+
+```
+
+**Q1: Estimate, rounding to nearest whole number**
+
+
+Next, a thought experiment: what if that same house was larger or smaller? How would the price change? And what if it *did* have a waterfront view? Keep everything in your scenario the same, except now vary the square footage of the living space betweeen 800 sq ft and 3000 sq ft. Vary also whether the house has a waterfront view. 
+
+Make a line plot to show how the estimated price changes as the size of the living space changes. Color the line by whether the house has a waterfront view. Add `scale_y_continuous(labels = scales::dollar)` to your plot so you can see the Y-axis in dollars. Add labels and a theme. 
+
+```{r}
+
+
+```
+
+**Q2: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+
+# Task 2: Nate Silver
+
+
+Now, let's look at the `elections` dataset again:
+
+```{r}
+elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl=1")
+```
+
+Fit a model that explains GOP performance in 2016 as a function of census_region, population, percent of the population that is Black, median household income, and the GOP's performance in that county in 2012. 
+
+```{r}
+
+
+```
+
+
+What's our best estimate for a county in the West, where the GOP got 23% of the vote in 2012, the population is about 100,000, the percent of the population that is Black is 6%, and median household income is $42,000? 
+
+```{r}
+
+
+```
+
+**Q3: rounding to two decimal places, what's the estimated GOP share?**
+
+
+Finally, let's get a precise estimate for a particular county. Look up Broward county, and using it's characteristics and your model for above, produce the estimated vote share for Republicans in Broward in 2016: 
+
+```{r}
+
+
+```
+
+**Q4: rounding to two decimal places, what's the estimate for the GOP vote share in Broward County?**
+
+
+Finally, compare this estimate to how the GOP *actually performed* in the 2020 election in Broward County. In a way, this is like asking how good our guess would be for the 2020 election if we were using data from 2016. 
+
+**Q5: Rounding to two decimal places, how wrong is our estimate compared to actual 2020 performance?**
+
+
+
+# Optional task 3: making maps
+
+
+You don't have to do this one. It's just for fun + learning. 
+
+
+We're going to learn how to make maps. Check out the `county_map` data below:
+
+```{r}
+data("county_data")
+data("county_map")
+county_map %>% 
+  sample_n(5)
+```
+
+Notice it's got coordinates (`lon`, `lat`) and a bunch of other stuff you can't make sense of. But `ggplot` knows this is map data and can turn it into a map. 
+
+
+Here's how you plot this below. Notice where `long`, `lat`, and `group` go and that we need to use `geom_polygon` to plot. 
+
+
+```{r}
+ggplot(data = county_map,
+            mapping = aes(x = long, y = lat,
+                          group = group)) +
+  geom_polygon(color = "white", size = 0.05) + coord_equal()
+```
+
+
+
+Let's bring some county-level data in so we can make interesting plots. Do the following: 
+
+
+- Merge county_data and county_map together using `inner_join()`
+- Pick a state and subset the resulting dataframe to just that state
+- Use the code from above to plot the counties in your state
+
+
+```{r}
+
+```
+
+
+
+Look through your dataset and find a variable that you think is interesting. Copy the code from above, but this time you're going to map `fill` to that variable that is of interest to you. 
+
+
+```{r}
+
+
+```
+
+
+The default colors are ugly. Is the variable you picked categorical or continuous? 
+
+- If it's a categorical variable, add `scale_fill_brewer()` to the plot, and go to [this website](http://colorbrewer2.org/#type=sequential&scheme=BuGn&n=3) to pick a palette. Click the palettes and find the name (the first green one at top left is "BuGn"). Add `palette = "YOUR PALETTE"` to add the colors you want. 
+- If it's a continuous variable, add `scale_fill_gradient2` to your plot. Set `high` equal to some color (hint: look up the Hex number for the color you want). You can also set `low` to something else as well, if you want. 
+
+
+```{r}
+
+```
+
+
+Finally, let's get rid of all the junk on here. Add `theme()` to the map, and within theme, set:
+
+- legend.position to "bottom", which will move the legend down
+- axis.text to `element_blank()`, which will get rid of axis numbers
+- axis.ticks to `element_blank()`, which will get rid of tick marks
+- axis.title to `element_blank()`, which will...
+- panel.background to `element_blank()`, which will...
+- panel.border to `element_blank()`, which will...
+- panel.grid to `element_blank()`, which will...
+- plot.background to `element_blank()`, which will...
+
+
+
+```{r}
+
+```
+
+
+Looks good! Post in Slack so I can see. 

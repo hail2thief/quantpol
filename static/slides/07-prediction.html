@@ -4,7 +4,7 @@
     <title>Prediction</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-10-24" />
+    <meta name="date" content="2021-10-25" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
@@ -65,11 +65,11 @@ We're using models to estimate the relationship between one variable (the treatm
 
 --
 
-We follow this formula, using `lm` and `tidy`
+We follow this two-step formula, using `lm` and `tidy`
 
 --
 
-Estimate the model:
+1) Estimate the model:
 
 
 ```r
@@ -77,7 +77,7 @@ example_model = lm(outcome ~ treatment, data = data_where_these_variables_live)
 ```
 
 
-Examine the output: 
+2) Examine the output: 
 
 
 ```r
@@ -101,24 +101,31 @@ There are two scenarios:
 ---
 
 
-# Scenario 1: the treatment variable is continuous
+# Scenario 1: treatment is continuous
 
+In this case, we follow this interpretation formula:
 
-If the treatment variable is **continous**, we interpret the coefficient estimate like so: 
 &gt;For every UNIT INCREASE in X, there is an associated COEFFICIENT ESTIMATE change in Y
+
+--
 
 The coefficient estimate is the *rate of change* in Y as X increases or decreases
 
+--
+
 Things to figure out: 
 
-* What does a "one unit increase in X" mean in your particular example? e.g., what does it mean for X to increase by one? The same for Y: what units is it in? 
+* What does a "one unit increase in X" mean with this data? The same for Y: what units is it in? 
 
 ---
 
 # Scenario 1: Example
 
-The relationship between age and how much tv people watch:
 
+```r
+age_tv = lm(tvhours ~ age, data = gss_cat)
+tidy(age_tv)
+```
 
 ```
 ## # A tibble: 2 × 5
@@ -128,20 +135,21 @@ The relationship between age and how much tv people watch:
 ## 2 age           0.0210   0.00139      15.1 4.69e- 51
 ```
 
-* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per week (this is the unit of Y!)
+.small[
+* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per day (this is the unit of Y!)
 
-* Intercept = the model estimates that the average person who is zero years old watches about 2 hours of tv
+* Intercept = the model estimates that, on average, someone who is zero years old watches about 2 hours of tv per day
+]
+
 
 ---
 
-# Scenario 2: the treatment variable is categorical
+# Scenario 2: treatment is categorical
 
 
-If the treatment variable is **categorical**, we interpret the coefficient estimate like so: 
+&gt;**Formula**: Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
 
-&gt;Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
-
-The coefficient estimate is the *sudden difference across groups* in Y, comparing X to the category intercept
+The coefficient estimate is the  *difference across groups* in Y, comparing X to the category that is the intercept
 
 Things to figure out: 
 
@@ -155,8 +163,12 @@ Things to figure out:
 
 Estimating the relationship between tv consumption and marital status: 
 
-What values does `marital` take on?
+First, what values does `marital` take on?
 
+
+```r
+gss_cat %&gt;% distinct(marital)
+```
 
 ```
 ## # A tibble: 6 × 1
@@ -171,8 +183,17 @@ What values does `marital` take on?
 ```
 
 
+---
+
+# Scenario 2: Example
+
 Estimate the model:
 
+
+```r
+married_tv = lm(tvhours ~ marital, data = gss_cat)
+tidy(married_tv)
+```
 
 ```
 ## # A tibble: 6 × 5
@@ -186,31 +207,57 @@ Estimate the model:
 ## 6 maritalMarried         0.0949     0.854     0.111 0.912
 ```
 
+
+---
+
+# Scenario 2: Example
+
+.pull-left[
 By comparing the values X takes on with the output, we can see that the "Intercept" is "No answer"
 
 This means that each coefficient estimate will be interpreted *relative to* respondents who did not answer the question about whether they were married
+]
+
+.pull-right[
+
+|term                 | estimate|
+|:--------------------|--------:|
+|(Intercept)          |    2.556|
+|maritalNever married |    0.550|
+|maritalSeparated     |    0.994|
+|maritalDivorced      |    0.530|
+|maritalWidowed       |    1.356|
+|maritalMarried       |    0.095|
+]
 
 ---
 
 # Scenario 2: Example
 
 
-```
-## # A tibble: 6 × 5
-##   term                 estimate std.error statistic p.value
-##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept)            2.56       0.853     2.99  0.00275
-## 2 maritalNever married   0.550      0.855     0.643 0.520  
-## 3 maritalSeparated       0.994      0.863     1.15  0.249  
-## 4 maritalDivorced        0.530      0.855     0.619 0.536  
-## 5 maritalWidowed         1.36       0.857     1.58  0.114  
-## 6 maritalMarried         0.0949     0.854     0.111 0.912
-```
-
+.pull-left[
+.small[
 * Never married: respondents who never married watch, on average, .54 more hours of tv a day than respondents who did not answer
 * Separated: respondents who are separated watch, on average, 1 hour more of tv a day than respondents who did not answer
 * And so on...
 * The intercept = the average amount of tv watched by respondents who did not answer the question is about 2.5 hours a day
+]
+]
+
+.pull-right[
+
+|term                 | estimate|
+|:--------------------|--------:|
+|(Intercept)          |    2.556|
+|maritalNever married |    0.550|
+|maritalSeparated     |    0.994|
+|maritalDivorced      |    0.530|
+|maritalWidowed       |    1.356|
+|maritalMarried       |    0.095|
+]
+
+
+
 
 ---
 
@@ -236,13 +283,21 @@ At stake is what decision to take under uncertainty about the future
 
 ---
 
+
 # Making predictions
 
+.pull-left[
 The basics of prediction are pretty straightforward:
 
 * Take/collect existing data
 * Fit a model to it
 * Use model output to produce estimates
+]
+
+.pull-right[
+&lt;img src="images/tea-reading.jpeg" width="100%" /&gt;
+
+]
 
 ---
 
@@ -255,9 +310,15 @@ weight_model = lm(mpg ~ wt, data = mtcars)
 
 Remeber our model is an equation: 
 
+--
+
 `\(\widehat{mpg} = 37.29 - 5.34(wt)\)`
 
+--
+
 To get an estimate of `mpg`, we simply plug in the value of "weight" we are interested in:
+
+--
 
 Estimate for weight = 3.25
 
@@ -267,8 +328,15 @@ Estimate for weight = 3.25
 
 # Prediction (in R)
 
-To make predictions in R, we first **define the scenario** we want a prediction for, using the `crossing()` function
+First **define the scenario** we want a prediction for, using `crossing()`
 
+--
+
+
+```r
+*weight_scenario = crossing(wt = 3.25)
+weight_scenario
+```
 
 ```
 ## # A tibble: 1 × 1
@@ -277,16 +345,20 @@ To make predictions in R, we first **define the scenario** we want a prediction 
 ## 1  3.25
 ```
 
-Note that `crossing` creates a dataframe
+--
 
-The variables in `crossing` have to have the exact same name as the variables in the model
+Note that `crossing` creates a dataframe, and that the variables in `crossing` have to have the same name as the variables in the model
 
 ---
 
 # Prediction (in R)
 
-We can then combine our scenario with our model using the function `augment()`:
+We can then combine our scenario with our model using `augment()`:
 
+
+```r
+augment(weight_model, newdata = weight_scenario)
+```
 
 ```
 ## # A tibble: 1 × 2
@@ -295,6 +367,7 @@ We can then combine our scenario with our model using the function `augment()`:
 ## 1  3.25    19.9
 ```
 
+--
 
 Note that we tell `augment` what our new scenario is using the `newdata = ` argument
 
@@ -306,6 +379,12 @@ Note too that we got the same answer as when we did it by hand
 
 We can also look at multiple scenarios, maybe a light, medium, and heavy car:
 
+.scroll-output[
+
+```r
+weight_scenario = crossing(wt = c(1.5, 3, 5))
+weight_scenario
+```
 
 ```
 ## # A tibble: 3 × 1
@@ -316,6 +395,10 @@ We can also look at multiple scenarios, maybe a light, medium, and heavy car:
 ## 3   5
 ```
 
+```r
+augment(weight_model, newdata = weight_scenario)
+```
+
 ```
 ## # A tibble: 3 × 2
 ##      wt .fitted
@@ -324,14 +407,87 @@ We can also look at multiple scenarios, maybe a light, medium, and heavy car:
 ## 2   3      21.3
 ## 3   5      10.6
 ```
+]
+
 
 ---
+
+# Prediction (in R)
+
+Or we can look at a ton of scenarios using the `seq()` function
+
+Here, we tell R to look at every weight between 2 and 6 tons, in .1 ton increments
+
+--
+
+
+.scroll-output[
+
+```r
+*seq_weights = crossing(wt = seq(from = 2, to = 6, by = .1))
+seq_weights
+```
+
+```
+## # A tibble: 41 × 1
+##       wt
+##    &lt;dbl&gt;
+##  1   2  
+##  2   2.1
+##  3   2.2
+##  4   2.3
+##  5   2.4
+##  6   2.5
+##  7   2.6
+##  8   2.7
+##  9   2.8
+## 10   2.9
+## # … with 31 more rows
+```
+]
+
+
+---
+
+
+# Prediction (in R)
+
+
+And then get predictions for all these scenarios:
+
+.scroll-output[
+
+```r
+augment(weight_model, newdata = seq_weights)
+```
+
+```
+## # A tibble: 41 × 2
+##       wt .fitted
+##    &lt;dbl&gt;   &lt;dbl&gt;
+##  1   2      26.6
+##  2   2.1    26.1
+##  3   2.2    25.5
+##  4   2.3    25.0
+##  5   2.4    24.5
+##  6   2.5    23.9
+##  7   2.6    23.4
+##  8   2.7    22.9
+##  9   2.8    22.3
+## 10   2.9    21.8
+## # … with 31 more rows
+```
+]
+
+
+---
+
 
 # Trivial
 
 Do we really need a model to predict MPG when weight = 3.25? Probably not
 
-&lt;img src="07-prediction_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
 
 
 ---
@@ -341,9 +497,11 @@ Do we really need a model to predict MPG when weight = 3.25? Probably not
 
 The real power of modeling and prediction comes with using multiple explanatory variables
 
+--
+
 Many factors influence a car's fuel efficiency; we can use that information to make more precise predictions
 
-We can use `?mtcars` look at the variables and what they mean
+--
 
 .scroll-output[
 
@@ -399,21 +557,33 @@ big_model = lm(mpg ~ wt + cyl + hp + am, data = mtcars)
 # Interpretation
 
 
-```
-## # A tibble: 5 × 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)  36.1       3.10       11.6  4.94e-12
-## 2 wt           -2.61      0.920      -2.83 8.60e- 3
-## 3 cyl          -0.745     0.583      -1.28 2.12e- 1
-## 4 hp           -0.0250    0.0136     -1.83 7.86e- 2
-## 5 am            1.48      1.44        1.03 3.14e- 1
-```
 
+.pull-left[
+
+|term        | estimate|
+|:-----------|--------:|
+|(Intercept) |   36.147|
+|wt          |   -2.606|
+|cyl         |   -0.745|
+|hp          |   -0.025|
+|am          |    1.478|
+]
+
+--
+
+.pull-right[
+.small[
 * wt = every additional ton of weight is associate with a 2.61 decrease in mpg
 * cyl = every additional cylinder is associated with a .7 decrease in mpg
 * hp = every additional unit of horse power is associated with a .02 decrease in mpg
-* am = on average, cars with manual transmissions (`am = 1`) have 1.48 more mpg than cars with automatic transmissions (`am = 0`) [Note this is a dummy variable!] 
+* am = on average, cars with manual transmissions (`am = 1`) have 1.48 more mpg than cars with automatic transmissions (`am = 0`)
+]
+]
+
+--
+
+Note how the estimate on weight changed as we added more variables; this the relationship between weight and mpg, *after adjusting for other factors*. More on this later
+
 
 ---
 
@@ -423,6 +593,14 @@ We can make predictions just as before, only adding more variables to our scenar
 
 For example: a car that weighs 3 tons, has 4 cylinders, 120 horse power, and has a manual transmission
 
+--
+
+
+```r
+big_scenario = crossing(wt = 3, cyl = 4, hp = 120, am = 1)
+
+augment(big_model, newdata = big_scenario)
+```
 
 ```
 ## # A tibble: 1 × 5
@@ -437,58 +615,60 @@ For example: a car that weighs 3 tons, has 4 cylinders, 120 horse power, and has
 
 We can also look at what happens when one variable changes a lot, while the others stay the same, using the `seq()` function
 
-
-
+.scroll-output[
 
 ```r
-varying_hp = crossing(wt = 3, 
-                      cyl = 4, 
-                      hp = seq(from = 50, to = 340, by = 5),
-                      am = 1)
+varying_hp = crossing(wt = 3, cyl = 4, am = 1,
+                      hp = seq(from = 50, to = 340, by = 5))
 
 augment(big_model, newdata = varying_hp)
 ```
 
 ```
 ## # A tibble: 59 × 5
-##       wt   cyl    hp    am .fitted
+##       wt   cyl    am    hp .fitted
 ##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
-##  1     3     4    50     1    25.6
-##  2     3     4    55     1    25.5
-##  3     3     4    60     1    25.3
-##  4     3     4    65     1    25.2
-##  5     3     4    70     1    25.1
-##  6     3     4    75     1    25.0
-##  7     3     4    80     1    24.8
-##  8     3     4    85     1    24.7
-##  9     3     4    90     1    24.6
-## 10     3     4    95     1    24.5
+##  1     3     4     1    50    25.6
+##  2     3     4     1    55    25.5
+##  3     3     4     1    60    25.3
+##  4     3     4     1    65    25.2
+##  5     3     4     1    70    25.1
+##  6     3     4     1    75    25.0
+##  7     3     4     1    80    24.8
+##  8     3     4     1    85    24.7
+##  9     3     4     1    90    24.6
+## 10     3     4     1    95    24.5
 ## # … with 49 more rows
 ```
+]
+
 
 ---
 
 # Prediction
 
-We could then store our estimate, and use it for plotting our estimated MPG as horse power changes:
+We could then store our estimate, and use it for plotting
 
 
 ```r
 hp_pred = augment(big_model, newdata = varying_hp)
-
 ggplot(hp_pred, aes(x = hp, y = .fitted)) + geom_point() + theme_bw() + 
   labs(x = "Horsepower", y = "Predicted fuel efficiency")
 ```
 
-&lt;img src="07-prediction_files/figure-html/unnamed-chunk-18-1.png" width="100%" /&gt;
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-22-1.png" width="70%" /&gt;
 
 ---
 
-# Prediction
+# Troubleshooting
 
 Note that your scenario needs to include every variable in your model, otherwise you will get an error
 
-The one below is missing cylinders, and won't run:
+--
+
+The one below is missing cylinders, which is in `big_model`, and won't run:
+
+--
 
 
 ```r
@@ -504,9 +684,15 @@ augment(big_model, newdata = bad_scenario)
 
 # Pick scenarios that make sense
 
+--
+
 Note that to make predictions that make sense, we have to look through our data and see what values are plausible for the variables
 
+--
+
 For example, a 20 cylinder car doesn't make sense; neither does setting `am` = 3, since `am` is a dummy variable that takes two values (0 = automatic, 1 = manual)
+
+--
 
 But R doesn't know that, and will give you (nonsensical) estimates:
 
@@ -524,6 +710,13 @@ But R doesn't know that, and will give you (nonsensical) estimates:
 
 Say we wanted to predict a country's life expectancy, using population, GDP per capita, the year, and what continent it is in:
 
+--
+
+
+```r
+life_model = lm(lifeExp ~ gdpPercap + pop + year + continent, data = gapminder)
+tidy(life_model)
+```
 
 ```
 ## # A tibble: 8 × 5
@@ -545,6 +738,16 @@ Say we wanted to predict a country's life expectancy, using population, GDP per 
 
 What if we wanted to predict the life expectancy of a country with a GDP per capita of $7,000, a population of 20 million, in the year 2005, in Asia?
 
+--
+
+
+```r
+life_scenario = crossing(gdpPercap = 7000, 
+                       pop = 20000000, 
+                       year = 2005, 
+                       continent = "Asia")
+augment(life_model, newdata = life_scenario)
+```
 
 ```
 ## # A tibble: 1 × 5
@@ -560,6 +763,19 @@ What if we wanted to predict the life expectancy of a country with a GDP per cap
 
 We could go further, and vary GDP per capita as the other values stay the same:
 
+--
+
+.scroll-output[
+
+```r
+life_scenario = crossing(gdpPercap = seq(from = 5000, 
+                                       to = 100000, 
+                                       by = 5000), 
+                       pop = 20000000, 
+                       year = 2005, 
+                       continent = "Asia")
+augment(life_model, newdata = life_scenario)
+```
 
 ```
 ## # A tibble: 20 × 5
@@ -586,13 +802,28 @@ We could go further, and vary GDP per capita as the other values stay the same:
 ## 19     95000 20000000  2005 Asia         93.3
 ## 20    100000 20000000  2005 Asia         94.8
 ```
+]
+
 
 ---
 
 # Predicting health
 
-We could go *even* further, and also vary the continent the country is in: 
+We could go *even* further, and also vary the continent the country is in
 
+--
+
+.scroll-output[
+
+```r
+life_continent_scenario = crossing(gdpPercap = seq(from = 5000, 
+                                       to = 100000, 
+                                       by = 5000), 
+                       pop = 20000000, 
+                       year = 2005, 
+                       continent = c("Asia", "Africa", "Americas", "Europe"))
+augment(life_model, newdata = life_continent_scenario)
+```
 
 ```
 ## # A tibble: 80 × 5
@@ -611,6 +842,8 @@ We could go *even* further, and also vary the continent the country is in:
 ## # … with 70 more rows
 ```
 
+]
+
 
 ---
 
@@ -618,9 +851,89 @@ We could go *even* further, and also vary the continent the country is in:
 
 We can then save our predictions as an object, and plot them: 
 
-&lt;img src="07-prediction_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+
+```r
+pred_health = augment(life_model, newdata = life_continent_scenario)
+```
+
+
+
+```r
+ggplot(pred_health, aes(x = gdpPercap, y = .fitted, color = continent)) + 
+  geom_point() + labs(x = "GDP per capita", y = "Estimated life expectancy", color = "Continent") + theme_bw() + scale_color_brewer(palette = "Dark2")
+```
+
+&lt;img src="07-prediction_files/figure-html/unnamed-chunk-30-1.png" width="60%" /&gt;
 
 ---
+
+# Comparing to reality
+
+We can also compare our model estimate to a real country, for instance, Jamaica in 2007:
+
+--
+
+
+|country |continent | year| lifeExp|     pop| gdpPercap|
+|:-------|:---------|----:|-------:|-------:|---------:|
+|Jamaica |Americas  | 2007|  72.567| 2780132|   7320.88|
+
+--
+
+We can use Jamaica's values as our scenario, and see what our model predicted:
+
+
+```r
+jamaica = crossing(continent = "Americas", year = 2007, 
+                   pop = 2780132, gdpPercap = 7321)
+```
+
+---
+
+# Pretty close
+
+
+
+Actual:
+
+
+|country |continent | year| lifeExp|     pop| gdpPercap|
+|:-------|:---------|----:|-------:|-------:|---------:|
+|Jamaica |Americas  | 2007|  72.567| 2780132|   7320.88|
+
+Estimate:
+
+
+```
+## # A tibble: 1 × 5
+##   continent  year     pop gdpPercap .fitted
+##   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 Americas   2007 2780132      7321    72.5
+```
+
+---
+
+# This is not really prediction
+
+Our estimate of Jamaica is not *really* prediction, since we *used* that observation to fit our model, but it is a way of seeing how well the model we estimated fits the data
+
+--
+
+For true prediction, we could either: 
+
+--
+
+
+1. Fit a model with current data, and predict the outcome of some future event (e.g., an election, an NBA match)
+
+--
+
+
+2. Break off ~1/3 of our data, estimate the model on the rest of the data, and then see how well it predicts the outcome in the 1/3
+
+--
+
+Our prediction on this **out-of-sample** data would probably be (much) worse; but that whole deal would be a separate class!
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

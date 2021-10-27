@@ -44,6 +44,7 @@ lessons:
     date: "Oct 26, Oct 28"
     reading: "prediction"
     class: "prediction"
+    assignment: "ps-predict"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 5**'
   #   #date: "Feb 23, Tue"

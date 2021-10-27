@@ -107,18 +107,18 @@ We're using models to estimate the relationship between one variable (the treatm
 
 --
 
-We follow this formula, using `lm` and `tidy`
+We follow this two-step formula, using `lm` and `tidy`
 
 --
 
-Estimate the model:
+1) Estimate the model:
 
 ```{r, echo = TRUE, eval = FALSE}
 example_model = lm(outcome ~ treatment, data = data_where_these_variables_live)
 ```
 
 
-Examine the output: 
+2) Examine the output: 
 
 ```{r, echo = TRUE, eval = FALSE}
 tidy(example_model)
@@ -141,43 +141,46 @@ There are two scenarios:
 ---
 
 
-# Scenario 1: the treatment variable is continuous
+# Scenario 1: treatment is continuous
 
+In this case, we follow this interpretation formula:
 
-If the treatment variable is **continous**, we interpret the coefficient estimate like so: 
 >For every UNIT INCREASE in X, there is an associated COEFFICIENT ESTIMATE change in Y
+
+--
 
 The coefficient estimate is the *rate of change* in Y as X increases or decreases
 
+--
+
 Things to figure out: 
 
-* What does a "one unit increase in X" mean in your particular example? e.g., what does it mean for X to increase by one? The same for Y: what units is it in? 
+* What does a "one unit increase in X" mean with this data? The same for Y: what units is it in? 
 
 ---
 
 # Scenario 1: Example
 
-The relationship between age and how much tv people watch:
-
-```{r}
+```{r, echo = TRUE}
 age_tv = lm(tvhours ~ age, data = gss_cat)
 tidy(age_tv)
 ```
 
-* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per week (this is the unit of Y!)
+.small[
+* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per day (this is the unit of Y!)
 
-* Intercept = the model estimates that the average person who is zero years old watches about 2 hours of tv
+* Intercept = the model estimates that, on average, someone who is zero years old watches about 2 hours of tv per day
+]
+
 
 ---
 
-# Scenario 2: the treatment variable is categorical
+# Scenario 2: treatment is categorical
 
 
-If the treatment variable is **categorical**, we interpret the coefficient estimate like so: 
+>**Formula**: Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
 
->Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
-
-The coefficient estimate is the *sudden difference across groups* in Y, comparing X to the category intercept
+The coefficient estimate is the  *difference across groups* in Y, comparing X to the category that is the intercept
 
 Things to figure out: 
 
@@ -191,37 +194,68 @@ Things to figure out:
 
 Estimating the relationship between tv consumption and marital status: 
 
-What values does `marital` take on?
+First, what values does `marital` take on?
 
-```{r}
+```{r,echo = TRUE}
 gss_cat %>% distinct(marital)
 ```
 
-
-Estimate the model:
-
-```{r}
-married_tv = lm(tvhours ~ marital, data = gss_cat)
-tidy(married_tv)
-```
-
-By comparing the values X takes on with the output, we can see that the "Intercept" is "No answer"
-
-This means that each coefficient estimate will be interpreted *relative to* respondents who did not answer the question about whether they were married
 
 ---
 
 # Scenario 2: Example
 
-```{r}
+Estimate the model:
+
+```{r, echo = TRUE}
 married_tv = lm(tvhours ~ marital, data = gss_cat)
 tidy(married_tv)
 ```
 
+
+---
+
+# Scenario 2: Example
+
+.pull-left[
+By comparing the values X takes on with the output, we can see that the "Intercept" is "No answer"
+
+This means that each coefficient estimate will be interpreted *relative to* respondents who did not answer the question about whether they were married
+]
+
+.pull-right[
+```{r}
+married_tv = lm(tvhours ~ marital, data = gss_cat)
+tidy(married_tv) %>% 
+  select(term, estimate) %>% 
+  knitr::kable(digits = 3)
+```
+]
+
+---
+
+# Scenario 2: Example
+
+
+.pull-left[
+.small[
 * Never married: respondents who never married watch, on average, .54 more hours of tv a day than respondents who did not answer
 * Separated: respondents who are separated watch, on average, 1 hour more of tv a day than respondents who did not answer
 * And so on...
 * The intercept = the average amount of tv watched by respondents who did not answer the question is about 2.5 hours a day
+]
+]
+
+.pull-right[
+```{r}
+tidy(married_tv) %>% 
+  select(term, estimate) %>% 
+  knitr::kable(digits = 3)
+```
+]
+
+
+
 
 ---
 
@@ -249,13 +283,23 @@ knitr::include_graphics("images/prediction.png")
 
 ---
 
+
 # Making predictions
 
+.pull-left[
 The basics of prediction are pretty straightforward:
 
 * Take/collect existing data
 * Fit a model to it
 * Use model output to produce estimates
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/tea-reading.jpeg")
+```
+
+]
 
 ---
 
@@ -267,9 +311,15 @@ weight_model = lm(mpg ~ wt, data = mtcars)
 
 Remeber our model is an equation: 
 
+--
+
 $\widehat{mpg} = 37.29 - 5.34(wt)$
 
+--
+
 To get an estimate of `mpg`, we simply plug in the value of "weight" we are interested in:
+
+--
 
 Estimate for weight = 3.25
 
@@ -279,27 +329,30 @@ $\widehat{mpg} = 37.29 - 5.34 \times 3.25 = 19.935$
 
 # Prediction (in R)
 
-To make predictions in R, we first **define the scenario** we want a prediction for, using the `crossing()` function
+First **define the scenario** we want a prediction for, using `crossing()`
 
-```{r}
-weight_scenario = crossing(wt = 3.25)
+--
+
+```{r, echo = TRUE}
+weight_scenario = crossing(wt = 3.25) #<<
 weight_scenario
 ```
 
-Note that `crossing` creates a dataframe
+--
 
-The variables in `crossing` have to have the exact same name as the variables in the model
+Note that `crossing` creates a dataframe, and that the variables in `crossing` have to have the same name as the variables in the model
 
 ---
 
 # Prediction (in R)
 
-We can then combine our scenario with our model using the function `augment()`:
+We can then combine our scenario with our model using `augment()`:
 
-```{r}
+```{r, echo = TRUE}
 augment(weight_model, newdata = weight_scenario)
 ```
 
+--
 
 Note that we tell `augment` what our new scenario is using the `newdata = ` argument
 
@@ -311,13 +364,51 @@ Note too that we got the same answer as when we did it by hand
 
 We can also look at multiple scenarios, maybe a light, medium, and heavy car:
 
-```{r}
+.scroll-output[
+```{r, echo = TRUE}
 weight_scenario = crossing(wt = c(1.5, 3, 5))
 weight_scenario
 augment(weight_model, newdata = weight_scenario)
 ```
+]
+
 
 ---
+
+# Prediction (in R)
+
+Or we can look at a ton of scenarios using the `seq()` function
+
+Here, we tell R to look at every weight between 2 and 6 tons, in .1 ton increments
+
+--
+
+
+.scroll-output[
+```{r, echo = TRUE}
+seq_weights = crossing(wt = seq(from = 2, to = 6, by = .1)) #<<
+seq_weights
+```
+]
+
+
+---
+
+
+# Prediction (in R)
+
+
+And then get predictions for all these scenarios:
+
+.scroll-output[
+```{r, echo = TRUE}
+augment(weight_model, newdata = seq_weights)
+```
+]
+
+
+---
+
 
 # Trivial
 
@@ -337,9 +428,11 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 The real power of modeling and prediction comes with using multiple explanatory variables
 
+--
+
 Many factors influence a car's fuel efficiency; we can use that information to make more precise predictions
 
-We can use `?mtcars` look at the variables and what they mean
+--
 
 .scroll-output[
 ```{r}
@@ -362,14 +455,31 @@ big_model = lm(mpg ~ wt + cyl + hp + am, data = mtcars)
 
 # Interpretation
 
-```{r}
-tidy(big_model)
-```
 
+
+.pull-left[
+```{r}
+tidy(big_model) %>% 
+  select(term, estimate) %>% 
+  knitr::kable(digits = 3)
+```
+]
+
+--
+
+.pull-right[
+.small[
 * wt = every additional ton of weight is associate with a 2.61 decrease in mpg
 * cyl = every additional cylinder is associated with a .7 decrease in mpg
 * hp = every additional unit of horse power is associated with a .02 decrease in mpg
-* am = on average, cars with manual transmissions (`am = 1`) have 1.48 more mpg than cars with automatic transmissions (`am = 0`) [Note this is a dummy variable!] 
+* am = on average, cars with manual transmissions (`am = 1`) have 1.48 more mpg than cars with automatic transmissions (`am = 0`)
+]
+]
+
+--
+
+Note how the estimate on weight changed as we added more variables; this the relationship between weight and mpg, *after adjusting for other factors*. More on this later
+
 
 ---
 
@@ -379,11 +489,10 @@ We can make predictions just as before, only adding more variables to our scenar
 
 For example: a car that weighs 3 tons, has 4 cylinders, 120 horse power, and has a manual transmission
 
-```{r}
-big_scenario = crossing(wt = 3, 
-                      cyl = 4, 
-                      hp = 120, 
-                      am = 1)
+--
+
+```{r, echo = TRUE}
+big_scenario = crossing(wt = 3, cyl = 4, hp = 120, am = 1)
 
 augment(big_model, newdata = big_scenario)
 ```
@@ -394,37 +503,39 @@ augment(big_model, newdata = big_scenario)
 
 We can also look at what happens when one variable changes a lot, while the others stay the same, using the `seq()` function
 
-
-
+.scroll-output[
 ```{r, echo = TRUE}
-varying_hp = crossing(wt = 3, 
-                      cyl = 4, 
-                      hp = seq(from = 50, to = 340, by = 5),
-                      am = 1)
+varying_hp = crossing(wt = 3, cyl = 4, am = 1,
+                      hp = seq(from = 50, to = 340, by = 5))
 
 augment(big_model, newdata = varying_hp)
 ```
+]
+
 
 ---
 
 # Prediction
 
-We could then store our estimate, and use it for plotting our estimated MPG as horse power changes:
+We could then store our estimate, and use it for plotting
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, out.width="70%"}
 hp_pred = augment(big_model, newdata = varying_hp)
-
 ggplot(hp_pred, aes(x = hp, y = .fitted)) + geom_point() + theme_bw() + 
   labs(x = "Horsepower", y = "Predicted fuel efficiency")
 ```
 
 ---
 
-# Prediction
+# Troubleshooting
 
 Note that your scenario needs to include every variable in your model, otherwise you will get an error
 
-The one below is missing cylinders, and won't run:
+--
+
+The one below is missing cylinders, which is in `big_model`, and won't run:
+
+--
 
 ```{r, echo = TRUE, eval = FALSE}
 bad_scenario = crossing(wt = 3, 
@@ -439,9 +550,15 @@ augment(big_model, newdata = bad_scenario)
 
 # Pick scenarios that make sense
 
+--
+
 Note that to make predictions that make sense, we have to look through our data and see what values are plausible for the variables
 
+--
+
 For example, a 20 cylinder car doesn't make sense; neither does setting `am` = 3, since `am` is a dummy variable that takes two values (0 = automatic, 1 = manual)
+
+--
 
 But R doesn't know that, and will give you (nonsensical) estimates:
 
@@ -456,7 +573,9 @@ augment(big_model, newdata = crazy_car)
 
 Say we wanted to predict a country's life expectancy, using population, GDP per capita, the year, and what continent it is in:
 
-```{r}
+--
+
+```{r, echo = TRUE}
 life_model = lm(lifeExp ~ gdpPercap + pop + year + continent, data = gapminder)
 tidy(life_model)
 ```
@@ -467,7 +586,9 @@ tidy(life_model)
 
 What if we wanted to predict the life expectancy of a country with a GDP per capita of $7,000, a population of 20 million, in the year 2005, in Asia?
 
-```{r}
+--
+
+```{r, echo = TRUE}
 life_scenario = crossing(gdpPercap = 7000, 
                        pop = 20000000, 
                        year = 2005, 
@@ -482,7 +603,10 @@ augment(life_model, newdata = life_scenario)
 
 We could go further, and vary GDP per capita as the other values stay the same:
 
-```{r}
+--
+
+.scroll-output[
+```{r, echo = TRUE}
 life_scenario = crossing(gdpPercap = seq(from = 5000, 
                                        to = 100000, 
                                        by = 5000), 
@@ -491,14 +615,19 @@ life_scenario = crossing(gdpPercap = seq(from = 5000,
                        continent = "Asia")
 augment(life_model, newdata = life_scenario)
 ```
+]
+
 
 ---
 
 # Predicting health
 
-We could go *even* further, and also vary the continent the country is in: 
+We could go *even* further, and also vary the continent the country is in
 
-```{r}
+--
+
+.scroll-output[
+```{r, echo = TRUE}
 life_continent_scenario = crossing(gdpPercap = seq(from = 5000, 
                                        to = 100000, 
                                        by = 5000), 
@@ -508,6 +637,8 @@ life_continent_scenario = crossing(gdpPercap = seq(from = 5000,
 augment(life_model, newdata = life_continent_scenario)
 ```
 
+]
+
 
 ---
 
@@ -515,13 +646,79 @@ augment(life_model, newdata = life_continent_scenario)
 
 We can then save our predictions as an object, and plot them: 
 
-```{r}
+```{r,echo = TRUE}
 pred_health = augment(life_model, newdata = life_continent_scenario)
+```
+
+
+```{r, echo = TRUE, out.width="60%"}
 ggplot(pred_health, aes(x = gdpPercap, y = .fitted, color = continent)) + 
-  geom_point() + 
-  labs(x = "GDP per capita", y = "Estimated life expectancy", 
-       color = "Continent") + theme_bw() + 
-  scale_color_brewer(palette = "Dark2")
+  geom_point() + labs(x = "GDP per capita", y = "Estimated life expectancy", color = "Continent") + theme_bw() + scale_color_brewer(palette = "Dark2")
 ```
 
 ---
+
+# Comparing to reality
+
+We can also compare our model estimate to a real country, for instance, Jamaica in 2007:
+
+--
+
+```{r}
+gapminder %>% 
+  filter(country == "Jamaica", year == 2007) %>% 
+  knitr::kable()
+```
+
+--
+
+We can use Jamaica's values as our scenario, and see what our model predicted:
+
+```{r, echo = TRUE}
+jamaica = crossing(continent = "Americas", year = 2007, 
+                   pop = 2780132, gdpPercap = 7321)
+```
+
+---
+
+# Pretty close
+
+
+
+Actual:
+
+```{r}
+gapminder %>% 
+  filter(country == "Jamaica", year == 2007) %>% 
+  knitr::kable()
+```
+
+Estimate:
+
+```{r}
+augment(life_model, newdata = jamaica)
+```
+
+---
+
+# This is not really prediction
+
+Our estimate of Jamaica is not *really* prediction, since we *used* that observation to fit our model, but it is a way of seeing how well the model we estimated fits the data
+
+--
+
+For true prediction, we could either: 
+
+--
+
+
+1. Fit a model with current data, and predict the outcome of some future event (e.g., an election, an NBA match)
+
+--
+
+
+2. Break off ~1/3 of our data, estimate the model on the rest of the data, and then see how well it predicts the outcome in the 1/3
+
+--
+
+Our prediction on this **out-of-sample** data would probably be (much) worse; but that whole deal would be a separate class!

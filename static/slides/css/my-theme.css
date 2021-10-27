@@ -37,6 +37,16 @@ font-family: 'Garamond', sans-serif;
 font-weight: bold;
 }
 
+.center2 {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+
 .remark-slide-content h1 {
   font-size: 1.7em;
   line-height: 1em;
