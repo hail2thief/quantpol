@@ -79,7 +79,7 @@ Now, let's look at the `elections` dataset again:
 elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl=1")
 ```
 
-Fit a model that explains GOP performance in 2016 as a function of census_region, population, percent of the population that is Black, median household income, and the GOP's performance in that county in 2012. 
+Fit a model that explains GOP performance in 2016 as a function of census_region, population, percent of the population that is Black, household income, and the GOP's performance in that county in 2012. 
 
 ```{r}
 
