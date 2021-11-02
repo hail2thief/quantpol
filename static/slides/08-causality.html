@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Prediction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-11-02" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Prediction
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Prediction]
+
+--
+.box-2.large.sp-after[Causal inference]
+
+--
+.box-3.large.sp-after[The problem with causality]
+
+---
+
+class: middle, center, inverse
+# Why predict?
+---
+
+
+# Why predict
+
+
+We don't know what's going to happen in the **future**
+
+--
+
+Or in places/cases where we don't have data
+
+--
+
+Even if in cases where we have data -- what's our *best guess*? 
+
+--
+
+
+We can use **models** to make decisions informed by patterns in the data
+
+
+---
+
+
+# Prediction is for making decisions
+
+
+World Bank: what would happen to Jamaica if their GDP went up by 10k?
+
+--
+
+Who the hell knows, but we can use models to make an educated **guess**
+
+--
+
+
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+
+---
+
+
+# Moving forward
+
+
+.pull-left[
+* There are lots of prediction resources online
+* [Kaggle](http://kaggle.com) hosts prediction competitions with interesting data
+* Give it a shot!
+]
+
+
+.pull-right[
+&lt;img src="images/kaggle.png" width="100%" /&gt;
+]
+
+
+---
+
+class: middle, center, inverse
+# A turning point
+---
+
+
+# First half of course
+
+
+.pull-left[
+How to program, visualize data, modeling, relationships, etc.
+
+Look at all the functions you learned:
+&gt; `group_by`, `tally`, `summarise`, `filter`, `mutate`, `%&gt;%`, `distinct`, `lm`, `augment`, `tidy`, `ggplot`, `facet_wrap`...
+
+There are thousands more!
+]
+
+
+.pull-right[
+&lt;img src="images/learning-R.png" width="100%" /&gt;
+]
+
+---
+
+# First half of course
+
+
+Use models to estimate the relationship between X and Y:
+
+
+```r
+mod = lm(lifeExp ~ gdpPercap, data = gapminder)
+tidy(mod)
+```
+
+```
+## # A tibble: 2 × 5
+##   term         estimate std.error statistic   p.value
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept) 54.0      0.315         171.  0        
+## 2 gdpPercap    0.000765 0.0000258      29.7 3.57e-156
+```
+
+--
+
+But is this relationship **causal**? Would an increase in GDP **cause** an increase in life expectancy, on average? 
+
+---
+
+
+# Second half of the course
+
+.pull-left[
+
+"How do we know if X **causes** y?"
+
+This is known as **causal inference**
+
+Why it's so hard to establish causality with data and what we can do about it
+
+Are our estimates **causal**? Academics fight about this all day!
+
+]
+
+
+.pull-right[
+&lt;div class="figure"&gt;
+&lt;img src="images/the-thing.png" alt="Pictured: academic audience at a research presentation" width="100%" /&gt;
+&lt;p class="caption"&gt;Pictured: academic audience at a research presentation&lt;/p&gt;
+&lt;/div&gt;
+]
+
+---
+
+class: center, middle, inverse
+# Many interesting questions are causal
+
+--
+
+International relations: do peace-keepers **reduce conflict** in countries emerging from civil war? Does democracy make countries more **peaceful**?
+
+--
+
+Comparative politics: do elections reduce or increase **corruption**? Does repression increase or decrease **dissent**? 
+
+
+--
+
+
+American politics: do voter ID laws hurt general **turnout**? Do elites move **public opinion** or does public opinion move elites? 
+
+
+---
+
+
+# But not all
+
+
+**Most** of the interesting questions we (social scientists) want to answer with data are causal
+
+--
+
+Some are not: 
+
+Facebook (Meta?) might want to know: "Is there a person in this photo?"
+
+But not care about what factors **cause** the picture to be a photo of a person
+
+Depends on the question; most **why** questions are causal
+
+
+---
+
+
+# The value of causality
+
+
+.pull-left[
+One of our comparative advantages
+
+Not just academic; companies, governments, NGOs also need to answer "why" questions
+
+Does this policy work (or not)? Did it do what was intended? How effective or counterproductive was it? 
+]
+
+.pull-right[
+&lt;img src="images/causal-job.png" width="100%" /&gt;
+]
+
+---
+
+
+# What do we mean by causality?
+
+
+.pull-left[
+In this class, we say **X causes Y** if...
+
+An *intervention* that **changes** the value of X (without changing anything else)
+
+Produces a **change** in Y
+
+Easy: policies; hard: identities
+
+]
+
+.pull-right[
+&lt;img src="images/hume.jpeg" width="70%" /&gt;
+]
+
+
+---
+
+# Terminology
+
+
+We've seen this before:
+
+
+|Variable |Meaning                                   |Examples                                    |
+|:--------|:-----------------------------------------|:-------------------------------------------|
+|Y        |The thing that is affected by a treatment |Employment, turnout, violence               |
+|X        |The thing changing an outcome             |Min. wage laws, voter ID laws, peacekeepers |
+
+
+---
+
+
+# Obviously causal relationships
+
+
+A heavier car has to work harder to get from A to B
+
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-9-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Obviously causal relationships
+
+
+A bigger house is more desirable
+
+
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Not obvious
+
+.pull-left[
+People who are already wealthy or likely to be wealthy get more education than people who are poor
+]
+
+
+.pull-right[
+&lt;img src="images/education.png" width="100%" /&gt;
+]
+
+
+
+---
+
+
+# Not obvious
+
+States that pass these laws are different from states that don't pass
+
+&lt;img src="images/vote-id.png" width="70%" /&gt;
+
+---
+
+
+# Spurious correlation
+
+
+To make matters worse, correlation is common-place in nature:
+
+--
+
+
+&lt;img src="images/spurious-cheese.png" width="100%" /&gt;
+
+---
+
+class: middle, center, inverse
+# The trouble with causality
+
+--
+
+We can't directly observe a change in X **causing** a change in Y
+
+--
+
+This is true even in **experiments**, where we directly manipulate stuff
+
+--
+
+All we can see are **correlations** between X and Y
+
+--
+
+Some of those correlations **are** causal; some **are not**; how can we tell?
+
+---
+
+
+# First step: yes, we can tell (sometimes)
+
+--
+
+Students are obsessed with *"correlation does not mean causation"*
+
+But sometimes it does! that's the tricky part
+
+&lt;img src="images/sponge-cause.jpeg" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+# Make up data to convince ourselves
+
+
+We can make up data in R with the `rnorm()` function
+
+--
+
+`rnorm()` draws random numbers from a **normal distribution**
+
+--
+
+This means: the numbers are close to some **mean**, plus or minus a **standard deviation**
+
+--
+
+&gt; rnorm(n = 100, mean = 10, sd = 2)
+
+Generate 100 random numbers, most of which are +/- 2 away from 10
+
+---
+
+
+# Simulating an election
+
+--
+
+Let's say we want to fake county voting outcomes in the 2024 election, and make it so that most elections are pretty close
+
+--
+
+
+We can generate random numbers that are pretty close to 50 (a tie), plus or minus 5 points
+
+--
+
+.scroll-output[
+
+```r
+*fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5))
+fake_election
+```
+
+```
+## # A tibble: 100 × 1
+##    gop_share
+##        &lt;dbl&gt;
+##  1      47.5
+##  2      58.8
+##  3      50.9
+##  4      50.3
+##  5      48.0
+##  6      54.0
+##  7      46.5
+##  8      49.5
+##  9      41.4
+## 10      46.5
+## # … with 90 more rows
+```
+]
+
+
+
+---
+
+# And we can plot it
+
+
+
+```r
+ggplot(fake_election, aes(x = gop_share)) + 
+* geom_density(fill = "darkred", color = "white")  +
+  theme_bw(base_size = 14)
+```
+
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-16-1.png" width="80%" /&gt;
+
+
+---
+
+# Making X cause Y
+
+--
+
+Now let's say we wanted to make it so that getting more votes **increased** campaign donations (winners attract funding)
+
+--
+
+Say for every percent of the vote you get, you get $2,000
+
+--
+
+We can do that in R like so: 
+
+.scroll-output[
+
+```r
+fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
+*                      donations = 2000 * gop_share)
+fake_election
+```
+
+```
+## # A tibble: 100 × 2
+##    gop_share donations
+##        &lt;dbl&gt;     &lt;dbl&gt;
+##  1      48.2    96423.
+##  2      50.2   100401.
+##  3      48.4    96780.
+##  4      33.6    67241.
+##  5      48.2    96409.
+##  6      53.0   106053.
+##  7      45.5    91033.
+##  8      51.6   103182.
+##  9      47.9    95884.
+## 10      47.3    94570.
+## # … with 90 more rows
+```
+]
+
+
+---
+
+# Can we get the causal estimate back?
+
+We **know** the effect of vote share on campaign donations: it's 2k per percent of the vote
+
+--
+
+Can we use a model to get that estimate back?
+
+--
+
+Yes!
+
+
+```r
+lm(donations ~ gop_share, data = fake_election) %&gt;% tidy()
+```
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+## 1 (Intercept) 8.15e-11  3.93e-11   2.07e 0  0.0407
+## 2 gop_share   2   e+ 3  7.86e-13   2.55e15  0
+```
+
+
+---
+
+
+# This works even if we add noise
+
+
+In the last example, donations were **exactly** 2,000 `\(\times\)` the vote 
+
+--
+
+You could technically just do: $\frac{donations}{vote} = $ 2,000
+
+--
+
+What if we make this more difficult on the model? Let's add some random **noise**
+
+--
+
+.scroll-output[
+
+```r
+fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
+*                      donations = 2000 * gop_share + rnorm(n = 100, mean = 10, sd = 2))
+fake_election
+```
+
+```
+## # A tibble: 100 × 2
+##    gop_share donations
+##        &lt;dbl&gt;     &lt;dbl&gt;
+##  1      47.3    94593.
+##  2      49.4    98761.
+##  3      56.3   112645.
+##  4      46.2    92386.
+##  5      43.8    87699.
+##  6      49.7    99381.
+##  7      51.8   103541.
+##  8      54.1   108169.
+##  9      50.1   100274.
+## 10      52.5   105003.
+## # … with 90 more rows
+```
+]
+
+
+
+---
+
+# Pretty damn close
+
+Even with noise, we can use a model to get pretty close to the true effect: 
+
+
+```r
+lm(donations ~ gop_share, data = fake_election) %&gt;% tidy()
+```
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic    p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)     8.23    1.63        5.04 0.00000211
+## 2 gop_share    2000.      0.0329  60803.   0
+```
+
+---
+
+
+# 🚨 Your turn: Michael Lacour 🚨
+
+--
+
+.pull-left[
+* Lacour published a huge study in *Science*
+* Study showed huge improvements in attitudes towards LGBT issues (gay marriage) from exposure to LGBT canvassers
+* Data was completely forged, using some of the same functions I showed you
+* Created patterns that got him the answer he wanted to get
+]
+
+.pull-right[
+&lt;img src="images/lacour.png" width="100%" /&gt;
+]
+
+
+---
+
+# 🚨 Your turn: Michael Lacour 🚨
+
+
+Using the steps I just went through above, make up some data that pre-confirms some pattern about the world you wish were true and plot it. Some ideas: 
+
+--
+
+* Amount of alcohol consumption and your overall health
+* Time spent studying for Prof. Tellez’s class and future income
+* Number of Pokemon you can name from memory and the number of dates you go on per month
+
+
+--
+
+Experiment with other random number generators: `rpois()` for whole numbers, `rexp()` for skewed distributions
+
+
+
+<div class="countdown" id="timer_6181a99a" style="right:0;bottom:0;font-size:2em;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+
+---
+
+
+class: middle, center, inverse
+## So we (sometimes) *can* estimate causal effects
+--
+
+## Where does it all go wrong then? 
+---
+
+# An example from IR
+
+Does democracy reduce international conflict?
+
+--
+
+Theory: war is costly and the costs are borne by citizens; countries where citizens have input `\(\rightarrow\)` less conflict
+
+--
+
+
+X here is **whether the country is a democracy** (dummy)
+
+Y is **the number of wars the country is involved in**
+
+--
+
+Ideal approach: take a country, look at Y when X = 0, and then when X = 1
+
+
+--
+
+Do this for all countries, take the average
+
+---
+
+
+# Potential outcomes
+
+
+Magical world where we can compare the number of wars when a country is a democracy versus when it is not
+
+
+|country | democracy| war|
+|:-------|---------:|---:|
+|Canada  |         0|   1|
+|Canada  |         1|   1|
+|China   |         0|   1|
+|China   |         1|   3|
+|USA     |         0|   4|
+|USA     |         1|   6|
+
+
+
+---
+
+
+# The problem
+
+
+.pull-left[
+What's weird here?
+
+In reality, we can only observe democracy at one value for each country
+
+The US is a democracy, we can measure wars when democracy = 1, **but not when democracy = 0**
+
+China is not a democracy, we can measure wars when democracy = 0, **but not when democracy = 1**
+]
+
+.pull-right[
+
+|country | democracy| war|
+|:-------|---------:|---:|
+|Canada  |         0|   1|
+|Canada  |         1|   1|
+|China   |         0|   1|
+|China   |         1|   3|
+|USA     |         0|   4|
+|USA     |         1|   6|
+
+]
+
+---
+
+
+# Potential vs. observed
+
+
+We only **observe** the world on the right, but not the left
+
+.pull-left[
+
+|country | democracy| war|
+|:-------|---------:|---:|
+|Canada  |         0|   1|
+|Canada  |         1|   1|
+|China   |         0|   1|
+|China   |         1|   3|
+|USA     |         0|   4|
+|USA     |         1|   6|
+]
+
+.pull-left[
+
+|country | democracy| war|
+|:-------|---------:|---:|
+|Canada  |         0|  NA|
+|Canada  |         1|   1|
+|China   |         0|   1|
+|China   |         1|  NA|
+|USA     |         0|  NA|
+|USA     |         1|   6|
+]
+
+
+---
+
+
+# The fundamental problem of causality
+
+--
+
+We have missing data on "what would have happened" had the US been an autocracy
+
+--
+
+"what would have happened" `\(\rightarrow\)` the **counterfactual**
+
+--
+
+
+Our goal in causal inference is to make as good a guess as possible as to what Y would have been had democracy = 0 instead of 1 (and vice versa)
+
+
+---
+
+# Comparing apples and oranges
+
+
+Well, why don't we just compare the Y's (wars) for countries where democracy = 0 (autocracies) versus the countries where democracy = 1 (democracies)?
+
+--
+
+If democracies fight less, then democracy **reduces** conflict
+
+--
+
+
+```r
+observed %&gt;% 
+  group_by(democracy) %&gt;% 
+  summarise(wars = mean(war, na.rm = TRUE))
+```
+
+```
+## # A tibble: 2 × 2
+##   democracy  wars
+##       &lt;dbl&gt; &lt;dbl&gt;
+## 1         0   1  
+## 2         1   3.5
+```
+
+---
+
+
+# Comparing apples and oranges
+
+
+Implicitly, this means we are saying the countries that are *autocracies* are good **counterfactuals** for the countries that are democracies (and vice versa)
+
+--
+
+For instance, China being a counterfactual for the US
+
+--
+
+But China and the US are different in so many ways! They are not good **counterfactuals** of one another
+
+--
+
+
+We cannot be confident that the differences we find are **only** because of democracy, and not some other variable
+
+---
+
+# Why experiments work
+
+In an experiment, we *randomly* expose participants to some treatment, while others are exposed to nothing (or a placebo)
+
+--
+
+
+| Person|Shown an ad? | Democrats thermometer|
+|------:|:------------|---------------------:|
+|      1|Yes          |                 33.33|
+|      2|No           |                 76.39|
+|      3|Yes          |                 22.39|
+|      4|No           |                 14.02|
+|      5|No           |                  86.6|
+
+--
+
+We then compare the outcome of those who did and didn't get the treatment
+
+
+---
+
+
+# Why experiments work
+
+
+Experiments have the same "problem" as the democracy and war example: we can't observe *the same person* seeing and not seeing the ad
+
+
+| Person|Shown an ad? | Democrats thermometer|
+|------:|:------------|---------------------:|
+|      1|Yes          |                 33.33|
+|      2|No           |                 76.39|
+|      3|Yes          |                 22.39|
+|      4|No           |                 14.02|
+|      5|No           |                  86.6|
+
+
+--
+
+But since the experimental ad was *randomly* assigned, the people that did and didn't see the ad are good **counterfactuals** of one another
+
+
+---
+
+
+# 🚨 Your turn: counterfactuals 🚨
+
+
+Think through the counterfactual scenarios in these examples and whether they are or are not good counterfactuals of one another. 
+
+
+1. A study on whether international trade between two countries makes them more likely to form a defensive alliance.
+
+2. A study on whether being a victim of a crime makes someone more supportive of harsher penalties for criminals. 
+
+3. A study on whether those who were drafted to the military are more likely to vote for "dove" candidates.
+
+
+<div class="countdown" id="timer_6181a867" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+---
+
+
+
+&lt;!-- # Simulation --&gt;
+
+
+&lt;!-- Same mean, different standard deviation: --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- tibble(`rnorm(n = 200, mean = 10, sd = 5)` = rnorm(n = 200,  --&gt;
+&lt;!--                                                    mean = 10, sd = 5),  --&gt;
+&lt;!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  --&gt;
+&lt;!--                                                   mean = 10, sd = 2),  --&gt;
+&lt;!--        `rnorm(n = 200, mean = 10, sd = 1)` = rnorm(n = 200,  --&gt;
+&lt;!--                                                   mean = 10, sd = 1)) %&gt;%  --&gt;
+&lt;!--   pivot_longer(everything()) %&gt;%  --&gt;
+&lt;!--   ggplot(aes(x = value)) +  --&gt;
+&lt;!--   geom_density(fill = yellow, color = "white") +  --&gt;
+&lt;!--   facet_wrap(vars(name)) + theme_fancy --&gt;
+&lt;!-- ``` --&gt;
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- # Simulation --&gt;
+
+
+&lt;!-- Different mean, different standard deviation: --&gt;
+
+&lt;!-- ```{r} --&gt;
+&lt;!-- tibble(`rnorm(n = 200, mean = 8, sd = 5)` = rnorm(n = 200,  --&gt;
+&lt;!--                                                    mean = 8, sd = 5),  --&gt;
+&lt;!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  --&gt;
+&lt;!--                                                   mean = 10, sd = 2),  --&gt;
+&lt;!--        `rnorm(n = 200, mean = 5, sd = 1)` = rnorm(n = 200,  --&gt;
+&lt;!--                                                   mean = 5, sd = 1)) %&gt;%  --&gt;
+&lt;!--   pivot_longer(everything()) %&gt;%  --&gt;
+&lt;!--   ggplot(aes(x = value)) +  --&gt;
+&lt;!--   geom_density(fill = yellow, color = "white") +  --&gt;
+&lt;!--   facet_wrap(vars(name)) + theme_fancy --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- --- --&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

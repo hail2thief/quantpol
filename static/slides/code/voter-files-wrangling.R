@@ -79,3 +79,6 @@ inst = df %>%
   select(birthyr_2019, gender_2019, race_2019, pid3_2019, 
          pid7_2019, inst_court_2019:inst_business_2019) %>% 
   drop_na()
+
+
+

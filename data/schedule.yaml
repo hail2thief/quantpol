@@ -55,8 +55,8 @@ lessons:
 
   - title: "Week 7: Causality and DAGs"
     date: "Nov 2, Nov 4"
-    #class: "confounds"
-    #reading: "causal"
+    class: "causality"
+    reading: "causal"
     
   - title: 'Week 8: ggdag<br>(**no class Thursday: Veterans Day**)<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 9"

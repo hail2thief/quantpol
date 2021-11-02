@@ -1,0 +1,915 @@
+---
+title: "Prediction"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(socviz)
+library(fivethirtyeight)
+library(patchwork)
+library(gapminder)
+library(broom)
+library(moderndive)
+library(ggrepel)
+
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Prediction]
+
+--
+.box-2.large.sp-after[Causal inference]
+
+--
+.box-3.large.sp-after[The problem with causality]
+
+---
+
+class: middle, center, inverse
+# Why predict?
+---
+
+
+# Why predict
+
+
+We don't know what's going to happen in the **future**
+
+--
+
+Or in places/cases where we don't have data
+
+--
+
+Even if in cases where we have data -- what's our *best guess*? 
+
+--
+
+
+We can use **models** to make decisions informed by patterns in the data
+
+
+---
+
+
+# Prediction is for making decisions
+
+
+World Bank: what would happen to Jamaica if their GDP went up by 10k?
+
+--
+
+Who the hell knows, but we can use models to make an educated **guess**
+
+--
+
+
+```{r}
+ggplot(filter(gapminder, year == 2007), aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point() + theme_fancy + 
+  labs(x = "GDP per capita", 
+       y = "Life expectancy") + 
+  geom_point(data = filter(gapminder, country == "Jamaica", 
+                           year == 2007), 
+             color = red, size = 4) + 
+  geom_label_repel(data = filter(gapminder, country == "Jamaica", 
+                           year == 2007), label = "Jamaica in 2007",
+             color = red, size = 4, nudge_x = 2e3, nudge_y = -10) + 
+  geom_point(data = tibble(gdpPercap = 17321, lifeExp = 75.5), 
+             color = yellow, size = 4) + 
+  geom_label_repel(data = tibble(gdpPercap = 17321, lifeExp = 75.5), 
+             color = yellow, size = 4, nudge_x = 5e3, nudge_y = -10,
+             label = "Our estimate for Jamaica at 17k/person") + 
+  annotate(geom = "rect", xmin = 7000, xmax = 8000, 
+           ymin = -Inf, ymax = Inf, fill = red, alpha = .2) + 
+  annotate(geom = "rect", xmin = 17000, xmax = 18000, 
+           ymin = -Inf, ymax = Inf, fill = yellow, alpha = .2)
+```
+
+---
+
+
+# Moving forward
+
+
+.pull-left[
+* There are lots of prediction resources online
+* [Kaggle](http://kaggle.com) hosts prediction competitions with interesting data
+* Give it a shot!
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/kaggle.png")
+```
+]
+
+
+---
+
+class: middle, center, inverse
+# A turning point
+---
+
+
+# First half of course
+
+
+.pull-left[
+How to program, visualize data, modeling, relationships, etc.
+
+Look at all the functions you learned:
+> `group_by`, `tally`, `summarise`, `filter`, `mutate`, `%>%`, `distinct`, `lm`, `augment`, `tidy`, `ggplot`, `facet_wrap`...
+
+There are thousands more!
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/learning-R.png")
+```
+]
+
+---
+
+# First half of course
+
+
+Use models to estimate the relationship between X and Y:
+
+```{r, echo = TRUE}
+mod = lm(lifeExp ~ gdpPercap, data = gapminder)
+tidy(mod)
+```
+
+--
+
+But is this relationship **causal**? Would an increase in GDP **cause** an increase in life expectancy, on average? 
+
+---
+
+
+# Second half of the course
+
+.pull-left[
+
+"How do we know if X **causes** y?"
+
+This is known as **causal inference**
+
+Why it's so hard to establish causality with data and what we can do about it
+
+Are our estimates **causal**? Academics fight about this all day!
+
+]
+
+
+.pull-right[
+```{r, fig.cap="Pictured: academic audience at a research presentation"}
+knitr::include_graphics("images/the-thing.png")
+```
+]
+
+---
+
+class: center, middle, inverse
+# Many interesting questions are causal
+
+--
+
+International relations: do peace-keepers **reduce conflict** in countries emerging from civil war? Does democracy make countries more **peaceful**?
+
+--
+
+Comparative politics: do elections reduce or increase **corruption**? Does repression increase or decrease **dissent**? 
+
+
+--
+
+
+American politics: do voter ID laws hurt general **turnout**? Do elites move **public opinion** or does public opinion move elites? 
+
+
+---
+
+
+# But not all
+
+
+**Most** of the interesting questions we (social scientists) want to answer with data are causal
+
+--
+
+Some are not: 
+
+Facebook (Meta?) might want to know: "Is there a person in this photo?"
+
+But not care about what factors **cause** the picture to be a photo of a person
+
+Depends on the question; most **why** questions are causal
+
+
+---
+
+
+# The value of causality
+
+
+.pull-left[
+One of our comparative advantages
+
+Not just academic; companies, governments, NGOs also need to answer "why" questions
+
+Does this policy work (or not)? Did it do what was intended? How effective or counterproductive was it? 
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/causal-job.png")
+```
+]
+
+---
+
+
+# What do we mean by causality?
+
+
+.pull-left[
+In this class, we say **X causes Y** if...
+
+An *intervention* that **changes** the value of X (without changing anything else)
+
+Produces a **change** in Y
+
+Easy: policies; hard: identities
+
+]
+
+.pull-right[
+```{r,out.width="70%"}
+knitr::include_graphics("images/hume.jpeg")
+```
+]
+
+
+---
+
+# Terminology
+
+
+We've seen this before:
+
+```{r}
+tribble(~Variable, ~Meaning, ~Examples, 
+        "Y", "The thing that is affected by a treatment", "Employment, turnout, violence", 
+        "X", "The thing changing an outcome", "Min. wage laws, voter ID laws, peacekeepers") %>% 
+  knitr::kable()
+```
+
+
+---
+
+
+# Obviously causal relationships
+
+
+A heavier car has to work harder to get from A to B
+
+```{r}
+ggplot(mtcars, aes(x = wt, y = mpg)) + 
+  geom_point(color = blue, alpha = .8, size = 3) + 
+  geom_smooth(method = "lm") + 
+  theme_fancy
+```
+
+
+---
+
+
+# Obviously causal relationships
+
+
+A bigger house is more desirable
+
+
+```{r}
+ggplot(house_prices, aes(x = sqft_living, y = price)) + 
+  geom_point(color = blue, alpha = .8, size = 3) + 
+  geom_smooth(method = "lm") + 
+  theme_fancy + 
+  labs(x = "Square feet of living space", 
+       y = "Price", subtitle = "Data from moderndive::house_prices") + 
+  scale_y_continuous(labels = scales::dollar)
+```
+
+
+---
+
+
+# Not obvious
+
+.pull-left[
+People who are already wealthy or likely to be wealthy get more education than people who are poor
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/education.png")
+```
+]
+
+
+
+---
+
+
+# Not obvious
+
+States that pass these laws are different from states that don't pass
+
+```{r,out.width="70%"}
+knitr::include_graphics("images/vote-id.png")
+```
+
+---
+
+
+# Spurious correlation
+
+
+To make matters worse, correlation is common-place in nature:
+
+--
+
+
+```{r}
+knitr::include_graphics("images/spurious-cheese.png")
+```
+
+---
+
+class: middle, center, inverse
+# The trouble with causality
+
+--
+
+We can't directly observe a change in X **causing** a change in Y
+
+--
+
+This is true even in **experiments**, where we directly manipulate stuff
+
+--
+
+All we can see are **correlations** between X and Y
+
+--
+
+Some of those correlations **are** causal; some **are not**; how can we tell?
+
+---
+
+
+# First step: yes, we can tell (sometimes)
+
+--
+
+Students are obsessed with *"correlation does not mean causation"*
+
+But sometimes it does! that's the tricky part
+
+```{r,out.width="50%",fig.align='center'}
+knitr::include_graphics("images/sponge-cause.jpeg")
+```
+
+
+---
+
+
+# Make up data to convince ourselves
+
+
+We can make up data in R with the `rnorm()` function
+
+--
+
+`rnorm()` draws random numbers from a **normal distribution**
+
+--
+
+This means: the numbers are close to some **mean**, plus or minus a **standard deviation**
+
+--
+
+> rnorm(n = 100, mean = 10, sd = 2)
+
+Generate 100 random numbers, most of which are +/- 2 away from 10
+
+---
+
+
+# Simulating an election
+
+--
+
+Let's say we want to fake county voting outcomes in the 2024 election, and make it so that most elections are pretty close
+
+--
+
+
+We can generate random numbers that are pretty close to 50 (a tie), plus or minus 5 points
+
+--
+
+.scroll-output[
+```{r, echo = TRUE}
+fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5)) #<<
+fake_election
+```
+]
+
+
+
+---
+
+# And we can plot it
+
+
+```{r, echo = TRUE, out.width="80%"}
+ggplot(fake_election, aes(x = gop_share)) + 
+  geom_density(fill = "darkred", color = "white")  +  #<<
+  theme_bw(base_size = 14)
+```
+
+
+---
+
+# Making X cause Y
+
+--
+
+Now let's say we wanted to make it so that getting more votes **increased** campaign donations (winners attract funding)
+
+--
+
+Say for every percent of the vote you get, you get $2,000
+
+--
+
+We can do that in R like so: 
+
+.scroll-output[
+```{r, echo = TRUE}
+fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
+                       donations = 2000 * gop_share) #<<
+fake_election
+```
+]
+
+
+---
+
+# Can we get the causal estimate back?
+
+We **know** the effect of vote share on campaign donations: it's 2k per percent of the vote
+
+--
+
+Can we use a model to get that estimate back?
+
+--
+
+Yes!
+
+```{r, echo = TRUE}
+lm(donations ~ gop_share, data = fake_election) %>% tidy()
+```
+
+
+---
+
+
+# This works even if we add noise
+
+
+In the last example, donations were **exactly** 2,000 $\times$ the vote 
+
+--
+
+You could technically just do: $\frac{donations}{vote} = $ 2,000
+
+--
+
+What if we make this more difficult on the model? Let's add some random **noise**
+
+--
+
+.scroll-output[
+```{r,echo = TRUE}
+fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
+                       donations = 2000 * gop_share + rnorm(n = 100, mean = 10, sd = 2)) #<<
+fake_election
+```
+]
+
+
+
+---
+
+# Pretty damn close
+
+Even with noise, we can use a model to get pretty close to the true effect: 
+
+```{r, echo = TRUE}
+lm(donations ~ gop_share, data = fake_election) %>% tidy()
+```
+
+---
+
+
+# 🚨 Your turn: Michael Lacour 🚨
+
+--
+
+.pull-left[
+* Lacour published a huge study in *Science*
+* Study showed huge improvements in attitudes towards LGBT issues (gay marriage) from exposure to LGBT canvassers
+* Data was completely forged, using some of the same functions I showed you
+* Created patterns that got him the answer he wanted to get
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/lacour.png")
+```
+]
+
+
+---
+
+# 🚨 Your turn: Michael Lacour 🚨
+
+
+Using the steps I just went through above, make up some data that pre-confirms some pattern about the world you wish were true and plot it. Some ideas: 
+
+--
+
+* Amount of alcohol consumption and your overall health
+* Time spent studying for Prof. Tellez’s class and future income
+* Number of Pokemon you can name from memory and the number of dates you go on per month
+
+
+--
+
+Experiment with other random number generators: `rpois()` for whole numbers, `rexp()` for skewed distributions
+
+
+
+```{r}
+countdown::countdown(minutes = 5L, font_size = "2em")
+```
+
+
+
+---
+
+
+class: middle, center, inverse
+## So we (sometimes) *can* estimate causal effects
+--
+
+## Where does it all go wrong then? 
+---
+
+# An example from IR
+
+Does democracy reduce international conflict?
+
+--
+
+Theory: war is costly and the costs are borne by citizens; countries where citizens have input $\rightarrow$ less conflict
+
+--
+
+
+X here is **whether the country is a democracy** (dummy)
+
+Y is **the number of wars the country is involved in**
+
+--
+
+Ideal approach: take a country, look at Y when X = 0, and then when X = 1
+
+
+--
+
+Do this for all countries, take the average
+
+---
+
+
+# Potential outcomes
+
+
+Magical world where we can compare the number of wars when a country is a democracy versus when it is not
+
+```{r}
+dem_peace = crossing(country = c("USA", "Canada", "China"), 
+         democracy = c(1, 0)) %>% 
+  mutate(war = rpois(n = n(), lambda = 4 + -2*I(democracy==1)))
+
+knitr::kable(dem_peace)
+```
+
+
+
+---
+
+
+# The problem
+
+
+.pull-left[
+What's weird here?
+
+In reality, we can only observe democracy at one value for each country
+
+The US is a democracy, we can measure wars when democracy = 1, **but not when democracy = 0**
+
+China is not a democracy, we can measure wars when democracy = 0, **but not when democracy = 1**
+]
+
+.pull-right[
+```{r}
+knitr::kable(dem_peace)
+```
+
+]
+
+---
+
+
+# Potential vs. observed
+
+
+We only **observe** the world on the right, but not the left
+
+.pull-left[
+```{r}
+knitr::kable(dem_peace)
+```
+]
+
+.pull-left[
+```{r}
+observed = dem_peace %>% 
+  mutate(war = case_when((country %in% c("Canada", "USA") &
+                           democracy == 0) | 
+                           (country == "China" & democracy == 1) ~ NA_integer_, 
+                         TRUE ~ war))
+
+knitr::kable(observed)
+```
+]
+
+
+---
+
+
+# The fundamental problem of causality
+
+--
+
+We have missing data on "what would have happened" had the US been an autocracy
+
+--
+
+"what would have happened" $\rightarrow$ the **counterfactual**
+
+--
+
+
+Our goal in causal inference is to make as good a guess as possible as to what Y would have been had democracy = 0 instead of 1 (and vice versa)
+
+
+---
+
+# Comparing apples and oranges
+
+
+Well, why don't we just compare the Y's (wars) for countries where democracy = 0 (autocracies) versus the countries where democracy = 1 (democracies)?
+
+--
+
+If democracies fight less, then democracy **reduces** conflict
+
+--
+
+```{r, echo = TRUE}
+observed %>% 
+  group_by(democracy) %>% 
+  summarise(wars = mean(war, na.rm = TRUE))
+```
+
+---
+
+
+# Comparing apples and oranges
+
+
+Implicitly, this means we are saying the countries that are *autocracies* are good **counterfactuals** for the countries that are democracies (and vice versa)
+
+--
+
+For instance, China being a counterfactual for the US
+
+--
+
+But China and the US are different in so many ways! They are not good **counterfactuals** of one another
+
+--
+
+
+We cannot be confident that the differences we find are **only** because of democracy, and not some other variable
+
+---
+
+# Why experiments work
+
+In an experiment, we *randomly* expose participants to some treatment, while others are exposed to nothing (or a placebo)
+
+--
+
+```{r}
+experiment = tibble(Person = 1:5, 
+       `Shown an ad?` = c("Yes", "No", "Yes", "No", "No"), 
+       `Democrats thermometer` = round(runif(n = 5, min = 0, max = 100) + 10*I(`Shown an ad?` == "Yes"), 2))
+
+knitr::kable(experiment, digits = 2)
+```
+
+--
+
+We then compare the outcome of those who did and didn't get the treatment
+
+
+---
+
+
+# Why experiments work
+
+
+Experiments have the same "problem" as the democracy and war example: we can't observe *the same person* seeing and not seeing the ad
+
+```{r}
+knitr::kable(experiment, digits = 2)
+```
+
+
+--
+
+But since the experimental ad was *randomly* assigned, the people that did and didn't see the ad are good **counterfactuals** of one another
+
+
+---
+
+
+# 🚨 Your turn: counterfactuals 🚨
+
+
+Think through the counterfactual scenarios in these examples and whether they are or are not good counterfactuals of one another. 
+
+
+1. A study on whether international trade between two countries makes them more likely to form a defensive alliance.
+
+2. A study on whether being a victim of a crime makes someone more supportive of harsher penalties for criminals. 
+
+3. A study on whether those who were drafted to the military are more likely to vote for "dove" candidates.
+
+
+```{r}
+countdown::countdown(minutes = 5L)
+```
+
+---
+
+
+
+<!-- # Simulation -->
+
+
+<!-- Same mean, different standard deviation: -->
+
+<!-- ```{r} -->
+<!-- tibble(`rnorm(n = 200, mean = 10, sd = 5)` = rnorm(n = 200,  -->
+<!--                                                    mean = 10, sd = 5),  -->
+<!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  -->
+<!--                                                   mean = 10, sd = 2),  -->
+<!--        `rnorm(n = 200, mean = 10, sd = 1)` = rnorm(n = 200,  -->
+<!--                                                   mean = 10, sd = 1)) %>%  -->
+<!--   pivot_longer(everything()) %>%  -->
+<!--   ggplot(aes(x = value)) +  -->
+<!--   geom_density(fill = yellow, color = "white") +  -->
+<!--   facet_wrap(vars(name)) + theme_fancy -->
+<!-- ``` -->
+
+
+<!-- --- -->
+
+<!-- # Simulation -->
+
+
+<!-- Different mean, different standard deviation: -->
+
+<!-- ```{r} -->
+<!-- tibble(`rnorm(n = 200, mean = 8, sd = 5)` = rnorm(n = 200,  -->
+<!--                                                    mean = 8, sd = 5),  -->
+<!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  -->
+<!--                                                   mean = 10, sd = 2),  -->
+<!--        `rnorm(n = 200, mean = 5, sd = 1)` = rnorm(n = 200,  -->
+<!--                                                   mean = 5, sd = 1)) %>%  -->
+<!--   pivot_longer(everything()) %>%  -->
+<!--   ggplot(aes(x = value)) +  -->
+<!--   geom_density(fill = yellow, color = "white") +  -->
+<!--   facet_wrap(vars(name)) + theme_fancy -->
+<!-- ``` -->
+
+<!-- --- -->
+
