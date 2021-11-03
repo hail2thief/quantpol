@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Prediction</title>
+    <title>Causality</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
     <meta name="date" content="2021-11-02" />
@@ -29,7 +29,7 @@ background-image: url("images/dubois-spiral-2.png")
 background-position: right
 background-size: contain
 
-# Prediction
+# Causality
 
 ### *The Scientific Study of Politics*
 
@@ -173,19 +173,21 @@ But is this relationship **causal**? Would an increase in GDP **cause** an incre
 
 "How do we know if X **causes** y?"
 
-This is known as **causal inference**
-
-Why it's so hard to establish causality with data and what we can do about it
-
 Are our estimates **causal**? Academics fight about this all day!
+
+This question is at center of **causal inference**
+
+We will learn why it is so difficult to establish causality with data
+
+We will also learn potential solutions
 
 ]
 
 
 .pull-right[
 &lt;div class="figure"&gt;
-&lt;img src="images/the-thing.png" alt="Pictured: academic audience at a research presentation" width="100%" /&gt;
-&lt;p class="caption"&gt;Pictured: academic audience at a research presentation&lt;/p&gt;
+&lt;img src="images/the-thing.png" alt="Pictured: audience at a research presentation" width="100%" /&gt;
+&lt;p class="caption"&gt;Pictured: audience at a research presentation&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -215,7 +217,7 @@ American politics: do voter ID laws hurt general **turnout**? Do elites move **p
 # But not all
 
 
-**Most** of the interesting questions we (social scientists) want to answer with data are causal
+**Many** of the interesting questions people want to answer with data are causal
 
 --
 
@@ -258,8 +260,6 @@ In this class, we say **X causes Y** if...
 An *intervention* that **changes** the value of X (without changing anything else)
 
 Produces a **change** in Y
-
-Easy: policies; hard: identities
 
 ]
 
@@ -311,7 +311,7 @@ A bigger house is more desirable
 # Not obvious
 
 .pull-left[
-People who are already wealthy or likely to be wealthy get more education than people who are poor
+People who are already wealthy (or likely to become wealthy) get more education than people who are poor
 ]
 
 
@@ -326,7 +326,7 @@ People who are already wealthy or likely to be wealthy get more education than p
 
 # Not obvious
 
-States that pass these laws are different from states that don't pass
+States that pass these laws are different from states that don't pass these laws
 
 &lt;img src="images/vote-id.png" width="70%" /&gt;
 
@@ -392,7 +392,7 @@ We can make up data in R with the `rnorm()` function
 
 --
 
-This means: the numbers are close to some **mean**, plus or minus a **standard deviation**
+This means: the numbers it makes up are pretty close to some **mean**, plus or minus a **standard deviation**
 
 --
 
@@ -407,7 +407,7 @@ Generate 100 random numbers, most of which are +/- 2 away from 10
 
 --
 
-Let's say we want to fake county voting outcomes in the 2024 election, and make it so that most elections are pretty close
+Let's say we want to fake county voting outcomes in the 2024 election, and make it look like most elections are pretty close
 
 --
 
@@ -468,7 +468,7 @@ Now let's say we wanted to make it so that getting more votes **increased** camp
 
 --
 
-Say for every percent of the vote you get, you get $2,000
+Say for every percent of the vote you get, you get $2,000 ore in donations
 
 --
 
@@ -539,7 +539,7 @@ In the last example, donations were **exactly** 2,000 `\(\times\)` the vote
 
 --
 
-You could technically just do: $\frac{donations}{vote} = $ 2,000
+You could technically just do: `\(\frac{donations}{vote} = 2,000\)`
 
 --
 
@@ -580,6 +580,8 @@ fake_election
 # Pretty damn close
 
 Even with noise, we can use a model to get pretty close to the true effect: 
+
+--
 
 
 ```r
@@ -633,7 +635,7 @@ Experiment with other random number generators: `rpois()` for whole numbers, `re
 
 
 
-<div class="countdown" id="timer_6181a99a" style="right:0;bottom:0;font-size:2em;" data-warnwhen="0">
+<div class="countdown" id="timer_6181d578" style="right:0;bottom:0;font-size:2em;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -653,20 +655,17 @@ class: middle, center, inverse
 
 Does democracy reduce international conflict?
 
---
-
 Theory: war is costly and the costs are borne by citizens; countries where citizens have input `\(\rightarrow\)` less conflict
 
 --
 
-
-X here is **whether the country is a democracy** (dummy)
+X here is **whether the country is a democracy** (versus autocracy)
 
 Y is **the number of wars the country is involved in**
 
 --
 
-Ideal approach: take a country, look at Y when X = 0, and then when X = 1
+Ideal, imaginary approach: take a country, look at Y when democracy = 1, and then when democracy = 0
 
 
 --
@@ -704,9 +703,9 @@ What's weird here?
 
 In reality, we can only observe democracy at one value for each country
 
-The US is a democracy, we can measure wars when democracy = 1, **but not when democracy = 0**
+The US is a democracy, we can observe wars when democracy = 1, **but not when democracy = 0**
 
-China is not a democracy, we can measure wars when democracy = 0, **but not when democracy = 1**
+China is not a democracy, we can observe wars when democracy = 0, **but not when democracy = 1**
 ]
 
 .pull-right[
@@ -779,7 +778,7 @@ Our goal in causal inference is to make as good a guess as possible as to what Y
 # Comparing apples and oranges
 
 
-Well, why don't we just compare the Y's (wars) for countries where democracy = 0 (autocracies) versus the countries where democracy = 1 (democracies)?
+Why not just compare the number of wars for countries where democracy = 0 (autocracies) versus the countries where democracy = 1 (democracies)?
 
 --
 
@@ -812,7 +811,7 @@ Implicitly, this means we are saying the countries that are *autocracies* are go
 
 --
 
-For instance, China being a counterfactual for the US
+For instance, that China is a good counterfactual for the US
 
 --
 
@@ -870,12 +869,37 @@ But since the experimental ad was *randomly* assigned, the people that did and d
 
 ---
 
+# The gold standard
+
+
+This is why experiments are known as the **gold standard** of research
+
+--
+
+We have control over **treatment**, and we **randomize** it
+
+--
+
+With **observational data** that already exists in the world, we *don't* have control over treatment, and we *can't* randomize it
+
+--
+
+Experiments are great, but not feasible or ethical in most cases
+
+--
+
+So we'll have to take other measures to try to overcome these problems with observational data
+
+
+---
+
 
 # 🚨 Your turn: counterfactuals 🚨
 
 
-Think through the counterfactual scenarios in these examples and whether they are or are not good counterfactuals of one another. 
+Think through the counterfactual scenarios in these examples. What are the comparisons being made? And are they good counterfactuals? 
 
+--
 
 1. A study on whether international trade between two countries makes them more likely to form a defensive alliance.
 
@@ -884,7 +908,7 @@ Think through the counterfactual scenarios in these examples and whether they ar
 3. A study on whether those who were drafted to the military are more likely to vote for "dove" candidates.
 
 
-<div class="countdown" id="timer_6181a867" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6181d679" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 

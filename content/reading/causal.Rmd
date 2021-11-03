@@ -24,16 +24,16 @@ editor_options:
 
 
 
-<!-- ## Slides -->
+## Slides
 
-<!-- ### Tuesday -->
+### Tuesday
 
-<!-- [Class slides here](/slides/08-causality.html) -->
+[Class slides here](/slides/08-causality.html)
 
 
-<!-- ```{r,echo=FALSE} -->
-<!-- xaringanExtra::embed_xaringan( -->
-<!--    url = "/slides/08-causality.html", -->
-<!--    ratio = "16:9" -->
-<!-- ) -->
-<!-- ``` -->
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/08-causality.html",
+   ratio = "16:9"
+)
+```

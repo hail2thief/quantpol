@@ -1,0 +1,29 @@
+---
+title: "Final Project"
+linktitle: "Final Project"
+output:
+  blogdown::html_page:
+    toc: false
+menu:
+  assignment:
+    parent: Problem sets
+    weight: 20
+type: docs
+editor_options: 
+  chunk_output_type: console
+---
+
+
+# Instructions
+
+You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined here: 
+
+
+
+## The Data
+
+
+### War and gender
+
+
+War can dramatically alter societies
