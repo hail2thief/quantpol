@@ -1,0 +1,891 @@
+---
+title: "Causality II"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(ggdag)
+library(rethinking)
+library(broom)
+data("WaffleDivorce")
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Prediction]
+
+--
+.box-2.large.sp-after[Causal inference]
+
+--
+.box-3.large.sp-after[The problem with causality]
+
+---
+
+
+class: center, middle, inverse
+# Last class
+
+--
+
+
+We want to know if X **causes** Y, using data
+
+--
+
+
+We *can* use models to capture the effect of X on Y, if in fact X does affect Y
+
+--
+
+
+Problem is some correlations are causal, others aren't
+
+--
+
+How can we tell?
+
+
+---
+
+
+# Causal models
+
+.pull-left[
+We need a *model* to get at causality
+
+A model is our idea of the data came to be (the **data-generating process**)
+
+The model tells us how to *identify* a causal effect (if it's possible!)
+
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/models.jpeg")
+```
+]
+
+---
+
+
+# Directed acyclical graphs (DAGs)
+
+
+Circles = variables; Arrows = direction of *causality*
+
+X1 has an effect on Y
+
+```{r,out.width="80%"}
+dagify(Y ~ X1) %>% 
+  ggdag() + theme_dag()
+```
+
+
+---
+
+
+# DAGs
+
+
+X1 has an effect on Y; X2 has an effect on X1
+
+```{r}
+dagify(Y ~ X1, 
+       X1 ~ X2) %>% 
+  ggdag() + theme_dag()
+```
+
+
+---
+
+
+# DAGs
+
+
+X1 has an effect on Y; X2 has an effect on X1; X3 has an effect on X1 and Y
+
+
+```{r}
+dagify(Y ~ X1 + X3, 
+       X1 ~ X2 + X3) %>% 
+  ggdag() + theme_dag()
+```
+
+
+---
+
+
+# Example
+
+
+Where does someone's ideology come from?
+
+--
+
+Variables: Income (I), Liberal (L), Age (A), MSNBC (M), Parents (P)
+
+--
+
+
+```{r}
+dag = dagify(L ~ M + P + A + I, 
+             M ~ P, 
+             exposure = "M", 
+             outcome = "L")
+ggdag(dag) + theme_dag() + theme(legend.position = "none")
+```
+
+???
+What are our assumptions? What's this DAG saying?
+
+
+---
+
+class: middle, center
+# DAGs
+
+DAGs encode everything we know about some process
+
+--
+
+
+We can see all of our assumptions and how they fit together
+
+--
+
+
+For example: the effect of Parents on how Liberal someone is happens directly and indirectly (through Media)
+
+--
+
+Missing arrows also matter: we are assuming that Age has no effect on Media diet
+
+
+---
+
+
+# 🚨 Our turn: let's make our own DAG 🚨
+
+
+On [daggity.net](http://www.dagitty.net/dags.html#)
+
+---
+
+
+# Identification
+
+
+DAGs are important because they help us figure out how to estimate the effect of one variable on another
+
+--
+
+While at the same time being mindful of all the other variables that might be relevant
+
+--
+
+
+For instance, we might want to estimate the effect of Media consumption (M) on how Liberal someone is
+
+--
+
+
+This process is called "identification" $\rightarrow$ to identify the effect of X on Y
+
+
+---
+
+
+class: center, middle, inverse
+# Waffles and Divorce
+---
+
+
+
+# Waffle House 
+
+
+```{r}
+knitr::include_graphics("images/waffle-house.png")
+```
+
+
+
+---
+
+
+# Waffle House Index
+
+.pull-left[
+```{r}
+knitr::include_graphics("images/waffle-house-index.jpeg")
+```
+
+]
+.pull-right[
+```{r}
+knitr::include_graphics("images/waffle-index.png")
+```
+
+]
+
+
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+States with many Waffle Houses per person also have some of the highest divorce rate
+
+--
+
+```{r}
+WaffleDivorce %>% 
+  mutate(`Waffles per Person` = WaffleHouses/Population) %>% 
+  select(Location, Marriage, Divorce, `Waffles per Person`) %>% 
+  knitr::kable(digits = 2)
+```
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+Do cheap, delicious waffles put marriages at risk? 
+
+--
+
+```{r}
+ggplot(WaffleDivorce, aes(x = WaffleHouses/Population, y = Divorce)) + 
+  geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults")
+```
+
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+Almost certainly *not*
+
+--
+
+No one thinks there is a *plausible* way in which Waffle House causes divorce
+
+--
+
+Instead, when we see a correlation of this kind we wonder about other variables that are "*actually*" driving the relationship
+
+--
+
+You've likely thought about this before: *a "lurking" variable, "other factors", that "matter"*
+
+--
+
+But what might that *variable* be? And *how* exactly does it lead us astray?
+
+
+---
+
+
+# The lurking variable
+
+
+It turns out that Waffle Houses originated in the South (Georgia), and most of them are still there
+
+--
+
+The South also happens to have some of the highest divorce rates in the country
+
+---
+
+
+# The DAG
+
+
+So the DAG probably looks something like this:
+
+
+```{r}
+dagify(Divorce ~ South, 
+       Waffle ~ South, 
+       exposure = "Waffle",
+       outcome = "Divorce", 
+       coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
+                      y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+
+---
+
+
+# The problem
+
+
+```{r, out.width="60%"}
+dagify(Divorce ~ South, 
+       Waffle ~ South, 
+       exposure = "Waffle",
+       outcome = "Divorce", 
+       coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
+                      y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+
+--
+
+
+A DAG like this will produce a relationship between Waffles and Divorce, even when it doesn't exist
+
+--
+
+
+This is called **confounding**: the South is **confounding** the relationship between Waffles and Divorce
+
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Let's make up data to convince ourselves this is true
+
+--
+
+fifty states, about half of them are in the South in this made-up example
+
+--
+
+```{r, echo  = TRUE}
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE))
+```
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Make Waffle houses, which are more **common** in the South
+
+```{r, echo = TRUE}
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+       waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south) #<<
+```
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Make a divorce rate, which is **higher** in the South
+
+```{r, echo = TRUE}
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
+              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south) #<<
+```
+
+
+Notice! Waffles do not **cause** divorce
+
+---
+
+
+# A totally spurious relationship
+
+
+The South's **effect** on Waffle House and on Divorce creates a **spurious** correlation between the two
+
+
+```{r}
+ggplot(fake, aes(x = waffle, y = divorce)) + 
+  geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(title = "Our fake waffle data", 
+       x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults")
+```
+
+
+---
+
+
+# A totally spurious relationship
+
+
+The DAG on the left will produce an association like the one on the right
+
+.pull-left[
+```{r}
+dagify(Divorce ~ South, 
+       Waffle ~ South, 
+       exposure = "Waffle",
+       outcome = "Divorce", 
+       coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
+                      y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+
+.pull-right[
+```{r}
+ggplot(fake, aes(x = waffle, y = divorce)) + 
+  geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(title = "Our fake waffle data", 
+       x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults")
+```
+]
+
+
+Even if Waffles and Divorce are **causally** unrelated
+
+---
+
+# What's going on here? 
+
+
+.pull-left[
+Think of causality as water flowing through the DAG
+
+The water flows in the direction of the arrows
+
+We want look at water flowing from a **treatment** to an **outcome**
+
+But **account** for the fact that there is often indirect flow between them
+
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/mario-pipes.jpg")
+```
+
+]
+
+
+---
+
+
+# What's going on here?
+
+
+.pull-left[
+To **identify** the effect of Waffles on Divorce we need to **account**, or **control for**, the indirect flow resulting from South
+
+Otherwise we will be led astray
+]
+
+.pull-right[
+```{r}
+dagify(Divorce ~ South, 
+       Waffle ~ South, 
+       exposure = "Waffle",
+       outcome = "Divorce", 
+       coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
+                      y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+---
+
+
+# The formula
+
+
+1. Make a DAG of what we think is going on with our treatment and outcome
+
+2. Figure out where the *indirect flows* are
+
+3. Account for those in our analysis
+
+
+---
+
+
+# What do we need to close? 
+
+
+```{r}
+dagify(Y ~ X, 
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+```
+
+--
+
+Nothing
+
+---
+
+
+# What do we need to close? 
+
+
+```{r}
+dagify(Y ~ X + Z, 
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+```
+
+--
+
+Nothing! No indirect flow to X
+
+---
+
+# What do we need to close? 
+
+
+```{r}
+dagify(Y ~ X + Z + A + B, 
+       B ~ C, 
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+```
+
+--
+
+Nothing! No indirect flow to X!
+
+---
+
+
+# What do we need to close? 
+
+
+```{r}
+dagify(Y ~ X + Z + A + B, 
+       X ~ G,
+       B ~ C, 
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+```
+
+
+---
+
+# What do we need to close to identify...
+
+
+Media consumption (M) $\rightarrow$ Ideology (I)
+
+
+```{r}
+dag = dagify(L ~ M + P + A + I, 
+             M ~ P, 
+             exposure = "M", 
+             outcome = "L")
+ggdag_status(dag) + theme_dag() + theme(legend.position = "none")
+```
+
+---
+
+
+```{r,out.width="70%",fig.align='center'}
+knitr::include_graphics("images/elemental-confounds.png")
+```
+
+
+---
+
+
+# The confounding fork
+
+Y $\leftarrow$ Z $\rightarrow$ X
+
+There is a third variable, Z, that is a **common cause** of X and Y
+
+
+```{r}
+dagify(Y ~ Z, 
+       X ~ Z, 
+       exposure = "X",
+       outcome = "Y", 
+       coords = list(x = c(Y = 0, X = 2, Z = 1), 
+                      y = c(Y = 0, X = 0, Z = 1))) %>% 
+  ggdag() + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+
+
+---
+
+# The confounding fork
+
+
+We need to figure out what Z is, measure it, and **adjust for it**
+
+
+.pull-left[
+```{r}
+dagify(Y ~ Z, 
+       X ~ Z, 
+       exposure = "X",
+       outcome = "Y", 
+       coords = list(x = c(Y = 0, X = 2, Z = 1), 
+                      y = c(Y = 0, X = 0, Z = 1))) %>% 
+  ggdag() + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+.pull-right[
+```{r}
+dagify(Y ~ Z + X, 
+       X ~ Z, 
+       exposure = "X",
+       outcome = "Y", 
+       coords = list(x = c(Y = 0, X = 2, Z = 1), 
+                      y = c(Y = 0, X = 0, Z = 1))) %>% 
+  ggdag() + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+Note that **both** of these scenarios will mess us up!
+
+
+---
+
+
+# The second scenario
+
+
+Say the true effect of X on Y is very small: .0001
+
+```{r, echo = TRUE}
+fake = tibble(Z = sample(c(0, 1), size = 50, replace = TRUE), 
+       X = rnorm(n = 50, mean = 20, sd = 4) + 10*Z, 
+       Y = rnorm(n = 50, mean = 20, sd = 2) + 10*Z + .0001 * X) #<<
+```
+
+
+---
+
+# The second scenario
+
+
+The effect of Z on X and Y will **distort** our estimates:
+
+```{r, echo = TRUE}
+lm(Y ~ X, data = fake) %>% tidy()
+```
+
+
+Estimate is many, many times larger than the true effect
+
+In some cases can even produce an opposite relationship!
+
+---
+
+
+# The perplexing pipe
+
+
+X $\rightarrow$ Z $\rightarrow$ Y
+
+X causes Z, which causes Y (or: Z **mediates** the effect of X on Y)
+
+What happens if we **adjust for Z**? 
+
+We **block** the effect of X on Y; so we leave Z alone
+
+
+```{r}
+dagify(Y ~ Z, 
+       Z ~ X, 
+       coords = list(x = c(X = -.5, Z = 0, Y = .5), 
+                     y = c(Y = 0, Z = 0, X = 0))) %>% 
+  ggdag() + theme_dag()
+```
+
+
+---
+
+
+# An example 
+
+
+What effect does US foreign intervention have on US sentiment? 
+
+Say the DAG looks like this:
+
+```{r}
+dagify(Sentiment ~ Infrastructure, 
+       Infrastructure ~ Intervention, 
+       coords = list(x = c(X = -.5, Z = 0, Y = .5), 
+                     y = c(Y = 0, Z = 0, X = 0))) %>% 
+  ggdag() + theme_dag()
+```
+
+
+**Infrastructure** is a pipe; if we control it we are *blocking out* the effect of US intervention on sentiment
+
+---
+
+
+# An example 
+
+
+What if the DAG instead looked like this:
+
+```{r}
+dagify(Sentiment ~ Infrastructure + Intervention, 
+       Infrastructure ~ Intervention, 
+       coords = list(x = c(X = -.5, Z = 0, Y = .5), 
+                     y = c(Y = 0, Z = 0, X = 0))) %>% 
+  ggdag() + theme_dag()
+```
+
+???
+What does it mean
+
+---
+
+
+# An example 
+
+
+Two ways that Intervention affects US sentiment: direclty and indirectly
+
+Adjusting for **Infrastructure** blocks the *indirect* effect
+
+So we are still **missing** part of the effect!
+
+
+```{r}
+dagify(Sentiment ~ Infrastructure + Intervention, 
+       Infrastructure ~ Intervention, 
+       coords = list(x = c(X = -.5, Z = 0, Y = .5), 
+                     y = c(Y = 0, Z = 0, X = 0))) %>% 
+  ggdag() + theme_dag()
+```
+
+???
+What does it mean
+
+---
+
+
+# Pipes: why are they even a problem?
+
+
+Bad social science: sometimes we are so afraid of **forks** that we control for everything we have data on
+
+Controlling for **cholesterol** in a study of whether **smoking** causes **cardiac arrest** would mess up our results
+
+```{r}
+smoking_ca_dag = dagify(cardiacarrest ~ cholesterol,
+                         cholesterol ~ smoking + weight,
+                         smoking ~ unhealthy,
+                         weight ~ unhealthy,
+                         labels = c("cardiacarrest" = "Cardiac\n Arrest", 
+                                    "smoking" = "Smoking",
+                                    "cholesterol" = "Cholesterol",
+                                    "unhealthy" = "Unhealthy\n Lifestyle",
+                                    "weight" = "Weight"),
+                         exposure = "smoking",
+                         outcome = "cardiacarrest")
+
+ggdag_status(smoking_ca_dag, text = FALSE, use_labels = "label") + theme_dag_blank() + theme(legend.position = "none")
+```
+
+
+

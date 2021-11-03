@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Causality II</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-11-03" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Causality II
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Prediction]
+
+--
+.box-2.large.sp-after[Causal inference]
+
+--
+.box-3.large.sp-after[The problem with causality]
+
+---
+
+
+class: center, middle, inverse
+# Last class
+
+--
+
+
+We want to know if X **causes** Y, using data
+
+--
+
+
+We *can* use models to capture the effect of X on Y, if in fact X does affect Y
+
+--
+
+
+Problem is some correlations are causal, others aren't
+
+--
+
+How can we tell?
+
+
+---
+
+
+# Causal models
+
+.pull-left[
+We need a *model* to get at causality
+
+A model is our idea of the data came to be (the **data-generating process**)
+
+The model tells us how to *identify* a causal effect (if it's possible!)
+
+]
+
+.pull-right[
+&lt;img src="images/models.jpeg" width="100%" /&gt;
+]
+
+---
+
+
+# Directed acyclical graphs (DAGs)
+
+
+Circles = variables; Arrows = direction of *causality*
+
+X1 has an effect on Y
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-2-1.png" width="80%" /&gt;
+
+
+---
+
+
+# DAGs
+
+
+X1 has an effect on Y; X2 has an effect on X1
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+
+
+---
+
+
+# DAGs
+
+
+X1 has an effect on Y; X2 has an effect on X1; X3 has an effect on X1 and Y
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Example
+
+
+Where does someone's ideology come from?
+
+--
+
+Variables: Income (I), Liberal (L), Age (A), MSNBC (M), Parents (P)
+
+--
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
+
+???
+What are our assumptions? What's this DAG saying?
+
+
+---
+
+class: middle, center
+# DAGs
+
+DAGs encode everything we know about some process
+
+--
+
+
+We can see all of our assumptions and how they fit together
+
+--
+
+
+For example: the effect of Parents on how Liberal someone is happens directly and indirectly (through Media)
+
+--
+
+Missing arrows also matter: we are assuming that Age has no effect on Media diet
+
+
+---
+
+
+# 🚨 Our turn: let's make our own DAG 🚨
+
+
+On [daggity.net](http://www.dagitty.net/dags.html#)
+
+---
+
+
+# Identification
+
+
+DAGs are important because they help us figure out how to estimate the effect of one variable on another
+
+--
+
+While at the same time being mindful of all the other variables that might be relevant
+
+--
+
+
+For instance, we might want to estimate the effect of Media consumption (M) on how Liberal someone is
+
+--
+
+
+This process is called "identification" `\(\rightarrow\)` to identify the effect of X on Y
+
+
+---
+
+
+class: center, middle, inverse
+# Waffles and Divorce
+---
+
+
+
+# Waffle House 
+
+
+&lt;img src="images/waffle-house.png" width="100%" /&gt;
+
+
+
+---
+
+
+# Waffle House Index
+
+.pull-left[
+&lt;img src="images/waffle-house-index.jpeg" width="100%" /&gt;
+
+]
+.pull-right[
+&lt;img src="images/waffle-index.png" width="100%" /&gt;
+
+]
+
+
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+States with many Waffle Houses per person also have some of the highest divorce rate
+
+--
+
+
+|Location             | Marriage| Divorce| Waffles per Person|
+|:--------------------|--------:|-------:|------------------:|
+|Alabama              |     20.2|    12.7|              26.78|
+|Alaska               |     26.0|    12.5|               0.00|
+|Arizona              |     20.3|    10.8|               2.84|
+|Arkansas             |     26.4|    13.5|              14.04|
+|California           |     19.1|     8.0|               0.00|
+|Colorado             |     23.5|    11.6|               2.19|
+|Connecticut          |     17.1|     6.7|               0.00|
+|Delaware             |     23.1|     8.9|               3.33|
+|District of Columbia |     17.7|     6.3|               0.00|
+|Florida              |     17.0|     8.5|               7.07|
+|Georgia              |     22.1|    11.5|              39.32|
+|Hawaii               |     24.9|     8.3|               0.00|
+|Idaho                |     25.8|     7.7|               0.00|
+|Illinois             |     17.9|     8.0|               0.16|
+|Indiana              |     19.8|    11.0|               2.62|
+|Iowa                 |     21.5|    10.2|               0.00|
+|Kansas               |     22.1|    10.6|               2.11|
+|Kentucky             |     22.2|    12.6|              14.75|
+|Louisiana            |     20.6|    11.0|              14.57|
+|Maine                |     13.5|    13.0|               0.00|
+|Maryland             |     18.3|     8.8|               1.91|
+|Massachusetts        |     15.8|     7.8|               0.00|
+|Michigan             |     16.5|     9.2|               0.00|
+|Minnesota            |     15.3|     7.4|               0.00|
+|Mississippi          |     19.3|    11.1|              24.24|
+|Missouri             |     18.6|     9.5|               6.51|
+|Montana              |     18.5|     9.1|               0.00|
+|Nebraska             |     19.6|     8.8|               0.00|
+|New Hampshire        |     16.7|    10.1|               0.00|
+|New Jersey           |     14.8|     6.1|               0.00|
+|New Mexico           |     20.4|    10.2|               0.97|
+|New York             |     16.8|     6.6|               0.00|
+|North Carolina       |     20.4|     9.9|              14.88|
+|North Dakota         |     26.7|     8.0|               0.00|
+|Ohio                 |     16.9|     9.5|               5.55|
+|Oklahoma             |     23.8|    12.8|               4.27|
+|Oregon               |     18.9|    10.4|               0.00|
+|Pennsylvania         |     15.5|     7.7|               0.87|
+|Rhode Island         |     15.0|     9.4|               0.00|
+|South Carolina       |     18.1|     8.1|              31.10|
+|South Dakota         |     20.1|    10.9|               0.00|
+|Tennessee            |     19.4|    11.4|              16.22|
+|Texas                |     21.5|    10.0|               3.94|
+|Utah                 |     29.6|    10.2|               0.00|
+|Vermont              |     16.4|     9.6|               0.00|
+|Virginia             |     20.5|     8.9|               5.00|
+|Washington           |     21.4|    10.0|               0.00|
+|West Virginia        |     22.2|    10.9|               2.16|
+|Wisconsin            |     17.2|     8.3|               0.00|
+|Wyoming              |     30.7|    10.3|               0.00|
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+Do cheap, delicious waffles put marriages at risk? 
+
+--
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Does Waffle House cause divorce?
+
+
+Almost certainly *not*
+
+--
+
+No one thinks there is a *plausible* way in which Waffle House causes divorce
+
+--
+
+Instead, when we see a correlation of this kind we wonder about other variables that are "*actually*" driving the relationship
+
+--
+
+You've likely thought about this before: *a "lurking" variable, "other factors", that "matter"*
+
+--
+
+But what might that *variable* be? And *how* exactly does it lead us astray?
+
+
+---
+
+
+# The lurking variable
+
+
+It turns out that Waffle Houses originated in the South (Georgia), and most of them are still there
+
+--
+
+The South also happens to have some of the highest divorce rates in the country
+
+---
+
+
+# The DAG
+
+
+So the DAG probably looks something like this:
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+
+---
+
+
+# The problem
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-12-1.png" width="60%" /&gt;
+
+--
+
+
+A DAG like this will produce a relationship between Waffles and Divorce, even when it doesn't exist
+
+--
+
+
+This is called **confounding**: the South is **confounding** the relationship between Waffles and Divorce
+
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Let's make up data to convince ourselves this is true
+
+--
+
+fifty states, about half of them are in the South in this made-up example
+
+--
+
+
+```r
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE))
+```
+
+```
+## # A tibble: 50 × 1
+##    south
+##    &lt;dbl&gt;
+##  1     0
+##  2     1
+##  3     1
+##  4     1
+##  5     0
+##  6     1
+##  7     0
+##  8     0
+##  9     0
+## 10     0
+## # … with 40 more rows
+```
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Make Waffle houses, which are more **common** in the South
+
+
+```r
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+*      waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south)
+```
+
+```
+## # A tibble: 50 × 2
+##    south waffle
+##    &lt;dbl&gt;  &lt;dbl&gt;
+##  1     1   25.5
+##  2     1   29.1
+##  3     0   18.6
+##  4     1   28.0
+##  5     1   34.4
+##  6     0   16.6
+##  7     1   36.1
+##  8     1   30.8
+##  9     0   11.8
+## 10     0   19.0
+## # … with 40 more rows
+```
+
+---
+
+
+# Simulation to convince ourselves
+
+
+Make a divorce rate, which is **higher** in the South
+
+
+```r
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
+*             divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south)
+```
+
+
+Notice! Waffles do not **cause** divorce
+
+---
+
+
+# A totally spurious relationship
+
+
+The South's **effect** on Waffle House and on Divorce creates a **spurious** correlation between the two
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
+
+
+---
+
+
+# A totally spurious relationship
+
+
+The DAG on the left will produce an association like the one on the right
+
+.pull-left[
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-17-1.png" width="100%" /&gt;
+]
+
+
+.pull-right[
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-18-1.png" width="100%" /&gt;
+]
+
+
+Even if Waffles and Divorce are **causally** unrelated
+
+---
+
+# What's going on here? 
+
+
+.pull-left[
+Think of causality as water flowing through the DAG
+
+The water flows in the direction of the arrows
+
+We want look at water flowing from a **treatment** to an **outcome**
+
+But **account** for the fact that there is often indirect flow between them
+
+]
+
+.pull-right[
+&lt;img src="images/mario-pipes.jpg" width="100%" /&gt;
+
+]
+
+
+---
+
+
+# What's going on here?
+
+
+.pull-left[
+To **identify** the effect of Waffles on Divorce we need to **account**, or **control for**, the indirect flow resulting from South
+
+Otherwise we will be led astray
+]
+
+.pull-right[
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-20-1.png" width="100%" /&gt;
+]
+
+---
+
+
+# The formula
+
+
+1. Make a DAG of what we think is going on with our treatment and outcome
+
+2. Figure out where the *indirect flows* are
+
+3. Account for those in our analysis
+
+
+---
+
+
+# What do we need to close? 
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-21-1.png" width="100%" /&gt;
+
+--
+
+Nothing
+
+---
+
+
+# What do we need to close? 
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-22-1.png" width="100%" /&gt;
+
+--
+
+Nothing! No indirect flow to X
+
+---
+
+# What do we need to close? 
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-23-1.png" width="100%" /&gt;
+
+--
+
+Nothing! No indirect flow to X!
+
+---
+
+
+# What do we need to close? 
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-24-1.png" width="100%" /&gt;
+
+
+---
+
+# What do we need to close to identify...
+
+
+Media consumption (M) `\(\rightarrow\)` Ideology (I)
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+
+---
+
+
+&lt;img src="images/elemental-confounds.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+# The confounding fork
+
+Y `\(\leftarrow\)` Z `\(\rightarrow\)` X
+
+There is a third variable, Z, that is a **common cause** of X and Y
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-27-1.png" width="100%" /&gt;
+
+
+---
+
+# The confounding fork
+
+
+We need to figure out what Z is, measure it, and **adjust for it**
+
+
+.pull-left[
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-28-1.png" width="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-29-1.png" width="100%" /&gt;
+]
+
+Note that **both** of these scenarios will mess us up!
+
+
+---
+
+
+# The second scenario
+
+
+Say the true effect of X on Y is very small: .0001
+
+
+```r
+fake = tibble(Z = sample(c(0, 1), size = 50, replace = TRUE), 
+       X = rnorm(n = 50, mean = 20, sd = 4) + 10*Z, 
+*      Y = rnorm(n = 50, mean = 20, sd = 2) + 10*Z + .0001 * X)
+```
+
+
+---
+
+# The second scenario
+
+
+The effect of Z on X and Y will **distort** our estimates:
+
+
+```r
+lm(Y ~ X, data = fake) %&gt;% tidy()
+```
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic     p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;
+## 1 (Intercept)   11.3      2.37        4.77 0.0000175  
+## 2 X              0.533    0.0915      5.82 0.000000467
+```
+
+
+Estimate is many, many times larger than the true effect
+
+In some cases can even produce an opposite relationship!
+
+---
+
+
+# The perplexing pipe
+
+
+X `\(\rightarrow\)` Z `\(\rightarrow\)` Y
+
+X causes Z, which causes Y (or: Z **mediates** the effect of X on Y)
+
+What happens if we **adjust for Z**? 
+
+We **block** the effect of X on Y; so we leave Z alone
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-32-1.png" width="100%" /&gt;
+
+
+---
+
+
+# An example 
+
+
+What effect does US foreign intervention have on US sentiment? 
+
+Say the DAG looks like this:
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-33-1.png" width="100%" /&gt;
+
+
+**Infrastructure** is a pipe; if we control it we are *blocking out* the effect of US intervention on sentiment
+
+---
+
+
+# An example 
+
+
+What if the DAG instead looked like this:
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-34-1.png" width="100%" /&gt;
+
+???
+What does it mean
+
+---
+
+
+# An example 
+
+
+Two ways that Intervention affects US sentiment: direclty and indirectly
+
+Adjusting for **Infrastructure** blocks the *indirect* effect
+
+So we are still **missing** part of the effect!
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-35-1.png" width="100%" /&gt;
+
+???
+What does it mean
+
+---
+
+
+# Pipes: why are they even a problem?
+
+
+Bad social science: sometimes we are so afraid of **forks** that we control for everything we have data on
+
+Controlling for **cholesterol** in a study of whether **smoking** causes **cardiac arrest** would mess up our results
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-36-1.png" width="100%" /&gt;
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
