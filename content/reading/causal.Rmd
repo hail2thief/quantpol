@@ -37,3 +37,16 @@ xaringanExtra::embed_xaringan(
    ratio = "16:9"
 )
 ```
+
+
+### Thursday
+
+[Class slides here](/slides/08-causality-II.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/08-causality-II.html",
+   ratio = "16:9"
+)
+```
