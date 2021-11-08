@@ -61,7 +61,7 @@ lessons:
   - title: 'Week 8: ggdag<br>(**no class Thursday: Veterans Day**)<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 9"
     #class: "dags"
-    #reading: "dags"
+    reading: "dags"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 6**'
   #   #date: "Mar 16, Tue"
