@@ -1,0 +1,89 @@
+---
+title: How to scrape websites
+menu:
+  reference:
+    parent: Guides
+type: docs
+weight: 4
+output:
+  blogdown::html_page:
+      toc: TRUE
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#pulling-the-table">Pulling the table</a></li>
+<li><a href="#cleaning-up-the-data-and-making-the-plot">Cleaning up the data and making the plot</a></li>
+</ul>
+</div>
+
+<div id="intro" class="section level2">
+<h2>Intro</h2>
+<pre class="r"><code>library(tidyverse)
+library(rvest)
+library(janitor)</code></pre>
+<p>There’s a lot of information on the internet. Sometimes this information is nicely formatted, which means we can scrape it from the internet fairly easily.</p>
+<p>Take a look at the table on this page of Simpsons guest star appearances: <a href="https://en.wikipedia.org/wiki/List_of_The_Simpsons_guest_stars" class="uri">https://en.wikipedia.org/wiki/List_of_The_Simpsons_guest_stars</a></p>
+<p>We’re gonna pull this table from the internet into R. You’ll need the <code>rvest</code> and <code>janitor</code> packages. Install if you don’t have them.</p>
+</div>
+<div id="pulling-the-table" class="section level2">
+<h2>Pulling the table</h2>
+<p>First step is to pull down the whole Wikipedia page. To do so, use the <code>read_html</code> function, putting the URL of the site we want to scrape inside of it (in quotation marks!). Assign this to an object named <code>content</code>.</p>
+<pre class="r"><code>df = read_html(&quot;https://en.wikipedia.org/wiki/List_of_The_Simpsons_guest_stars&quot;)</code></pre>
+<p>Now we have the whole page. We just want that table. Run the <code>html_table</code> function on <code>content</code> and store that in an object called <code>table</code>. Add <code>fill = TRUE</code> within the function otherwise you’ll get an error.</p>
+<pre class="r"><code>table = html_table(df, fill = TRUE)</code></pre>
+<p>Notice up top in your environment that you have an object called <code>table</code> that is a list with 13 elements. That means we have 13 tables from that page. But we only want the one with guest stars! Which one is it?</p>
+<p>We need to look at the elements in that list to figure out which of the 13 tables is ours. To look at a specific element in a list, we can use the <code>pluck()</code> function, like so:</p>
+<pre class="r"><code>table %&gt;% pluck(1)</code></pre>
+<pre><code>## # A tibble: 1 × 1
+##   X1                                                                            
+##   &lt;chr&gt;                                                                         
+## 1 Seasons: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 • Movie • 19 20 21 22 2…</code></pre>
+<p>The first element in our list is not what we want; what about the second?</p>
+<pre class="r"><code>table %&gt;% pluck(2)</code></pre>
+<pre><code>## # A tibble: 676 × 6
+##    Season `Guest star`             `Role(s)`  No.   `Prod. code` `Episode title`
+##     &lt;int&gt; &lt;chr&gt;                    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;          
+##  1     21 Matt Groening            Himself    442–… LABF13       &quot;\&quot;Homer the W…
+##  2     21 Kevin Michael Richardson Security … 442–… LABF13       &quot;\&quot;Homer the W…
+##  3     21 Seth Rogen               Lyle McCa… 442–… LABF13       &quot;\&quot;Homer the W…
+##  4     21 Marcia Wallace           Edna Krab… 443–… LABF15       &quot;\&quot;Bart Gets a…
+##  5     21 Chuck Liddell            Himself    444–… LABF16       &quot;\&quot;The Great W…
+##  6     21 Marcia Wallace           Edna Krab… 444–… LABF16       &quot;\&quot;The Great W…
+##  7     21 Marcia Wallace           Edna Krab… 445–… LABF14       &quot;\&quot;Treehouse o…
+##  8     21 Marcia Wallace           Edna Krab… 446–… LABF17       &quot;\&quot;The Devil W…
+##  9     21 Jonah Hill               Andy Hami… 447–… LABF18       &quot;\&quot;Pranks and …
+## 10     21 Marcia Wallace           Edna Krab… 447–… LABF18       &quot;\&quot;Pranks and …
+## # … with 666 more rows</code></pre>
+<p>That’s what we want. Let’s assign that as an object:</p>
+<pre class="r"><code>simpsons = table %&gt;% 
+  pluck(2)</code></pre>
+</div>
+<div id="cleaning-up-the-data-and-making-the-plot" class="section level2">
+<h2>Cleaning up the data and making the plot</h2>
+<p>The column names of this table are hard to work with. Let’s use the <code>clean_names</code> function on our table and assign that to another object called <code>clean_simpsons</code>.</p>
+<pre class="r"><code>clean_simpsons = 
+  simpsons %&gt;% clean_names()</code></pre>
+<p>Finally, we can use our tidyverse know-how to calculate how many times each Guest Star has appeared on the Simpson’s, and filter the data down to just those who have appeared more than twice. We can then make a plot showing how many times each of these guest stars has appeared on the show.</p>
+<pre class="r"><code>plot_simpsons = clean_simpsons %&gt;% 
+  group_by(guest_star) %&gt;% 
+  tally() %&gt;% 
+  filter(n &gt; 2)
+
+ggplot(plot_simpsons, aes(x = reorder(guest_star, n), y = n)) + 
+  geom_col() + 
+  coord_flip()</code></pre>
+<p><img src="/reference/scraping-websites_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Done! Here are some other good ones to try:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump" class="uri">https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_helicopter_prison_escapes" class="uri">https://en.wikipedia.org/wiki/List_of_helicopter_prison_escapes</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Passengers_of_the_Titanic" class="uri">https://en.wikipedia.org/wiki/Passengers_of_the_Titanic</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Last_meal" class="uri">https://en.wikipedia.org/wiki/Last_meal</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_consorts_of_the_Ottoman_sultans" class="uri">https://en.wikipedia.org/wiki/List_of_consorts_of_the_Ottoman_sultans</a></li>
+<li><a href="https://en.wikipedia.org/wiki/List_of_people_who_died_climbing_Mount_Everest" class="uri">https://en.wikipedia.org/wiki/List_of_people_who_died_climbing_Mount_Everest</a></li>
+</ul>
+</div>

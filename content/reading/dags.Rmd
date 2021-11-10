@@ -21,3 +21,19 @@ editor_options:
 - work through the examples in the `ggdag` package vignette [ here](https://cran.r-project.org/web/packages/ggdag/vignettes/intro-to-dags.html).^[Don't just copy/paste the code; write it out yourself! Change the variables in the smoking/cancer example to something of interest to you.]
 
 - <i class="fas fa-book"></i> [Directed Acyclical Graphs in Causal Inference: The Mixtape](https://mixtape.scunning.com)^[This reading is mathy-er than what we've covered so far. It also features code from STATA, which we don't use. Don't worry about that so much; we will focus on broad concepts/ideas.]
+
+
+## Slides
+
+### Tuesday
+
+[Class slides here](/slides/09-dags.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/09-dags.html",
+   ratio = "16:9"
+)
+```
+

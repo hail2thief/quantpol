@@ -1,0 +1,179 @@
+---
+title: "Problem set 6: dags"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggdag)
+```
+
+
+# Task 1: General knowledge
+
+
+Look at the example DAG below, where we are interested in the effect of X on Y: 
+
+
+```{r}
+dagify(Y ~ X + M, 
+       M ~ X) %>% 
+  ggdag()
+```
+
+**Q1: if we were to control for M here, and then looked at the relationship between X and Y, what would that relationship be capturing?** 
+
+
+
+Keeping the **fundamental problem of causality** in mind, think about a researcher that wants to test whether international trade between two countries makes them more or less likely to form defensive alliances. 
+
+
+**Q2: What is the counterfactual in this study that we fundamentally can never observe?** 
+
+
+
+You work in HR at a tech company where it is your task to a run a survey of the employees. You collect data on various characteristics and find something odd: there's a strong *negative* correlation between how socially skilled an employee is (as measured by some scale) and how technically skilled they are. That is, employees with strong programming skills tend to not be so socially skilled, and those who are very socially skilled tend to not be very good at programming. 
+
+
+**Q3: explain how a collider could help make sense of this weird relationship**
+
+
+
+# Task 2: Doggy DAG
+
+
+A study claims that [owning a dog lowers a person's risk of early death by 24%](https://twitter.com/SwedishMedical/status/1186669377506205703). These are not experiments: people were *not* randomly assigned dog or no-dog. Instead, researchers went out in the world and asked people if they owned a dog or not, asked them about their health, and other characteristics. 
+
+
+Make a DAG that has the following characteristics: 
+
+- health is caused by age, income, having a dog, race, region, and education; having a dog is caused by income, race, and age; income is caused by race, region, age, and education; education is caused by age
+
+
+```{r dog-dag}
+
+
+
+```
+
+
+Look at all the paths from owning a dog to health:
+
+
+```{r dog-dag-paths}
+
+
+
+```
+
+
+**Q4: what is the longest backdoor path from health to dog-ownership?** 
+
+
+What do you need to adjust for here to properly estimate the effect of dogs on health? 
+
+
+```{r}
+
+
+```
+
+
+
+**Q5: Which of the following sets of variables could you control for?** 
+
+
+
+
+## Bonus: Scraping Trump insults from Wikipedia
+
+
+You don't have to do this one. This one teaches you how to do simple web-scraping.
+
+
+There's a lot of information on the internet. Sometimes this information is nicely formatted, which means we can scrape it from the internet fairly easily. 
+
+Take a look at the table on this page of insults by former president Donald Trump: 
+https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump
+
+
+We're gonna pull this table from the internet into R. You'll need the `rvest` and `janitor` packages. Install if you don't have and load them below. 
+
+
+```{r}
+library(rvest)
+library(janitor)
+```
+
+
+First step is to pull down the whole Wikipedia page. To do so, use the `read_html` function, putting the URL of the site we want to scrape inside of it (in quotation marks!). Assign this to an object named `content`. 
+
+
+```{r}
+
+
+
+```
+
+
+Now we have the whole page. We just want that table. Run the `html_table` function on `content` and store that in an object called `tables`. Add `fill = TRUE` within the function otherwise you'll get an error. 
+
+
+```{r}
+
+
+```
+
+
+Notice up top in your environment that you have an object called `table` that is a **list** with 10 elements. That means we have 10 tables from that page. But we only want the one with *domestic political figures*! Which one is it? 
+
+
+We need to look at the elements in that list to figure out which of the 10 tables is ours. To look at the first element in that list, run `tables %>% pluck(1)` in the console. Is that the table? If not, try looking at the second element, and so on, until you find the table with insults. 
+
+
+Once you identify the right number, assign that table to an object called insults, like so: `insults = tables %>% pluck(NUMBER)`
+
+
+```{r}
+
+
+```
+
+
+The column names of this table are hard to work with. Let's use the `clean_names` function on our table and assign that to another object called `clean_insults`. 
+
+
+```{r}
+
+
+```
+
+Finally, use your tidyverse know-how to calculate how many times each person has been given an insulting nickname by Trump. Make a plot showing how many times each person was insulted. 
+
+```{r}
+
+
+```
+
+
+Double-bonus: repeat the steps above for a different table on Wikipedia (suggestions below). Whether you finish this one or another, post on Slack so I can see. 
+
+- https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump
+- https://en.wikipedia.org/wiki/List_of_helicopter_prison_escapes
+- https://en.wikipedia.org/wiki/Passengers_of_the_Titanic
+- https://en.wikipedia.org/wiki/Last_meal
+- https://en.wikipedia.org/wiki/List_of_consorts_of_the_Ottoman_sultans
+- https://en.wikipedia.org/wiki/List_of_people_who_died_climbing_Mount_Everest

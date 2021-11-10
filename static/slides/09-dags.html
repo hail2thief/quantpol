@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Drawing DAGs</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2021-11-09" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/countdown/countdown.css" rel="stylesheet" />
+    <script src="libs/countdown/countdown.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Drawing DAGs
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Why DAG?]
+
+--
+.box-2.large.sp-after[Identifying effects]
+
+--
+.box-3.large.sp-after[`ggdag`]
+
+---
+
+class: center, middle, inverse
+# Why DAG?
+---
+
+
+# Why DAG
+
+
+We want to identify the effect of X (waffles) on Y (divorce)
+
+--
+
+We can use our model to identify that effect, BUT:
+
+--
+
+We also know that **lurking variables** might make things go awry (the South)
+
+
+---
+
+
+# Why DAG
+
+
+We know that the DAG on the left will produce the **spurious** correlation on the right
+
+.pull-left[
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+]
+
+
+Regardless of whether or not waffles cause divorce
+
+
+---
+
+
+# Why not control for everything? 
+
+--
+
+.pull-left[
+Controlling for the wrong thing can *close* a **perplexing pipe**
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+]
+
+--
+
+.pull-right[
+Or *open* up an **exploding collider**
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+
+]
+
+
+---
+
+class: center, middle, inverse
+# What do we do?
+
+
+We have to be careful, slow, and cautious
+
+--
+
+Think carefully about what the DAG *probably* looks like
+
+--
+
+Use the DAG to figure out what we need to control 
+
+(and what must be left alone)
+
+
+--
+
+**Next week:** how to actually control for stuff
+
+
+---
+
+
+# Why experiments work
+
+
+DAGs can also help us see why experiments "work":
+
+--
+
+
+| Person|Shown an ad? | Democrats thermometer|
+|------:|:------------|---------------------:|
+|      1|Yes          |                 95.51|
+|      2|No           |                 61.67|
+|      3|Yes          |                 62.09|
+|      4|No           |                 60.09|
+|      5|No           |                 46.38|
+
+---
+
+
+# Why experiments work
+
+
+Experiments seem simple...
+
+--
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-6-1.png" width="100%" /&gt;
+
+---
+
+
+# Why experiments work
+
+
+But the outcome can be very complex ... 
+
+And yet we can still **identify** the effect:
+
+
+--
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-7-1.png" width="90%" /&gt;
+
+---
+
+
+# When experiments go wrong
+
+
+Say the ad experiment implemented on a phone app, and **younger people are more likely to use the app** than older (e.g., age and exposure to treatment are correlated):
+
+--
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-8-1.png" width="70%" /&gt;
+
+
+This means **Age** is now a *fork*
+
+
+---
+
+
+class: center, middle, inverse
+# Identifying effects
+---
+
+
+# Front-doors and back-doors
+
+
+.pull-left[
+The **back-door criterion** ties this all together
+
+Confounding caused by existence of an open “**back door**” from X to Y
+
+A backdoor path is *a non-causal path from X to Y*
+
+Need to close back-doors and keep front-doors open
+]
+
+.pull-right[
+&lt;img src="images/backdoor.jpeg" width="100%" /&gt;
+
+]
+
+
+---
+
+
+
+# Solve the DAG
+
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+
+???
+Control for A and I or A and S
+
+---
+
+
+# Solve the DAG
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+
+
+???
+U1 and U2
+
+---
+
+
+# Solve the DAG
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+
+???
+A, C, or U
+What's B here?
+
+---
+
+
+
+# The gender wage gap
+
+
+Does gender-based discrimination reduce women's earning potential (e.g., is there a "gender gap" in pay)?
+
+--
+
+In general, women earn about 82 cents for every $1 earned by men
+
+.footnote[
+[1] specifically, this is the ratio of women’s and men’s median earnings for full-time, year-round workers 15 years old and older.
+]
+
+
+--
+
+But **controlling** for occupation (e.g., comparing men and women in the same jobs), the wage gap seems to disappear (in some studies)
+
+
+
+---
+
+
+# The gender wage gap
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-13-1.png" width="90%" /&gt;
+
+Controlling for occupation = looking at the **direct** effect of discrimination on wages
+
+
+???
+How does discrimination affect wages?
+What happens if we control for occupation?
+
+
+---
+
+# The gender wage gap
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-14-1.png" width="90%" /&gt;
+
+But doing so opens up a **collider** (through ability); no free lunch here
+
+???
+How does discrimination affect wages?
+What happens if we control for occupation?
+
+
+---
+
+
+class: center, middle, inverse
+# Making DAGs in R
+---
+
+
+# The makings of a DAG
+
+
+We can use the `dagify()` function, from `ggdag`, to make a DAG
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-15-1.png" width="100%" /&gt;
+
+
+---
+
+# The makings of a DAG
+
+
+Using same syntax as `lm()`, specify all of the **causes** of each of the variables
+
+
+```r
+dag = dagify(Y ~ X + P + A + I, # Y is caused by X, P, A and I
+       X ~ P,  # X is caused by P
+       A ~ I + P,  # A is caused by I and P
+       exposure = "X", 
+       outcome = "Y")
+```
+
+
+Finally, tell R which variable is the **treatment** ("exposure") and **outcome**
+
+
+
+---
+
+
+
+# Plotting with ggdag
+
+
+We can plot our dag using ggdag (*notice how the layout is randomly determined*)
+
+
+```r
+ggdag(dag)
+```
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-17-1.png" width="80%" /&gt;
+
+
+---
+
+
+# Seeing the paths
+
+
+We can see all the paths from X to Y using `ggdag_paths()`:
+
+
+```r
+ggdag_paths(dag)
+```
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-18-1.png" width="80%" /&gt;
+
+
+---
+
+
+# What to control for? 
+
+
+We can identify what to control for using `ggdag_adjustment_set()`:
+
+
+```r
+ggdag_adjustment_set(dag)
+```
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-19-1.png" width="80%" /&gt;
+
+
+---
+
+
+# Optional: clean it up
+
+
+Can add some extra code to make the graph nice: 
+
+
+```r
+ggdag(dag, text = FALSE, use_labels = "name") + 
+  theme_dag()
+```
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-20-1.png" width="70%" /&gt;
+
+---
+
+
+# Optional: words instead of letters
+
+
+We can also use words (no spaces!) instead of letters
+
+
+```r
+dag2 = dagify(child ~ grandpa + parent + neighborhood, 
+       parent ~ grandpa + neighborhood, 
+       exposure = "grandpa",
+       outcome = "child")
+ggdag(dag2, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-21-1.png" width="60%" /&gt;
+
+---
+
+
+# 🚨 Your turn: make your own DAG 🚨
+
+
+Come up with your own theory of how one variable affects another. Think about all of the variables that might affect each of those variables. 
+
+
+1. Make a DAG to represent all of those relationships. Post your DAG in the Slack. 
+
+2. Use the tools we learned to identify all the paths from one variable to the other. 
+
+3. Use the tools to identify what **backdoor paths** need to be accounted for. 
+
+
+
+<div class="countdown" id="timer_618b0ebd" style="right:0;bottom:0;font-size:1.5em;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLanguage": "r",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

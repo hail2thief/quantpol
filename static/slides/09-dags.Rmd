@@ -1,0 +1,632 @@
+---
+title: "Drawing DAGs"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(ggdag)
+library(rethinking)
+library(paletteer)
+data("WaffleDivorce")
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Why DAG?]
+
+--
+.box-2.large.sp-after[Identifying effects]
+
+--
+.box-3.large.sp-after[`ggdag`]
+
+---
+
+class: center, middle, inverse
+# Why DAG?
+---
+
+
+# Why DAG
+
+
+We want to identify the effect of X (waffles) on Y (divorce)
+
+--
+
+We can use our model to identify that effect, BUT:
+
+--
+
+We also know that **lurking variables** might make things go awry (the South)
+
+
+---
+
+
+# Why DAG
+
+
+We know that the DAG on the left will produce the **spurious** correlation on the right
+
+.pull-left[
+```{r}
+dagify(Divorce ~ South, 
+       Waffle ~ South, 
+       exposure = "Waffle",
+       outcome = "Divorce", 
+       coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
+                      y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+.pull-right[
+```{r}
+ggplot(WaffleDivorce, aes(x = WaffleHouses/Population, y = Divorce)) + 
+  geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults")
+```
+]
+
+
+Regardless of whether or not waffles cause divorce
+
+
+---
+
+
+# Why not control for everything? 
+
+--
+
+.pull-left[
+Controlling for the wrong thing can *close* a **perplexing pipe**
+
+
+```{r}
+dagify(Y ~ Z, 
+       X ~ Z, 
+       exposure = "X",
+       outcome = "Y", 
+       coords = list(x = c(Y = 0, X = 2, Z = 1), 
+                      y = c(Y = 0, X = 0, Z = 1))) %>% 
+  ggdag() + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+]
+
+--
+
+.pull-right[
+Or *open* up an **exploding collider**
+
+```{r}
+collider_triangle(x = "X", y = "Y", m = "Z") %>% 
+  ggdag(use_labels = "label", text = FALSE) + theme_dag()
+```
+
+]
+
+
+---
+
+class: center, middle, inverse
+# What do we do?
+
+
+We have to be careful, slow, and cautious
+
+--
+
+Think carefully about what the DAG *probably* looks like
+
+--
+
+Use the DAG to figure out what we need to control 
+
+(and what must be left alone)
+
+
+--
+
+**Next week:** how to actually control for stuff
+
+
+---
+
+
+# Why experiments work
+
+
+DAGs can also help us see why experiments "work":
+
+--
+
+```{r}
+experiment = tibble(Person = 1:5, 
+       `Shown an ad?` = c("Yes", "No", "Yes", "No", "No"), 
+       `Democrats thermometer` = round(runif(n = 5, min = 0, max = 100) + 10*I(`Shown an ad?` == "Yes"), 2))
+
+knitr::kable(experiment, digits = 2)
+```
+
+---
+
+
+# Why experiments work
+
+
+Experiments seem simple...
+
+--
+
+```{r}
+dagify(Support ~ Ad, 
+       exposure = "Ad", 
+       outcome = "Support") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_color_paletteer_d(palette = "wesanderson::Darjeeling1") + 
+  scale_fill_paletteer_d(palette = "wesanderson::Darjeeling1")
+```
+
+---
+
+
+# Why experiments work
+
+
+But the outcome can be very complex ... 
+
+And yet we can still **identify** the effect:
+
+
+--
+
+
+```{r,out.width="90%"}
+dagify(Support ~ Ad + Age + Income + Race + Region + Religion +
+         Parents + Media, 
+       Income ~ Region + Parents, 
+       Religion ~ Parents, 
+       Media ~ Parents + Religion + Age + Region, 
+       exposure = "Ad", 
+       outcome = "Support") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+---
+
+
+# When experiments go wrong
+
+
+Say the ad experiment implemented on a phone app, and **younger people are more likely to use the app** than older (e.g., age and exposure to treatment are correlated):
+
+--
+
+
+```{r, out.width="70%"}
+dagify(Support ~ Ad + Age + Income + Race + Region + Religion +
+         Parents + Media, 
+       Income ~ Region + Parents, 
+       Religion ~ Parents, 
+       Media ~ Parents + Religion + Age + Region, 
+       Ad ~ Age,
+       exposure = "Ad", 
+       outcome = "Support") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+
+This means **Age** is now a *fork*
+
+
+---
+
+
+class: center, middle, inverse
+# Identifying effects
+---
+
+
+# Front-doors and back-doors
+
+
+.pull-left[
+The **back-door criterion** ties this all together
+
+Confounding caused by existence of an open “**back door**” from X to Y
+
+A backdoor path is *a non-causal path from X to Y*
+
+Need to close back-doors and keep front-doors open
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/backdoor.jpeg")
+```
+
+]
+
+
+---
+
+
+
+# Solve the DAG
+
+
+
+```{r}
+dagify(Y ~ X + I + A, 
+       X ~ A + S, 
+       A ~ S, 
+       I ~ S, 
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status() + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+???
+Control for A and I or A and S
+
+---
+
+
+# Solve the DAG
+
+
+```{r}
+dagify(y ~ c + x + u1 + u2,
+       c ~ t + x,
+       t ~ x,
+       x ~ u1 + u2, 
+       exposure = "x", 
+       outcome = "y") %>% 
+  ggdag_status() + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+
+???
+U1 and U2
+
+---
+
+
+# Solve the DAG
+
+
+```{r}
+dagify(y ~ x + c, 
+       x ~ u, 
+       u ~ a, 
+       c ~ a,
+       b ~ u + c, 
+       exposure = "x", 
+       outcome = "y") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+???
+A, C, or U
+What's B here?
+
+---
+
+
+
+# The gender wage gap
+
+
+Does gender-based discrimination reduce women's earning potential (e.g., is there a "gender gap" in pay)?
+
+--
+
+In general, women earn about 82 cents for every $1 earned by men
+
+.footnote[
+[1] specifically, this is the ratio of women’s and men’s median earnings for full-time, year-round workers 15 years old and older.
+]
+
+
+--
+
+But **controlling** for occupation (e.g., comparing men and women in the same jobs), the wage gap seems to disappear (in some studies)
+
+
+
+---
+
+
+# The gender wage gap
+
+
+```{r, out.width="90%"}
+gender = dagify(earnings ~ ability + occupation + discrimination, 
+       discrimination ~ gender, 
+       occupation ~ discrimination + ability, 
+       exposure = "discrimination", 
+       outcome = "earnings")
+
+ggdag_status(gender, text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+Controlling for occupation = looking at the **direct** effect of discrimination on wages
+
+
+???
+How does discrimination affect wages?
+What happens if we control for occupation?
+
+
+---
+
+# The gender wage gap
+
+
+```{r, out.width="90%"}
+ggdag_status(gender, text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+But doing so opens up a **collider** (through ability); no free lunch here
+
+???
+How does discrimination affect wages?
+What happens if we control for occupation?
+
+
+---
+
+
+class: center, middle, inverse
+# Making DAGs in R
+---
+
+
+# The makings of a DAG
+
+
+We can use the `dagify()` function, from `ggdag`, to make a DAG
+
+
+```{r}
+dagify(Y ~ X + P + A + I, # Y is caused by X, P, A and I
+       X ~ P,  # X is caused by P
+       A ~ I + P,  # A is caused by I and P
+       exposure = "X", 
+       outcome = "Y") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+
+---
+
+# The makings of a DAG
+
+
+Using same syntax as `lm()`, specify all of the **causes** of each of the variables
+
+```{r, echo = TRUE}
+dag = dagify(Y ~ X + P + A + I, # Y is caused by X, P, A and I
+       X ~ P,  # X is caused by P
+       A ~ I + P,  # A is caused by I and P
+       exposure = "X", 
+       outcome = "Y")
+```
+
+
+Finally, tell R which variable is the **treatment** ("exposure") and **outcome**
+
+
+
+---
+
+
+
+# Plotting with ggdag
+
+
+We can plot our dag using ggdag (*notice how the layout is randomly determined*)
+
+```{r, echo = TRUE, out.width="80%"}
+ggdag(dag)
+```
+
+
+---
+
+
+# Seeing the paths
+
+
+We can see all the paths from X to Y using `ggdag_paths()`:
+
+```{r, echo=TRUE, out.width="80%"}
+ggdag_paths(dag)
+```
+
+
+---
+
+
+# What to control for? 
+
+
+We can identify what to control for using `ggdag_adjustment_set()`:
+
+```{r, echo = TRUE, out.width="80%"}
+ggdag_adjustment_set(dag)
+```
+
+
+---
+
+
+# Optional: clean it up
+
+
+Can add some extra code to make the graph nice: 
+
+```{r, echo = TRUE, out.width="70%"}
+ggdag(dag, text = FALSE, use_labels = "name") + 
+  theme_dag()
+```
+
+---
+
+
+# Optional: words instead of letters
+
+
+We can also use words (no spaces!) instead of letters
+
+```{r, echo = TRUE, out.width="60%"}
+dag2 = dagify(child ~ grandpa + parent + neighborhood, 
+       parent ~ grandpa + neighborhood, 
+       exposure = "grandpa",
+       outcome = "child")
+ggdag(dag2, text = FALSE, use_labels = "name") + theme_dag()
+```
+
+---
+
+
+# 🚨 Your turn: make your own DAG 🚨
+
+
+Come up with your own theory of how one variable affects another. Think about all of the variables that might affect each of those variables. 
+
+
+1. Make a DAG to represent all of those relationships. Post your DAG in the Slack. 
+
+2. Use the tools we learned to identify all the paths from one variable to the other. 
+
+3. Use the tools to identify what **backdoor paths** need to be accounted for. 
+
+
+
+```{r}
+countdown::countdown(minutes = 10L, font_size = "1.5em")
+```
+
+
+

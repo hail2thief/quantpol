@@ -19,15 +19,22 @@ editor_options:
 
 <div id="TOC">
 <ul>
+<li><a href="#in-class-example">In-class example</a>
+<ul>
 <li><a href="#making-dags-with-ggdag">Making DAGs with ggdag()</a></li>
+</ul></li>
 </ul>
 </div>
 
+<div id="in-class-example" class="section level1">
+<h1>In-class example</h1>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as….”</p>
+<p><a href="/files/dags.R"><i class="fas fa-file-archive"></i> <code>dags.R</code></a></p>
 <div id="making-dags-with-ggdag" class="section level2">
 <h2>Making DAGs with ggdag()</h2>
 <p>To make DAGs we use <code>dagify()</code> from the <code>ggdag</code> package. Note the basic format:</p>
 <ul>
-<li>Y ~ A + B + C + … = think of this as “Y is caused by A, B, C, …”.</li>
+<li>Y ~ A + B + C + … = think of this as “Y is caused by A, B, C, ….”</li>
 <li>you need to specify the treatment variable with <code>exposure</code> (another word for “treatment”) and the outcome variable with <code>outcome</code></li>
 </ul>
 <pre class="r"><code>library(ggdag)
@@ -60,4 +67,5 @@ dag = dagify(turnout ~ shuttle + income + distance_poll + schedule_flex,
 <p>If we want to use labels instead of text to make it easier to read:</p>
 <pre class="r"><code>ggdag(dag, use_labels = &quot;name&quot;, text = FALSE) + theme_dag()</code></pre>
 <p><img src="/class/dags_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
 </div>
