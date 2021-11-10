@@ -62,6 +62,7 @@ lessons:
     date: "Nov 9"
     class: "dags"
     reading: "dags"
+    assignment: "ps-dags"
     
   # - title: '<i class="fas fa-star"></i> **Assignment 6**'
   #   #date: "Mar 16, Tue"

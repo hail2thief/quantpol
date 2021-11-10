@@ -34,11 +34,11 @@ dagify(Y ~ X + M,
   ggdag()
 ```
 
-**Q1: if we were to control for M here, and then looked at the relationship between X and Y, what would that relationship be capturing?** 
+**Q1: if we were to control for M here, and then looked at the effect of X on Y, what would that effect be capturing?** 
 
 
 
-Keeping the **fundamental problem of causality** in mind, think about a researcher that wants to test whether international trade between two countries makes them more or less likely to form defensive alliances. 
+Keeping the **fundamental problem of causality** in mind, think about a researcher that wants to test whether international trade between two countries makes countries more or less likely to form defensive alliances. 
 
 
 **Q2: What is the counterfactual in this study that we fundamentally can never observe?** 
@@ -83,7 +83,7 @@ Look at all the paths from owning a dog to health:
 **Q4: what is the longest backdoor path from health to dog-ownership?** 
 
 
-What do you need to adjust for here to properly estimate the effect of dogs on health? 
+Look at which variables you need to control for to properly estimate the effect of dog-ownership on health: 
 
 
 ```{r}
@@ -93,7 +93,7 @@ What do you need to adjust for here to properly estimate the effect of dogs on h
 
 
 
-**Q5: Which of the following sets of variables could you control for?** 
+**Q5: Which variables do you need to control for?** 
 
 
 
@@ -169,7 +169,7 @@ Finally, use your tidyverse know-how to calculate how many times each person has
 ```
 
 
-Double-bonus: repeat the steps above for a different table on Wikipedia (suggestions below). Whether you finish this one or another, post on Slack so I can see. 
+Double-bonus: repeat the steps above for a different table on Wikipedia (suggestions below). Whether you finish the Trump one or another of these, post on Slack so I can see. 
 
 - https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump
 - https://en.wikipedia.org/wiki/List_of_helicopter_prison_escapes
