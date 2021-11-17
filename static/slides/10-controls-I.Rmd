@@ -1,0 +1,948 @@
+---
+title: "Controls"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(ggdag)
+library(rethinking)
+library(paletteer)
+library(ggrepel)
+library(huxtable)
+library(gapminder)
+data("WaffleDivorce")
+
+
+# waffles per capita
+WaffleDivorce$Waffles = WaffleDivorce$WaffleHouses/WaffleDivorce$Population
+
+# rescale gapminder data
+gap = 
+  gapminder %>% 
+  mutate(gdpPercap = gdpPercap / 1e4, 
+         pop = pop / 1e6)
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+# stupid geom_label_repel problem
+update_geom_defaults("label", list(family = "Fira Sans"))
+update_geom_defaults("label_repel", list(family = "Fira Sans"))
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[How to be a control freak]
+
+--
+.box-2.large.sp-after[Intuition]
+
+--
+.box-3.large.sp-after[Limitations]
+
+---
+
+
+class: center, middle, inverse
+# Where are we so far?
+
+--
+
+Want to estimate the effect of X on Y
+
+--
+
+Elemental confounds get in our way
+
+--
+
+DAGs + `ggdag()` to model causal process, figure out **which** variables to control for
+
+
+---
+
+
+# Do waffles cause divorce?
+
+--
+
+Remember, we have strong reason to believe the South is **confounding** the relationship between Waffle Houses and divorce rates:
+
+--
+
+```{r}
+    dagify(Divorce ~ South + Waffle, 
+           Waffle ~ South, 
+           exposure = "Waffle",
+           outcome = "Divorce", 
+           coords = list(x = c(Waffle = 0, Divorce = 1, South = .5), 
+                         y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+      ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+      theme(legend.position = "none")
+```
+
+
+---
+
+
+class: center, middle, inverse
+# A problem we share with Lincoln
+
+--
+
+We need to **control (for) the South**
+
+--
+
+It has a pernicious influence on divorce and waffle house locations
+
+--
+
+But how do we do *control* for the South? And what does that even *mean*? 
+
+
+---
+
+
+# We've already done it
+
+
+One way to adjust/control for backdoor paths is with **multiple regression**:
+
+--
+
+In general: $Y = \alpha + \beta_1X_1 + \beta_2X_2 + \dots$
+
+--
+
+
+In this case: $Y = \alpha + \beta_1Waffles + \beta_2South$
+
+
+--
+
+Multiple regression is just regression with *multiple* explanatory variables
+
+--
+
+In multiple regression, coefficients are different: they describe the relationship between **X1** and **Y**, *after adjusting for the X2, X3, X4, etc.*
+
+
+---
+
+
+# Comparing models
+
+
+Let's fit two models of the effect of GDP on life expectancy, one with controls and one without: 
+
+```{r,echo = TRUE}
+no_controls = lm(lifeExp ~ gdpPercap, data = gap)
+controls = lm(lifeExp ~ gdpPercap + pop + year, data = gap)
+```
+
+
+(note: I've rescaled gdp (10,000s) and population (millions))
+
+---
+
+
+# The regression table
+
+
+We can compare models using a **regression table**; 
+
+many different functions, we'll use `huxreg()` from the `huxtable` package
+
+```{r, echo = TRUE, eval = FALSE}
+huxreg(no_controls, controls) #<<
+```
+
+
+---
+
+
+# The regression table
+
+.scroll-output[
+```{r}
+huxreg(no_controls, controls)
+```
+]
+
+
+
+---
+
+# The regression table
+
+We should add labels to the models: 
+
+.scroll-output[
+```{r, echo = TRUE, out.width="40%"}
+huxreg("No controls" = no_controls, "With controls" = controls) #<<
+```
+]
+
+
+---
+
+
+# The regression table
+
+Get rid of the extra crap, keep only the sample size (`nobs`):
+
+.scroll-output[
+```{r, echo = TRUE}
+huxreg("No controls" = no_controls, 
+       "With controls" = controls, 
+       statistics = "nobs") #<<
+```
+]
+
+
+---
+
+
+# Comparison
+
+
+.pull-left[
+Model 1 has no controls: just the relationship between GDP and life expectancy
+
+Model 2 controls/adjusts for: population and year
+
+]
+
+
+.pull-right[
+.scroll-box-8[
+```{r}
+huxreg("No controls" = no_controls, "With controls" = controls, statistics = "nobs")
+```
+]
+
+]
+
+
+---
+
+
+# Interpretation
+
+
+.pull-left[
+No controls: every additional 10k of GDP = 7.6 years more life expectancy
+
+With controls: .shout[after adjusting for population and year], every additional 10k of GDP = 6.7 years more of life expectancy
+
+]
+
+
+.pull-right[
+.scroll-box-8[
+```{r}
+huxreg("No controls" = no_controls, "With controls" = controls, statistics = "nobs")
+```
+]
+
+]
+
+
+In other words: .shout[comparing countries with similar population levels and in the same year], every additional 10k of GDP = 6.7 years more of life expectancy
+
+
+
+---
+
+
+# Does this actually work? Back to the waffles
+
+
+Only way to know for sure is with made-up data, where we **know** the effects ex ante:
+
+
+```{r, echo = TRUE}
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
+              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south) 
+```
+
+
+---
+
+
+# What do we know?
+
+
+```{r, echo = TRUE}
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
+              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south) 
+```
+
+
+We *know* that waffles have **0 effect** on divorce
+
+We *know* that the south has an effect of **10** on divorce
+
+We *know* that the south has an effect of **8** on waffles
+
+---
+
+# Controlling for the South
+
+
+Fit a **naive** model without controls, and the correct one **controlling** for the South:
+
+```{r, echo = TRUE}
+naive_waffles = lm(divorce ~ waffle, data = fake)
+control_waffles = lm(divorce ~ waffle + south, data = fake)
+```
+
+---
+
+
+# The results
+
+
+Perfect! Naive model is **confounded**; but controlling for the South, we get pretty close to the truth (0 effect)
+
+.scroll-output[
+```{r}
+huxreg("Naive model" = naive_waffles, 
+       "Control South" = control_waffles, statistics = "nobs")
+```
+
+]
+
+
+
+---
+
+
+# What's going on?
+
+--
+
+In our made-up world, if we control for the South we can get back the **uncounfounded** estimate of Divorce ~ Waffles
+
+--
+
+But what's `lm()` doing under-the-hood that makes this possible?
+
+
+---
+
+
+# What's going on?
+
+
+.pull-left[
+- Quick and dirty: `lm()` is *estimating* and *removing* $South \rightarrow Divorce$, and $South \rightarrow Waffles$
+
+- what's left is the relationship between Waffles and Divorce, *adjusting for the influence of the South on each*
+
+- Need math to fully grasp, but plots help:
+]
+
+.pull-right[
+```{r}
+dagify(Divorce ~ South + Waffle, 
+           Waffle ~ South, 
+           exposure = "Waffle",
+           outcome = "Divorce", 
+           coords = list(x = c(Waffle = 0, Divorce = 1, South = .5), 
+                         y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
+      ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
+      theme(legend.position = "none")
+```
+
+]
+
+
+---
+
+
+# Plot the data
+
+
+This is the **confounded** relationship between waffles and divorce:
+
+```{r}
+ggplot(fake, aes(x = waffle, y = divorce)) + 
+  geom_point(size = 3, alpha = .8) + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults") + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  geom_label_repel(data = tibble(waffle = 30, divorce = 20, 
+                                 label = glue::glue("estimated effect = {round(coef(naive_waffles)[2], 2)}")), aes(label = label), 
+                   color = red, nudge_y = -10)
+```
+
+
+---
+
+
+# Add the south
+
+We can see what we already know: states in the South tend to have more divorce, and more waffles
+
+```{r}
+ggplot(fake, aes(x = waffle, y = divorce, color = factor(south))) + 
+  geom_point(size = 3, alpha = .8) + 
+  geom_smooth(method = "lm", color = red, fill = red) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "Is the state in the South?") + 
+  theme(legend.position = "right") + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35))
+```
+
+
+---
+
+
+# Effect of south on divorce
+
+ $South \rightarrow Divorce$ (in our fake data = 10)
+ 
+
+```{r}
+fake2 = fake %>% 
+  group_by(south) %>% 
+  mutate(south_waffles = mean(waffle), 
+         south_divorce = mean(divorce)) %>% 
+  ungroup() %>% 
+  mutate(waffles_res = waffle - south_waffles, 
+         divorce_res = divorce - south_divorce)
+
+
+ggplot(fake2, aes(x = waffle, y = divorce, color = factor(south))) + 
+  geom_point(size = 3) + 
+  geom_hline(yintercept = mean(fake2$divorce[fake2$south == 1]), 
+             color = "blue", size = 2) + 
+  geom_hline(yintercept = mean(fake2$divorce[fake2$south == 0]), 
+             color = "blue", size = 2) + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "In the South?") + 
+  theme(legend.position = "right")
+```
+
+---
+
+
+# Remove effect of south on divorce
+
+
+```{r}
+ggplot(fake2, aes(x = waffle, y = divorce_res, color = factor(south))) + 
+  geom_point(size = 3) + 
+  geom_hline(yintercept = mean(fake2$divorce_res[fake2$south == 1]), 
+             color = "blue", size = 2) + 
+  geom_hline(yintercept = mean(fake2$divorce_res[fake2$south == 0]), 
+             color = "blue", size = 2) + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "In the South?") + 
+  theme(legend.position = "right")
+```
+
+---
+
+
+# Next: effect of south on waffles
+
+ $South \rightarrow Waffles$ (in our fake data this is 8)
+
+
+```{r}
+ggplot(fake2, aes(x = waffle, y = divorce_res, color = factor(south))) + 
+  geom_point(size = 3) + 
+  geom_vline(xintercept = mean(fake2$waffle[fake2$south == 1]), 
+             color = "blue", size = 2) + 
+  geom_vline(xintercept = mean(fake2$waffle[fake2$south == 0]), 
+             color = "blue", size = 2) + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "In the South?") + 
+  theme(legend.position = "right")
+```
+
+
+---
+
+
+# Subtract out the effect of south on waffles
+
+
+```{r}
+ggplot(fake2, aes(x = waffles_res, y = divorce_res, color = factor(south))) + 
+  geom_point(size = 3) + 
+  geom_vline(xintercept = mean(fake2$waffles_res[fake2$south == 1]), 
+             color = "blue", size = 2) + 
+  geom_vline(xintercept = mean(fake2$waffles_res[fake2$south == 0]), 
+             color = "blue", size = 2) + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "In the South?") + 
+  theme(legend.position = "right")
+```
+
+
+---
+
+
+# What's left over?
+
+
+The true effect of waffles on divorce $\approx$ 0
+
+```{r}
+ggplot(fake2, aes(x = waffles_res, y = divorce_res)) + 
+  geom_point(size = 3) + 
+  geom_smooth(method = "lm") + 
+  coord_cartesian(xlim = c(-10, 45), 
+                  ylim = c(-10, 35)) + 
+  theme_fancy + 
+  labs(x = "Waffle Houses per million residents", 
+       y = "Divorce rate per 1,000 adults", 
+       color = "In the South?") + 
+  geom_label_repel(data = tibble(waffles_res = 0, divorce_res = 0, 
+                                 label = glue::glue("estimated effect = {round(coef(control_waffles)[2], 2)}")), aes(label = label), 
+                   color = blue, nudge_y = 10, nudge_x = 10)
+```
+
+---
+
+
+# 🚨 Your turn: controls 🚨
+
+
+Using the fake data template:
+
+1. make data where the effect of one variable on another is confounded by a third variable.
+
+2. Fit two models: one with and one without controlling for the confound
+
+3. Post the regression table comparing the two models in the Slack. 
+
+
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
+
+
+---
+
+
+class: center, middle, inverse
+# The other confounds
+---
+
+
+# The perplexing pipe
+
+
+Remember, with a perplexing pipe, controlling for Z blocks the effect of X on Y:
+
+```{r}
+dagify(Y ~ Z, 
+       Z ~ X, 
+       exposure = "X", 
+       outcome = "Y",
+       coords = list(x = c(X = -.5, Z = 0, Y = .5), 
+                     y = c(Y = 0, Z = 0, X = 0))) %>% 
+  ggdag_status() + theme_dag_blank() + 
+  theme(legend.position = "none")
+```
+
+
+---
+
+
+# Simulation
+
+
+Let's make up some data to show this: X has an effect of 8 on Z; Z has an effect of 4 on Y
+
+```{r, echo = TRUE}
+fake_pipe = tibble(x = rnorm(n = 200, mean = 10), 
+                   z = rnorm(n = 200, mean = 10) + 8 * x, 
+                   y = rnorm(n = 200, mean = 10) + 4 * z)
+```
+
+
+---
+
+
+# The data
+
+
+```{r}
+fake_pipe %>% knitr::kable()
+```
+
+
+---
+
+
+# Bad controls
+
+
+What's the total effect of X on Y: just believe me, it is $8 \times 4 = 32$
+
+Remember, with a **pipe** controlling for Z is a .shout[bad idea]
+
+Let's fit two models, where one makes the mistake of controlling for Z
+
+```{r, echo = TRUE}
+right_model = lm(y ~ x, data = fake_pipe)
+bad_control = lm(y ~ x + z, data = fake_pipe)
+```
+
+
+---
+
+
+# Bad controls
+
+
+Notice how the model that mistakenly controls for Z tells you that X basically has no effect on Y (*wrong*)
+
+.scroll-output[
+```{r}
+huxreg("Correct model" = right_model, 
+       "Bad control" = bad_control, statistics = "nobs")
+```
+]
+
+
+---
+
+
+
+# The exploding collider
+
+
+Remember, with an exploding collider, controlling for M creates strange correlations between X and Y:
+
+```{r}
+collider_triangle(x = "X", y = "Y", m = "Z") %>% 
+  ggdag_status() + theme_dag() + 
+  theme(legend.position = "none")
+```
+
+
+---
+
+
+# Simulation
+
+
+Let's make up some data to show this: X has an effect of 8 on M; Y has an effect of 4 on M; X has no effect on Y
+
+
+```{r, echo = TRUE}
+fake_collider = tibble(x = rnorm(n = 100, mean = 10), 
+                   y = rnorm(n = 100, mean = 10),
+                   m = rnorm(n = 100, mean = 10) + 8 * x + 4 * y)
+```
+
+
+---
+
+
+# The data
+
+
+```{r}
+fake_collider %>% knitr::kable()
+```
+
+
+---
+
+
+# Bad controls
+
+
+What's the effect of X on Y? it's zero
+
+Remember, with a **collider** controlling for M is a .shout[bad idea]
+
+Let's fit two models, where one makes the mistake of controlling for M
+
+```{r, echo = TRUE}
+right_model = lm(y ~ x, data = fake_collider)
+collided_model = lm(y ~ x + m, data = fake_collider)
+```
+
+
+---
+
+
+# Bad controls
+
+
+Notice how the model that mistakenly controls for Z tells you that X basically has no effect on Y (*wrong*)
+
+.scroll-output[
+```{r}
+huxreg("Correct model" = right_model, 
+       "Collided!" = collided_model, statistics = "nobs")
+```
+]
+
+
+---
+
+
+# Colliding as sample selection
+
+
+Most of the time when we see a collider, it's because of a sample selection issue
+
+--
+
+Examples: the NBA, height, and scoring; the (alleged) negative correlation between how surprising and reliable findings are, among published research
+
+--
+
+Imagine 😉 Google wants to hire the best of the best, and they have two criteria: interpersonal skills, and technical skills
+
+
+---
+
+
+# Simulate the hiring process
+
+
+Say Google can measure how socially and technically skilled someone is (0-100), and the two are **causally unrelated**:
+
+
+```{r, echo = TRUE}
+fake_google = tibble(social_skills = rnorm(n = 200, mean = 50, sd = 10), 
+       tech_skills = rnorm(n = 200, mean = 50, sd = 10))
+```
+
+
+---
+
+
+# The data
+
+
+```{r}
+fake_google %>% knitr::kable()
+```
+
+
+---
+
+
+# Simulate the hiring process
+
+
+Now imagine that they add up the two skills to see a person's overall aptitude: 
+
+```{r, echo = TRUE}
+fake_google %>% 
+  mutate(total_score = social_skills + tech_skills) #<<
+```
+
+---
+
+
+# Simulating the hiring process
+
+
+Now imagine that Google **only hires** people who are in the top 15% of aptitude: 
+
+
+```{r, echo = TRUE, eval = FALSE}
+fake_google %>% 
+  mutate(total_score = social_skills + tech_skills) %>% 
+  mutate(hired = ifelse(total_score >= quantile(total_score, .85), "yes", "no")) #<<
+```
+
+.scroll-output[
+```{r, echo = FALSE}
+collide_google = fake_google %>% 
+  mutate(total_score = social_skills + tech_skills) %>% 
+  mutate(hired = ifelse(total_score >= quantile(total_score, .85), "yes", "no"))
+collide_google
+```
+]
+
+
+---
+
+
+# General population
+
+No relationship between social and technical skills among all job candidates
+
+```{r}
+ggplot(collide_google, aes(x = social_skills, y = tech_skills)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + labs(x = "Social skill score", y = "Technical skill score") + 
+  geom_smooth(method = "lm")
+```
+
+---
+
+
+# Collided!
+
+
+No bad models here; but if we only look at Google workers we see the weird trade-off between social and technical skills:
+
+```{r}
+ggplot(collide_google, aes(x = social_skills, y = tech_skills, 
+                           color = hired)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + labs(x = "Social skill score", y = "Technical skill score", 
+                     color = "Works at Google?") + 
+  geom_smooth(method = "lm") + 
+  theme(legend.position = "right")
+```
+
+---
+
+
+# Limitations
+
+It's cool that we can control for a **confound**, or avoid colliders/pipes and get back .shout[THE TRUTH]
+
+--
+
+
+But there are big limitations we must keep in mind when evaluating research:
+
+* We need to know what to control for (confident in our DAG)
+
+--
+
+* We need to have data on the controls (e.g., data on Z)
+
+--
+
+* We need our data to measure the variable well (e.g., # of homicides a good proxy for violence?)
+
+--
+
+Thursday: other approaches to **identifying effects**
+
+
+---
+
+
+# 🚨 Your turn: pipes, colliders 🚨
+
+
+Using the templates in the class script: 
+
+* Make a **realistic** pipe or collider scenario
+
+* Use models to show that everything goes wrong when you *mistakenly* control the pipe/collider
+
+* Post the correct model alongside the wrong model as a table in Slack
+
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
+
+
+---
+
+

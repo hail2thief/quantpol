@@ -21,6 +21,22 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```
 
 
+
+
+# In-class example
+
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
+
+[<i class="fas fa-file-archive"></i> `Controls.R`](/files/controls.R)
+
+
+
+
+
+
+## Closing backdoors with controls
+
+
 ```{r}
 library(ggdag)
 library(tidyverse)
@@ -31,8 +47,6 @@ set.seed(1990)
 
 ```
 
-
-## Closing backdoors with controls
 
 
 Remember that one of the lessons from our week on DAGs is that in order to estimate the effect of X on Y, sometimes we need to control for some variables and *avoid* controlling for others. 

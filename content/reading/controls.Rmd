@@ -16,6 +16,22 @@ editor_options:
 ---
 
 
-## Required
+## Optional
 
-- <i class="fas fa-book"></i> [Ch.6 in ModernDive on Data Visualization](https://moderndive.com)
+None
+
+
+## Slides
+
+### Tuesday
+
+[Class slides here](/slides/10-controls-I.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/10-controls-I.html",
+   ratio = "16:9"
+)
+```
+
