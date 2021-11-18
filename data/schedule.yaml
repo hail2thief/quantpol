@@ -72,7 +72,7 @@ lessons:
     date: "Nov 16, Nov 18"
     class: "controls"
     reading: "controls"
-    
+    assignment: "ps-controls"
   # - title: '<i class="fas fa-star"></i> **Assignment 7**'
   #   #date: "Mar 23, Tue"
   #   #assignment: "ps-controls"
