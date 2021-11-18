@@ -1,0 +1,146 @@
+---
+title: "Problem set 7: controls"
+output: html_document
+---
+
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+    
+    
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggdag)
+library(AER)
+library(huxtable)
+```
+
+
+
+# Task 1: Affairs
+
+
+For this part, you'll look at data on extra-marital affairs, taken from a Psychology Today study in 1969, from the AER package. 
+
+The affairs variable is coded weirdly, but just pretend it counts the number of affairs the respondent has had (or admits to having). 
+
+
+```{r load-data}
+data("Affairs")
+?Affairs # read about the data and variables
+head(Affairs, n = 10)
+```
+
+First, a blast from the past: find the percent of respondents who had no affairs, one affair, two affairs, and so on: 
+
+```{r}
+
+```
+
+
+**Q1: Roughly what percent of respondents have had at least one affair?**
+
+
+
+Now the key question: does having a child make someone more or less likely to have an extra-marital affair? 
+
+
+Looking at the variable names in the Affairs dataset, make a DAG where: 
+
+- having an affair is a function of: having children, how religious you are, how long you've been married, and how happy you are in your marriage (rating)
+- having children is a function of: how long you've been married and how religious you are (more religious people tend to have more kids)
+- length of marriage is a function of: how religious you are (more religious people tend to get married younger)
+- happinness of marriage is a function of: whether or not you have kids (studies show having children is a significant stressor on a marriage)
+
+
+```{r}
+
+
+```
+
+
+What variables do you need to adjust for to identify the effect of kids on affairs? 
+
+
+```{r}
+
+
+```
+
+
+**Q2: what variables do you need to adjust for?**
+
+
+
+
+
+Now, fit three models: 
+
+1) a naive model, where you fail to make any adjustments. 
+2) a model where you adjust for the correct variables you identified above. 
+3) the same model as (2) but where you *also* control for happiness (`rating`). 
+
+
+Display all three models side-by-side in a table:
+
+
+
+```{r}
+
+
+
+```
+
+**Q3: How does having children affect the number of affairs someone has in the naive model?**
+
+ 
+
+
+**Q4: How does having children affect the number of affairs someone has in the correct control model?**
+
+ 
+
+
+**Q5: Why is the effect of having children estimated in model 3 likely to be wrong?**
+
+
+
+
+
+# Task 2: Political advertisement
+
+
+Skim this study by Huber and Arceneaux (2007): link: https://www.jstor.org/stable/4620110?seq=1#metadata_info_tab_contents
+
+You will probably have to log-on to the school library to read it. 
+
+
+The study is trying to answer an important question: can election advertisement actually persuade voters to vote for a particular candidate? Do the millions spent on ads actually work? 
+
+
+Imagine you went out and collected data, across all US counties on: 1) how many dollars were spent, in ads, on pro-Biden messaging during the 2020 election; 2) how many people voted for Biden in each county. 
+
+
+**Q6: Imagine you fit a model like lm(voted_biden ~ dollars_ads) with this data. What is one key reason (also noted by the the authors) for worrying about confounding in this model?**
+
+
+
+The authors overcome these confounding concerns with a natural experiment. Thinking of this natural experiment: 
+
+**Q7: What is the "arbitrary cutoff" the authors are taking advantage of in this natural experiment?**. 
+
+
+
+**Q8: Explain, in your own words, why the natural experiment in this paper helps the authors identify the effect of ads on voter behavior.**
+
+
+
+You're done! Submit the Rmd. 

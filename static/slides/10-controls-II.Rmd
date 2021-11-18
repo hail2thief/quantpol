@@ -1,0 +1,680 @@
+---
+title: "Natural experiments"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(ggdag)
+library(paletteer)
+library(ggrepel)
+library(wakefield)
+library(huxtable)
+
+
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# fancy theme
+theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+
+# stupid geom_label_repel problem
+update_geom_defaults("label", list(family = "Fira Sans"))
+update_geom_defaults("label_repel", list(family = "Fira Sans"))
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[The causal revolution]
+
+--
+.box-2.large.sp-after[Natural experiments]
+
+--
+.box-3.large.sp-after[Regression discontinuities]
+
+---
+
+
+class: center, middle, inverse
+# A brief, unfair history of social science research
+---
+
+
+# Garbage can models
+
+
+.pull-left[
+* for a long time there was a tendency to estimate **garbage can models**
+* throw every variable under the sun into regression model, hope for the best
+* in some cases, no pre-meditated *treatment* variable
+* why? fear of forks/confounds! and other norms
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/garbage-models.png")
+```
+]
+
+---
+
+
+# An empty-garbage-can model
+  
+  
+.pull-left[
+Some studies don't even adjust for confounders
+
+
+From the dog ownership improves health article from the homework: 
+      
+["*A possible limitation was that the analyses were not adjusted for confounders.*"](https://www.ahajournals.org/doi/10.1161/CIRCOUTCOMES.119.005554)
+
+]
+
+.pull-right[
+```{r, out.width="80%"}
+knitr::include_graphics("images/morty.jpeg")
+```
+
+]
+
+---
+
+
+# Causal inference
+
+
+.pull-left[
+* More recently: a greater emphasis on worrying about **causality**
+* Recognition that **pipes** and **colliders** means we *shouldn't* just throw every variable into a model
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/causality.png")
+```
+]
+
+
+---
+
+# Improvements but obvious limits
+
+--
+
+If we can correctly specify our model (i.e., control for all backdoors, leave front-doors open) we will identify the effect of X on Y
+
+--
+
+Easier said than done! Often there is some confound (like W) that we **know exists but can't measure**, or worse, **don't know exists at all**
+
+
+```{r, out.width="80%", fig.align='center'}
+dagify(Y ~ X + W + Z + G, 
+       X ~ W + G, 
+       Z ~ G,
+       outcome = "Y", 
+       exposure = "X", 
+       latent = "W") %>% 
+  ggdag_status() + theme_dag() + theme(legend.position = "none")
+```
+
+
+---
+
+
+# The causal revolution
+
+
+Hard to specify the DAG and measure all the variables; what can we do? 
+
+Ideal: an experiment; but rarely feasible
+
+Alternative: find moments, situations, or weird, freak ocurrences where some group (e.g., people, cities, counties) were exposed to some **treatment** while another, otherwise similar group, was not
+
+Crucial: the reason one group got the **treatment**, and other didn't, is purely by *chance* (just like with an experiment)
+
+
+These weird moments where  are called **natural experiments**
+
+
+---
+
+
+# A good year for causality
+
+
+2021 Nobel Prize winners in economics pioneered **quasi-experimental methods**
+
+.pull-left[
+```{r, out.width="60%", fig.align='center'}
+knitr::include_graphics("images/card-nobel.jpeg")
+```
+
+]
+
+.pull-right[
+```{r, out.width="60%", fig.align='center'}
+knitr::include_graphics("images/angrist-nobel.jpeg")
+```
+]
+
+
+
+
+---
+
+
+class: center, middle, inverse
+# Regression discontinuity
+---
+
+
+
+# Do gifted programs pay off? 
+
+
+.pull-left[
+* Millions of kids across the US placed in gifted programs
+* Parents/society have to weigh pros and cons; is this worth doing? 
+* For instance: does being in gifted program **increase** your chances of success later in life? 
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/gifted-kid2.jpeg")
+```
+
+]
+
+???
+Explain gifted
+What does it mean to cause here?
+
+---
+  
+
+# The (fake) data
+
+
+```{r}
+fake_students = r_data_frame(n = 1000, name, age, grade) %>% 
+  mutate(test = runif(n = n())*100) %>% 
+  mutate(gifted = ifelse(test >= 75, "yes", "no")) %>% 
+  mutate(earnings = rgamma(n = n(), 2) * 20000 - 25000 * I(gifted == "yes") + 
+           1000 * test)
+knitr::kable(select(fake_students, Name, Age, Grade, gifted, earnings))
+```
+
+
+---
+
+
+# The results
+
+
+Big gifted program premium: `r scales::dollar(coef(lm(earnings ~ gifted, data = fake_students))[2])` more in earnings
+
+
+```{r}
+avgs = 
+  fake_students %>% 
+  group_by(gifted) %>% 
+  summarise(earnings = round(mean(earnings), 0))
+ggplot(fake_students, aes(x= gifted, y = earnings, 
+                          color = gifted)) + 
+  ggbeeswarm::geom_quasirandom(size = 2, alpha = .9) + 
+  coord_flip() + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) + 
+  theme_fancy + 
+  theme(legend.position = "none") + 
+  labs(y = "Current salary", x = "Was the respondent in gifted?") + 
+  geom_label_repel(data = avgs, aes(label = paste0("Avg: ", scales::dollar(earnings))), 
+                   size = 5, fontface = "bold", nudge_y = 30000, 
+                   nudge_x = .2)
+  
+```
+
+
+---
+
+
+# The problem
+
+
+So many potential confounds, including ones that are really, really hard to measure (like .shout[ability]) and others that are .shout[unknown]
+
+
+```{r}
+dagify(earnings ~ gifted + family + location + ability + unknown, 
+       gifted ~ family + location + ability + unknown, 
+       exposure = "gifted", 
+       outcome = "earnings", 
+       latent = "ability") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none")
+```
+
+
+---
+
+
+# The solution
+
+
+To get into gifted you typically need a certain score on an aptitude/IQ test
+
+Imagine that the **cutoff** score is 75 out of 100; above you're in gifted, below you are not
+
+How was that cutoff chosen?
+
+
+---
+
+
+
+# The solution
+
+
+The precise **cutoff** is completely arbitrary; could have been 74.5, or 76, or 80, or whatever
+
+The *arbitrary* nature of the cutoff creates a **natural experiment**
+
+
+A student got a 76 and a student who got a 34 are probably very different; if one makes more money than the other today, is that because of gifted? or other factors (.shout[ability]?)
+
+But a student who got a 76 and one who got a 74 are probably interchangeable, especially since tests are *noisy*
+
+
+Few points difference might be function of: random error, luck, whatever
+
+
+---
+
+
+# The natural experiment
+
+
+If we look *only* at students who scored close to the 75 cutoff we have the makings of a **natural experiment**
+
+
+Around cutoff, essentially random whether you get treatment (gifted program) or not
+
+
+We call these “natural experiments”: situations where some rule creates random assignment of treatment
+
+
+---
+
+
+# Looking around the cutoff
+
+
+In analysis terms, simple: look only at students who scored close to 75, let's say +/- 2:
+
+```{r, echo = TRUE}
+subset_students = fake_students %>% 
+  filter(test >= 73 & test <= 77) #<<
+```
+
+
+Estimate effect of gifted on full (wrong) sample, and discontinuity sample:
+
+```{r, echo = TRUE}
+wrong_model = lm(earnings ~ gifted, data = fake_students)
+discon_model = lm(earnings ~ gifted, data = subset_students)
+
+```
+
+
+---
+
+
+# The results
+
+
+Ouch! Looks like being in gifted actually **hurts** students in the long-run:
+
+scroll.output[
+```{r}
+huxreg("all students" = wrong_model, "students near cutoff" = discon_model, 
+       statistics = "nobs")
+```
+]
+
+---
+
+
+# Visualize it
+
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary") + 
+  scale_y_continuous(labels = scales::dollar)
+```
+
+
+---
+
+
+# The cutoff
+
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings, 
+                          color = gifted)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary", 
+       color = "Gifted?") + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) + 
+  geom_vline(xintercept = 75, lty = 2, size = 2, color = "red")
+```
+
+
+---
+
+
+# The natural experiment
+
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings, 
+                          color = gifted)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary", 
+       color = "Gifted?") + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) + 
+  annotate(geom = "rect", xmin = 73, xmax = 77, ymin = -Inf, ymax = Inf, 
+           fill = "coral3", alpha = .4)
+```
+
+
+---
+
+
+# The discontinuity
+
+
+These are the students who, **by chance**, just barely made it (or not) into gifted
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings, 
+                          color = gifted)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary", 
+       color = "Gifted?") + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) +
+  coord_cartesian(xlim = c(73, 77))
+```
+
+
+---
+
+
+# The discontinuity
+
+
+On average, these students make **less money**
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings, 
+                          color = gifted)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary", 
+       color = "Gifted?") + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) +
+  coord_cartesian(xlim = c(73, 77)) + 
+  geom_label_repel(data = tibble(test = 73.5, earnings = coef(discon_model)[1], 
+                                 gifted = "no"), 
+                   aes(label = paste("Avg earnings: ", scales::dollar(earnings)))) + 
+  geom_label_repel(data = tibble(test = 76.5, 
+                                 earnings = coef(discon_model)[1] + coef(discon_model)[2], 
+                                 gifted = "yes"), 
+                   aes(label = paste("Avg earnings: ", scales::dollar(earnings))))
+```
+
+
+---
+
+
+# The payoff
+
+
+In the **naive** estimate we think gifted programs help students in the long-run
+
+
+With the **discontinuity** we see the opposite: gifted hurts
+
+
+The *arbitrary* cutoff in who gets into gifted gets us unconfounded estimates for free: no need to control for anything, or worry about backdoor paths
+
+
+---
+
+
+# Other examples: rules
+
+
+* How much moral hazard is there in insurance? E.g., if your insurance covers \$10,000 in services, will provider charge you \$10,000 even if you only need \$8,000 in services?
+
+
+* Naive estimate: `lm(cost of service ~ insurance_coverage)`
+
+
+* What's wrong with the naive estimate?
+
+
+---
+
+
+# Baby problems
+
+* Insurance will cover two nights in a hospital after delivery
+
+* **discontinuity**: how long is "a night"? 
+
+* Nights counted by number of *midnights* (arbitrary)
+
+* 👶 born on Monday at 11:59pm = gets Tue + Wed in hospital
+
+* 👶 born on Tuesday at 12:01am = gets Tue + Wed + Thur in hospital
+
+
+---
+
+
+# Results
+
+
+Babies who get arbitrary
+
+
+# Other examples: Nobel Prize winners
+
+
+
+# Limitations: changing estimates
+
+
+By focusing on units near cutoff, estimate changes: 
+
+* effect of putting a child in gifted on future earnings ❌
+
+* effect of putting a child *with roughly 75 IQ* in gifted on earnings ✅
+
+
+
+```{r}
+ggplot(fake_students, aes(x = test, y = earnings, 
+                          color = gifted)) + 
+  geom_point(size = 2, alpha = .8) + 
+  theme_fancy + 
+  labs(x = "Score on IQ test", y = "Current salary", 
+       color = "Gifted?") + 
+  scale_y_continuous(labels = scales::dollar) + 
+  scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
+                          direction = -1) + 
+  annotate(geom = "rect", xmin = 73, xmax = 77, ymin = -Inf, ymax = Inf, 
+           fill = "coral3", alpha = .4)
+```
+
+
+---
+
+# Limitations 
+
+
+There is also a risk that if people *know* about the cutoff they will sort strategically in non-random ways (**sorting around the cutoff**)
+
+With gifted, maybe wealthier/better-connected/etc parents have students retake test, pressure test-giver, etc.
+
+In that case, being gifted is no longer as-if random for those close to the cutoff
+
+
+
+
+```{r}
+dagify(earnings ~ gifted + parents, 
+       gifted ~ parents, 
+       exposure = "gifted", 
+       outcome = "earnings") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none")
+```
+
+
+---
+
+
+
+
+# Big picture
+
+
+Natural experiments are "strongest" causal tool, and regression discontinuity designs are probably the most convincing version of natural experiments
+
+
+In many cases they are very simple to implement
+
+
+The tough part? Finding one! And collecting the data
+
+
+Often helps to have *specific* knowledge of a particular region/area/issue
+
+
+---
+
+
+# 🚨 Your turn: brainstorm 🚨
+
+
+With the person to your right:
+
+
+1. Think of other arbitrary rules, demarcations, cutoffs, etc., that might create the opportunity for a natural experiment. 
+
+2. What problem could that natural experiment help solve? In the gifted program case: the IQ test cutoff helps solve the problem of estimating the effect of gifted programs on future success. 
+
+3. Post a summary in the Slack and if the idea is good enough I will steal it and publish it. 
+
+
+
+```{r}
+countdown::countdown(minutes = 15L)
+```
+
+---
+
+
+# Other approaches
+
+
+* Difference-in-difference designs
+* Synthetic control approaches
