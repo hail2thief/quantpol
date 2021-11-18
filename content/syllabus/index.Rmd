@@ -162,7 +162,7 @@ If you think you received the wrong grade, you will need to submit a memo giving
 
 ## Old tech
 
-Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (2 extra credit percentage points; you’ve got until September 28th).
+Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (2 extra credit points; you’ve got until September 28th).
 
 
 <img src="/media/cyber-green.gif" alt="drawing"/>
@@ -171,4 +171,4 @@ Once you have read this entire syllabus and [the assignments page](/assignment/)
 
 ## Credits
 
-This course draws on code, content, ideas, inspirations and much more from work by Andrew Heiss, Nick-Ch, Kieran Healy, and others who have made their courses publicly available.
+This course draws on code, content, ideas, inspirations and much more from work by Andrew Heiss, Nick-Ch, Kieran Healy, Scott Cunningham, and others who have made their courses publicly available.

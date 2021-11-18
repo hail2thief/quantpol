@@ -24,7 +24,7 @@ library(kableExtra)
 
 # Instructions
 
-You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined here: 
+You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined there: 
 
 
 
@@ -34,7 +34,7 @@ You will pick one of the datasets below, download the adjoining Rmarkdown templa
 ### War, gender, and social change
 
 
-One of the big changes that World War II brought about in the US was bringing women into the labor force in massive numbers. Over time, involvement of women in economic and political life also changed dramatically. 
+One of the big changes that World War II brought about in the US was the entrance of women into the labor force in massive numbers. Over this period, involvement of women in economic and political life also increased dramatically. 
 
 Wars are big, destabilizing events that can dramatically transform societies. Can wars, either domestic or foreign, change gender relations within a country? 
 
@@ -54,7 +54,7 @@ tribble(~variable, ~meaning,
         "milper", "Military personnel per capita", 
         "milex_pc", "Military expenditures per capita", 
         "population", "Total population", 
-        "polity2", "Democracy score, ranging from full autocracy (-10) to full democracy (10).") %>% 
+        "polity2", "Country's democracy score in that year, from POLITY2. Ranging from full autocracy (-10) to full democracy (10).") %>% 
   kable() %>% 
     column_spec(2, width = "20em")
 ```
@@ -65,7 +65,7 @@ Ideas:
 - effects of civil war on women's empowerment
 - effects of international war on women's empowerment
 - effects of war on fertility
-- effect of democracy on military spending 
+- effect of democratization on military spending 
 
 
 
@@ -83,7 +83,7 @@ tribble(~variable, ~meaning,
         "year", "Year", 
         "failure", "Did the group experience failure in this year?", 
         "allies", "Number of allies the group has", 
-        "alliesties", "Number of ties a group's allies have", 
+        "alliesties", "Number of ties a group's allies have (eigenvector centrality score)", 
         "size", "Size of group (from 0 to 3)", 
         "religious", "Is the group religious?", 
         "ethnic", "Is the group ethnically defined?", 
@@ -102,6 +102,8 @@ Ideas:
 - does decapitation cause organizational failure? 
 - do terrorist alliances reduce organizational failure? 
 - does religion or ethnicity make a group more likely to form alliances? 
+- does religious belief make a group more resistant to failure?
+
 
 
 ### Western education and the spread of democracy
@@ -119,13 +121,13 @@ tribble(~variable, ~meaning,
         "enddate", "When the leader ended their tenure", 
         "angloedu", "Was leader educated in an English-speaking country?", 
         "westedu", "Was leader educated in the West?", 
-        "noedu", "No higher education?", 
+        "noedu", "Did leader have no higher education?", 
         "polity2change", "Change in POLITY2 score over leader's tenure (positive = country became more democratic, negative = less democratic)", 
         "BMRtransition", "1 if country underwent democratic transition",
         "ethfrac", "Ethnic fractionalization index of country", 
         "britcolony", "Is leader in a former british colony?", 
         "igdp", "interpolated real GDP per capita /100,000", 
-        "usally", "1 if cold war alliance with USA at any point",
+        "usally", "did country have cold war alliance with USA at any point?",
         "ioil", "does the country have oil?", 
         "ipolconiii", "Executive constraints variable (from 0 to 1)", 
         "studentflowthousand", "students studying in the US (in thousands)") %>%
@@ -136,16 +138,17 @@ tribble(~variable, ~meaning,
 
 Ideas: 
 
-- does a Western education spread democracy to other countries? 
-- does a Western education make alliances with the US more likely? 
-- does having lots of students studying abroad in the US make US alliances more likely? 
+- does a leader receiving a Western education spread democracy to their home countries? 
+- does a leader receiving a Western education make alliances with the US more likely? 
+- does a leader having lots of students studying abroad in the US make US alliances more likely? 
+- does a country experiencing a democratic transition increase the likelihood a leader studies in the West? or that more of their students study in the West?
 
 
 
 ### Crime and authoritarianism
 
 
-Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs?
+Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs? Do they become more conservative, or liberal? Do they become more supportive of harsh policies? Or do they become more involved in their communities, and seek change? 
 
 
 This dataset comes from [LAPOP](https://www.vanderbilt.edu/lapop/), and the [codebook](https://www.vanderbilt.edu/lapop/ab2018/AB2018-V12.0-Eng_190131_W.pdf). The data is a survey of people living across a dozen countries in Latin America, their experiences with crime, and their attitudes towards democracy, how the state should respond to crime, and so on. 
@@ -162,7 +165,11 @@ tribble(~variable, ~meaning,
         "income", "Income", 
         "victim", "Victim of a crime in last 12 months", 
         "coup_support", "Agrees that a military coup is justified if crime is high", 
-        "neighbor_crime", "Murders have taken place in neighborhood") %>% 
+        "neighbor_crime", "Murders have taken place in neighborhood", 
+        "np1", "Did respondent attend community meeting?", 
+        "protested", "Did respondent participate in a protest?",
+        "solve_problems", "How often respondent helps solve local problem (1, Once a week, 2 = Once or twice a month, 3 = Once or twice a year, 4 = Never)",
+        "l1", "Ideology (1 = far left, 10 = far right)") %>% 
   kable() %>% 
     column_spec(2, width = "20em")
 ```
@@ -170,15 +177,17 @@ tribble(~variable, ~meaning,
 
 Ideas: 
 
-- does being a victim of a crime increase support for military coups? 
-- does being a victim of a crime increase support for vigilante justice? 
+- does being a victim of a crime increase support for military coups or vigilante justice? 
 - can education reduce support for military coups? 
+- does being a victim of crime make someone more ideologically conservative? 
+- do victims of crime become more involved in their communities, or engage in protest? 
+- does the experience of participating in a protest make someone become more liberal or conservative? 
 
 
 ### Judicial appointments and public opinion in the US
 
 
-The appointment and confirmation of judges to the Supreme Court is an increasingly important and politicized process in the current climate of high polarization. Do politicians, in voting to confirm a Supreme Court nominee, respond to public pressure? Or do they act more autonomously? 
+The appointment and confirmation of judges to the Supreme Court is an increasingly important and politicized process. Do politicians, in voting to confirm a Supreme Court nominee, respond to public pressure? Or do they act more autonomously? 
 
 This dataset comes from a [JOP article by Kastellec, Lax, and Phillips](https://www.journals.uchicago.edu/doi/abs/10.1017/S0022381610000150?casa_token=lcXn5k2nWHYAAAAA:xDh4ZxsRNVtKuGGe-hZN1HZjfh2D7jbctAsK3qSAfwgl57wmVjA_tOA5xEoz3ehUWgq-Mln2). The dataset contains estimates of public support for the confirmation of 10 recent Supreme Court nominees, how Senators voted during the confirmation process, and other factors, in all 50 states. 
 

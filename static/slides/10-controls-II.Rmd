@@ -114,7 +114,6 @@ class: center, middle, inverse
 * for a long time there was a tendency to estimate **garbage can models**
 * throw every variable under the sun into regression model, hope for the best
 * in some cases, no pre-meditated *treatment* variable
-* why? fear of forks/confounds! and other norms
 ]
 
 .pull-right[
@@ -130,10 +129,10 @@ knitr::include_graphics("images/garbage-models.png")
   
   
 .pull-left[
-Some studies don't even adjust for confounders
+Some studies don't even control for confounds
 
 
-From the dog ownership improves health article from the homework: 
+From the dog ownership improves health article in the homework: 
       
 ["*A possible limitation was that the analyses were not adjusted for confounders.*"](https://www.ahajournals.org/doi/10.1161/CIRCOUTCOMES.119.005554)
 
@@ -154,6 +153,7 @@ knitr::include_graphics("images/morty.jpeg")
 
 .pull-left[
 * More recently: a greater emphasis on worrying about **causality**
+* Recognition that confounds are lurking everywhere, and we should worry about them
 * Recognition that **pipes** and **colliders** means we *shouldn't* just throw every variable into a model
 ]
 
@@ -170,14 +170,14 @@ knitr::include_graphics("images/causality.png")
 
 --
 
-If we can correctly specify our model (i.e., control for all backdoors, leave front-doors open) we will identify the effect of X on Y
+.large[**IF**] we can correctly specify our model (i.e., control for all backdoors, leave front-doors open) we will identify the effect of X on Y
 
 --
 
 Easier said than done! Often there is some confound (like W) that we **know exists but can't measure**, or worse, **don't know exists at all**
 
 
-```{r, out.width="80%", fig.align='center'}
+```{r, out.width="70%", fig.align='center'}
 dagify(Y ~ X + W + Z + G, 
        X ~ W + G, 
        Z ~ G,
@@ -194,16 +194,23 @@ dagify(Y ~ X + W + Z + G,
 # The causal revolution
 
 
-Hard to specify the DAG and measure all the variables; what can we do? 
+Hard to correctly specify the DAG and measure all the variables; what can we do?
 
-Ideal: an experiment; but rarely feasible
+--
 
-Alternative: find moments, situations, or weird, freak ocurrences where some group (e.g., people, cities, counties) were exposed to some **treatment** while another, otherwise similar group, was not
+Ideal - an experiment, where *treatment is randomly assigned*; but this is rarely feasible
 
-Crucial: the reason one group got the **treatment**, and other didn't, is purely by *chance* (just like with an experiment)
+--
+
+Alternative - find moments, situations, or weird, freak occurrences where some group were exposed to some **treatment** while another group was not
 
 
-These weird moments where  are called **natural experiments**
+the reason one group got the **treatment**, and other didn't, is purely by *chance* (just like with an experiment)
+
+
+--
+
+These weird moments in history are called **natural experiments**
 
 
 ---
@@ -227,9 +234,6 @@ knitr::include_graphics("images/angrist-nobel.jpeg")
 ```
 ]
 
-
-
-
 ---
 
 
@@ -250,7 +254,7 @@ class: center, middle, inverse
 
 
 .pull-right[
-```{r}
+```{r,out.width="80%"}
 knitr::include_graphics("images/gifted-kid2.jpeg")
 ```
 
@@ -264,6 +268,9 @@ What does it mean to cause here?
   
 
 # The (fake) data
+
+
+Go out and collect data on people who were and were not in gifted:
 
 
 ```{r}
@@ -306,6 +313,8 @@ ggplot(fake_students, aes(x= gifted, y = earnings,
   
 ```
 
+???
+Does this mean gifted caused this, or even some of it?
 
 ---
 
@@ -332,12 +341,21 @@ dagify(earnings ~ gifted + family + location + ability + unknown,
 
 # The solution
 
-
+.pull-left[
 To get into gifted you typically need a certain score on an aptitude/IQ test
 
-Imagine that the **cutoff** score is 75 out of 100; above you're in gifted, below you are not
+Imagine that the **cutoff** score is 75/100; above you're in gifted, below you are not
 
 How was that cutoff chosen?
+
+]
+
+.pull-right[
+```{r, out.width="70%",fig.align='center'}
+knitr::include_graphics("images/phrenology.jpeg")
+```
+
+]
 
 
 ---
@@ -349,13 +367,19 @@ How was that cutoff chosen?
 
 The precise **cutoff** is completely arbitrary; could have been 74.5, or 76, or 80, or whatever
 
+--
+
 The *arbitrary* nature of the cutoff creates a **natural experiment**
 
+--
 
-A student got a 76 and a student who got a 34 are probably very different; if one makes more money than the other today, is that because of gifted? or other factors (.shout[ability]?)
+A student who a 76 and a student who got a 34 are probably very different; if one makes more money than the other today, is that because of gifted? or other factors (.shout[ability]?)
+
+--
 
 But a student who got a 76 and one who got a 74 are probably interchangeable, especially since tests are *noisy*
 
+--
 
 Few points difference might be function of: random error, luck, whatever
 
@@ -368,11 +392,13 @@ Few points difference might be function of: random error, luck, whatever
 
 If we look *only* at students who scored close to the 75 cutoff we have the makings of a **natural experiment**
 
+--
 
 Around cutoff, essentially random whether you get treatment (gifted program) or not
 
+--
 
-We call these “natural experiments”: situations where some rule creates random assignment of treatment
+“Natural experiments”: situations where some *thing* (often a rule) creates random assignment of treatment
 
 
 ---
@@ -381,7 +407,7 @@ We call these “natural experiments”: situations where some rule creates rand
 # Looking around the cutoff
 
 
-In analysis terms, simple: look only at students who scored close to 75, let's say +/- 2:
+In analysis terms, (can be) simple: look only at students who scored close to 75, let's say +/- 2:
 
 ```{r, echo = TRUE}
 subset_students = fake_students %>% 
@@ -389,7 +415,10 @@ subset_students = fake_students %>%
 ```
 
 
-Estimate effect of gifted on full (wrong) sample, and discontinuity sample:
+--
+
+Then we estimate model on this group; let's also estimate in the full (confounded!) sample
+
 
 ```{r, echo = TRUE}
 wrong_model = lm(earnings ~ gifted, data = fake_students)
@@ -406,7 +435,7 @@ discon_model = lm(earnings ~ gifted, data = subset_students)
 
 Ouch! Looks like being in gifted actually **hurts** students in the long-run:
 
-scroll.output[
+.scroll-output[
 ```{r}
 huxreg("all students" = wrong_model, "students near cutoff" = discon_model, 
        statistics = "nobs")
@@ -418,6 +447,8 @@ huxreg("all students" = wrong_model, "students near cutoff" = discon_model,
 
 # Visualize it
 
+
+People with higher aptitude/training/ability/etc. better off today:
 
 ```{r}
 ggplot(fake_students, aes(x = test, y = earnings)) + 
@@ -497,7 +528,7 @@ ggplot(fake_students, aes(x = test, y = earnings,
 # The discontinuity
 
 
-On average, these students make **less money**
+On average, the students who *by chance* made it in make **less money**
 
 ```{r}
 ggplot(fake_students, aes(x = test, y = earnings, 
@@ -526,26 +557,39 @@ ggplot(fake_students, aes(x = test, y = earnings,
 # The payoff
 
 
-In the **naive** estimate we think gifted programs help students in the long-run
-
+.pull-left[
+In the **naive** estimate we think gifted programs help students in the long-run; 
 
 With the **discontinuity** we see the opposite: gifted hurts
 
 
-The *arbitrary* cutoff in who gets into gifted gets us unconfounded estimates for free: no need to control for anything, or worry about backdoor paths
+*Arbitrary cutoff* gets us unconfounded estimates for free: no need to worry about backdoor paths
+]
 
+.pull-right[
+```{r}
+knitr::include_graphics("images/gifted-kid.jpeg")
+```
+
+]
 
 ---
 
+class: center, middle, inverse
+# Other examples
+---
 
-# Other examples: rules
+
+# Moral hazard
 
 
-* How much moral hazard is there in insurance? E.g., if your insurance covers \$10,000 in services, will provider charge you \$10,000 even if you only need \$8,000 in services?
+* How much **moral hazard** is there in insurance? E.g., if your insurance covers 10k in services, will provider charge you $10k even if you only need 8k in services?
 
+--
 
 * Naive estimate: `lm(cost of service ~ insurance_coverage)`
 
+--
 
 * What's wrong with the naive estimate?
 
@@ -553,44 +597,158 @@ The *arbitrary* cutoff in who gets into gifted gets us unconfounded estimates fo
 ---
 
 
+```{r, out.width="60%", fig.align='center'}
+knitr::include_graphics("images/diamond-rd.png")
+```
+
+
+
+---
+
 # Baby problems
+
 
 * Insurance will cover two nights in a hospital after delivery
 
-* **discontinuity**: how long is "a night"? 
+--
 
-* Nights counted by number of *midnights* (arbitrary)
+* But how long is "**a night**"? 
+
+--
+
+* Nights counted by number of *midnights* (*arbitrary cutoff*)
+
+--
 
 * 👶 born on Monday at 11:59pm = gets Tue + Wed in hospital
 
-* 👶 born on Tuesday at 12:01am = gets Tue + Wed + Thur in hospital
+--
+
+* 👶 born on Tuesday at 12:01am = gets Tue + Wed + Thur in hospital (by chance, get extra minimum coverage)
 
 
 ---
 
 
-# Results
+# Finding
 
 
-Babies who get arbitrary
+1 in 4 babies born after midnight spend an *extra night in hospital* (💵💵💵), even when there is *no health benefit to doing so*
 
 
-# Other examples: Nobel Prize winners
+```{r, fig.align='center', out.width="70%"}
+knitr::include_graphics("images/diamond-rd-graph.png")
+```
 
+
+---
+
+
+
+# Other examples: Nobel Prize winner
+
+
+Min wage -> unemployment?
+
+.pull-left[
+```{r, out.width="80%"}
+knitr::include_graphics("images/min-wage-model.png")
+```
+]
+
+.pull-right[
+```{r, out.width="80%"}
+knitr::include_graphics("images/pa-nj-nobel.jpg")
+```
+]
+
+
+
+---
+
+
+# Big picture
+
+
+Natural experiments are "strongest" causal tool, and regression discontinuity designs are probably the most convincing approach
+
+
+--
+
+Easy to implement; less worry about confounding; the tough part? Finding one! And collecting the data
+
+--
+
+Often the result of some rule, boundary, or some other random, **arbitrary** process having a sudden impact in the world
+
+--
+
+
+Premium on: *specific* knowledge of a particular region/area/issue
+
+
+
+---
+
+
+# 🚨 Your turn: 🧠🧠🧠 🚨
+
+
+With the person to your right (or whatever):
+
+.small[
+1. Write down as many rules, demarcations, cutoffs, etc., out there in the world that you can think of. 
+
+2. Can any of these create an opportunity for a natural experiment, where *something* happens to some people/countries/places but not to others as a result of this rule/cutoff/thing? 
+
+3. What problem could that natural experiment help solve? In the gifted program case: the IQ test cutoff helps solve the problem of estimating the effect of gifted programs on future success. 
+
+4. Post a summary in the Slack and if the idea is good enough I will steal it and publish it. 
+
+]
+
+
+
+```{r}
+countdown::countdown(minutes = 15L, font_size = "2em")
+```
+
+---
+
+
+class: center, middle, inverse
+# No free lunch
+
+--
+
+Natural experiments are great but there is still reason to worry
+
+--
+
+If we find a good one, the thing we are trying to estimate might *unexpectedly* change (is this bad? depends)
+
+--
+
+People are **strategic**; if there's a rule out there that has consequences, they will do what they can to end up on the right side of it
+
+---
 
 
 # Limitations: changing estimates
 
 
-By focusing on units near cutoff, estimate changes: 
+By focusing on units near cutoff, our estimate subtly changes: 
 
-* effect of putting a child in gifted on future earnings ❌
+--
+
+* ~~effect of putting *a child* in gifted on future earnings~~
+
+--
 
 * effect of putting a child *with roughly 75 IQ* in gifted on earnings ✅
 
 
-
-```{r}
+```{r, out.width="70%"}
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
@@ -607,19 +765,30 @@ ggplot(fake_students, aes(x = test, y = earnings,
 
 ---
 
-# Limitations 
+# Limitations: "sorting around the cutoff"
 
 
-There is also a risk that if people *know* about the cutoff they will sort strategically in non-random ways (**sorting around the cutoff**)
+There is also a risk that if people *know* about the cutoff they will behave strategically in ways that **confound our estimate** 
+
+--
 
 With gifted, maybe wealthier/better-connected/etc parents have students retake test, pressure test-giver, etc.
+
+--
 
 In that case, being gifted is no longer as-if random for those close to the cutoff
 
 
+---
 
 
-```{r}
+# Sorting around the cut-off
+
+
+If parents can force almost-there kids into gifted, parents become a **backdoor path to earnings** (since your parents likely affect your earnings directly, or in other ways)
+
+
+```{r, out.width="90%"}
 dagify(earnings ~ gifted + parents, 
        gifted ~ parents, 
        exposure = "gifted", 
@@ -634,47 +803,4 @@ dagify(earnings ~ gifted + parents,
 
 
 
-# Big picture
 
-
-Natural experiments are "strongest" causal tool, and regression discontinuity designs are probably the most convincing version of natural experiments
-
-
-In many cases they are very simple to implement
-
-
-The tough part? Finding one! And collecting the data
-
-
-Often helps to have *specific* knowledge of a particular region/area/issue
-
-
----
-
-
-# 🚨 Your turn: brainstorm 🚨
-
-
-With the person to your right:
-
-
-1. Think of other arbitrary rules, demarcations, cutoffs, etc., that might create the opportunity for a natural experiment. 
-
-2. What problem could that natural experiment help solve? In the gifted program case: the IQ test cutoff helps solve the problem of estimating the effect of gifted programs on future success. 
-
-3. Post a summary in the Slack and if the idea is good enough I will steal it and publish it. 
-
-
-
-```{r}
-countdown::countdown(minutes = 15L)
-```
-
----
-
-
-# Other approaches
-
-
-* Difference-in-difference designs
-* Synthetic control approaches
