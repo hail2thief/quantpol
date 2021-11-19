@@ -24,11 +24,17 @@ library(kableExtra)
 
 # Instructions
 
-You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined there: 
+
+You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined there.  
+
+You will then do two things: 
+
+1) submit the .Rmd file on Canvas
+2) submit one powerpoint slide ***as a PDF*** that summarizes your whole project
 
 
 
-## The Data
+## Pick what you want
 
 
 ### War, gender, and social change
@@ -145,13 +151,13 @@ Ideas:
 
 
 
-### Crime and authoritarianism
+### The effects of criminal victimization
 
 
 Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs? Do they become more conservative, or liberal? Do they become more supportive of harsh policies? Or do they become more involved in their communities, and seek change? 
 
 
-This dataset comes from [LAPOP](https://www.vanderbilt.edu/lapop/), and the [codebook](https://www.vanderbilt.edu/lapop/ab2018/AB2018-V12.0-Eng_190131_W.pdf). The data is a survey of people living across a dozen countries in Latin America, their experiences with crime, and their attitudes towards democracy, how the state should respond to crime, and so on. 
+This dataset comes from [LAPOP](https://www.vanderbilt.edu/lapop/), and the [codebook](https://www.vanderbilt.edu/lapop/ab2018/AB2018-V12.0-Eng_190131_W.pdf). The data is a survey of people living across a dozen countries in Latin America, their experiences with crime, their attitudes towards democracy, how they think the state should respond to crime, and so on. 
 
 
 ```{r}
@@ -223,7 +229,7 @@ Ideas:
 
 There's a big literature on how debates over redistributive policy (e.g., welfare measures) in the United States can often become racialized -- that people support or oppose welfare policies not on the merits but rather on which groups they anticipate will benefit from such policies and their attitudes towards those groups. 
 
-This data comes from the [2019 Democracy Fund Voter Study Group](https://www.voterstudygroup.org/publication/2019-voter-survey-full-data-set). The data is a survey of Americans, and includes  information on racial prejudice, demographics, ideology, and support for welfare policies. 
+This data comes from the [2019 Democracy Fund Voter Study Group](https://www.voterstudygroup.org), [codebook here](https://www.dropbox.com/s/qr2mw5olguglpj7/dfvsg_Guide_2019_VOTER_Survey.pdf?dl=0). The data is a survey of Americans, and includes  information on racial prejudice, demographics, ideology, and support for welfare policies. 
 
 
 

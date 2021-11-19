@@ -21,12 +21,12 @@ editor_options:
 <ul>
 <li><a href="#instructions">Instructions</a>
 <ul>
-<li><a href="#the-data">The Data</a>
+<li><a href="#pick-what-you-want">Pick what you want</a>
 <ul>
 <li><a href="#war-gender-and-social-change">War, gender, and social change</a></li>
 <li><a href="#decapitation-and-counter-terrorism">Decapitation and counter-terrorism</a></li>
 <li><a href="#western-education-and-the-spread-of-democracy">Western education and the spread of democracy</a></li>
-<li><a href="#crime-and-authoritarianism">Crime and authoritarianism</a></li>
+<li><a href="#the-effects-of-criminal-victimization">The effects of criminal victimization</a></li>
 <li><a href="#judicial-appointments-and-public-opinion-in-the-us">Judicial appointments and public opinion in the US</a></li>
 <li><a href="#welfare-and-race-in-the-united-states">Welfare and race in the United States</a></li>
 <li><a href="#coca-and-conflict-in-colombia">Coca and conflict in Colombia</a></li>
@@ -37,12 +37,17 @@ editor_options:
 
 <div id="instructions" class="section level1">
 <h1>Instructions</h1>
-<p>You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined here:</p>
-<div id="the-data" class="section level2">
-<h2>The Data</h2>
+<p>You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined there.</p>
+<p>You will then do two things:</p>
+<ol style="list-style-type: decimal">
+<li>submit the .Rmd file on Canvas</li>
+<li>submit one powerpoint slide <strong><em>as a PDF</em></strong> that summarizes your whole project</li>
+</ol>
+<div id="pick-what-you-want" class="section level2">
+<h2>Pick what you want</h2>
 <div id="war-gender-and-social-change" class="section level3">
 <h3>War, gender, and social change</h3>
-<p>One of the big changes that World War II brought about in the US was bringing women into the labor force in massive numbers. Over time, involvement of women in economic and political life also changed dramatically.</p>
+<p>One of the big changes that World War II brought about in the US was the entrance of women into the labor force in massive numbers. Over this period, involvement of women in economic and political life also increased dramatically.</p>
 <p>Wars are big, destabilizing events that can dramatically transform societies. Can wars, either domestic or foreign, change gender relations within a country?</p>
 <p>This dataset comes from <a href="https://www.cambridge.org/core/journals/international-organization/article/abs/conflict-peace-and-the-evolution-of-womens-empowerment/8507AFF68DD2AB7BF637B97064C2C2AF">this IO article by Webster, Chen, and Beardsley</a> and includes information on women’s involvement in civil society and politics, war, and other related variables, using data from every country between 1900 and 2015.</p>
 <table>
@@ -142,7 +147,7 @@ Total population
 polity2
 </td>
 <td style="text-align:left;width: 20em; ">
-Democracy score, ranging from full autocracy (-10) to full democracy (10).
+Country’s democracy score in that year, from POLITY2. Ranging from full autocracy (-10) to full democracy (10).
 </td>
 </tr>
 </tbody>
@@ -152,7 +157,7 @@ Democracy score, ranging from full autocracy (-10) to full democracy (10).
 <li>effects of civil war on women’s empowerment</li>
 <li>effects of international war on women’s empowerment</li>
 <li>effects of war on fertility</li>
-<li>effect of democracy on military spending</li>
+<li>effect of democratization on military spending</li>
 </ul>
 </div>
 <div id="decapitation-and-counter-terrorism" class="section level3">
@@ -208,7 +213,7 @@ Number of allies the group has
 alliesties
 </td>
 <td style="text-align:left;width: 20em; ">
-Number of ties a group’s allies have
+Number of ties a group’s allies have (eigenvector centrality score)
 </td>
 </tr>
 <tr>
@@ -282,6 +287,7 @@ Country’s GDP per capita.
 <li>does decapitation cause organizational failure?</li>
 <li>do terrorist alliances reduce organizational failure?</li>
 <li>does religion or ethnicity make a group more likely to form alliances?</li>
+<li>does religious belief make a group more resistant to failure?</li>
 </ul>
 </div>
 <div id="western-education-and-the-spread-of-democracy" class="section level3">
@@ -345,7 +351,7 @@ Was leader educated in the West?
 noedu
 </td>
 <td style="text-align:left;width: 20em; ">
-No higher education?
+Did leader have no higher education?
 </td>
 </tr>
 <tr>
@@ -393,7 +399,7 @@ interpolated real GDP per capita /100,000
 usally
 </td>
 <td style="text-align:left;width: 20em; ">
-1 if cold war alliance with USA at any point
+did country have cold war alliance with USA at any point?
 </td>
 </tr>
 <tr>
@@ -424,15 +430,16 @@ students studying in the US (in thousands)
 </table>
 <p>Ideas:</p>
 <ul>
-<li>does a Western education spread democracy to other countries?</li>
-<li>does a Western education make alliances with the US more likely?</li>
-<li>does having lots of students studying abroad in the US make US alliances more likely?</li>
+<li>does a leader receiving a Western education spread democracy to their home countries?</li>
+<li>does a leader receiving a Western education make alliances with the US more likely?</li>
+<li>does a leader having lots of students studying abroad in the US make US alliances more likely?</li>
+<li>does a country experiencing a democratic transition increase the likelihood a leader studies in the West? or that more of their students study in the West?</li>
 </ul>
 </div>
-<div id="crime-and-authoritarianism" class="section level3">
-<h3>Crime and authoritarianism</h3>
-<p>Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs?</p>
-<p>This dataset comes from <a href="https://www.vanderbilt.edu/lapop/">LAPOP</a>, and the <a href="https://www.vanderbilt.edu/lapop/ab2018/AB2018-V12.0-Eng_190131_W.pdf">codebook</a>. The data is a survey of people living across a dozen countries in Latin America, their experiences with crime, and their attitudes towards democracy, how the state should respond to crime, and so on.</p>
+<div id="the-effects-of-criminal-victimization" class="section level3">
+<h3>The effects of criminal victimization</h3>
+<p>Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs? Do they become more conservative, or liberal? Do they become more supportive of harsh policies? Or do they become more involved in their communities, and seek change?</p>
+<p>This dataset comes from <a href="https://www.vanderbilt.edu/lapop/">LAPOP</a>, and the <a href="https://www.vanderbilt.edu/lapop/ab2018/AB2018-V12.0-Eng_190131_W.pdf">codebook</a>. The data is a survey of people living across a dozen countries in Latin America, their experiences with crime, their attitudes towards democracy, how they think the state should respond to crime, and so on.</p>
 <table>
 <thead>
 <tr>
@@ -525,18 +532,52 @@ neighbor_crime
 Murders have taken place in neighborhood
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+np1
+</td>
+<td style="text-align:left;width: 20em; ">
+Did respondent attend community meeting?
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+protested
+</td>
+<td style="text-align:left;width: 20em; ">
+Did respondent participate in a protest?
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+solve_problems
+</td>
+<td style="text-align:left;width: 20em; ">
+How often respondent helps solve local problem (1, Once a week, 2 = Once or twice a month, 3 = Once or twice a year, 4 = Never)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+l1
+</td>
+<td style="text-align:left;width: 20em; ">
+Ideology (1 = far left, 10 = far right)
+</td>
+</tr>
 </tbody>
 </table>
 <p>Ideas:</p>
 <ul>
-<li>does being a victim of a crime increase support for military coups?</li>
-<li>does being a victim of a crime increase support for vigilante justice?</li>
+<li>does being a victim of a crime increase support for military coups or vigilante justice?</li>
 <li>can education reduce support for military coups?</li>
+<li>does being a victim of crime make someone more ideologically conservative?</li>
+<li>do victims of crime become more involved in their communities, or engage in protest?</li>
+<li>does the experience of participating in a protest make someone become more liberal or conservative?</li>
 </ul>
 </div>
 <div id="judicial-appointments-and-public-opinion-in-the-us" class="section level3">
 <h3>Judicial appointments and public opinion in the US</h3>
-<p>The appointment and confirmation of judges to the Supreme Court is an increasingly important and politicized process in the current climate of high polarization. Do politicians, in voting to confirm a Supreme Court nominee, respond to public pressure? Or do they act more autonomously?</p>
+<p>The appointment and confirmation of judges to the Supreme Court is an increasingly important and politicized process. Do politicians, in voting to confirm a Supreme Court nominee, respond to public pressure? Or do they act more autonomously?</p>
 <p>This dataset comes from a <a href="https://www.journals.uchicago.edu/doi/abs/10.1017/S0022381610000150?casa_token=lcXn5k2nWHYAAAAA:xDh4ZxsRNVtKuGGe-hZN1HZjfh2D7jbctAsK3qSAfwgl57wmVjA_tOA5xEoz3ehUWgq-Mln2">JOP article by Kastellec, Lax, and Phillips</a>. The dataset contains estimates of public support for the confirmation of 10 recent Supreme Court nominees, how Senators voted during the confirmation process, and other factors, in all 50 states.</p>
 <table>
 <thead>
@@ -666,7 +707,7 @@ if the senator faces reelection within two years of the vote
 <div id="welfare-and-race-in-the-united-states" class="section level3">
 <h3>Welfare and race in the United States</h3>
 <p>There’s a big literature on how debates over redistributive policy (e.g., welfare measures) in the United States can often become racialized – that people support or oppose welfare policies not on the merits but rather on which groups they anticipate will benefit from such policies and their attitudes towards those groups.</p>
-<p>This data comes from the <a href="https://www.voterstudygroup.org/publication/2019-voter-survey-full-data-set">2019 Democracy Fund Voter Study Group</a>. The data is a survey of Americans, and includes information on racial prejudice, demographics, ideology, and support for welfare policies.</p>
+<p>This data comes from the <a href="https://www.voterstudygroup.org">2019 Democracy Fund Voter Study Group</a>, <a href="https://www.dropbox.com/s/qr2mw5olguglpj7/dfvsg_Guide_2019_VOTER_Survey.pdf?dl=0">codebook here</a>. The data is a survey of Americans, and includes information on racial prejudice, demographics, ideology, and support for welfare policies.</p>
 <table>
 <thead>
 <tr>
