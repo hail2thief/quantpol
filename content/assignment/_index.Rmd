@@ -36,17 +36,15 @@ I'll accept problem sets late one day (but you will lose a full letter-grade). B
 ## Final project
 
 
-The final project for this class will be an **original** analysis of data that you care about. The project **must** incorporate: 
+See here: [final project details](/assignment/final-project/)
 
-1. A significant amount of data wrangling
-2. At least one visualization of the main idea in the project
-3. A DAG outlining barriers to causal identification
-4. Other statistics, figures, or details that flesh out the project
+<!-- The final project for this class will be an **original** analysis of data that you care about. The project **must** incorporate:  -->
+
+<!-- 1. A significant amount of data wrangling -->
+<!-- 2. At least one visualization of the main idea in the project -->
+<!-- 3. A DAG outlining barriers to causal identification -->
+<!-- 4. Other statistics, figures, or details that flesh out the project -->
 
 
-The primary deliverable will be:
 
-1. a **Powerpoint slide** summarizing and visualizing the main idea in your project
-2. a short memo providing added detail to explain the project
-3. an R script to reproduce your analysis
 

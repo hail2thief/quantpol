@@ -25,19 +25,40 @@ library(kableExtra)
 # Instructions
 
 
-You will pick one of the datasets below, download the adjoining Rmarkdown template, and complete the following activities outlined there.  
-
-You will then do two things: 
-
-1) submit the .Rmd file on Canvas
-2) submit one powerpoint slide ***as a PDF*** that summarizes your whole project
+Your primary goal is this: to explore the effect of some treatment on an outcome you are interested in, using one of the datasets below. You get to decide what the treatment and outcome variable are; there is more than one "right" answer. I provide a few ideas beneath each dataset but you can do what you want.
 
 
+Browse through the different topics, think about what causal story you want to tell, and pick the topic you want. Download the adjoining Rmarkdown template, and complete the following activities outlined there. 
 
-## Pick what you want
+
+Once you are done, you will submit the completed .Rmd file on Canvas.
 
 
-### War, gender, and social change
+You can use your notes, slides, and any other material from the course, but you must work on this independently. The project is due by **December 5th at 5pm**. 
+
+
+
+
+# Evaluation
+
+
+Your project will be evaluated along two dimensions: 
+
+1) accuracy (90% of grade): did you answer the questions well? does your code work? did you interpret the results correctly? is your argument clear and persuasive? Basically: how good is your project? 
+2) professionalism (10% of grade): is it neat, organized, easy to read? is your writing grammatical, uses capitalization, punctuation, etc.? are graphs neat and well-labeled? Basically: how presentable is your project? 
+
+
+
+# Note
+
+If you need more information about the data, a specific variable, etc., look through the linked articles or codebooks. 
+
+
+
+# Dataset options
+
+
+## War, gender, and social change
 
 
 One of the big changes that World War II brought about in the US was the entrance of women into the labor force in massive numbers. Over this period, involvement of women in economic and political life also increased dramatically. 
@@ -74,8 +95,13 @@ Ideas:
 - effect of democratization on military spending 
 
 
+### The template
 
-### Decapitation and counter-terrorism
+[`Webster template`](/files/final-project-data/final-webster.Rmd)
+
+
+
+## Decapitation and counter-terrorism
 
 
 States spend lots of resources trying to capture or kill the leaders of non-state organizations such as terrorist groups, rebel groups, and criminal organizations. Does **decapitating** these orgs actually work?
@@ -111,8 +137,14 @@ Ideas:
 - does religious belief make a group more resistant to failure?
 
 
+### The template
 
-### Western education and the spread of democracy
+[`Price template`](/files/final-project-data/final-price.Rmd)
+
+
+
+
+## Western education and the spread of democracy
 
 
 Despite living in autocratic countries, dictators often either attend or send their kids to universities in democratic countries where some of the world's top universities are often located. Does the experience of living in a democratic state influence leaders once they return? Could experiences like this "spread" democracy? 
@@ -150,8 +182,14 @@ Ideas:
 - does a country experiencing a democratic transition increase the likelihood a leader studies in the West? or that more of their students study in the West?
 
 
+### The template
 
-### The effects of criminal victimization
+[`Price template`](/files/final-project-data/final-price.Rmd)
+
+
+
+
+## The effects of criminal victimization
 
 
 Many people in the world become victims of crime at some point or another in their lives. These experiences can be highly traumatic. How does criminal victimization change people and their attitudes and beliefs? Do they become more conservative, or liberal? Do they become more supportive of harsh policies? Or do they become more involved in their communities, and seek change? 
@@ -190,7 +228,14 @@ Ideas:
 - does the experience of participating in a protest make someone become more liberal or conservative? 
 
 
-### Judicial appointments and public opinion in the US
+### The template
+
+[`LAPOP template`](/files/final-project-data/final-lap-crime.Rmd)
+
+
+
+
+## Judicial appointments and public opinion in the US
 
 
 The appointment and confirmation of judges to the Supreme Court is an increasingly important and politicized process. Do politicians, in voting to confirm a Supreme Court nominee, respond to public pressure? Or do they act more autonomously? 
@@ -224,7 +269,13 @@ Ideas:
 - does a senator's ideology cause them to vote in particular ways during Senate confirmations? 
 
 
-### Welfare and race in the United States
+### The template
+
+[`Kastellec template`](/files/final-project-data/final-kastellec.Rmd)
+
+
+
+## Welfare and race in the United States
 
 
 There's a big literature on how debates over redistributive policy (e.g., welfare measures) in the United States can often become racialized -- that people support or oppose welfare policies not on the merits but rather on which groups they anticipate will benefit from such policies and their attitudes towards those groups. 
@@ -261,14 +312,20 @@ Ideas:
 - does education cause people to become more liberal or more conservative? 
 
 
+### The template
 
-### Coca and conflict in Colombia
+
+[`Prejudice template`](/files/final-project-data/final-prejudice.Rmd)
+
+
+
+## Coca and conflict in Colombia
 
 
 Colombia has one of the longest-running internal conflicts in the world, involving multiple armed groups over decades and also a thriving drug trade. Does past violence beget current violence? Does the drug trade cause conflict? 
 
 
-This data comes from [The Center for Economic Development at the University of Los Andes, in Colombia](https://economia.uniandes.edu.co/cede). 
+This data comes from [The Center for Economic Development at the University of Los Andes, in Colombia](https://economia.uniandes.edu.co/cede), codebook [here (in Spanish!)](https://www.dropbox.com/s/j5e5i9esrxui2uu/9ce_Panel_conflicto_y_violencia%28062016%29.pdf?dl=0)
 
 
 ```{r}
@@ -300,3 +357,8 @@ Ideas:
 - does the coca trade cause conflict by one group or another, or general homicides? 
 - do past conflicts, either during La Violencia, or over land, cause current conflicts? 
 - how has the experience of Spanish colonization in some parts of the country but not others influenced contemporary outcomes? 
+
+
+### The template
+
+[`Colombia template`](/files/final-project-data/final-colombia.Rmd)
