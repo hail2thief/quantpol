@@ -184,7 +184,7 @@ Ideas:
 
 ### The template
 
-[`Price template`](/files/final-project-data/final-price.Rmd)
+[`Gift template`](/files/final-project-data/final-gift.Rmd)
 
 
 
