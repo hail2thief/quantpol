@@ -6,7 +6,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 menu: 
   class:
     parent: Class
-    weight: 13
+    weight: 11
 type: docs
 output:
   blogdown::html_page:
@@ -22,6 +22,16 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 ```
 
+
+# In-class example
+
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
+
+[<i class="fas fa-file-archive"></i> `uncertainty.R`](/slides/code/uncertainty.R)
+
+
+
+# Other examples
 
 
 ```{r libraries}

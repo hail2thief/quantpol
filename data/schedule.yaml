@@ -82,8 +82,8 @@ lessons:
     
   - title: "Week 10: Uncertainty <br> (**no class Thursday: Thanksgiving**)"
     date: "Nov 23"
-    #class: "fixed-effects"
-    #reading: "fe"
+    class: "fixed-effects"
+    reading: "fe"
     
   - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
     date: "Nov 30 - Dec 2"
@@ -94,7 +94,7 @@ lessons:
   #   #date: "Apr 6, Tue"
   #   #assignment: "ps-fe"
     
-  - title: '<i class="fas fa-star"></i> **Final Project Presentations**'
-    date: "Dec 6, Wed, 8:30PM"
+  - title: '<i class="fas fa-star"></i> **Final Project Due**'
+    date: "Dec 5, Wed, 5:00PM"
     assignment: "final-project"
  

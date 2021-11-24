@@ -6,7 +6,7 @@ csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
 menu: 
   class:
     parent: Class
-    weight: 13
+    weight: 11
 type: docs
 output:
   blogdown::html_page:
@@ -19,13 +19,24 @@ editor_options:
 
 <div id="TOC">
 <ul>
+<li><a href="#in-class-example">In-class example</a></li>
+<li><a href="#other-examples">Other examples</a>
+<ul>
 <li><a href="#why-are-we-uncertain">Why are we uncertain?</a></li>
 <li><a href="#become-less-uncertain">Become less uncertain</a></li>
 <li><a href="#more-data-more-certain">More data, more certain</a></li>
 <li><a href="#good-and-bad-samples">Good and bad samples</a></li>
+</ul></li>
 </ul>
 </div>
 
+<div id="in-class-example" class="section level1">
+<h1>In-class example</h1>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as….”</p>
+<p><a href="/slides/code/uncertainty.R"><i class="fas fa-file-archive"></i> <code>uncertainty.R</code></a></p>
+</div>
+<div id="other-examples" class="section level1">
+<h1>Other examples</h1>
 <pre class="r"><code>library(tidyverse)
 library(broom)
 library(socviz)
@@ -42,7 +53,7 @@ set.seed(1990)</code></pre>
   group_by(sex) %&gt;% 
   summarise(obama = mean(obama, na.rm = TRUE))
 true_prop</code></pre>
-<pre><code>## # A tibble: 2 x 2
+<pre><code>## # A tibble: 2 × 2
 ##   sex    obama
 ##   &lt;fct&gt;  &lt;dbl&gt;
 ## 1 Male   0.576
@@ -53,7 +64,7 @@ true_prop</code></pre>
   sample_n(10) %&gt;% 
   group_by(sex) %&gt;% 
   summarise(obama = mean(obama, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 2 x 2
+<pre><code>## # A tibble: 2 × 2
 ##   sex    obama
 ##   &lt;fct&gt;  &lt;dbl&gt;
 ## 1 Male    0.25
@@ -76,7 +87,7 @@ true_prop</code></pre>
   group_by(sex, replicate) %&gt;% 
   summarise(obama = mean(obama, na.rm = TRUE)) %&gt;% 
   arrange(replicate)</code></pre>
-<pre><code>## # A tibble: 19 x 3
+<pre><code>## # A tibble: 19 × 3
 ## # Groups:   sex [2]
 ##    sex    replicate   obama
 ##    &lt;fct&gt;      &lt;int&gt;   &lt;dbl&gt;
@@ -214,6 +225,7 @@ rbind(low_certain, hi_certain) %&gt;%
 <p>Notice how the distribution of sample estimates are no longer centered around the true population parameter (the black lines). They are centered elsewhere. Increasing the sample size will continue to make the distribution taller and skinnier, but it will not be centered around the black lines.</p>
 <p>This is because our sample is <em>biased</em>. In the population, there are people of all sorts of ages. But in our sample, it’s only older people. A bigger sample will not solve this problem.</p>
 <p>Why would our sample not have young people in it, even though the population does? These <em>sampling biases</em> happens in the real world all the time. Maybe younger people are less willing to answer polls, or to take surveys, or to have landlines, etc., that means they are “missing” at higher rates from samples.</p>
+</div>
 </div>
 <div class="footnotes">
 <hr />
