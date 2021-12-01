@@ -41,6 +41,41 @@ therm_2017 = df_2017 %>%
   drop_na(sex, race, party_id, educ_2017)
 
 
+
+
+# the issues --------------------------------------------------------------
+
+
+keep = c("immi_naturalize_2016", "gaymar_2016", "deathpen_2016", 
+         "univhealthcov_2016", "envwarm_2016", "taxdoug_2016", 
+         "amshamed_2016", "gunown_2016")
+
+issues = df %>% 
+  select(state = state_2018, birth_year = birthyr_baseline, sex = gender_baseline, 
+         all_of(keep)) %>% 
+  mutate(across(.cols = c(immi_naturalize_2016:univhealthcov_2016),
+                .fns = ~ case_when(. == 1 ~ 1, 
+                                   . == 2 ~ 0, 
+                                   TRUE ~ NA_real_)), 
+         sex = as_factor(sex), 
+         state = as_factor(state), 
+         gunown_2016 = case_when(gunown_2016 %in% c(1, 2) ~ 1, 
+                                 gunown_2016 == 3 ~ 0, 
+                                 TRUE ~ NA_real_), 
+         amshamed_2016 = ifelse(amshamed_2016 > 4, NA, amshamed_2016)) %>% 
+  drop_na(state)
+
+
+# write out
+write_csv(issues, "../files/voter-files-issues.csv")
+
+
+
+
+
+
+
+
 # save for class
 write_csv(therm_2017, "../files/voter-files-therm.csv")
 

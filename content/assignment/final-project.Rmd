@@ -255,7 +255,7 @@ tribble(~variable, ~meaning,
         "vote", "if the senator voted to confirm the nominee", 
         "pres.dem", "if the nominating president was a Democrat", 
         "sameprty", "if the senator is the same party as the president", 
-        "nom_ideology", "Nominee's ideology, on a -1 (liberal) to +1 (conservative) scale", 
+        "nom_ideology", "Nominee's ideology, on a 0 (conservative) to 1 (liberal) scale", 
         "opinion", "nominee's approval rating (out of 100%) in the senator's state at the time of the vote", 
         "reelection", "if the senator faces reelection within two years of the vote") %>% kable() %>% 
     column_spec(2, width = "20em")

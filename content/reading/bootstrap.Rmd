@@ -16,10 +16,24 @@ editor_options:
 ---
 
 
-## Required
+## Optional
 
-- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> Chapter 7 from [ModernDive](https://moderndive.com/7-sampling.html)
+- <i class="fa fa-external-link-square-alt" aria-hidden="true"></i> [Chapter 7 in ModernDive](https://moderndive.com/7-sampling.html)
 
 - <i class="fas fa-book"></i> [Ch.8 in *ModernDive*](https://moderndive.com/8-confidence-intervals.html)
 
+
+## Slides
+
+### Tuesday
+
+[Class slides here](/slides/12-bootstrap.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/12-bootstrap.html",
+   ratio = "16:9"
+)
+```
 

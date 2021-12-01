@@ -87,12 +87,8 @@ lessons:
     
   - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Online lectures**'
     date: "Nov 30 - Dec 2"
-    #class: "rdd"
-    #reading: "reg-discon"
-  #   
-  # - title: '<i class="fas fa-star"></i> **Assignment 8**'
-  #   #date: "Apr 6, Tue"
-  #   #assignment: "ps-fe"
+    class: "bootstrap"
+    reading: "bootstrap"
     
   - title: '<i class="fas fa-star"></i> **Final Project Due**'
     date: "Dec 5, 5:00PM"

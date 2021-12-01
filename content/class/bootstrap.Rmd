@@ -24,467 +24,470 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 
 
-```{r libraries}
-library(tidyverse)
-library(broom)
-library(socviz)
-library(infer)
-```
+# In-class example
 
+Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
+[<i class="fas fa-file-archive"></i> `bootstraps.R`](/slides/code/bootstraps.R)
 
-## Bootstrapping concepts
 
 
-Remember, our estimate is based on a sample from some population, and each sample is going to give us a different estimate. This means our estimates will **vary** from sample to sample. How can we quantify this **variability**?
 
+<!-- ## Bootstrapping concepts -->
 
-One approach is via **bootstrapping**, where we: 
 
-1. Simulate many new datasets out of our original dataset
-2. Estimate the thing we want to estimate in each of those *bootstrapped* samples
-3. Look at the distribution of estimates across bootstrap samples
+<!-- Remember, our estimate is based on a sample from some population, and each sample is going to give us a different estimate. This means our estimates will **vary** from sample to sample. How can we quantify this **variability**? -->
 
 
-That distribution of bootstrapped estimates gives us a sense for how much an estimate might vary from sample to sample. 
+<!-- One approach is via **bootstrapping**, where we:  -->
 
+<!-- 1. Simulate many new datasets out of our original dataset -->
+<!-- 2. Estimate the thing we want to estimate in each of those *bootstrapped* samples -->
+<!-- 3. Look at the distribution of estimates across bootstrap samples -->
 
-### Bootstrapping averages
 
-Let's do this with the `infer` package, to estimate the number of kids the average American has. 
+<!-- That distribution of bootstrapped estimates gives us a sense for how much an estimate might vary from sample to sample.  -->
 
 
-```{r}
-gss_sm %>% 
-  # specify the outcome variable
-  specify(response = childs) %>% 
-  # generate the bootstrapped samples
-  generate(reps = 1000, type = "bootstrap")
-```
 
+<!-- ## Using the `infer` package -->
 
-Notice how each of the 1,000 bootstrapped samples has the same number of observations as the original dataset. 
+<!-- ### Bootstrapping averages -->
 
+<!-- Let's do this with the `infer` package, to estimate the number of kids the average American has.  -->
 
-The above is equivalent to doing this 1,000 times:
 
-```{r}
-gss_sm %>% 
-  # subset down to just kids
-  select(childs) %>% 
-  # sample with replacement, same size as original dataset
-  sample_n(nrow(gss_sm), replace = TRUE)
-```
+<!-- ```{r} -->
+<!-- gss_sm %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") -->
+<!-- ``` -->
 
 
+<!-- Notice how each of the 1,000 bootstrapped samples has the same number of observations as the original dataset.  -->
 
-We can then calculate the average number of kids in each of those 1,000 bootstraps: 
 
+<!-- The above is equivalent to doing this 1,000 times: -->
 
-```{r}
-boot_kids = gss_sm %>% 
-  # specify the outcome variable
-  specify(response = childs) %>% 
-  # generate the bootstrapped samples
-  generate(reps = 1000, type = "bootstrap") %>% 
-  # find the average # of kids in each bootstrap sample
-  calculate(stat = "mean")
+<!-- ```{r} -->
+<!-- gss_sm %>%  -->
+<!--   # subset down to just kids -->
+<!--   select(childs) %>%  -->
+<!--   # sample with replacement, same size as original dataset -->
+<!--   sample_n(nrow(gss_sm), replace = TRUE) -->
+<!-- ``` -->
 
-boot_kids
-```
 
 
-`stat` is the average number of kids in each bootstrap (`replicate`). 
+<!-- We can then calculate the average number of kids in each of those 1,000 bootstraps:  -->
 
 
-We can look at the distribution to get a sense for the variability in the estimates: 
+<!-- ```{r} -->
+<!-- boot_kids = gss_sm %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") -->
 
+<!-- boot_kids -->
+<!-- ``` -->
 
-```{r}
-ggplot(boot_kids, aes(x = stat)) + 
-  geom_density(color = "white", fill = "coral", alpha = .7) + 
-  theme_bw() + 
-  labs(title = "Average number of kids across bootstraps", 
-       x = NULL, y = NULL) + 
-  scale_x_continuous(limits = c(1, 3))
-```
 
+<!-- `stat` is the average number of kids in each bootstrap (`replicate`).  -->
 
-Notice how almost all bootstrapped estimates of the average number of kids are between 1.75 and 2, and the vast majority are in a narrower range than that. 
 
+<!-- We can look at the distribution to get a sense for the variability in the estimates:  -->
 
-We can also **quantify** this variation by taking the standard deviation of `stat`:
 
-```{r}
-boot_kids %>% 
-  summarise(se = sd(stat))
-```
+<!-- ```{r} -->
+<!-- ggplot(boot_kids, aes(x = stat)) +  -->
+<!--   geom_density(color = "white", fill = "coral", alpha = .7) +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Average number of kids across bootstraps",  -->
+<!--        x = NULL, y = NULL) +  -->
+<!--   scale_x_continuous(limits = c(1, 3)) -->
+<!-- ``` -->
 
-This is also known as the **standard error**. 
 
+<!-- Notice how almost all bootstrapped estimates of the average number of kids are between 1.75 and 2, and the vast majority are in a narrower range than that.  -->
 
 
-#### Variability gets bigger as sample size gets smaller
+<!-- We can also **quantify** this variation by taking the standard deviation of `stat`: -->
 
+<!-- ```{r} -->
+<!-- boot_kids %>%  -->
+<!--   summarise(se = sd(stat)) -->
+<!-- ``` -->
 
-The process above gives us a sense of the variability in our estimate of the average number of kids in the US, based on our survey of $\approx$ 2,800 people. What if we had a much smaller survey? Say 100 people? 
+<!-- This is also known as the **standard error**.  -->
 
-We can mimic that below by taking 100 random people from `gss_sm` and pretending that's our full survey:
 
 
-```{r}
-boot_kids = gss_sm %>% 
-  # smaller survey of only 100 people
-  sample_n(100) %>% 
-  # specify the outcome variable
-  specify(response = childs) %>% 
-  # generate the bootstrapped samples
-  generate(reps = 1000, type = "bootstrap") %>% 
-  # find the average # of kids in each bootstrap sample
-  calculate(stat = "mean")
-```
+<!-- #### Variability gets bigger as sample size gets smaller -->
 
 
-Notice how much wider this distribution is than the one above. The variability in our bootstrapped estimates is much higher!
+<!-- The process above gives us a sense of the variability in our estimate of the average number of kids in the US, based on our survey of $\approx$ 2,800 people. What if we had a much smaller survey? Say 100 people?  -->
 
-```{r}
-ggplot(boot_kids, aes(x = stat)) + 
-  geom_density(color = "white", fill = "coral", alpha = .7) + 
-  theme_bw() + 
-  labs(title = "Average number of kids across bootstraps", 
-       x = NULL, y = NULL) + 
-  scale_x_continuous(limits = c(1, 3))
-```
+<!-- We can mimic that below by taking 100 random people from `gss_sm` and pretending that's our full survey: -->
 
 
-You can quantify this too; notice how much bigger the standard error is of this much smaller survey: 
+<!-- ```{r} -->
+<!-- boot_kids = gss_sm %>%  -->
+<!--   # smaller survey of only 100 people -->
+<!--   sample_n(100) %>%  -->
+<!--   # specify the outcome variable -->
+<!--   specify(response = childs) %>%  -->
+<!--   # generate the bootstrapped samples -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # find the average # of kids in each bootstrap sample -->
+<!--   calculate(stat = "mean") -->
+<!-- ``` -->
 
 
-```{r}
-boot_kids %>% 
-  summarise(se = sd(stat))
-```
+<!-- Notice how much wider this distribution is than the one above. The variability in our bootstrapped estimates is much higher! -->
 
+<!-- ```{r} -->
+<!-- ggplot(boot_kids, aes(x = stat)) +  -->
+<!--   geom_density(color = "white", fill = "coral", alpha = .7) +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Average number of kids across bootstraps",  -->
+<!--        x = NULL, y = NULL) +  -->
+<!--   scale_x_continuous(limits = c(1, 3)) -->
+<!-- ``` -->
 
 
+<!-- You can quantify this too; notice how much bigger the standard error is of this much smaller survey:  -->
 
-### Bootstrapping regression coefficients
 
+<!-- ```{r} -->
+<!-- boot_kids %>%  -->
+<!--   summarise(se = sd(stat)) -->
+<!-- ``` -->
 
-We can use bootstrapping to approximate the variability in lots of things we might want to estimaet, including coefficients from regression. 
 
 
-Say we wanted to look at the effect of age on whether or not someone has children:
 
-```{r}
-lm(childs ~ age, data = gss_sm) %>% 
-  tidy()
-```
+<!-- ### Bootstrapping regression coefficients -->
 
 
-Remember this estimate comes from a *sample*. Other samples will give us different estimates. We can get a sense for how much coefficients will vary across samples with bootstrapping: 
+<!-- We can use bootstrapping to approximate the variability in lots of things we might want to estimaet, including coefficients from regression.  -->
 
-```{r}
-boot_age = gss_sm %>% 
-  # specify is now Y ~ X
-  specify(childs ~ age) %>% 
-  generate(reps = 1000, type = "bootstrap") %>% 
-  # "slope" is another word for coefficient
-  calculate(stat = "slope")
-```
 
+<!-- Say we wanted to look at the effect of age on whether or not someone has children: -->
 
-Notice how the code looks a bit different: we put `childs ~ age` in `specify()` and we gotta tell R to calculate the "slope", or coefficient, from `lm(childs ~ age)`. 
+<!-- ```{r} -->
+<!-- lm(childs ~ age, data = gss_sm) %>%  -->
+<!--   tidy() -->
+<!-- ``` -->
 
 
-We can plot:
+<!-- Remember this estimate comes from a *sample*. Other samples will give us different estimates. We can get a sense for how much coefficients will vary across samples with bootstrapping:  -->
 
-```{r}
-ggplot(boot_age, aes(x = stat)) + 
-  geom_density(color = "white", fill = "coral", alpha = .7) + 
-  theme_bw() + 
-  labs(title = "Estimate of relationship between age and number of kids",
-       subtitle = "Coefficient estimates across bootstrapped samples.",
-       x = NULL, y = NULL)
-```
+<!-- ```{r} -->
+<!-- boot_age = gss_sm %>%  -->
+<!--   # specify is now Y ~ X -->
+<!--   specify(childs ~ age) %>%  -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   # "slope" is another word for coefficient -->
+<!--   calculate(stat = "slope") -->
+<!-- ``` -->
 
 
-Notice how coefficient estimates vary a lot, from .03 to almost .04. 
+<!-- Notice how the code looks a bit different: we put `childs ~ age` in `specify()` and we gotta tell R to calculate the "slope", or coefficient, from `lm(childs ~ age)`.  -->
 
 
+<!-- We can plot: -->
 
-## Standard errors and confidence intervals
+<!-- ```{r} -->
+<!-- ggplot(boot_age, aes(x = stat)) +  -->
+<!--   geom_density(color = "white", fill = "coral", alpha = .7) +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Estimate of relationship between age and number of kids", -->
+<!--        subtitle = "Coefficient estimates across bootstrapped samples.", -->
+<!--        x = NULL, y = NULL) -->
+<!-- ``` -->
 
 
-The distributions we get from bootstrapping give us a sense for the **variability** in our sample estimates. We can quantify that variability in two ways: 
+<!-- Notice how coefficient estimates vary a lot, from .03 to almost .04.  -->
 
 
-One is through the standard error (the standard deviation of the bootstrapped sample estimates):
 
-```{r}
-boot_age %>% 
-  summarise(se = sd(stat))
-```
+<!-- ## Standard errors and confidence intervals -->
 
 
-The other is the confidence interval, which provides our "best guess" of the thing we are trying to estimate: 
+<!-- The distributions we get from bootstrapping give us a sense for the **variability** in our sample estimates. We can quantify that variability in two ways:  -->
 
 
-```{r}
-boot_age %>% get_confidence_interval(level = .95)
-```
+<!-- One is through the standard error (the standard deviation of the bootstrapped sample estimates): -->
 
+<!-- ```{r} -->
+<!-- boot_age %>%  -->
+<!--   summarise(se = sd(stat)) -->
+<!-- ``` -->
 
-The standard is 95%: so the two numbers give us the upper and lower bound of the middle 95% of the bootstrapped distribution. 
 
+<!-- The other is the confidence interval, which provides our "best guess" of the thing we are trying to estimate:  -->
 
-Notice that as the confidence increases, the bounds get larger: 
 
-```{r}
-boot_age %>% get_confidence_interval(level = .99)
-```
+<!-- ```{r} -->
+<!-- boot_age %>% get_confidence_interval(level = .95) -->
+<!-- ``` -->
 
-As the confidence decreases, the bounds get smaller: 
 
-```{r}
-boot_age %>% get_confidence_interval(level = .5)
-```
+<!-- The standard is 95%: so the two numbers give us the upper and lower bound of the middle 95% of the bootstrapped distribution.  -->
 
 
+<!-- Notice that as the confidence increases, the bounds get larger:  -->
 
+<!-- ```{r} -->
+<!-- boot_age %>% get_confidence_interval(level = .99) -->
+<!-- ``` -->
 
-## Hypothesis testing
+<!-- As the confidence decreases, the bounds get smaller:  -->
 
+<!-- ```{r} -->
+<!-- boot_age %>% get_confidence_interval(level = .5) -->
+<!-- ``` -->
 
-Remember, hypothesis testing is about how we decide between two competing hypotheses -- or theories about the relationship between two variables -- using data. 
 
 
-Take the example from class, on whether [bicep size predicts conservative ideology](https://www.theatlantic.com/health/archive/2013/05/study-mens-biceps-predict-their-political-ideologies/275942/). The two competing hypotheses are:
 
-1. Null hypothesis: there is no relationship between biceps and conservative ideology
-2. Alternative hypothesis: there is a positive relationship between biceps and conservative ideology
+<!-- ## Hypothesis testing -->
 
-We make up fake data below: 
 
-```{r}
-set.seed(23424)
-# fake bicep data
-fake = tibble(person = 1:100, 
-              bicep = rnorm(100), 
-              conservative = runif(100)*100 + 2*bicep)
+<!-- Remember, hypothesis testing is about how we decide between two competing hypotheses -- or theories about the relationship between two variables -- using data.  -->
 
-```
 
+<!-- Take the example from class, on whether [bicep size predicts conservative ideology](https://www.theatlantic.com/health/archive/2013/05/study-mens-biceps-predict-their-political-ideologies/275942/). The two competing hypotheses are: -->
 
-We estimate the relationship between bicep and ideology: 
+<!-- 1. Null hypothesis: there is no relationship between biceps and conservative ideology -->
+<!-- 2. Alternative hypothesis: there is a positive relationship between biceps and conservative ideology -->
 
-```{r}
-# what is the effect?
-lm(conservative ~ bicep, data = fake) %>% summary()
-```
+<!-- We make up fake data below:  -->
 
+<!-- ```{r} -->
+<!-- set.seed(23424) -->
+<!-- # fake bicep data -->
+<!-- fake = tibble(person = 1:100,  -->
+<!--               bicep = rnorm(100),  -->
+<!--               conservative = runif(100)*100 + 2*bicep) -->
 
-Remember, this estimate is based on one sample. How much might estimates vary? We can use bootstrapping to get a sense: 
+<!-- ``` -->
 
 
-```{r}
-boot_bicep = fake %>% 
-  specify(conservative ~ bicep) %>% 
-  generate(reps = 1000, type = "bootstrap") %>% 
-  calculate(stat = "slope")
+<!-- We estimate the relationship between bicep and ideology:  -->
 
+<!-- ```{r} -->
+<!-- # what is the effect? -->
+<!-- lm(conservative ~ bicep, data = fake) %>% summary() -->
+<!-- ``` -->
 
-ggplot(boot_bicep, aes(x = stat)) + 
-  geom_density(color = "white", fill = "coral", alpha = .7) + 
-  theme_bw() + 
-  labs(title = "Estimate of relationship between bicep size and ideology score",
-       subtitle = "Coefficient estimates across bootstrapped samples.",
-       x = NULL, y = NULL)
 
-```
+<!-- Remember, this estimate is based on one sample. How much might estimates vary? We can use bootstrapping to get a sense:  -->
 
 
-Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative. 
+<!-- ```{r} -->
+<!-- boot_bicep = fake %>%  -->
+<!--   specify(conservative ~ bicep) %>%  -->
+<!--   generate(reps = 1000, type = "bootstrap") %>%  -->
+<!--   calculate(stat = "slope") -->
 
 
-How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology? 
+<!-- ggplot(boot_bicep, aes(x = stat)) +  -->
+<!--   geom_density(color = "white", fill = "coral", alpha = .7) +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Estimate of relationship between bicep size and ideology score", -->
+<!--        subtitle = "Coefficient estimates across bootstrapped samples.", -->
+<!--        x = NULL, y = NULL) -->
 
+<!-- ``` -->
 
 
-### Hypothesis testing: permutation
+<!-- Notice how much the coefficient can vary: in some cases as large as 10 or more, in others 0, and in some cases even negative.  -->
 
 
-One way to decide is to simulate what the world might look like under the null hypothesis -- a world where biceps don't affect ideology. 
+<!-- How do we decide, based on this distribution, whether there is in fact that a stable relationship between biceps and ideology?  -->
 
 
-We can do this by randomly "shuffling" or *permuting* the values in our bicep variable. Why? This mimics the idea that if bicep size and ideology are unrelated, you could completely alter one variable without affecting the other. So we:
 
+<!-- ### Hypothesis testing: permutation -->
 
-1. "shuffle" or permute the bicep variable
-2. estimate `lm(conservative ~ bicep)`, store coefficient on bicep
-3. repeat N times
 
+<!-- One way to decide is to simulate what the world might look like under the null hypothesis -- a world where biceps don't affect ideology.  -->
 
 
-```{r}
-# permutation based hypothesis testing
-null_biceps = fake %>% 
-  # specify is now Y ~ X
-  specify(conservative ~ bicep) %>% 
-  # define null hypothesis: "independence"
-  hypothesize(null = "independence") %>% 
-  # now we do "permute" instead of bootstrap
-  generate(reps = 1000, type = "permute") %>% 
-  # "slope" is another word for coefficient
-  calculate(stat = "slope")
+<!-- We can do this by randomly "shuffling" or *permuting* the values in our bicep variable. Why? This mimics the idea that if bicep size and ideology are unrelated, you could completely alter one variable without affecting the other. So we: -->
 
-null_biceps
-```
 
+<!-- 1. "shuffle" or permute the bicep variable -->
+<!-- 2. estimate `lm(conservative ~ bicep)`, store coefficient on bicep -->
+<!-- 3. repeat N times -->
 
-Each row here is the estimated coefficient of bicep from a permuted sample -- a sample where the values of bicep have been shuffled. Look at the distribution:
 
 
-```{r}
-ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white", 
-                                                     fill = "coral") + 
-  theme_bw() + 
-  labs(title = "The Simulated Null Distribution", 
-       subtitle = "What we would observe in a world where biceps and ideology are unrelated.", 
-       x = "Permuted coefficient estimates from lm(affairs ~ children)", 
-       y = NULL)
-```
+<!-- ```{r} -->
+<!-- # permutation based hypothesis testing -->
+<!-- null_biceps = fake %>%  -->
+<!--   # specify is now Y ~ X -->
+<!--   specify(conservative ~ bicep) %>%  -->
+<!--   # define null hypothesis: "independence" -->
+<!--   hypothesize(null = "independence") %>%  -->
+<!--   # now we do "permute" instead of bootstrap -->
+<!--   generate(reps = 1000, type = "permute") %>%  -->
+<!--   # "slope" is another word for coefficient -->
+<!--   calculate(stat = "slope") -->
 
+<!-- null_biceps -->
+<!-- ``` -->
 
-This is our simulation of what we might observe under the *null hypothesis* -- that there is no relationship between biceps and ideology. Two key takeaways here: 
 
-1. As we would expect, most of our simulated coefficient estimates are close to zero. This makes sense! The null hypothesis is precisely that there is no relationship between the two (e.g., that the coefficient is not greater than zero!). 
+<!-- Each row here is the estimated coefficient of bicep from a permuted sample -- a sample where the values of bicep have been shuffled. Look at the distribution: -->
 
-2. Even in a world where the null is true, you can still get pretty large coefficient estimates by chance, even as large as -10 and +10.  
 
-Point (2) is really important: totally by chance, two variables that are unrelated can still have strong positive or negative correlations. It is *unlikely that this happens, but it's still possible*. 
+<!-- ```{r} -->
+<!-- ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white",  -->
+<!--                                                      fill = "coral") +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "The Simulated Null Distribution",  -->
+<!--        subtitle = "What we would observe in a world where biceps and ideology are unrelated.",  -->
+<!--        x = "Permuted coefficient estimates from lm(affairs ~ children)",  -->
+<!--        y = NULL) -->
+<!-- ``` -->
 
 
-With a simulation of what the world would like under the null hypothesis, we can turn back to our original estimate: 
+<!-- This is our simulation of what we might observe under the *null hypothesis* -- that there is no relationship between biceps and ideology. Two key takeaways here:  -->
 
+<!-- 1. As we would expect, most of our simulated coefficient estimates are close to zero. This makes sense! The null hypothesis is precisely that there is no relationship between the two (e.g., that the coefficient is not greater than zero!).  -->
 
-```{r}
-lm(conservative ~ bicep, data = fake) %>% moderndive::get_regression_table()
-```
+<!-- 2. Even in a world where the null is true, you can still get pretty large coefficient estimates by chance, even as large as -10 and +10.   -->
 
+<!-- Point (2) is really important: totally by chance, two variables that are unrelated can still have strong positive or negative correlations. It is *unlikely that this happens, but it's still possible*.  -->
 
-How likely is it that our estimate would have occurred by chance? 
 
+<!-- With a simulation of what the world would like under the null hypothesis, we can turn back to our original estimate:  -->
 
-```{r}
-ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white", 
-                                                     fill = "coral") + 
-  theme_bw() + 
-  labs(title = "The Simulated Null Distribution", 
-       subtitle = "What we would observe in a world where biceps and ideology are unrelated.", 
-       x = "Permuted coefficient estimates from lm(affairs ~ children)", 
-       y = NULL) + 
-  geom_vline(xintercept = 3.996, lty = 2, color = "black", size = 2)
-```
 
+<!-- ```{r} -->
+<!-- lm(conservative ~ bicep, data = fake) %>% moderndive::get_regression_table() -->
+<!-- ``` -->
 
-Our estimate is a fair bit larger than what you would expect to observe under the null hypothesis. We can calculate exactly how much larger using the **p-value**. We set `direction = right` because we want to know how much *larger* the estimate is than expected. 
 
-```{r}
-get_p_value(null_biceps, obs_stat = 3.996, direction = "both")
-```
+<!-- How likely is it that our estimate would have occurred by chance?  -->
 
-The **p-value** is .084, meaning that only 8.4% of the estimates we got by chance are as large or larger than our original result. In other words, our estimate is larger than 84% of the results we could observe by chance. 
 
+<!-- ```{r} -->
+<!-- ggplot(null_biceps, aes(x = stat)) + geom_histogram(color = "white",  -->
+<!--                                                      fill = "coral") +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "The Simulated Null Distribution",  -->
+<!--        subtitle = "What we would observe in a world where biceps and ideology are unrelated.",  -->
+<!--        x = "Permuted coefficient estimates from lm(affairs ~ children)",  -->
+<!--        y = NULL) +  -->
+<!--   geom_vline(xintercept = 3.996, lty = 2, color = "black", size = 2) -->
+<!-- ``` -->
 
-We can calculate this "by hand" too, like so: 
 
-```{r}
-null_biceps %>% 
-  mutate(bigger = ifelse(stat > 3.996, "yes", "no")) %>% 
-  group_by(bigger) %>% 
-  tally() %>% 
-  mutate(percent = n/sum(n))
-```
+<!-- Our estimate is a fair bit larger than what you would expect to observe under the null hypothesis. We can calculate exactly how much larger using the **p-value**. We set `direction = right` because we want to know how much *larger* the estimate is than expected.  -->
 
+<!-- ```{r} -->
+<!-- get_p_value(null_biceps, obs_stat = 3.996, direction = "both") -->
+<!-- ``` -->
 
-84% larger than we might observe by chance -- sounds like our result is unusually large, and unlikely to be the result of random chance. But is it unlikely enough for us to be confident? 
+<!-- The **p-value** is .084, meaning that only 8.4% of the estimates we got by chance are as large or larger than our original result. In other words, our estimate is larger than 84% of the results we could observe by chance.  -->
 
 
-### Alpha-levels (standards of evidence)
+<!-- We can calculate this "by hand" too, like so:  -->
 
+<!-- ```{r} -->
+<!-- null_biceps %>%  -->
+<!--   mutate(bigger = ifelse(stat > 3.996, "yes", "no")) %>%  -->
+<!--   group_by(bigger) %>%  -->
+<!--   tally() %>%  -->
+<!--   mutate(percent = n/sum(n)) -->
+<!-- ``` -->
 
-Remember the standard and totally arbitrary *alpha-level* accepted in the scientific community is .05. This means that p-values lower than .05 are considered too small to be the result of random chance, while p-values higher than that are considered too large to feel confident in. Arbitrary? Yes. 
 
+<!-- 84% larger than we might observe by chance -- sounds like our result is unusually large, and unlikely to be the result of random chance. But is it unlikely enough for us to be confident?  -->
 
-Since our p-value of .084 is larger than the .05 standard (the alpha-level), we would *fail to reject the null hypothesis*. In other words, the result is too plausible in a world where null hypothesis is true for us to reject it!
 
+<!-- ### Alpha-levels (standards of evidence) -->
 
-### Hypothesis testing: confidence intervals
 
+<!-- Remember the standard and totally arbitrary *alpha-level* accepted in the scientific community is .05. This means that p-values lower than .05 are considered too small to be the result of random chance, while p-values higher than that are considered too large to feel confident in. Arbitrary? Yes.  -->
 
-A different, and much more straightforward way, to do hypothesis testing is to bootstrap confidence intervals and see if they exclude 0. Let's do the bootstrap. 
 
+<!-- Since our p-value of .084 is larger than the .05 standard (the alpha-level), we would *fail to reject the null hypothesis*. In other words, the result is too plausible in a world where null hypothesis is true for us to reject it! -->
 
-```{r}
-boot_bicep = fake %>% 
-  specify(conservative ~ bicep) %>% 
-  generate(reps = 1000, type = "boot") %>% 
-  calculate(stat = "slope")
-```
 
+<!-- ### Hypothesis testing: confidence intervals -->
 
-Here is the distribution of bootstrapped estimates from our data:
 
+<!-- A different, and much more straightforward way, to do hypothesis testing is to bootstrap confidence intervals and see if they exclude 0. Let's do the bootstrap.  -->
 
-```{r}
-ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white", 
-                                                     fill = "coral") + 
-  theme_bw() + 
-  labs(title = "Distribution of bootstrapped estimates", 
-       subtitle = "How the relationship between biceps and ideology might vary across samples.", 
-       x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)", 
-       y = NULL)
-```
 
+<!-- ```{r} -->
+<!-- boot_bicep = fake %>%  -->
+<!--   specify(conservative ~ bicep) %>%  -->
+<!--   generate(reps = 1000, type = "boot") %>%  -->
+<!--   calculate(stat = "slope") -->
+<!-- ``` -->
 
 
-Here's the standard error:
+<!-- Here is the distribution of bootstrapped estimates from our data: -->
 
-```{r}
-boot_bicep %>% 
-  summarise(se = sd(stat))
-```
 
+<!-- ```{r} -->
+<!-- ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white",  -->
+<!--                                                      fill = "coral") +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Distribution of bootstrapped estimates",  -->
+<!--        subtitle = "How the relationship between biceps and ideology might vary across samples.",  -->
+<!--        x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)",  -->
+<!--        y = NULL) -->
+<!-- ``` -->
 
 
 
-Here's the 95% confidence interval:
+<!-- Here's the standard error: -->
 
-```{r}
-get_confidence_interval(boot_bicep, level = .95)
-```
+<!-- ```{r} -->
+<!-- boot_bicep %>%  -->
+<!--   summarise(se = sd(stat)) -->
+<!-- ``` -->
 
 
-Notice this interval *includes* 0. This means that the range of values that are our "best guess" for the effect of biceps on ideology **include** the possibility that there is no effect (or that the effect is negative). Following the standard of using .05 as the threshold, we would *fail to reject the null hypothesis of no effect of biceps on ideology*. 
 
 
+<!-- Here's the 95% confidence interval: -->
 
-Here's the confidence interval again, with shading:
+<!-- ```{r} -->
+<!-- get_confidence_interval(boot_bicep, level = .95) -->
+<!-- ``` -->
 
 
-```{r}
-ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white", 
-                                                     fill = "coral") + 
-  theme_bw() + 
-  labs(title = "Distribution of bootstrapped estimates", 
-       subtitle = "How the relationship between biceps and ideology might vary across samples.", 
-       x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)", 
-       y = NULL) + 
-  annotate(geom = "rect", xmin = get_confidence_interval(boot_bicep)[["lower_ci"]], 
-           xmax = get_confidence_interval(boot_bicep)[["upper_ci"]], ymin = 0, ymax = Inf, 
-           fill = "#2ECC40", alpha = 0.25)
-```
+<!-- Notice this interval *includes* 0. This means that the range of values that are our "best guess" for the effect of biceps on ideology **include** the possibility that there is no effect (or that the effect is negative). Following the standard of using .05 as the threshold, we would *fail to reject the null hypothesis of no effect of biceps on ideology*.  -->
+
+
+
+<!-- Here's the confidence interval again, with shading: -->
+
+
+<!-- ```{r} -->
+<!-- ggplot(boot_bicep, aes(x = stat)) + geom_histogram(color = "white",  -->
+<!--                                                      fill = "coral") +  -->
+<!--   theme_bw() +  -->
+<!--   labs(title = "Distribution of bootstrapped estimates",  -->
+<!--        subtitle = "How the relationship between biceps and ideology might vary across samples.",  -->
+<!--        x = "Bootstrapped coefficient estimates from lm(conservative ~ bicep)",  -->
+<!--        y = NULL) +  -->
+<!--   annotate(geom = "rect", xmin = get_confidence_interval(boot_bicep)[["lower_ci"]],  -->
+<!--            xmax = get_confidence_interval(boot_bicep)[["upper_ci"]], ymin = 0, ymax = Inf,  -->
+<!--            fill = "#2ECC40", alpha = 0.25) -->
+<!-- ``` -->
 
 
 
