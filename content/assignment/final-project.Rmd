@@ -210,10 +210,10 @@ tribble(~variable, ~meaning,
         "victim", "Victim of a crime in last 12 months", 
         "coup_support", "Agrees that a military coup is justified if crime is high", 
         "neighbor_crime", "Murders have taken place in neighborhood", 
-        "np1", "Did respondent attend community meeting?", 
+        "attend_meeting", "Did respondent attend community meeting?", 
         "protested", "Did respondent participate in a protest?",
         "solve_problems", "How often respondent helps solve local problem (1, Once a week, 2 = Once or twice a month, 3 = Once or twice a year, 4 = Never)",
-        "l1", "Ideology (1 = far left, 10 = far right)") %>% 
+        "ideology", "Ideology (1 = far left, 10 = far right)") %>% 
   kable() %>% 
     column_spec(2, width = "20em")
 ```
