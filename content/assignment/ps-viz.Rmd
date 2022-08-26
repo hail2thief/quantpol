@@ -4,10 +4,10 @@ linktitle: "Data visualization"
 output:
   blogdown::html_page:
     toc: false
-menu:
-  assignment:
-    parent: Problem sets
-    weight: 1
+# menu:
+#   assignment:
+#     parent: Problem sets
+#     weight: 1
 type: docs
 editor_options: 
   chunk_output_type: console
@@ -16,7 +16,7 @@ editor_options:
 ## Instructions
 
 
-1. Download this: <i class="far fa-file-archive"></i> [`ps-viz`](/files/ps-viz.Rmd)
+1. Download this: <i class="far fa-file-archive"></i> [`ps-viz`](/problem-sets/ps-viz.Rmd)
     - right-click, "save/download file as..."
 2. Complete all of the coding tasks in the `.Rmd` file
 3. **Once you are done**, go on Canvas and answer the questions related to the assignment

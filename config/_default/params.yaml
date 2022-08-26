@@ -18,7 +18,7 @@ day_night: false
 #   Latest font sets (may require updating): https://sourcethemes.com/academic/themes/
 #   Browse built-in font sets in `themes/academic/data/fonts/`
 #   Browse user installed font sets in `data/fonts/`
-font: "nunito"
+font: "sourcesans"
 
 # Choose a font size.
 # Sizes: XS (extra small), S (small), M (medium), L (large - DEFAULT), XL (extra large)
@@ -102,14 +102,14 @@ instructor:
   appointment_url: https://calendly.com/juan-f-tellez/
   
 course:
-  number: "POL-051"
-  semester: "Fall 2021"
+  number: "POL51"
+  semester: "Fall 2022"
   days: "T,TH"
-  time: "5:40 PM - 7:00 PM"
-  location: "Wellman Hall 106"
-  dates: "Sept. 22 - Dec 3 2021"
+  time: "3:10 PM - 4:30 PM"
+  location: "Everson Hall 176"
+  dates: "Sept 22 - Dec 1, 2022"
   github: "hail2thief/poli-301"
-  copyrightYear: "2020"
+  copyrightYear: "2022"
 
 university: 
   name: University of California, Davis

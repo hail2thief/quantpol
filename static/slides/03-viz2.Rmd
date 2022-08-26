@@ -22,6 +22,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+xaringanExtra::use_editable(id = "03-viz")
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, 
@@ -325,7 +326,7 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 ---
 
 
-class: center, middle
+class: left
 # 🚨 Your turn: Make a time series 🚨
 
 --
@@ -545,7 +546,7 @@ What does this plot show us?
 ---
 
 
-class: center, middle
+class: left
 # 🚨 Your turn: histograms 🚨
 
 
@@ -601,7 +602,7 @@ Useful for making comparisons, highlighting differences
 
 ???
 
-Causal difference between married and widowed? 
+Causal difference between married and widowed? theory?
 
 ---
 
@@ -810,12 +811,12 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-## My favorite scale
+## My favorite color scale
 
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
   geom_histogram() + 
-  scale_fill_viridis_d(option = "magma") #<<
+  scale_fill_viridis_d(option = "mako") #<<
 ```
 
 
@@ -840,27 +841,16 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-class: middle, center
-# 🚨 Your turn 🚨
+class: left
+# 🔥 fire challenge 🔥
 
 
---
+.can-edit[Instructions]
 
-Make the **ugliest** or **prettiest** graph you can
 
---
-
-Use as many or as few of the aesthetics, layers, and geometries as you want
-
---
-
-Post a screencap in the Slack so we can see
 
 
 ```{r}
 countdown::countdown(minutes = 10L)
 ```
-
-
----
 

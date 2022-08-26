@@ -34,6 +34,7 @@ knitr::opts_chunk$set(
   warning = FALSE,
   hiline = TRUE
 )
+xaringanExtra::use_editable(id = "02-viz")
 ```
 
 
@@ -507,12 +508,14 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
 
 ---
 
-class: center
+class: left
 ## 🚨 Your turn: label the points 🚨
 
-Map country names onto `label` aesthetic within `aes()`
 
-Add `geom_text` layer to your plot
+
+1. Add labels to each point by mapping country names onto the `label` aesthetic within `aes()`
+
+2. Add `geom_text` layer to your plot
 
 
 ```{r}
@@ -582,7 +585,7 @@ penguins %>%
 
 ---
 
-class: center, middle
+class: left
 ## 🚨 Your turn 🚨
 
 

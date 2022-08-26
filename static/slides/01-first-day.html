@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Introductions</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Juan Tellez" />
+    <meta name="date" content="2022-08-24" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"xd5e59483ceb4d5f941155f962c11bff","expires":14}</script>
+    <script src="libs/himalaya/himalaya.js"></script>
+    <script src="libs/js-cookie/js.cookie.js"></script>
+    <link href="libs/editable/editable.css" rel="stylesheet" />
+    <script src="libs/editable/editable.js"></script>
+    <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# Introductions
+
+### *The Scientific Study of Politics*
+
+### Professor Juan Tellez 
+
+#### University of California, Davis
+
+---
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[What's this class about?]
+
+--
+.box-2.large.sp-after[Getting to know each other]
+
+--
+.box-3.large.sp-after[UN voting patterns]
+
+---
+
+class: center, middle, inverse
+# What's this class about? 
+
+---
+
+
+
+# Most wanted lists
+
+
+.pull-left[
+
+- Countries like the US spend lots of resources trying to kill, capture leaders of *non-state armed groups*
+    - Rebel groups, terrorist orgs, organized crime
+    
+    
+- This is known in the literature as **decapitation**
+]
+
+.pull-right[
+&lt;img src="images/wanted.jpg" width="100%" /&gt;
+]
+
+---
+
+class: center, middle, inverse
+# Does **decapitation** work?
+
+---
+
+# The data: Milton and Price (2020)
+
+
+
+|Name                           | Year| Decapitated| Failure|
+|:------------------------------|----:|-----------:|-------:|
+|al-Qaeda                       | 1988|           0|       0|
+|al-Qaeda                       | 1989|           0|       0|
+|April 19 Movement (M-19)       | 1987|           0|       0|
+|April 19 Movement (M-19)       | 1988|           0|       0|
+|Loyalist Volunteer Force (LVF) | 1996|           0|       0|
+|Loyalist Volunteer Force (LVF) | 1997|           1|       0|
+
+---
+
+# The results: a big effect!
+
+
+&lt;img src="01-first-day_files/figure-html/model-1.png" width="100%" /&gt;
+
+--
+
+Decapitated terrorist groups are **3 times** more likely to dissolve
+
+---
+
+
+class: center, middle, inverse
+# Does this mean decapitation **causes** organizations to break down?
+
+--
+
+.can-edit[Reasons for doubt]
+
+???
+What do you think?
+---
+
+class: center, middle
+## Not so fast
+
+--
+
+Groups that **are** decapitated are *different* from groups that **aren't** decapitated
+    
+--
+
+&lt;img src="01-first-day_files/figure-html/dag-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+--
+
+`???` = Strength, resources, size, location, etc.
+
+--
+
+Ignoring these differences will **confound** our estimate of the effect of decapitation!
+
+---
+
+
+class: center, middle
+# What is this class about?
+
+--
+
+**Wrangling** and **visualizing** data to explore the questions we care about
+
+--
+
+Using **models** to describe how one political variable might cause another 
+
+--
+
+Thinking **causally** about the relationships we observe
+
+--
+
+Grappling with **uncertainty** in the relationships we observe
+
+
+---
+
+class: center, middle
+# An emphasis on **doing**
+
+--
+
+*No readings* or giant, cram-in-one-day exams
+
+--
+
+regular, *sustained* practice with hands-on problem sets
+
+--
+
+*synthesize* what you learn in a final project
+
+---
+
+class: center, middle
+# Programming as a way in
+
+
+&lt;img src="images/rstudio.png" width="60%" /&gt;
+
+
+10 weeks of focused study in **R**, a powerful and in-demand programming language
+
+
+---
+
+
+# Class philosophy:
+
+
+Little to none of this: 
+
+`$$\sigma^2 = \frac{\sum_{i=1}^{n}(x_i - \mu)^2} {n}$$`
+
+--
+
+Lots of this: 
+
+
+```r
+m1 = glm(failure ~ decap, data = df)
+pDat = ggeffects::ggeffect(m1, terms = "decap") %&gt;%  as_tibble()
+ggplot(pDat, aes(x = factor(x), y = predicted, 
+                 ymin = conf.low, ymax = conf.high, 
+                 color = factor(x))) + 
+  geom_pointrange(size = 2, fatten = 2, 
+                  alpha = .8)
+```
+
+---
+
+# This class is practical
+
+
+This class *could* be a couple lines on a resume:
+
+
+.pull-left[
+- Ability to work with data ➡️ marketable
+
+- R is popular in industry
+
+- Familiarity with R ➡️ other languages
+
+- Principles learned in R can be applied elsewhere (Excel)
+
+- Problem-solving in Slack
+]
+
+.pull-right[
+
+&lt;img src="images/data-science.png" width="100%" /&gt;
+]
+---
+
+
+
+class: center, middle, inverse
+# Let's look at the **website**
+
+---
+
+
+# There's a lot of work, and coding, in this class
+
+.pull-left[
+
+- I warned you!
+
+- Anyone can do it, yes "*even*" you
+
+- you will be surprised at what you can do by the end
+
+- But you have to try your best
+
+- If this doesn't work for you, take another class
+
+]
+
+.pull-right[
+&lt;img src="images/angry-student.png" width="100%" /&gt;
+
+]
+
+
+---
+
+
+class: center, middle, inverse
+&gt; It’s easy when you start out programming to get really frustrated and think, “Oh it’s me, I’m really stupid,” or, “I’m not made out to program.” But, that is absolutely not the case. Everyone gets frustrated. I still get frustrated occasionally when writing R code. It’s just a natural part of programming. So, it happens to everyone and gets less and less over time. Don’t blame yourself. Just take a break, do something fun, and then come back and try again later.
+
+Hadley Wickham,
+Chief Data Scientist at RStudio
+
+---
+
+
+class: center, middle, inverse
+# 🚨🚨 Problem sets = 50% 🚨🚨
+
+---
+
+class: center, middle
+# For the love of all that is good
+
+--
+
+**Do** the weekly check-ins; they are free points
+
+--
+
+**Go** to section, ask for help on Slack
+
+--
+
+**Do not** miss homeworks in this class
+
+--
+
+Missing one = leaving a big chunk of your final exam blank
+
+--
+
+I want students who are working hard to do well, but I can't save you
+
+
+---
+
+
+class: center, middle, inverse
+# Try your best and have fun!
+---
+
+
+
+
+class: center, middle, inverse
+# Who am *I* ?
+
+---
+
+
+
+class: middle, left
+background-image: url("images/travel-colombia.png")
+background-size: contain
+background-position: right
+
+## Grew up in Cali, Colombia...
+
+---
+
+
+class: middle, left
+background-image: url("images/florida.jpg")
+background-size: contain
+background-position: right
+
+### ...and Ft. Lauderdale
+### Went to UF (go gata)...
+
+---
+
+
+class: middle, left
+background-image: url("images/nc.jpg")
+background-size: 750px
+background-position: right
+
+### ...worked in Durham, NC
+### PhD at Duke University...
+
+---
+
+
+class: middle, left
+background-image: url("images/cocks.jpg")
+background-size: 750px
+background-position: right
+
+## ...Worked at UofSC
+---
+
+
+
+class: center, middle, inverse
+# Who are *you* ? 
+
+---
+
+# What year are you?
+
+&lt;img src="01-first-day_files/figure-html/spreadsheet-1.png" width="100%" /&gt;
+
+---
+
+# Where are you from?
+
+.scroll-output[
+
+|                                                                      |
+|:---------------------------------------------------------------------|
+|Castro Valley, Ca                                                     |
+|Santa Barbara, CA                                                     |
+|Hayden Lake, Idaho.                                                   |
+|Fresno, CA                                                            |
+|LA, CA                                                                |
+|San Pablo, California                                                 |
+|La Verne/Rancho Cucamonga, California                                 |
+|Chiang Mai, Thailand                                                  |
+|San Jose, CA                                                          |
+|King City, Ca                                                         |
+|Los Angeles, California                                               |
+|Stockton, CA                                                          |
+|Modesto, CA                                                           |
+|Los Angeles, CA                                                       |
+|LA but born in Mexico City and raised until I moved to LA 5 years ago |
+|Sacramento California                                                 |
+|San Jose, CA                                                          |
+|San Francisco, CA                                                     |
+|Vacaville, California,                                                |
+|Nevada City, CA                                                       |
+|San Jose, California                                                  |
+|Weifang, China                                                        |
+|Whittier, CA                                                          |
+|Dixon, CA                                                             |
+|Sacramento, CA                                                        |
+|Visalia, California                                                   |
+|Long Beach, CA                                                        |
+|San Bernardino, CA                                                    |
+|Morgan Hill, CA                                                       |
+|Short Hills NJ                                                        |
+|Concord, CA                                                           |
+|Los Angeles, California                                               |
+|Davis, California                                                     |
+|Cupertino, CA                                                         |
+|Napa California                                                       |
+|Los Angeles, California                                               |
+|Fremont, CA                                                           |
+|Reno, Nevada                                                          |
+|Alameda, California                                                   |
+|San Jose California                                                   |
+|Fontana, CA                                                           |
+|South San Francisco, CA                                               |
+|Half Moon Bay, California                                             |
+|Colfax, CA                                                            |
+|Huntington Beach, CA                                                  |
+|Brentwood, CA                                                         |
+|Los Angeles, California                                               |
+|Salinas, CA                                                           |
+|Elk Grove, California                                                 |
+|Los Angeles                                                           |
+|Santiago, Chile                                                       |
+|San Jose, California                                                  |
+|Manhattan Beach, CA                                                   |
+|Galt, California                                                      |
+|Davis, CA                                                             |
+|Fillmore CA                                                           |
+|Turlock, CA                                                           |
+|Claremont; California                                                 |
+|Modesto, CA                                                           |
+|Los Angeles, California.                                              |
+|LA                                                                    |
+|Martinez, CA                                                          |
+|San Diego                                                             |
+|Wilmington, Delaware                                                  |
+|Sacramento                                                            |
+|Fairfield, CA                                                         |
+|San Diego, CA                                                         |
+|Woodland, CA                                                          |
+|Mountain View, CA                                                     |
+|Vacaville, CA                                                         |
+|San Rafael, CA                                                        |
+|Los Angeles, CA                                                       |
+|Oakland, Ca                                                           |
+|Sacramento                                                            |
+|Oakland, California                                                   |
+|San Diego, California                                                 |
+|Los Angeles                                                           |
+|Vallejo, CA                                                           |
+|Fontana California                                                    |
+|Riverside, CA                                                         |
+|San Francisco, California                                             |
+|Sacramento,CA                                                         |
+|San Carlos, California                                                |
+|Berkeley, California                                                  |
+|Los Angeles, CA                                                       |
+|Vallejo, CA                                                           |
+|Woodland CA                                                           |
+|San Diego, California                                                 |
+|Long Beach, CA                                                        |
+|Redwood City                                                          |
+|East LA                                                               |
+|Davis California                                                      |
+|Ione, CA                                                              |
+|Walnut Creek, California                                              |
+|Pleasanton, CA                                                        |
+|Delhi, CA                                                             |
+|Porterville, CA                                                       |
+|Tracy, California                                                     |
+|Castro Valley, California                                             |
+|Nevada City, CA                                                       |
+]
+---
+
+
+# Everyone's in the same boat
+
+
+&lt;img src="01-first-day_files/figure-html/unnamed-chunk-7-1.png" width="100%" /&gt;
+
+---
+
+
+# Same concerns
+
+
+|What are you concerned about?                                                                                                                |
+|:--------------------------------------------------------------------------------------------------------------------------------------------|
+|The learning curve with software that I have not used before.                                                                                |
+|I'm not to sure if I'll be any good at coding since science and data aren't my strong suits.                                                 |
+|I’m just worried I might not be able to keep up, but I will try my best to.                                                                  |
+|I have zero experience programming and have trouble with computers altogether.                                                               |
+|Part of me is a little nervous that I won’t pick up the concepts as easily because I have not had computer coding experience in a few years. |
+
+
+---
+
+
+# Lots of cool stuff
+
+
+.scroll-output[
+
+|Something cool about you?                                                                                                                                                                                                                                       |
+|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|This summer, I got to be in the background of a TV show taping in NYC                                                                                                                                                                                           |
+|I have worked in 4 different countries.                                                                                                                                                                                                                         |
+|I enjoy watching UFC, hiking, and writing.                                                                                                                                                                                                                      |
+|I really like different types of mythology.                                                                                                                                                                                                                     |
+|I have a dog                                                                                                                                                                                                                                                    |
+|I’m into a lot of sci-fi shows and I love being able to cook for myself                                                                                                                                                                                         |
+|I have a piece of lead stuck in my left hand                                                                                                                                                                                                                    |
+|I can crack an egg with one hand.                                                                                                                                                                                                                               |
+|I run my own organization; a creative-based online platform for underrepresented Muslims!                                                                                                                                                                       |
+|I just became an aunt this year!                                                                                                                                                                                                                                |
+|I like Ike                                                                                                                                                                                                                                                      |
+|I graduated as a junior in high school!                                                                                                                                                                                                                         |
+|I am a golfer!!                                                                                                                                                                                                                                                 |
+|I’m a musician.                                                                                                                                                                                                                                                 |
+|I became an English speaker in 1 year and I moved to this country 5 years ago.                                                                                                                                                                                  |
+|Farsi was the first language I learned                                                                                                                                                                                                                          |
+|I am a season ticket holder for the SF Giants                                                                                                                                                                                                                   |
+|I am a good swimmer, and love horror movies and spicy food.                                                                                                                                                                                                     |
+|I drove across the United States by myself when I graduated high school                                                                                                                                                                                         |
+|I am tall, I like to play sports. the guitar, travel, and work on cars                                                                                                                                                                                          |
+|I'm a hobbyist knitter and I managed to rip off an Alexander McQueen sweater design and make it on my own.                                                                                                                                                      |
+|I’m good at drawings.                                                                                                                                                                                                                                           |
+|I like writing songs                                                                                                                                                                                                                                            |
+|I play ukulele!                                                                                                                                                                                                                                                 |
+|I have walked the city walls in Dubrovnik, Croatia                                                                                                                                                                                                              |
+|I have a fraternal twin sister                                                                                                                                                                                                                                  |
+|I am 20, and I transfered from community college.                                                                                                                                                                                                               |
+|I know how to solve a Rubik's cube :)                                                                                                                                                                                                                           |
+|I have a twin sister who goes to UCI.                                                                                                                                                                                                                           |
+|I love to skateboard and I can do a board slide down a rail                                                                                                                                                                                                     |
+|For the last couple of years I have been getting into investing and have seen a fair amount of success.                                                                                                                                                         |
+|I have been to Siberia                                                                                                                                                                                                                                          |
+|I coach/run a Speech and Debate team at Davis Senior High School                                                                                                                                                                                                |
+|I run a sticker shop with my sister!                                                                                                                                                                                                                            |
+|I love to eat and travel a lot                                                                                                                                                                                                                                  |
+|I Have always been very artistic and have tried out pretty much every single type of art. Right now, I am really into painting, but have previously made ceramics, jewelry, etc. I find being creative very fun and important to keeping myself busy and happy. |
+|I am fluent in Japanese                                                                                                                                                                                                                                         |
+|I managed to get a leadership position on my school's debate team in sophomore year                                                                                                                                                                             |
+|Originally born in Thailand                                                                                                                                                                                                                                     |
+|I enjoy dark fantasy alot                                                                                                                                                                                                                                       |
+|I am a certified lifeguard.                                                                                                                                                                                                                                     |
+|I was born in Honolulu, HI                                                                                                                                                                                                                                      |
+|I am half white half Afghan. My father was a refugee during the Soviet invasion in the 1980s.                                                                                                                                                                   |
+|I am a transfer student and I brought my horse who is at the Davis Equestrian Facility!                                                                                                                                                                         |
+|I was allergic to cats before I built a tolerance by adopting one.                                                                                                                                                                                              |
+|I play the guitar.                                                                                                                                                                                                                                              |
+|Something cool about me is that I own a Dodge Charger.                                                                                                                                                                                                          |
+|I love trying new things                                                                                                                                                                                                                                        |
+|I motorcycle and scuba dive                                                                                                                                                                                                                                     |
+|I am learning piano                                                                                                                                                                                                                                             |
+|I like to write poetry                                                                                                                                                                                                                                          |
+|I know how to snap with my pinkie!                                                                                                                                                                                                                              |
+|I’m a quarter Chinese and I play the bass!                                                                                                                                                                                                                      |
+|I was born in Thailand                                                                                                                                                                                                                                          |
+|I've lived in 3 different countries (Nigeria, Ecuador, US) and love learning how different cultures interact.                                                                                                                                                   |
+|I enjoy painting and I have a fish named Gary                                                                                                                                                                                                                   |
+|My first language is Assyrian                                                                                                                                                                                                                                   |
+|I used to live in Russia                                                                                                                                                                                                                                        |
+|Something that I find somewhat cool about myself, but I am not too sure if it is 100% true is that I can memorize knowledge almost instantly and for long periods of time.                                                                                      |
+|I can speak Spanish fluently and I made a whole collection of feminist art in high school!                                                                                                                                                                      |
+|I can solve a rubik's cube in under a minute                                                                                                                                                                                                                    |
+|When I was younger, my family held season tickets for the Golden State Warriors.                                                                                                                                                                                |
+|I love film photography                                                                                                                                                                                                                                         |
+|I played the violin since I was 3 years old!                                                                                                                                                                                                                    |
+|working on it haha                                                                                                                                                                                                                                              |
+|I'm a DACA student                                                                                                                                                                                                                                              |
+|I am a gym rat                                                                                                                                                                                                                                                  |
+|I have a 9 month old son.                                                                                                                                                                                                                                       |
+|I can crack my jaw. I was born without a sense of smell (not COVID related!).                                                                                                                                                                                   |
+|I am the first in my family to attend a university, I can speak Spanish, and I love dogs!                                                                                                                                                                       |
+|I speak 4 languages                                                                                                                                                                                                                                             |
+|I am a musician                                                                                                                                                                                                                                                 |
+|Anime                                                                                                                                                                                                                                                           |
+|i can speak 4 languages. Farsi, Hindi ,Pashto,English.                                                                                                                                                                                                          |
+|I want to be a civil rights attorney.                                                                                                                                                                                                                           |
+|I was born in Bolivia, South America. I don’t know haha.                                                                                                                                                                                                        |
+|I come from a politically active family background                                                                                                                                                                                                              |
+|I love collecting and caring for plants :)                                                                                                                                                                                                                      |
+|I have an audio engineering degree                                                                                                                                                                                                                              |
+|I'm obsessed with anime and I have a small portrait business.                                                                                                                                                                                                   |
+|I started a clothing company on Depop                                                                                                                                                                                                                           |
+|I have a cat names Charleston Chew                                                                                                                                                                                                                              |
+|Something cool about myself is that I work at Freewheeler Bicycle Center downtown!                                                                                                                                                                              |
+|I play (roughly) six instruments.                                                                                                                                                                                                                               |
+|I love 60s country music                                                                                                                                                                                                                                        |
+|I used to figure skate professionally as a child                                                                                                                                                                                                                |
+|I know three languages- Urdu, Punjabi, and English.                                                                                                                                                                                                             |
+|I can speak Portuguese                                                                                                                                                                                                                                          |
+|I have been skydiving!                                                                                                                                                                                                                                          |
+|I almost beat the world record for longest finger knitting but ran out of yarn.                                                                                                                                                                                 |
+|Uh, I almost went to film school.                                                                                                                                                                                                                               |
+|I am Davis born and raised                                                                                                                                                                                                                                      |
+|I am a transfer student to UC Davis from Cuesta College in San Luis Obispo, and this is my first quarter                                                                                                                                                        |
+|I'm a great public speaker, and I don't mind bragging about it because I'm not as good at everything else.                                                                                                                                                      |
+|I have two cats!                                                                                                                                                                                                                                                |
+|I am bilingual.                                                                                                                                                                                                                                                 |
+|I sing and play electric and acoustic guitar                                                                                                                                                                                                                    |
+|I have a twin sister.                                                                                                                                                                                                                                           |
+|Arabic is my first language                                                                                                                                                                                                                                     |
+|I play the drums (usually punk rock or alt rock)                                                                                                                                                                                                                |
+]
+
+---
+
+class: middle, left
+background-image: url("images/archie.jpeg")
+background-size: contain
+background-position: right
+# TV consensus: Riverdale
+---
+
+
+# But i'm a creep...
+
+
+&lt;iframe width="1000" height="500" src="https://www.youtube.com/embed/wnMEp02P-_k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
+
+---
+
+
+class: center, middle, inverse
+# UN Voting
+---
+
+class: center
+## 🚨 Your turn 🚨
+
+.can-edit[Instructions]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

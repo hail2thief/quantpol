@@ -23,7 +23,7 @@ library(pander)
 ## What is this class about? 
 
 
-Governments, academics, journalists, firms, NGOs and many others use quantitative data every day to make decisions. Data are also being used to make **causal** claims about the world -- to argue that some policy will improve or worsen our lives. 
+Policymakers, academics, journalists, firms, NGOs and many others use quantitative data every day to make decisions. Data are also being used to make **causal** claims about the world -- to argue that some policy will improve or worsen our lives. 
 
 
 This undergraduate course is about how to **do** data analysis and how to **think** causally about the political world. We will cover topics in data science, programming, regression, causal inference, and uncertainty. 
@@ -64,14 +64,13 @@ The weekly discussion sections will be the place to get help on lecture content,
 - Go over student questions from the week's lecture content
 - Get help from the TAs on new problem sets and review answers from past problem sets
 - Get help from the TAs on your final project
-- Discuss and debate some of the concepts that arise in lecture
 
 
 
 ## What materials do I need for this course?
 
 
-All materials for this course are **free and online**. You will do all of your analysis with the open source (and free!) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
+All materials for this course are **free and online**. You will do all of your analysis with the open source (and free) programming language [R](https://cran.r-project.org/). You will use [RStudio](https://www.rstudio.com/) as the main program to access R. 
 
 
 Given the focus on programming, *you will need consistent access to a laptop or computer for this class*. 
@@ -156,13 +155,10 @@ grading %>%
 ```
 
 
-If you think you received the wrong grade, you will need to submit a memo giving specific detail about why the grade should be changed. Please note that I will **only accept grade appeals three days after the posting of a grade**.
-
-
 
 ## Old tech
 
-Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (2 extra credit points; you’ve got until September 28th).
+Once you have read this entire syllabus and [the assignments page](/assignment/), please post a picture or gif of an old computer, something with a [cyberpunk](https://en.wikipedia.org/wiki/Cyberpunk) aesthetic, or some old technology to the Slack (I'll round your final grade up to the nearest whole number; you’ve got until September 29th).
 
 
 <img src="/media/cyber-green.gif" alt="drawing"/>
@@ -171,4 +167,4 @@ Once you have read this entire syllabus and [the assignments page](/assignment/)
 
 ## Credits
 
-This course draws on code, content, ideas, inspirations and much more from work by Andrew Heiss, Nick-Ch, Kieran Healy, Scott Cunningham, and others who have made their courses publicly available.
+This course draws on code, content, ideas, inspirations and much more from work by Andrew Heiss, Nick C. Huntington-Klein, Kieran Healy, Scott Cunningham, and others who have made their courses publicly available.

@@ -3,10 +3,6 @@ title: "Inference for regression"
 citeproc: true
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
-menu: 
-  readings:
-    parent: Readings
-    weight: 14
 type: docs
 output:
   blogdown::html_page:

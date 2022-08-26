@@ -1,0 +1,90 @@
+<script src="final-colombia_files/header-attrs-2.11/header-attrs.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#instructions" id="toc-instructions">Instructions</a></li>
+<li><a href="#setup" id="toc-setup">Setup</a></li>
+<li><a href="#introduction" id="toc-introduction">Introduction</a></li>
+<li><a href="#data" id="toc-data">Data</a></li>
+<li><a href="#the-dag" id="toc-the-dag">The DAG</a></li>
+<li><a href="#the-model" id="toc-the-model">The Model</a></li>
+<li><a href="#natural-experiments" id="toc-natural-experiments">Natural Experiments</a></li>
+<li><a href="#conclusions" id="toc-conclusions">Conclusions</a></li>
+</ul>
+</div>
+
+<div id="instructions" class="section level1">
+<h1>Instructions</h1>
+<ul>
+<li>Remember: with an .Rmd file, all code goes into code chunks and all regular text (like writing) goes outside of them.</li>
+<li>Follow the instructions below, writing your answers where it says WRITE HERE.</li>
+<li>If there’s an empty code chunk, use it to answer the questions.</li>
+<li>If for some reason you want/need to add a new code chunk, you can go to the dropdown menu at the top of the screen: Code –&gt; Insert Chunk.</li>
+</ul>
+</div>
+<div id="setup" class="section level1">
+<h1>Setup</h1>
+<p>Load the packages you will need here:</p>
+<p>Here is your data:</p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Briefly describe the motivation for your project and the question you want to answer. Why do you care about this question and why might others care about it?</p>
+<p>WRITING HERE</p>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>Provide 1-2 sentences each explaining your treatment variable, outcome variable, and one other variable of interest in the dataset. Describe what the variable “means” and how it is measured (e.g., the <code>wt</code> variable in <code>mtcars</code> tells you how much a car weighs. It measures weight in tons.)</p>
+<p>WRITING HERE</p>
+<p>For these same variables, provide some summary statistics. You could calculate averages, mins/maxes, standard deviations; proportions if you are using categorical variables; make histograms; whatever you think is most effective.</p>
+<p>Briefly describe these summary statistics here, giving your impression of these quantities (e.g., does the average seem high? low? about right?):</p>
+<p>WRITING HERE</p>
+<p>You have this big dataset with many rows, but sometimes it’s good to zoom in and look at smaller subsets. Think about a couple of criteria, or “rules”, and subset the data down to just those observations (e.g., how we did with filter early in the semester).</p>
+<p>Looking at these observations, briefly: describe them; what stands out to you about them?</p>
+<p>WRITE HERE</p>
+<p>Note: this is just exploration; you will use the full dataset for the remainder of the project.</p>
+<p>Finally, you will make the most compelling visualization you can think of using one or more of any of the variables in your dataset. Maybe it’s the relationship between two variables, the movement of some variable over time, averages across states or regions, etc. Whatever you want.</p>
+<p>Briefly discuss the visualization below. What does it tell us?</p>
+<p>WRITING HERE</p>
+</div>
+<div id="the-dag" class="section level1">
+<h1>The DAG</h1>
+<p>How do you think that your treatment variable <strong>affects</strong> your outcome? Tell a causal story about how changes in the treatment variable produce changes in the outcome variable. Example: you could have a theory that boosts in <code>foreign aid</code> <strong>cause</strong> reductions in <code>crime</code> by alleviating poverty, reducing grievances, etc.</p>
+<p>WRITING HERE</p>
+<p>Now, in a few sentences, explain why we should be worried about simply looking at the correlation between your treatment and outcome variable. Provide a <em>specific</em> example of a variable(s) that might confound your analysis.</p>
+<p>WRITE HERE</p>
+<p>Next, create a DAG that describes how you think your treatment and outcome variable cause and are caused by other variables. You should think about the other variables included in your dataset as well as variables that might not be in the dataset but are still relevant. You don’t have to go crazy!</p>
+<p>Note: it is perfectly fine if you create a DAG where you cannot identify the effect of treatment on outcome with the data you have.</p>
+<p>Briefly explain why you chose to draw the DAG this way (i.e., why X causes G and G causes Y):</p>
+<p>WRITING HERE</p>
+<p>What variables do you need to control for to identify the effect of your treatment on your outcome? Use your DAG to answer the question.</p>
+<p>What did you find? Also: are there any colliders or pipes to worry about?</p>
+<p>WRITING HERE</p>
+</div>
+<div id="the-model" class="section level1">
+<h1>The Model</h1>
+<p>With your DAG in hand, estimate three models:</p>
+<ol style="list-style-type: decimal">
+<li>a naive model with no controls</li>
+<li>a model with the correct set of controls, according to your DAG</li>
+<li>a model with a few extra variables</li>
+</ol>
+<p>Display the three models side-by-side, with labels, in a table:</p>
+<p>In 4-5 sentences, describe the results from models (1) and (2). Interpret the coefficients of each, in specific terms, using the units the variables are in (e.g., not just: when x goes up y goes up). Describe how the coefficient changes from the naive model to the model with the correct controls. Finally, how certain should we be of the effect estimates in each of these models? Interpret their corresponding p-value.</p>
+<p>WRITE HERE</p>
+<p>Lastly, using model (3), generate predictions for two scenarios of your choosing that might be interesting to a reader, based on your data.</p>
+<p>In a sentence or two, describe your estimates for each of these scenario:</p>
+<p>WRITING HERE</p>
+</div>
+<div id="natural-experiments" class="section level1">
+<h1>Natural Experiments</h1>
+<p>There are always limitations to relying on controls to estimate causal effects. Maybe you even came up with some confounding variables in your DAG that you don’t have data on. Try to come up with a natural experiment that would let you cleanly estimate the effect of your treatment on your outcome.</p>
+<p>It can be total fantasy; just show me you understand the basic idea (but brownie points if it’s realistic!). For example: “does wealth make people more likely to participate in politics? In my fantasy natural experiment, a freak accident at the IRS accidentally gives every American with a social security number ending in an even number a hundred thousand dollars.”</p>
+<p>Describe the imaginary natural experiment and explain why it helps you identify the effect of your treatment on your outcome.</p>
+<p>WRITING HERE</p>
+</div>
+<div id="conclusions" class="section level1">
+<h1>Conclusions</h1>
+<p>Conclude with a few thoughts on things you found interesting, or follow-up questions you might like to explore in the future.</p>
+<p>WRITING HERE</p>
+</div>

@@ -1,0 +1,232 @@
+---
+title: "Problem set 1: Data visualization"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(babynames) # loads babynames data, needs to install if not yet installed
+```
+
+
+# Task 1: Baby Names
+
+
+The `babynames` package includes data from the Social Security Administration with counts of baby names with at least 5 annual uses between 1880-2015.
+
+Because there are so many names, we'll look at "Riley".
+
+
+```{r}
+baby_subset <- babynames %>%
+  filter(name == "Riley")
+
+# look at the data
+head(baby_subset)
+```
+
+
+Using `baby_subset`, make a *time-series* that shows how often the name we picked was used for babies categorized as male and as female over time. (Hint: map the `sex` variable to the color aesthetic; also, the `n` variable shows the count per year). 
+
+
+Make the plot below:
+
+
+```{r}
+
+
+```
+
+
+**Question 1**: Roughly speaking, what happened with the use of the name Riley after the year 2000?
+
+
+
+Now, make a similar graph for "Carey". Alter the code chunk below so that `baby_subset` contains babies named "Carey" instead of "Riley". 
+
+
+```{r mckinley-subset}
+baby_subset <- babynames %>%
+  filter(name == "Riley")
+
+# look at the data
+head(baby_subset)
+```
+
+
+Now make the same plot below: 
+
+
+```{r}
+
+
+```
+
+
+**Question 2: roughly speaking, when did the name peak in use for male and female babies?**
+
+
+
+
+Finally, let's look at the most popular names in 1914, the year the first World War began. Run the code below:
+
+
+```{r}
+top_names = babynames %>% 
+  filter(year == 1914) %>% 
+  group_by(sex) %>% 
+  top_n(n = 10, wt = prop) %>% 
+  select(sex, name, prop) %>% 
+  mutate(name = fct_reorder(name, prop))
+```
+
+
+Make a barplot that puts the baby's name on the y-axis, and the proportion of babies with that name (the variable is called `prop`) on the x-axis. Map the sex variable to the fill aesthetic to create separate bars for male and female babies. 
+
+```{r}
+
+
+```
+
+**Question 3: What was the 7th most popular name for male and for female babies, respectively, in 1914?**
+
+
+
+# Task 2: The Movies
+
+
+Next, let's look at some data about movies. These data are about a selection of films and info about how much they cost, how much they made in theaters, and what rating they received from reviewers. 
+
+
+
+```{r clean-movie-data, message=FALSE, warning=FALSE}
+# read data
+movies = 
+  read_csv("https://www.dropbox.com/s/ti3d62yfqpgtkil/movies.csv?dl=1") %>% 
+  # exclude movies before 1980
+  filter(year >= 1980) %>% 
+  # make decades variable
+  mutate(decade = case_when(year >= 1980 & year < 1990 ~ "80s", 
+                            year >= 1990 & year < 2000 ~ "90s", 
+                            year >= 2000 & year < 2010 ~ "2000s", 
+                            year >= 2010 ~ "2010s"))
+
+
+# look at the data
+head(movies)
+```
+
+
+
+Using `movies`, make a scatterplot that presents a movie's budget (x-axis) against how much it grossed in theaters (y-axis). Color the points by which `decade` the movie was made in. Add titles to the x and y axis and a theme. 
+
+Make the plot below:
+
+
+```{r budget}
+
+
+```
+
+
+**Question 4: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+ 
+Look at that outlier point in bottom-right part of the plot (should have the color for "2010s"). What movie is this? 
+
+
+Make a new plot that adds labels to each of the points so that you can figure out what that movie is. Hint: look at how we did this with the health and wealth plot from class with `gapminder`.
+
+Make the plot below (hint: if hard to see, press the icon with an arrow and a box at the top right of the image):
+
+
+```{r}
+
+
+
+
+```
+
+
+**Question 5: What's the outlier movie?**
+
+
+
+
+**Question 6: What, if anything, does the movie's position on the graph tell us about how successful it was?**
+
+
+Are movies getting *longer* or *shorter* over time? Show the distribution of movie duration using a *histogram*, and map the `fill` aesthetic to `decade` so we can see the distribution within each decade. 
+
+Make the plot below: 
+
+
+```{r ratings-year}
+
+
+```
+
+
+**Question 7: compare the distribution of movie length across decades. Are movies getting longer over time, shorter over time, or are the distributions pretty similar?**
+
+
+
+
+Finally, let's look at who are the most/least *profitable* scary movie directors. First, we'll make a new dataset that only looks at scary movies, calculates each movie's profit (`gross` - `budget`) and finds the average profit for each director. To make this more manageable, let's look at directors who made at least 2 movies. 
+
+
+Run the code below:
+
+
+```{r summarize-profits-director}
+directors_profit = movies %>% 
+  # only look at horror movies
+  filter(genre %in% c("Horror", "Thriller", "Mystery")) %>% 
+  # calculate profit
+  mutate(profit = gross - budget) %>% 
+  # group by director name
+  group_by(director) %>% 
+  # calculate number of movies each director made, average profit, average rating
+  summarise(n_movies = n(), 
+            avg_profit = mean(profit)) %>% 
+  # include directors who made more than 1 movie
+  filter(n_movies > 1)
+
+# look at the data
+head(directors_profit)
+```
+
+
+Now make a barplot, that has the director on the x-axis and profit on the y-axis. Hint: add `coord_flip()` to your code make the plot more readable.
+
+
+Make the plot below:
+
+
+```{r plot-director-profits}
+
+
+```
+
+
+- **Question 8: Who is the most profitable director?** 
+- **Question 9: Who is the least profitable director?** 
+
+
+# All done!
+

@@ -22,8 +22,8 @@ You will do all of your work in this class with the open source (and free!) prog
 
 First you need to install R itself (the engine).
 
-1. If you have a **WINDOWS**, click here: [Download R 4.1.1 for Windows](https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe)
-2. If you have a **MAC**, click here: [Download R 4.1.1 for macOS](https://cran.r-project.org/bin/macosx/base/R-4.1.1.pkg)
+1. If you have a **WINDOWS**, click here: [Download R 4.2.1 for Windows](https://cran.r-project.org/bin/windows/base/R-4.2.1-win.exe)
+2. If you have a **MAC**, click here: [Download R 4.2.1 for macOS](https://cran.r-project.org/bin/macosx/base/R-4.2.1.pkg)
 3. Double click on the downloaded file (check your `Downloads` folder). Click yes through all the prompts to install like any other program.
 
 4. If you use macOS, [download and install XQuartz](https://www.xquartz.org/). You do not need to do this on Windows.
@@ -33,20 +33,27 @@ First you need to install R itself (the engine).
 
 Next, you need to install RStudio, the nicer graphical user interface (GUI) for R (the dashboard). Once R and RStudio are both installed, you can ignore R and only use RStudio. RStudio will use R automatically and you won't ever have to interact with R directly.
 
-1. If you have a **WINDOWS**, click here: [Download RStudio for Windows](https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe)
-2. If you have a **MAC**, click here: [Download RStudio for macOS](https://download1.rstudio.org/desktop/macos/RStudio-1.4.1717.dmg)
+1. If you have a **WINDOWS**, click here: [Download RStudio for Windows](https://download1.rstudio.org/desktop/windows/RStudio-2022.07.1-554.exe)
+2. If you have a **MAC**, click here: [Download RStudio for macOS](https://download1.rstudio.org/desktop/macos/RStudio-2022.07.1-554.dmg)
 3. Double click on the downloaded file (check your `Downloads` folder). Click yes through all the prompts to install like any other program.
 
 Double click on RStudio to run it (check your applications folder or start menu).
 
 
-## Extra installation help: video
+
+## Extra installation help (Mac): steps
+
+Here's a different [helpful walkthrough for Mac](https://scribehow.com/shared/Google_Workflow__ivjLMJ3_SIaV9LDOwaxQHQ)
 
 
-Here's a [helpful walkthrough from Kieran Healy](https://www.youtube.com/watch?v=9UITYisElZ8)
+
+## Extra installation help (Windows): video
 
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/9UITYisElZ8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+Here's a different, [helpful walkthrough for Windows](https://www.youtube.com/watch?v=TFGYlKvQEQ4)
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TFGYlKvQEQ4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 ## Install (CRAN) packages

@@ -1,20 +1,20 @@
 main:
   - name: Syllabus
-    #url: /syllabus/
+    url: /syllabus/
     weight: 1
-  # - name: Schedule
-  #   url: /schedule/
-  #   weight: 2
-  # - name: Assignments
-  #   url: /assignment/
-  #   weight: 3
-  # - name: Reference
-  #   url: /reference/
-  #   weight: 4
-  # - name: <i class="fab fa-slack"></i> Slack
-  #   url: https://pol51f21.slack.com
-  #   weight: 5
-    
+#   - name: Schedule
+#     url: /schedule/
+#     weight: 2
+#   - name: Assignments
+#     url: /assignment/
+#     weight: 3
+#   - name: Reference
+#     url: /reference/
+#     weight: 4
+#   - name: <i class="fab fa-slack"></i> Slack
+#     url: https://pol51f22.slack.com
+#     weight: 5
+# 
 # assignment:
 #   - name: Overview
 #     weight: 1

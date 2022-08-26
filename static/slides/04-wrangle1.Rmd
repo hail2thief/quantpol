@@ -24,6 +24,7 @@ editor_options:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+xaringanExtra::use_editable(id = "wrangle1")
 knitr::opts_chunk$set(
   fig.width=9, 
   fig.height=3.5, 
@@ -107,7 +108,7 @@ First step is now *the data object*
 
 ---
 
-class: center, middle
+class: center, middle, inverse
 # What is data-wrangling?
 
 --
@@ -147,8 +148,9 @@ You've seen these before...
 
 - They look like this in R: ` %>% `
 
-- OSX: <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
-- Windows: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
+- For the love of all that is good: Use keyboard shortcuts
+  - OSX: <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
+  - Windows: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
 ]
 
 .pull-right[
@@ -209,7 +211,9 @@ movies `%>%`
 
 ---
 
-
+class: center, middle, inverse
+# Filtering and logical operators
+---
 
 class: center
 # Our first wrangling function: `filter()`
@@ -303,7 +307,6 @@ tribble(~Operator, ~meaning,
         "<", "less than", 
         ">=", "greater than or equal to", 
         "<=", "less than or equal to", 
-        "%in%", "is among the set", 
         "%", "AND (both conditions true)", 
         "|", "OR (either condition is true)") %>% 
   knitr::kable(align = "cc")
@@ -332,6 +335,15 @@ apples %>% knitr::kable()
 # Green and unsweet apples
 
 ```{r,echo = TRUE}
+apples #<<
+```
+
+
+---
+
+# Green and unsweet apples
+
+```{r,echo = TRUE}
 apples %>% 
   filter(color == "green") #<<
 ```
@@ -350,17 +362,17 @@ apples %>%
 
 Notice TRUE/FALSE are all-caps!
 
---
-
-Same as:
-
-
-```{r,echo = TRUE, eval = FALSE}
-apples %>% filter(color == "green", sweet == FALSE) #<<
-```
-
 ---
 
+# Apples that aren't green
+
+```{r,echo = TRUE}
+apples %>% 
+  filter(color != "green") #<<
+```
+
+
+---
 
 
 # At least 4 pounds but less than 6
@@ -371,23 +383,10 @@ apples %>%
 ```
 
 
-Notice that *at least* implies *greater than or equal to*
+Notice: I can put two *conditions* on one line
 
+Notice: **at least** implies *greater than or equal to*
 
----
-
-# Using `%in%`
-
-
-Apples named either Fuji or Gala and weigh more than 2 pounds:
-
-```{r,echo = TRUE}
-apples %>% 
-  filter(name %in% c("Fuji", "Gala")) %>% 
-  filter(pounds > 2)
-```
-
-Notice how "lists" of things are wrapped in `c()`
 
 ---
 
@@ -397,6 +396,8 @@ Notice how "lists" of things are wrapped in `c()`
 The `&` operator can be used to combine rules
 
 Returns observations where *both* rules are true
+
+"Apples that are red AND sweet": 
 
 --
 
@@ -408,15 +409,10 @@ apples %>%
 
 --
 
-
-Same as:
-
+Notice this is same as:
 
 ```{r, echo = TRUE, eval = FALSE}
-# apples that are red AND sweet
-apples %>% 
-  filter(color == "red") %>% 
-  filter(sweet == TRUE)
+apples %>% filter(color == "red", sweet == FALSE)
 ```
 
 
@@ -439,46 +435,41 @@ The <kbd>|</kbd>  should be above your Return/Enter key!
 
 ---
 
-# 🚨 Your turn: find the flights 🚨
 
-.scroll-output[
-```{r}
-flights %>% 
-  select(month, day, origin, dest, carrier, dep_time, arr_time) %>% 
-  sample_n(20) %>% 
-  knitr::kable()
-```
-]
+# Let's try: students
+
+Put the below in human terms:
+
+.can-edit.key-student[Instructions.]
+
+
 
 ---
 
 
-# 🚨 Your turn: find the flights 🚨
+## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+There was once a Twitter bot that would randomly tweet profiles of real voters from the Cooperative Election Study:
 
 --
 
-Using the `flights_small` object, find the following:
-
-
---
-
-1. Flights in the winter that took off between 8:13am and 12:59pm
-
---
-
-2. How many flights arrived late on Thanksgiving Day or Christmas Eve?
-
---
-
-3. Spring break flights to Fort Lauderdale or Miami from JFK, in April
-
---
-
-
-```{r}
-countdown::countdown(minutes = 10L)
+```{r, out.width="80%"}
+knitr::include_graphics("images/american-voter-bot.png")
 ```
 
+---
+
+## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+
+.can-edit[Instructions.]
+
+
+---
+
+
+class: center, middle, inverse
+# Objects
 ---
 
 # The last step: creating objects
@@ -490,8 +481,8 @@ Step 1-2: the data, the pipe, the wrangling functions
 
 
 ```{r, echo = TRUE, eval = FALSE}
-flights_small %>% 
-  filter(dest == "FLL")
+apples %>% 
+  filter(sweet == "green") #<<
 ```
 
 --
@@ -499,8 +490,8 @@ flights_small %>%
 Step 3: store the subsetted data as a new **object** for later use
 
 ```{r, echo = TRUE, eval = FALSE}
-miami_flights = flights_small %>% 
-  filter(dest == "MIA")
+green_apples = apples %>% #<<
+  filter(sweet == "green")
 ```
 
 ---
@@ -519,8 +510,7 @@ new_object = stuff %>% filter(year == 1999)
 Or like this: 
 
 ```{r, echo = TRUE, eval = FALSE}
-new_object = 
-  stuff %>% filter(year == 1999)
+new_object = stuff %>% filter(year == 1999)
 ```
 
 ---
@@ -528,11 +518,11 @@ new_object =
 
 # Naming objects
 
-> There are only two hard things in Computer Science: cache invalidation and naming things.
+> *There are only two hard things in Computer Science: cache invalidation and naming things.*
 -- Phil Karlton
 
 
-Few rules: can't start with a number; use `_` to separate words
+Few rules: cannot begin with a number; use `_` to separate words
 
 ```{r, echo = TRUE, eval = FALSE}
 # Good
@@ -586,15 +576,11 @@ ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
 
 Using the `elections` dataset:
 
-.small[
-1. Find the worst place I've lived: Trump won with more than 53% of the vote, median income is less than $45,000, either in the South or the Northeast, and the population is between 155k and 156k. What county is it?
 
-2. Make a histogram of Democratic performance in the South in 2020, excluding Florida.
+1. Make a histogram of Democratic performance in the South in 2020, excluding Florida.
 
-3. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020. Make a plot of your choosing about these counties.
+2. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020. Make a (nice) barplot of these counties and their 2020 Republican vote shares.
 
-4. Identify the counties where Trump outperformed Romney by 15 points. Make a (nice) barplot of these counties and their vote shares. 
-]
 
 ```{r}
 countdown::countdown(minutes = 10L)

@@ -1,6 +1,6 @@
 # POL51: The Scientific Study of Politics
 
-<img src="static/media/red-green-computer.gif" width="800">
+<img src="assets/images/icon.png" width="800">
 
 
 

@@ -3,94 +3,74 @@ lessons:
     header: True
 
   - title: 'Week 1: Introduction'
-    date: "Sep 23"
-    reading: "getting-started"
+    date: "Sep 22"
+    reading: "01-start"
     class: "getting-started"
     
   - title: 'Week 2: Visualizing data with ggplot<br><i class="fas fa-star"></i> **Assignment 1**'
-    date: "Sep 28, Sep 30"
+    date: "Sep 27, Sep 29"
     class: "dataviz"
-    reading: "data-viz"
-    assignment: "ps-viz"
-    
-  # - title: '<i class="fas fa-star"></i> **Assignment 1**'
-  #   #date: "Jan 26, Tue"
-  #   #assignment: "ps-viz"
+    reading: "02-viz"
+    #assignment: "ps-viz"
     
   - title: 'Week 3: Data wrangling<br><i class="fas fa-star"></i> **Assignment 2**'
-    date: "Oct 5, Oct 7"
+    date: "Oct 4, Oct 6"
     class: "data-wrangle"
-    reading: "data-wrangle"
-    assignment: "ps-wrangle"
-    
+    reading: "03-wrangle"
+    #assignment: "ps-wrangle"  
 
   - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
-    date: "Oct 12, Oct 14"
+    date: "Oct 11, Oct 13"
     class: "data-summary"
-    reading: "data-summary"
-    assignment: "ps-summary"
+    reading: "04-relationships"
+    #assignment: "ps-summary"
 
   - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
-    date: "Oct 19, Oct 21"
+    date: "Oct 18, Oct 20"
     class: "regression"
-    reading: "intro-reg"
-    assignment: "ps-reg"
-  #   
-  # - title: '<i class="fas fa-star"></i> **Assignment 4**'
-  #   #date: "Feb 16, Tue"
-  #   #assignment: "ps-reg"
+    reading: "05-reg"
+    #assignment: "ps-reg"
     
-  - title: 'Week 6: Prediction<br>(**no class Tuesday, Thursday lecture online**)<br><br><i class="fas fa-star"></i> **Assignment 5**'
-    date: "Oct 26, Oct 28"
-    reading: "prediction"
+  - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
+    date: "Oct 25, Oct 27"
+    reading: "06-pred"
     class: "prediction"
-    assignment: "ps-predict"
-    
-  # - title: '<i class="fas fa-star"></i> **Assignment 5**'
-  #   #date: "Feb 23, Tue"
-  #   #assignment: "ps-predict"
+    #assignment: "ps-predict"
     
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
 
   - title: "Week 7: Causality and DAGs"
-    date: "Nov 2, Nov 4"
+    date: "Nov 1, Nov 3"
     class: "causality"
-    reading: "causal"
+    #reading: "07-causal"
     
-  - title: 'Week 8: ggdag<br>(**no class Thursday: Veterans Day**)<br><i class="fas fa-star"></i> **Assignment 6**'
-    date: "Nov 9"
+  - title: 'Week 8: ggdag<br><i class="fas fa-star"></i> **Assignment 6**'
+    date: "Nov 8, Nov 10"
     class: "dags"
-    reading: "dags"
-    assignment: "ps-dags"
-    
-  # - title: '<i class="fas fa-star"></i> **Assignment 6**'
-  #   #date: "Mar 16, Tue"
-  #   #assignment: "ps-dags"
+    reading: "08-dags"
+    #assignment: "ps-dags"
     
   - title: 'Week 9: Closing backdoors<br><i class="fas fa-star"></i> **Assignment 7**'
-    date: "Nov 16, Nov 18"
+    date: "Nov 15, Nov 17"
     class: "controls"
-    reading: "controls"
-    assignment: "ps-controls"
-  # - title: '<i class="fas fa-star"></i> **Assignment 7**'
-  #   #date: "Mar 23, Tue"
-  #   #assignment: "ps-controls"
+    reading: "09-controls"
+    #assignment: "ps-controls"
     
   - title: '<span class="fake-header-table">Uncertainty</span>'
     header: True
     
   - title: "Week 10: Uncertainty <br> (**no class Thursday: Thanksgiving**)"
-    date: "Nov 23"
+    date: "Nov 22"
     class: "uncertainty"
-    reading: "uncertainty"
+    reading: "10-uncertainty"
     
-  - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Online lectures**'
-    date: "Nov 30 - Dec 2"
+  - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
+    date: "Nov 29 - Dec 1"
     class: "bootstrap"
-    reading: "bootstrap"
+    reading: "11-bootstrap"
     
   - title: '<i class="fas fa-star"></i> **Final Project Due**'
-    date: "Dec 5, 5:00PM"
-    assignment: "final-project"
+    date: "Dec 9, 10:30AM"
+    #assignment: "final-project"
  

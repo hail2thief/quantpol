@@ -19,6 +19,32 @@ font_add_google("Fira Sans")
 showtext_auto()
 
 
+
+# dubois
+library(cowplot)
+
+ggdraw() +
+  draw_image(
+    "https://miro.medium.com/max/1400/1*n-ck9Jt8oy7adM73XYA8PA.png",
+    scale = 1,
+    y = .1
+  ) -> p
+
+
+sticker(p, package="POL51",h_fill = 'white',h_color = 'black',
+        p_size=8, s_x=1, s_y=.7, s_width=2.5, s_height=2.5,
+        p_x = 1, p_y = 1,
+        p_family = "Fira Sans", p_color = 'black', dpi = 500,
+        white_around_sticker = TRUE,
+        filename = 'sticker.png')
+
+sticker(p, package="POL51",h_fill = 'white',h_color = 'black',
+        p_size=8, s_x=1, s_y=.7, s_width=2.5, s_height=2.5,
+        p_x = 1, p_y = 1,
+        p_family = "Fira Sans", p_color = 'black', dpi = 500,
+        white_around_sticker = TRUE,
+        filename = 'assets/images/icon.png')
+
 # fake data from http://rpubs.com/lakenp/simpsonsparadox
 set.seed(123)
 n = 800
