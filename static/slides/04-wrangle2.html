@@ -4,7 +4,7 @@
     <title>Wrangling II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-10-07" />
+    <meta name="date" content="2022-08-30" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
@@ -51,7 +51,7 @@ class: center
 .box-2.large.sp-after[Mutating new variables]
 
 --
-.box-3.large.sp-after[Selecting and arranging]
+.box-3.large.sp-after[Creating categories]
 
 ---
 
@@ -129,8 +129,7 @@ background-size: cover
 |    &lt;     |           less than           |
 |    &gt;=    |   greater than or equal to    |
 |    &lt;=    |     less than or equal to     |
-|   %in%   |       is among the set        |
-|    %     |  AND (both conditions true)   |
+|    &amp;     |  AND (both conditions true)   |
 |  &amp;#124;  | OR (either condition is true) |
 
 
@@ -141,14 +140,15 @@ background-size: cover
 Using `elections`:
 
 .small[
-1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.
+1. Find the worst place I've lived: Trump won with more than 53% of the vote, median income is less than $45,000, either in the South or the Northeast, and the population is between 155k and 156k. What county is it?
 
-2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
 
-3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. **I'll do this one**.
+2. Which counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
+
+3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
 ]
 
-<div class="countdown" id="timer_615f8240" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_630e5f43" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -186,20 +186,20 @@ elections
 
 ```
 ## # A tibble: 3,152 × 17
-##    fips  name    state census_region    pop female white black travel_time land_area hh_income
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 01001 Autaug… AL    South          55395   51.5  78.1  18.4        26.2      594.     53682
-##  2 01003 Baldwi… AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221
-##  3 01005 Barbou… AL    South          26887   46.5  50.2  47.6        24.6      885.     32911
-##  4 01007 Bibb C… AL    South          22506   46    76.3  22.1        27.6      623.     36447
-##  5 01009 Blount… AL    South          57719   50.6  96     1.8        33.9      645.     44145
-##  6 01011 Bulloc… AL    South          10764   45.2  27.2  69.9        26.9      623.     32033
-##  7 01013 Butler… AL    South          20296   53.4  54.3  43.6        24        777.     29918
-##  8 01015 Calhou… AL    South         115916   51.7  76    20.9        22.5      606.     39962
-##  9 01017 Chambe… AL    South          34076   52    58.8  39.1        24.6      597.     32402
-## 10 01019 Cherok… AL    South          26037   50.4  93.2   4.5        26.9      554.     34907
-## # … with 3,142 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
-## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name            state census_region    pop female white black travel_time land_area hh_income per_dem_2012
+##    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 01001 Autauga County  AL    South          55395   51.5  78.1  18.4        26.2      594.     53682        0.266
+##  2 01003 Baldwin County  AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221        0.216
+##  3 01005 Barbour County  AL    South          26887   46.5  50.2  47.6        24.6      885.     32911        0.513
+##  4 01007 Bibb County     AL    South          22506   46    76.3  22.1        27.6      623.     36447        0.262
+##  5 01009 Blount County   AL    South          57719   50.6  96     1.8        33.9      645.     44145        0.123
+##  6 01011 Bullock County  AL    South          10764   45.2  27.2  69.9        26.9      623.     32033        0.763
+##  7 01013 Butler County   AL    South          20296   53.4  54.3  43.6        24        777.     29918        0.461
+##  8 01015 Calhoun County  AL    South         115916   51.7  76    20.9        22.5      606.     39962        0.335
+##  9 01017 Chambers County AL    South          34076   52    58.8  39.1        24.6      597.     32402        0.471
+## 10 01019 Cherokee County AL    South          26037   50.4  93.2   4.5        26.9      554.     34907        0.218
+## # … with 3,142 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
+## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -215,20 +215,20 @@ elections %&gt;%
 
 ```
 ## # A tibble: 58 × 17
-##    fips  name    state census_region    pop female white black travel_time land_area hh_income
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 06001 Alamed… CA    West          1.61e6   51    52    12.4        28.8      739.     72112
-##  2 06003 Alpine… CA    West          1.12e3   47.4  71.8   0.4        23.7      738.     58636
-##  3 06005 Amador… CA    West          3.67e4   46.9  90.9   2.1        30        595.     53684
-##  4 06007 Butte … CA    West          2.24e5   50.4  87     1.8        20.3     1636.     43752
-##  5 06009 Calave… CA    West          4.46e4   50    92.1   1          35.5     1020.     55295
-##  6 06011 Colusa… CA    West          2.14e4   48.3  91.6   1.2        21.2     1151.     52158
-##  7 06013 Contra… CA    West          1.11e6   51.2  67.9   9.6        33.3      716.     78756
-##  8 06015 Del No… CA    West          2.72e4   44.6  78.6   3.7        14.2     1006.     37909
-##  9 06017 El Dor… CA    West          1.83e5   50    90.1   0.9        28.8     1708.     69297
-## 10 06019 Fresno… CA    West          9.66e5   50    77.4   5.9        22.1     5958.     45563
-## # … with 48 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
-## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name             state census_region    pop female white black travel_time land_area hh_income per_dem_2012
+##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 06001 Alameda County   CA    West          1.61e6   51    52    12.4        28.8      739.     72112        0.785
+##  2 06003 Alpine County    CA    West          1.12e3   47.4  71.8   0.4        23.7      738.     58636        0.601
+##  3 06005 Amador County    CA    West          3.67e4   46.9  90.9   2.1        30        595.     53684        0.392
+##  4 06007 Butte County     CA    West          2.24e5   50.4  87     1.8        20.3     1636.     43752        0.464
+##  5 06009 Calaveras County CA    West          4.46e4   50    92.1   1          35.5     1020.     55295        0.401
+##  6 06011 Colusa County    CA    West          2.14e4   48.3  91.6   1.2        21.2     1151.     52158        0.383
+##  7 06013 Contra Costa Co… CA    West          1.11e6   51.2  67.9   9.6        33.3      716.     78756        0.657
+##  8 06015 Del Norte County CA    West          2.72e4   44.6  78.6   3.7        14.2     1006.     37909        0.428
+##  9 06017 El Dorado County CA    West          1.83e5   50    90.1   0.9        28.8     1708.     69297        0.396
+## 10 06019 Fresno County    CA    West          9.66e5   50    77.4   5.9        22.1     5958.     45563        0.476
+## # … with 48 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
+## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -244,20 +244,20 @@ elections %&gt;%
 
 ```
 ## # A tibble: 29 × 17
-##    fips  name    state census_region    pop female white black travel_time land_area hh_income
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 06005 Amador… CA    West           36742   46.9  90.9   2.1        30        595.     53684
-##  2 06007 Butte … CA    West          224241   50.4  87     1.8        20.3     1636.     43752
-##  3 06009 Calave… CA    West           44624   50    92.1   1          35.5     1020.     55295
-##  4 06011 Colusa… CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158
-##  5 06015 Del No… CA    West           27212   44.6  78.6   3.7        14.2     1006.     37909
-##  6 06017 El Dor… CA    West          183087   50    90.1   0.9        28.8     1708.     69297
-##  7 06019 Fresno… CA    West          965974   50    77.4   5.9        22.1     5958.     45563
-##  8 06021 Glenn … CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023
-##  9 06027 Inyo C… CA    West           18410   49.8  81.7   0.9        14.8    10181.     44796
-## 10 06029 Kern C… CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552
-## # … with 19 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
-## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name             state census_region    pop female white black travel_time land_area hh_income per_dem_2012
+##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 06005 Amador County    CA    West           36742   46.9  90.9   2.1        30        595.     53684        0.392
+##  2 06007 Butte County     CA    West          224241   50.4  87     1.8        20.3     1636.     43752        0.464
+##  3 06009 Calaveras County CA    West           44624   50    92.1   1          35.5     1020.     55295        0.401
+##  4 06011 Colusa County    CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158        0.383
+##  5 06015 Del Norte County CA    West           27212   44.6  78.6   3.7        14.2     1006.     37909        0.428
+##  6 06017 El Dorado County CA    West          183087   50    90.1   0.9        28.8     1708.     69297        0.396
+##  7 06019 Fresno County    CA    West          965974   50    77.4   5.9        22.1     5958.     45563        0.476
+##  8 06021 Glenn County     CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023        0.358
+##  9 06027 Inyo County      CA    West           18410   49.8  81.7   0.9        14.8    10181.     44796        0.427
+## 10 06029 Kern County      CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552        0.385
+## # … with 19 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
+## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -276,20 +276,20 @@ elections %&gt;%
 
 ```
 ## # A tibble: 10 × 17
-##    fips  name    state census_region    pop female white black travel_time land_area hh_income
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 06011 Colusa… CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158
-##  2 06021 Glenn … CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023
-##  3 06029 Kern C… CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552
-##  4 06035 Lassen… CA    West           31749   36.6  81.8   8.5        19.4     4541.     53107
-##  5 06049 Modoc … CA    West            9023   49.6  88.9   1.1        16.9     3918.     36212
-##  6 06061 Placer… CA    West          371694   51.2  86.3   1.7        26.9     1407.     72725
-##  7 06089 Shasta… CA    West          179804   50.9  88.8   1          20.1     3775.     44651
-##  8 06091 Sierra… CA    West            3003   49.7  94.7   0.4        27.5      953.     39009
-##  9 06101 Sutter… CA    West           95847   50.2  74.5   2.4        27.4      602.     50408
-## 10 06103 Tehama… CA    West           63067   50.2  90.9   0.9        23.3     2950.     41924
-## # … with 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;,
-## #   per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time land_area hh_income per_dem_2012
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 06011 Colusa County CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158        0.383
+##  2 06021 Glenn County  CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023        0.358
+##  3 06029 Kern County   CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552        0.385
+##  4 06035 Lassen County CA    West           31749   36.6  81.8   8.5        19.4     4541.     53107        0.287
+##  5 06049 Modoc County  CA    West            9023   49.6  88.9   1.1        16.9     3918.     36212        0.279
+##  6 06061 Placer County CA    West          371694   51.2  86.3   1.7        26.9     1407.     72725        0.389
+##  7 06089 Shasta County CA    West          179804   50.9  88.8   1          20.1     3775.     44651        0.336
+##  8 06091 Sierra County CA    West            3003   49.7  94.7   0.4        27.5      953.     39009        0.366
+##  9 06101 Sutter County CA    West           95847   50.2  74.5   2.4        27.4      602.     50408        0.381
+## 10 06103 Tehama County CA    West           63067   50.2  90.9   0.9        23.3     2950.     41924        0.348
+## # … with 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;,
+## #   per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -316,20 +316,20 @@ elections
 
 ```
 ## # A tibble: 3,152 × 17
-##    fips  name    state census_region    pop female white black travel_time land_area hh_income
-##    &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 01001 Autaug… AL    South          55395   51.5  78.1  18.4        26.2      594.     53682
-##  2 01003 Baldwi… AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221
-##  3 01005 Barbou… AL    South          26887   46.5  50.2  47.6        24.6      885.     32911
-##  4 01007 Bibb C… AL    South          22506   46    76.3  22.1        27.6      623.     36447
-##  5 01009 Blount… AL    South          57719   50.6  96     1.8        33.9      645.     44145
-##  6 01011 Bulloc… AL    South          10764   45.2  27.2  69.9        26.9      623.     32033
-##  7 01013 Butler… AL    South          20296   53.4  54.3  43.6        24        777.     29918
-##  8 01015 Calhou… AL    South         115916   51.7  76    20.9        22.5      606.     39962
-##  9 01017 Chambe… AL    South          34076   52    58.8  39.1        24.6      597.     32402
-## 10 01019 Cherok… AL    South          26037   50.4  93.2   4.5        26.9      554.     34907
-## # … with 3,142 more rows, and 6 more variables: per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
-## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name            state census_region    pop female white black travel_time land_area hh_income per_dem_2012
+##    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+##  1 01001 Autauga County  AL    South          55395   51.5  78.1  18.4        26.2      594.     53682        0.266
+##  2 01003 Baldwin County  AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221        0.216
+##  3 01005 Barbour County  AL    South          26887   46.5  50.2  47.6        24.6      885.     32911        0.513
+##  4 01007 Bibb County     AL    South          22506   46    76.3  22.1        27.6      623.     36447        0.262
+##  5 01009 Blount County   AL    South          57719   50.6  96     1.8        33.9      645.     44145        0.123
+##  6 01011 Bullock County  AL    South          10764   45.2  27.2  69.9        26.9      623.     32033        0.763
+##  7 01013 Butler County   AL    South          20296   53.4  54.3  43.6        24        777.     29918        0.461
+##  8 01015 Calhoun County  AL    South         115916   51.7  76    20.9        22.5      606.     39962        0.335
+##  9 01017 Chambers County AL    South          34076   52    58.8  39.1        24.6      597.     32402        0.471
+## 10 01019 Cherokee County AL    South          26037   50.4  93.2   4.5        26.9      554.     34907        0.218
+## # … with 3,142 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
+## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 
@@ -470,83 +470,54 @@ apples %&gt;%
 
 ---
 
-# Another example: back to flights
+# Another example: population density
 
 
-Say I want to know how many **hours** late a flight is in departing
+Say I want to know how **densely** populated all counties in the US are:
 
 
 
-| month| day| dep_time| sched_dep_time| arr_time| sched_arr_time|origin |dest | air_time| distance|
-|-----:|---:|--------:|--------------:|--------:|--------------:|:------|:----|--------:|--------:|
-|     1|   1|      517|            515|      830|            819|EWR    |IAH  |      227|     1400|
-|     1|   1|      533|            529|      850|            830|LGA    |IAH  |      227|     1416|
-|     1|   1|      542|            540|      923|            850|JFK    |MIA  |      160|     1089|
-|     1|   1|      544|            545|     1004|           1022|JFK    |BQN  |      183|     1576|
-|     1|   1|      554|            600|      812|            837|LGA    |ATL  |      116|      762|
-|     1|   1|      554|            558|      740|            728|EWR    |ORD  |      150|      719|
+|name           |state |    pop| land_area|
+|:--------------|:-----|------:|---------:|
+|Autauga County |AL    |  55395|    594.44|
+|Baldwin County |AL    | 200111|   1589.78|
+|Barbour County |AL    |  26887|    884.88|
+|Bibb County    |AL    |  22506|    622.58|
+|Blount County  |AL    |  57719|    644.78|
+|Bullock County |AL    |  10764|    622.81|
 
 ---
 
-# How late? Calculate delay
+# Density
 
-Lateness = difference between when they depart vs. were scheduled to depart
+`\(Density = \frac{Population}{Area}\)`
 
 --
 
 
 
 ```r
-flights_small %&gt;%
-* mutate(how_late = dep_time - sched_dep_time)
+elections %&gt;%
+* mutate(density = pop / land_area)
 ```
 
 
-```
-## # A tibble: 6 × 5
-##   month   day dep_time sched_dep_time how_late
-##   &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;int&gt;
-## 1     1     1      517            515        2
-## 2     1     1      533            529        4
-## 3     1     1      542            540        2
-## 4     1     1      544            545       -1
-## 5     1     1      554            600      -46
-## 6     1     1      554            558       -4
-```
-
-???
-Notice this is in minutes!
-
----
-
-
-
-# How late? Convert to hours
-
-
-
-```r
-flights_small %&gt;%
-  mutate(how_late = dep_time - sched_dep_time) %&gt;%
-* mutate(how_late_hrs = how_late / 60)
-```
-
 
 ```
-## # A tibble: 336,776 × 6
-##    month   day dep_time sched_dep_time how_late how_late_hrs
-##    &lt;int&gt; &lt;int&gt;    &lt;int&gt;          &lt;int&gt;    &lt;int&gt;        &lt;dbl&gt;
-##  1     1     1      517            515        2       0.0333
-##  2     1     1      533            529        4       0.0667
-##  3     1     1      542            540        2       0.0333
-##  4     1     1      544            545       -1      -0.0167
-##  5     1     1      554            600      -46      -0.767 
-##  6     1     1      554            558       -4      -0.0667
-##  7     1     1      555            600      -45      -0.75  
-##  8     1     1      557            600      -43      -0.717 
-##  9     1     1      557            600      -43      -0.717 
-## 10     1     1      558            600      -42      -0.7   
-## # … with 336,766 more rows
+## # A tibble: 3,152 × 5
+##    name            state    pop land_area density
+##    &lt;chr&gt;           &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Autauga County  AL     55395      594.    93.2
+##  2 Baldwin County  AL    200111     1590.   126. 
+##  3 Barbour County  AL     26887      885.    30.4
+##  4 Bibb County     AL     22506      623.    36.1
+##  5 Blount County   AL     57719      645.    89.5
+##  6 Bullock County  AL     10764      623.    17.3
+##  7 Butler County   AL     20296      777.    26.1
+##  8 Calhoun County  AL    115916      606.   191. 
+##  9 Chambers County AL     34076      597.    57.1
+## 10 Cherokee County AL     26037      554.    47.0
+## # … with 3,142 more rows
 ```
 
 
@@ -558,44 +529,95 @@ flights_small %&gt;%
 
 
 ```r
-*flights_delay = flights_small %&gt;%
-  mutate(how_late = dep_time - sched_dep_time) %&gt;%
-  mutate(how_late_hrs = how_late / 60)
+elections_density = elections %&gt;%
+  mutate(density = pop / land_area)
 ```
 
 --
 
-Notice that the original `flights_small` does not have either of these new variables!
+Notice that the original `elections` does not have this new variable!
 
 
 
 ```r
-flights_small %&gt;% names()
+elections %&gt;% names()
 ```
 
 ```
-##  [1] "month"          "day"            "dep_time"       "sched_dep_time" "arr_time"      
-##  [6] "sched_arr_time" "origin"         "dest"           "air_time"       "distance"
+##  [1] "fips"          "name"          "state"         "census_region" "pop"           "female"        "white"        
+##  [8] "black"         "travel_time"   "land_area"     "hh_income"     "per_dem_2012"  "per_gop_2012"  "per_dem_2016" 
+## [15] "per_gop_2016"  "per_gop_2020"  "per_dem_2020"
 ```
-
-
 
 ---
 
 
-# Look at the distribution of lateness
+# Population density and vote choice
 
+
+Do denser counties tend to vote more R or D?
+
+--
+
+
+```r
+ggplot(elections_density, aes(x = density, y = per_gop_2020)) +
+  geom_point() + labs(x = "Pop density", y = "GOP vote share (2020)") + theme_minimal()
+```
+
+&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-23-1.png" width="70%" /&gt;
+
+???
+Looks horrible --&gt; density is very skewed
+
+---
+
+
+# Dealing with the skew with logarithms
+
+
+Sometimes it is appropriate to take the natural logarithm of a highly-skewed variable (don't stress about this)
+
+--
+
+Mutate our new dataset, `elections_density`
+
+
+```r
+log_elec_density = elections_density %&gt;%
+* mutate(log_density = log(density))
+```
+
+--
+
+
+Another approach, mutating the original `elections` dataset *twice*
 
 
 
 ```r
-ggplot(flights_delay, aes(x = how_late_hrs)) +
-  geom_histogram()
+log_elec_density = elections %&gt;%
+  mutate(density = pop / land_area) %&gt;% 
+* mutate(log_density = log(density))
 ```
 
-&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-25-1.png" width="80%" /&gt;
+---
+
+
+# Plot again 🧘‍♂️
+
+
+
+```r
+ggplot(log_elec_density, aes(x = log_density, y = per_gop_2020)) + 
+  geom_point() + labs(x = "Pop density (logged)", y = "GOP vote share (2020)") + 
+  theme_light()
+```
+
+&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-26-1.png" width="70%" /&gt;
 
 ---
+
 
 # Math on computers
 
@@ -626,7 +648,7 @@ ggplot(flights_delay, aes(x = how_late_hrs)) +
 4. 🔥Challenge🔥: Create a variable that tells you whether a county **flipped** from 2016 to 2020 (e.g., Dems won it in 2016, Reps won it in 2020). 
 ]
 
-<div class="countdown" id="timer_615f810d" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_630e5f11" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -657,232 +679,183 @@ ggplot(flights_delay, aes(x = how_late_hrs)) +
 ---
 
 
+class: center, middle, inverse
+# Creating categories
+---
 
-&lt;!-- # Identifying flipped counties --&gt;
 
-&lt;!-- ```{r} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   mutate(gop_won_12 = per_gop_2012 &gt; per_dem_2012) %&gt;%  --&gt;
-&lt;!--   mutate(gop_won_16 = per_gop_2016 &gt; per_dem_2016) %&gt;%  --&gt;
-&lt;!--   mutate(flipped = gop_won_12 != gop_won_16) %&gt;%  --&gt;
-&lt;!--   select(name, state, gop_won_12, gop_won_16, flipped) --&gt;
-&lt;!-- ``` --&gt;
+# Creating categories with `case_when()`
 
+Sometimes we want to create **categorical variables** (tall, short, poor, rich, Republican-leaning, Democrat-leaning, etc.)
 
-&lt;!-- --- --&gt;
+We can use `case_when()`, a special function that goes **within** mutate
 
-&lt;!-- --- --&gt;
+Like `filter()`, `case_when()` also relies on logical operators
 
-&lt;!-- class: center, middle --&gt;
-&lt;!-- # Keeping only a few columns with `select()` --&gt;
+---
 
+# Who won the election?
 
-&lt;!-- `select()` lets you keep (or get rid of) variables you don't want --&gt;
 
+```
+## # A tibble: 6 × 4
+##   name           state per_gop_2020 per_dem_2020
+##   &lt;chr&gt;          &lt;chr&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Autauga County AL           0.714       0.270 
+## 2 Baldwin County AL           0.762       0.224 
+## 3 Barbour County AL           0.535       0.458 
+## 4 Bibb County    AL           0.784       0.207 
+## 5 Blount County  AL           0.896       0.0957
+## 6 Bullock County AL           0.248       0.747
+```
 
-&lt;!-- ```{r, out.width="60%"} --&gt;
-&lt;!-- knitr::include_graphics("images/select.png") --&gt;
-&lt;!-- ``` --&gt;
+---
 
 
-&lt;!-- --- --&gt;
+# Who won the election?
 
-&lt;!-- # Using `select()` --&gt;
+Let's say we want to break down elections into four categories: 
 
+- places where R's won **big** (let's say big = more than 10 points)
+- places where R's won *small* (from winning at all up to 10 points)
+- places where R's lost **big** (let's say big = more than 10 points)
+- places where R's lost *small* (from winning at all up to 10 points)
 
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights --&gt;
-&lt;!-- ``` --&gt;
+???
+How to measure *size of win* based on vote shares?
 
-&lt;!-- --- --&gt;
+---
 
-&lt;!-- # Using `select()` --&gt;
 
-&lt;!-- Keep only the year, month, and day: --&gt;
+# Winning categories
 
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- flights %&gt;% --&gt;
-&lt;!--   select(year, month, day) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
+First we figure out *by how much* Republicans won (or lost) to Democrats in a county (this is called the **margin**): 
 
-&lt;!-- --- --&gt;
+--
 
 
-&lt;!-- # Sorting data with `arrange()` --&gt;
+```r
+elections_margin = elections %&gt;% 
+* mutate(reps_margin = per_gop_2020 - per_dem_2020)
+```
 
 
-&lt;!-- You can sort a dataframe by a variable with `arrange()` --&gt;
 
-&lt;!-- -- --&gt;
+```
+## # A tibble: 3,152 × 5
+##    state name            per_gop_2020 per_dem_2020 reps_margin
+##    &lt;chr&gt; &lt;chr&gt;                  &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+##  1 AL    Autauga County         0.714       0.270       0.444 
+##  2 AL    Baldwin County         0.762       0.224       0.538 
+##  3 AL    Barbour County         0.535       0.458       0.0766
+##  4 AL    Bibb County            0.784       0.207       0.577 
+##  5 AL    Blount County          0.896       0.0957      0.800 
+##  6 AL    Bullock County         0.248       0.747      -0.499 
+##  7 AL    Butler County          0.575       0.418       0.157 
+##  8 AL    Calhoun County         0.688       0.298       0.390 
+##  9 AL    Chambers County        0.573       0.416       0.156 
+## 10 AL    Cherokee County        0.860       0.132       0.728 
+## # … with 3,142 more rows
+```
 
-&lt;!-- Where did the GOP perform **worst** in 2016?  --&gt;
 
-&lt;!-- -- --&gt;
+---
 
-&lt;!-- ```{r,echo = TRUE} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   select(name, state, per_gop_2016) %&gt;%  --&gt;
-&lt;!--   arrange(per_gop_2016) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
 
+# Winning categories
 
+Now we can use `case_when()` to build categories out of the margin variable. 
 
-&lt;!-- --- --&gt;
 
-&lt;!-- # Sorting data with `arrange()` --&gt;
+`case_when()` uses the following formula: `LOGICAL CONDITION ~ "category name"`
 
+--
 
-&lt;!-- Where did the GOP perform **best** in 2016? --&gt;
+Like so:
 
-&lt;!-- -- --&gt;
 
-&lt;!-- You can add `desc()` to arrange to sort in **descending** order --&gt;
 
+```r
+elec_win_cat = elections_margin %&gt;% 
+  mutate(win_type = case_when(reps_margin &gt;= .10 ~ "Big R win")) # reps win by more than 10
+```
 
-&lt;!-- ```{r,echo = TRUE} --&gt;
-&lt;!-- elections %&gt;%  --&gt;
-&lt;!--   select(name, state, per_gop_2016) %&gt;%  --&gt;
-&lt;!--   arrange(desc(per_gop_2016)) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
 
-&lt;!-- --- --&gt;
+```
+## # A tibble: 3,152 × 4
+##    name            state reps_margin win_type 
+##    &lt;chr&gt;           &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;    
+##  1 Autauga County  AL         0.444  Big R win
+##  2 Baldwin County  AL         0.538  Big R win
+##  3 Barbour County  AL         0.0766 &lt;NA&gt;     
+##  4 Bibb County     AL         0.577  Big R win
+##  5 Blount County   AL         0.800  Big R win
+##  6 Bullock County  AL        -0.499  &lt;NA&gt;     
+##  7 Butler County   AL         0.157  Big R win
+##  8 Calhoun County  AL         0.390  Big R win
+##  9 Chambers County AL         0.156  Big R win
+## 10 Cherokee County AL         0.728  Big R win
+## # … with 3,142 more rows
+```
 
-&lt;!-- class: center, middle --&gt;
-&lt;!-- # 🚨 Your turn 🚨 --&gt;
+---
 
 
-&lt;!-- Using `elections`: --&gt;
+# Winning categories
 
+The rest of the categories:
 
-&lt;!-- Use today's functions in some way and make a plot of your choosing --&gt;
 
-&lt;!-- Post on Slack so we can see! --&gt;
+```r
+elec_win_cat = elections_margin %&gt;% 
+  mutate(win_type = case_when(reps_margin &gt;= .10 ~ "Big R win", # reps win by more than 10
+                              reps_margin &gt; 0 &amp; reps_margin &lt; .1 ~ "Small R win", # reps win by more than 0 but less than 10
+                              reps_margin &lt; 0 &amp; reps_margin &gt; -.10 ~ "Small R loss", # reps lose by more than 0 but less than 10
+                              reps_margin &lt;= -.10 ~ "Big R loss")) # reps lose by more than 10
+```
 
 
-&lt;!-- ```{r} --&gt;
-&lt;!-- countdown::countdown(minutes = 5L) --&gt;
-&lt;!-- ``` --&gt;
+```
+## # A tibble: 3,152 × 4
+##    name            state reps_margin win_type   
+##    &lt;chr&gt;           &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;      
+##  1 Autauga County  AL         0.444  Big R win  
+##  2 Baldwin County  AL         0.538  Big R win  
+##  3 Barbour County  AL         0.0766 Small R win
+##  4 Bibb County     AL         0.577  Big R win  
+##  5 Blount County   AL         0.800  Big R win  
+##  6 Bullock County  AL        -0.499  Big R loss 
+##  7 Butler County   AL         0.157  Big R win  
+##  8 Calhoun County  AL         0.390  Big R win  
+##  9 Chambers County AL         0.156  Big R win  
+## 10 Cherokee County AL         0.728  Big R win  
+## # … with 3,142 more rows
+```
 
+---
 
-&lt;!-- --- --&gt;
 
+# Make a plot
 
-&lt;!-- # Creating categorical variables using `case_when()` --&gt;
 
+```r
+ggplot(elec_win_cat, aes(x = per_gop_2020, fill = win_type)) + 
+  geom_histogram() + theme_light()
+```
 
-&lt;!-- Sometimes we want to create **categorical variables** --&gt;
+&lt;img src="04-wrangle2_files/figure-html/unnamed-chunk-36-1.png" width="100%" /&gt;
 
-&lt;!-- We can use `case_when()`, a special function that goes **within** mutate --&gt;
+---
 
-&lt;!-- Like `filter()`, `case_when()` also relies on logical operators --&gt;
 
-&lt;!-- --- --&gt;
+# 🚨 Your turn 🚨
 
-&lt;!-- # Are flights late, on time, or early? --&gt;
+Using the `elections` dataset:
 
-&lt;!-- scroll-output[ --&gt;
-&lt;!-- ```{r} --&gt;
-&lt;!-- flights_delay %&gt;% --&gt;
-&lt;!--   knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
 
-&lt;!-- --- --&gt;
+1. Using the variable on the percent of the county population that is Black/African-American, categorize the counties by whether the population is: 0-9% Black, 10-19% Black, 20-49% Black, or more than 50% Black. 
 
-&lt;!-- # Are flights late, on time, or early? --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- flights_delay %&gt;% --&gt;
-&lt;!--   mutate(late_status = case_when()) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Are flights late, on time, or early? --&gt;
-
-
-&lt;!-- ```{r, echo = TRUE, eval = FALSE} --&gt;
-&lt;!-- flights_delay %&gt;% --&gt;
-&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late")) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- Read: if "how_late_hrs" is greater than zero, categorize as "Late" --&gt;
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Are flights late, on time, or early? --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- flights_delay %&gt;% --&gt;
-&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late", --&gt;
-&lt;!--                                  how_late_hrs == 0 ~ "On time")) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- Read: if "how_late_hrs" is equal to zero, categorize as "On time" --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Are flights late, on time, or early? --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- flights_delay %&gt;% --&gt;
-&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late", --&gt;
-&lt;!--                                  how_late_hrs == 0 ~ "On time", --&gt;
-&lt;!--                                  how_late_hrs &lt; 0 ~ "Early")) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- Read: if "how_late_hrs" is greater than zero, categorize as "Early" --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- # Store as object! --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- flight_status = flights_delay %&gt;% --&gt;
-&lt;!--   mutate(late_status = case_when(how_late_hrs &gt; 0 ~ "Late", --&gt;
-&lt;!--                                  how_late_hrs == 0 ~ "On time", --&gt;
-&lt;!--                                  how_late_hrs &lt; 0 ~ "Early")) #&lt;&lt; --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-
-&lt;!-- &lt;!-- # Now we can plot --&gt; --&gt;
-
-&lt;!-- &lt;!-- ```{r} --&gt; --&gt;
-&lt;!-- &lt;!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + --&gt; --&gt;
-&lt;!-- &lt;!--   geom_histogram() --&gt; --&gt;
-&lt;!-- &lt;!-- ``` --&gt; --&gt;
-
-&lt;!-- &lt;!-- --- --&gt; --&gt;
-
-
-&lt;!-- # 🚨 Your turn: again 🚨 --&gt;
-
-
-&lt;!-- 1. Who won each county in 2020? Create a variable that tells you who won. --&gt;
-
-&lt;!-- 2. --&gt;
-
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- countdown::countdown(minutes = 5L) --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-
-
+2. Make a boxplot (`geom_boxplot()`) where you put the new variable on the x-axis, and the Democrat vote share in the 2016 election on the y-axis. 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

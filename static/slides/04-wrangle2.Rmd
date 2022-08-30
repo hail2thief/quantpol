@@ -41,21 +41,12 @@ knitr::opts_chunk$set(
 
 ```{r packages}
 library(tidyverse)
-library(nycflights13)
 library(socviz)
-library(covdata)
 
 # dubois colors
 red = "#dc354a"
 yellow = "ecb025"
 blue = "#213772"
-
-
-# flights 
-flights_small = 
-  flights %>% 
-  select(month, day, dep_time, sched_dep_time, arr_time, sched_arr_time, 
-         origin, dest, air_time, distance)
 
 
 # elections
@@ -93,7 +84,7 @@ class: center
 .box-2.large.sp-after[Mutating new variables]
 
 --
-.box-3.large.sp-after[Selecting and arranging]
+.box-3.large.sp-after[Creating categories]
 
 ---
 
@@ -172,8 +163,7 @@ tribble(~Operator, ~meaning,
         "<", "less than",
         ">=", "greater than or equal to",
         "<=", "less than or equal to",
-        "%in%", "is among the set",
-        "%", "AND (both conditions true)",
+        "&", "AND (both conditions true)",
         "|", "OR (either condition is true)") %>%
   knitr::kable(align = "cc")
 ```
@@ -186,11 +176,12 @@ tribble(~Operator, ~meaning,
 Using `elections`:
 
 .small[
-1. Where did I move to in Florida as a kid? Population is higher than 1 million and the county is less than 2/3 white.
+1. Find the worst place I've lived: Trump won with more than 53% of the vote, median income is less than $45,000, either in the South or the Northeast, and the population is between 155k and 156k. What county is it?
 
-2. How many counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
 
-3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties. **I'll do this one**.
+2. Which counties in the South have more than 1 million inhabitants? Make a barplot of the population of these.
+
+3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
 ]
 
 ```{r}
@@ -396,60 +387,38 @@ apples %>%
 
 ---
 
-# Another example: back to flights
+# Another example: population density
 
 
-Say I want to know how many **hours** late a flight is in departing
+Say I want to know how **densely** populated all counties in the US are:
 
 
 ```{r}
-flights_small %>%
+elections %>%
+  select(name, state, pop, land_area) %>% 
   head() %>% 
   knitr::kable()
 ```
 
 ---
 
-# How late? Calculate delay
+# Density
 
-Lateness = difference between when they depart vs. were scheduled to depart
+$Density = \frac{Population}{Area}$
 
 --
 
 
 ```{r, echo = TRUE, eval = FALSE}
-flights_small %>%
-  mutate(how_late = dep_time - sched_dep_time) #<<
+elections %>%
+  mutate(density = pop / land_area) #<<
 ```
+
 
 ```{r}
-flights_small %>%
-  mutate(how_late = dep_time - sched_dep_time) %>%
-  select(month, day, dep_time, sched_dep_time, how_late) %>% 
-  head()
-```
-
-???
-Notice this is in minutes!
-
----
-
-
-
-# How late? Convert to hours
-
-
-```{r, echo = TRUE, eval = FALSE}
-flights_small %>%
-  mutate(how_late = dep_time - sched_dep_time) %>%
-  mutate(how_late_hrs = how_late / 60) #<<
-```
-
-```{r, echo = FALSE, eval = TRUE}
-flights_small %>%
-  mutate(how_late = dep_time - sched_dep_time) %>%
-  mutate(how_late_hrs = how_late / 60) %>%
-  select(month, day, dep_time, sched_dep_time, how_late, how_late_hrs)
+elections %>%
+  mutate(density = pop / land_area) %>% 
+  select(name, state, pop, land_area, density)
 ```
 
 
@@ -460,35 +429,80 @@ flights_small %>%
 
 
 ```{r, echo = TRUE}
-flights_delay = flights_small %>% #<<
-  mutate(how_late = dep_time - sched_dep_time) %>%
-  mutate(how_late_hrs = how_late / 60)
+elections_density = elections %>%
+  mutate(density = pop / land_area)
 ```
 
 --
 
-Notice that the original `flights_small` does not have either of these new variables!
+Notice that the original `elections` does not have this new variable!
 
 
 ```{r, echo = TRUE}
-flights_small %>% names()
+elections %>% names()
 ```
 
+---
 
+
+# Population density and vote choice
+
+
+Do denser counties tend to vote more R or D?
+
+--
+
+```{r, echo = TRUE, out.width="70%"}
+ggplot(elections_density, aes(x = density, y = per_gop_2020)) +
+  geom_point() + labs(x = "Pop density", y = "GOP vote share (2020)") + theme_minimal()
+```
+
+???
+Looks horrible --> density is very skewed
 
 ---
 
 
-# Look at the distribution of lateness
+# Dealing with the skew with logarithms
 
 
+Sometimes it is appropriate to take the natural logarithm of a highly-skewed variable (don't stress about this)
 
-```{r, echo = TRUE, out.width="80%"}
-ggplot(flights_delay, aes(x = how_late_hrs)) +
-  geom_histogram()
+--
+
+Mutate our new dataset, `elections_density`
+
+```{r, echo = TRUE}
+log_elec_density = elections_density %>%
+  mutate(log_density = log(density)) #<<
+```
+
+--
+
+
+Another approach, mutating the original `elections` dataset *twice*
+
+
+```{r, echo = TRUE}
+log_elec_density = elections %>%
+  mutate(density = pop / land_area) %>% 
+  mutate(log_density = log(density)) #<<
 ```
 
 ---
+
+
+# Plot again 🧘‍♂️
+
+
+```{r, echo = TRUE, out.width="70%"}
+ggplot(log_elec_density, aes(x = log_density, y = per_gop_2020)) + 
+  geom_point() + labs(x = "Pop density (logged)", y = "GOP vote share (2020)") + 
+  theme_light()
+```
+
+---
+
 
 # Math on computers
 
@@ -551,229 +565,129 @@ countdown::countdown(minutes = 10L)
 ---
 
 
+class: center, middle, inverse
+# Creating categories
+---
 
-<!-- # Identifying flipped counties -->
 
-<!-- ```{r} -->
-<!-- elections %>%  -->
-<!--   mutate(gop_won_12 = per_gop_2012 > per_dem_2012) %>%  -->
-<!--   mutate(gop_won_16 = per_gop_2016 > per_dem_2016) %>%  -->
-<!--   mutate(flipped = gop_won_12 != gop_won_16) %>%  -->
-<!--   select(name, state, gop_won_12, gop_won_16, flipped) -->
-<!-- ``` -->
+# Creating categories with `case_when()`
 
+Sometimes we want to create **categorical variables** (tall, short, poor, rich, Republican-leaning, Democrat-leaning, etc.)
 
-<!-- --- -->
+We can use `case_when()`, a special function that goes **within** mutate
 
-<!-- --- -->
+Like `filter()`, `case_when()` also relies on logical operators
 
-<!-- class: center, middle -->
-<!-- # Keeping only a few columns with `select()` -->
+---
 
+# Who won the election?
 
-<!-- `select()` lets you keep (or get rid of) variables you don't want -->
+```{r}
+elections %>% 
+  select(name, state, per_gop_2020, per_dem_2020) %>% 
+  head()
+```
 
+---
 
-<!-- ```{r, out.width="60%"} -->
-<!-- knitr::include_graphics("images/select.png") -->
-<!-- ``` -->
 
+# Who won the election?
 
-<!-- --- -->
+Let's say we want to break down elections into four categories: 
 
-<!-- # Using `select()` -->
+- places where R's won **big** (let's say big = more than 10 points)
+- places where R's won *small* (from winning at all up to 10 points)
+- places where R's lost **big** (let's say big = more than 10 points)
+- places where R's lost *small* (from winning at all up to 10 points)
 
+???
+How to measure *size of win* based on vote shares?
 
-<!-- ```{r, echo = TRUE} -->
-<!-- flights -->
-<!-- ``` -->
+---
 
-<!-- --- -->
 
-<!-- # Using `select()` -->
+# Winning categories
 
-<!-- Keep only the year, month, and day: -->
+First we figure out *by how much* Republicans won (or lost) to Democrats in a county (this is called the **margin**): 
 
-<!-- ```{r, echo = TRUE} -->
-<!-- flights %>% -->
-<!--   select(year, month, day) #<< -->
-<!-- ``` -->
+--
 
-<!-- --- -->
+```{r, echo = TRUE, eval = TRUE}
+elections_margin = elections %>% 
+  mutate(reps_margin = per_gop_2020 - per_dem_2020) #<<
+```
 
 
-<!-- # Sorting data with `arrange()` -->
+```{r, echo = FALSE, eval = TRUE}
+elections %>% 
+  select(state, name, per_gop_2020, per_dem_2020) %>% 
+  mutate(reps_margin = per_gop_2020 - per_dem_2020)
+```
 
 
-<!-- You can sort a dataframe by a variable with `arrange()` -->
+---
 
-<!-- -- -->
 
-<!-- Where did the GOP perform **worst** in 2016?  -->
+# Winning categories
 
-<!-- -- -->
+Now we can use `case_when()` to build categories out of the margin variable. 
 
-<!-- ```{r,echo = TRUE} -->
-<!-- elections %>%  -->
-<!--   select(name, state, per_gop_2016) %>%  -->
-<!--   arrange(per_gop_2016) #<< -->
-<!-- ``` -->
 
+`case_when()` uses the following formula: `LOGICAL CONDITION ~ "category name"`
 
+--
 
-<!-- --- -->
+Like so:
 
-<!-- # Sorting data with `arrange()` -->
 
+```{r, echo = TRUE}
+elec_win_cat = elections_margin %>% 
+  mutate(win_type = case_when(reps_margin >= .10 ~ "Big R win")) # reps win by more than 10
+```
 
-<!-- Where did the GOP perform **best** in 2016? -->
+```{r, echo = FALSE, eval = TRUE}
+elec_win_cat %>% 
+  select(name, state, reps_margin, win_type)
+```
 
-<!-- -- -->
+---
 
-<!-- You can add `desc()` to arrange to sort in **descending** order -->
 
+# Winning categories
 
-<!-- ```{r,echo = TRUE} -->
-<!-- elections %>%  -->
-<!--   select(name, state, per_gop_2016) %>%  -->
-<!--   arrange(desc(per_gop_2016)) #<< -->
-<!-- ``` -->
+The rest of the categories:
 
-<!-- --- -->
+```{r, echo = TRUE}
+elec_win_cat = elections_margin %>% 
+  mutate(win_type = case_when(reps_margin >= .10 ~ "Big R win", # reps win by more than 10
+                              reps_margin > 0 & reps_margin < .1 ~ "Small R win", # reps win by more than 0 but less than 10
+                              reps_margin < 0 & reps_margin > -.10 ~ "Small R loss", # reps lose by more than 0 but less than 10
+                              reps_margin <= -.10 ~ "Big R loss")) # reps lose by more than 10
+```
 
-<!-- class: center, middle -->
-<!-- # 🚨 Your turn 🚨 -->
+```{r, echo = FALSE, eval = TRUE}
+elec_win_cat %>% 
+  select(name, state, reps_margin, win_type)
+```
 
+---
 
-<!-- Using `elections`: -->
 
+# Make a plot
 
-<!-- Use today's functions in some way and make a plot of your choosing -->
+```{r, echo = TRUE}
+ggplot(elec_win_cat, aes(x = per_gop_2020, fill = win_type)) + 
+  geom_histogram() + theme_light()
+```
 
-<!-- Post on Slack so we can see! -->
+---
 
 
-<!-- ```{r} -->
-<!-- countdown::countdown(minutes = 5L) -->
-<!-- ``` -->
+# 🚨 Your turn 🚨
 
+Using the `elections` dataset:
 
-<!-- --- -->
 
+1. Using the variable on the percent of the county population that is Black/African-American, categorize the counties by whether the population is: 0-9% Black, 10-19% Black, 20-49% Black, or more than 50% Black. 
 
-<!-- # Creating categorical variables using `case_when()` -->
-
-
-<!-- Sometimes we want to create **categorical variables** -->
-
-<!-- We can use `case_when()`, a special function that goes **within** mutate -->
-
-<!-- Like `filter()`, `case_when()` also relies on logical operators -->
-
-<!-- --- -->
-
-<!-- # Are flights late, on time, or early? -->
-
-<!-- scroll-output[ -->
-<!-- ```{r} -->
-<!-- flights_delay %>% -->
-<!--   knitr::kable() -->
-<!-- ``` -->
-<!-- ] -->
-
-<!-- --- -->
-
-<!-- # Are flights late, on time, or early? -->
-
-
-<!-- ```{r} -->
-<!-- flights_delay %>% -->
-<!--   mutate(late_status = case_when()) #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- # Are flights late, on time, or early? -->
-
-
-<!-- ```{r, echo = TRUE, eval = FALSE} -->
-<!-- flights_delay %>% -->
-<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late")) #<< -->
-<!-- ``` -->
-
-<!-- Read: if "how_late_hrs" is greater than zero, categorize as "Late" -->
-
-<!-- --- -->
-
-<!-- # Are flights late, on time, or early? -->
-
-
-<!-- ```{r} -->
-<!-- flights_delay %>% -->
-<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late", -->
-<!--                                  how_late_hrs == 0 ~ "On time")) #<< -->
-<!-- ``` -->
-
-
-<!-- Read: if "how_late_hrs" is equal to zero, categorize as "On time" -->
-
-
-<!-- --- -->
-
-<!-- # Are flights late, on time, or early? -->
-
-
-<!-- ```{r} -->
-<!-- flights_delay %>% -->
-<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late", -->
-<!--                                  how_late_hrs == 0 ~ "On time", -->
-<!--                                  how_late_hrs < 0 ~ "Early")) #<< -->
-<!-- ``` -->
-
-
-<!-- Read: if "how_late_hrs" is greater than zero, categorize as "Early" -->
-
-
-<!-- --- -->
-
-
-<!-- # Store as object! -->
-
-
-<!-- ```{r} -->
-<!-- flight_status = flights_delay %>% -->
-<!--   mutate(late_status = case_when(how_late_hrs > 0 ~ "Late", -->
-<!--                                  how_late_hrs == 0 ~ "On time", -->
-<!--                                  how_late_hrs < 0 ~ "Early")) #<< -->
-<!-- ``` -->
-
-<!-- --- -->
-
-
-<!-- <!-- # Now we can plot --> -->
-
-<!-- <!-- ```{r} --> -->
-<!-- <!-- ggplot(flight_status, aes(x = dep_time, fill = late_status)) + --> -->
-<!-- <!--   geom_histogram() --> -->
-<!-- <!-- ``` --> -->
-
-<!-- <!-- --- --> -->
-
-
-<!-- # 🚨 Your turn: again 🚨 -->
-
-
-<!-- 1. Who won each county in 2020? Create a variable that tells you who won. -->
-
-<!-- 2. -->
-
-
-<!-- ```{r} -->
-<!-- countdown::countdown(minutes = 5L) -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-
-
+2. Make a boxplot (`geom_boxplot()`) where you put the new variable on the x-axis, and the Democrat vote share in the 2016 election on the y-axis. 

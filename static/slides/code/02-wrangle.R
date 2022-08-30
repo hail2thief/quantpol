@@ -1,18 +1,25 @@
 # load libraries
 library(tidyverse)
-library(nycflights13)
 library(socviz)
 
 
-# make a smaller version of the flights dataset
-flights_small = 
-  flights %>% 
-  select(month, day, dep_time, sched_dep_time, arr_time, sched_arr_time, 
-         origin, dest, air_time, distance)
 
+# American Voter Bot ------------------------------------------------------
+
+
+# read data
+df = read_rds("https://github.com/hail2thief/poli-301/raw/master/static/files/voter-bot.rds")
 
 
 # do your work here!
+
+
+
+
+
+
+# Elections analyst -------------------------------------------------------
+
 
 
 # elections data
@@ -21,3 +28,5 @@ elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl
 
 
 # do your work here!
+
+
