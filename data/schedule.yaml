@@ -5,36 +5,36 @@ lessons:
   - title: 'Week 1: Introduction'
     date: "Sep 22"
     reading: "01-start"
-    class: "getting-started"
+    #class: "getting-started"
     
   - title: 'Week 2: Visualizing data with ggplot<br><i class="fas fa-star"></i> **Assignment 1**'
     date: "Sep 27, Sep 29"
-    class: "dataviz"
+    #class: "dataviz"
     reading: "02-viz"
     #assignment: "ps-viz"
     
   - title: 'Week 3: Data wrangling<br><i class="fas fa-star"></i> **Assignment 2**'
     date: "Oct 4, Oct 6"
-    class: "data-wrangle"
+    #class: "data-wrangle"
     reading: "03-wrangle"
     #assignment: "ps-wrangle"  
 
   - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
     date: "Oct 11, Oct 13"
-    class: "data-summary"
+    #class: "data-summary"
     reading: "04-relationships"
     #assignment: "ps-summary"
 
   - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
     date: "Oct 18, Oct 20"
-    class: "regression"
+    #class: "regression"
     reading: "05-reg"
     #assignment: "ps-reg"
     
   - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
     date: "Oct 25, Oct 27"
     reading: "06-pred"
-    class: "prediction"
+    #class: "prediction"
     #assignment: "ps-predict"
     
   - title: '<span class="fake-header-table">Causality</span>'
@@ -42,18 +42,18 @@ lessons:
 
   - title: "Week 7: Causality and DAGs"
     date: "Nov 1, Nov 3"
-    class: "causality"
-    #reading: "07-causal"
+    #class: "causality"
+    reading: "07-causal"
     
   - title: 'Week 8: ggdag<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 8, Nov 10"
-    class: "dags"
+    #class: "dags"
     reading: "08-dags"
     #assignment: "ps-dags"
     
   - title: 'Week 9: Closing backdoors<br><i class="fas fa-star"></i> **Assignment 7**'
     date: "Nov 15, Nov 17"
-    class: "controls"
+    #class: "controls"
     reading: "09-controls"
     #assignment: "ps-controls"
     
@@ -62,13 +62,14 @@ lessons:
     
   - title: "Week 10: Uncertainty <br> (**no class Thursday: Thanksgiving**)"
     date: "Nov 22"
-    class: "uncertainty"
+    #class: "uncertainty"
     reading: "10-uncertainty"
     
   - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
     date: "Nov 29 - Dec 1"
-    class: "bootstrap"
+    #class: "bootstrap"
     reading: "11-bootstrap"
+    #assignment: "ps-uncertainty"
     
   - title: '<i class="fas fa-star"></i> **Final Project Due**'
     date: "Dec 9, 10:30AM"

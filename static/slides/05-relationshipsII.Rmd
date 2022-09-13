@@ -454,9 +454,21 @@ ggplot(legend_gen, aes(x = generation, y = prop_legendary)) +
 
 # 🚨 Your turn: Bob Ross 🚨
 
+
 All dummy data on the paintings of Bob Ross
 
---
+
+```{r, out.width="60%",fig.align='center'}
+knitr::include_graphics("images/bob-ross.png")
+```
+
+
+
+---
+
+
+# 🚨 Your turn: Bob Ross 🚨
+
 
 .scroll-output[
 ```{r}

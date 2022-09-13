@@ -21,14 +21,14 @@ editor_options:
 - <i class="fas fa-book"></i> [CH.6 in ModernDive](https://moderndive.com/6-multiple-regression.html#multiple-regression), but ignore the stuff on the interactions
 
 
-## Slides (full week)
+## Slides
 
-[Class slides here](/slides/07-prediction.html)
+<!-- [Class slides here](/slides/07-prediction.html) -->
 
 
-```{r,echo=FALSE}
-xaringanExtra::embed_xaringan(
-   url = "/slides/07-prediction.html",
-   ratio = "16:9"
-)
-```
+<!-- ```{r,echo=FALSE} -->
+<!-- xaringanExtra::embed_xaringan( -->
+<!--    url = "/slides/07-prediction.html", -->
+<!--    ratio = "16:9" -->
+<!-- ) -->
+<!-- ``` -->

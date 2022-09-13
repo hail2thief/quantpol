@@ -4,10 +4,10 @@ linktitle: "Final Project"
 output:
   blogdown::html_page:
     toc: true
-menu:
-  assignment:
-    parent: Problem sets
-    weight: 20
+# menu:
+#   assignment:
+#     parent: Problem sets
+#     weight: 20
 type: docs
 editor_options: 
   chunk_output_type: console

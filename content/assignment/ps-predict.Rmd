@@ -4,10 +4,10 @@ linktitle: "Prediction"
 output:
   blogdown::html_page:
     toc: false
-menu:
-  assignment:
-    parent: Problem sets
-    weight: 4
+# menu:
+#   assignment:
+#     parent: Problem sets
+#     weight: 4
 type: docs
 editor_options: 
   chunk_output_type: console

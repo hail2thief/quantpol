@@ -4,7 +4,7 @@
     <title>Modeling II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-10-21" />
+    <meta name="date" content="2022-09-01" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
@@ -506,7 +506,7 @@ Mind your *scales*: if a coefficient is tiny, ask yourself if the scale makes se
 
 
 
-<div class="countdown" id="timer_6171fb94" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6310de50" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -544,18 +544,18 @@ This is a dummy variable: a country either is, or isn't, in the Americas
 ---
 
 
-# Creating dummies with `ifelse()`
+# Creating dummies
 
-We can create that dummy using `ifelse()` and logical operators:
+We can create that dummy using logical operators:
 
 
 ```r
 gap_dummies = gapminder %&gt;%
-  mutate(is_americas = ifelse(continent == "Americas", 1, 0))
+  mutate(is_americas = continent == "Americas")
 ```
 
 
-Read: "IF the observation's continent equals "Americas", assign a 1, otherwise 0"
+Read: "IF the observation's continent equals "Americas", assign a TRUE, otherwise FALSE"
 
 ---
 
@@ -563,18 +563,18 @@ Read: "IF the observation's continent equals "Americas", assign a 1, otherwise 0
 # Dummy variables
 
 
-|country     | year| is_americas|
-|:-----------|----:|-----------:|
-|Nepal       | 1972|           0|
-|Australia   | 1977|           0|
-|Togo        | 1967|           0|
-|China       | 1957|           0|
-|Guatemala   | 1957|           1|
-|Lebanon     | 2002|           0|
-|Puerto Rico | 1967|           1|
-|Niger       | 1972|           0|
-|Togo        | 1987|           0|
-|Gambia      | 2007|           0|
+|country     | year|is_americas |
+|:-----------|----:|:-----------|
+|Nepal       | 1972|FALSE       |
+|Australia   | 1977|FALSE       |
+|Togo        | 1967|FALSE       |
+|China       | 1957|FALSE       |
+|Guatemala   | 1957|TRUE        |
+|Lebanon     | 2002|FALSE       |
+|Puerto Rico | 1967|TRUE        |
+|Niger       | 1972|FALSE       |
+|Togo        | 1987|FALSE       |
+|Gambia      | 2007|FALSE       |
 
 ---
 
@@ -596,10 +596,10 @@ And look at the output:
 
 ```
 ## # A tibble: 2 × 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)    58.4      0.339    172.   0       
-## 2 is_americas     6.29     0.808      7.79 1.14e-14
+##   term            estimate std.error statistic  p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)        58.4      0.339    172.   0       
+## 2 is_americasTRUE     6.29     0.808      7.79 1.14e-14
 ```
 
 ---
@@ -609,9 +609,9 @@ And look at the output:
 
 .pull-left[
 
-Turn the light on (`is_america` goes from zero to one), the light *increases* by SLOPE
+Turn the light on (`is_america` goes from FALSE to TRUE), the light *increases* by SLOPE
 
-Turn the light off (`is_america` goes from one to zero), the light *decreases* by SLOPE
+Turn the light off (`is_america` goes from TRUE to FALSE), the light *decreases* by SLOPE
 
 The change is **instant**
 ]
@@ -632,10 +632,10 @@ The change is **instant**
 
 ```
 ## # A tibble: 2 × 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)    58.4      0.339    172.   0       
-## 2 is_americas     6.29     0.808      7.79 1.14e-14
+##   term            estimate std.error statistic  p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)        58.4      0.339    172.   0       
+## 2 is_americasTRUE     6.29     0.808      7.79 1.14e-14
 ```
 
 .small[
@@ -655,7 +655,7 @@ Intercept (set is_americas = 0): Countries not in the Americas (i.e., in Africa,
 # Categorical variables
 
 
-The intercept here is "is_america = 0"; the slope is the **red line**
+The intercept here is "is_america = FALSE"; the slope is the **red line**
 
 &lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-26-1.png" width="100%" /&gt;
 
@@ -671,11 +671,11 @@ Say I go back and create a dummy for each continent:
 
 ```r
 gap_dummies = gapminder %&gt;%
-  mutate(is_africa = ifelse(continent == "Africa", 1, 0),
-         is_europe = ifelse(continent == "Europe", 1, 0),
-         is_asia = ifelse(continent == "Asia", 1, 0),
-         is_oceania = ifelse(continent == "Oceania", 1, 0),
-         is_americas = ifelse(continent == "Americas", 1, 0))
+  mutate(is_africa = continent == "Africa",
+         is_europe = continent == "Europe",
+         is_asia = continent == "Asia",
+         is_oceania = continent == "Oceania",
+         is_americas = continent == "Americas")
 ```
 
 
@@ -695,11 +695,11 @@ tidy(dummy_mod2)
 
 ```
 ## # A tibble: 3 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     53.7     0.323     166.  0        
-## 2 is_americas     11.0     0.684      16.0 7.08e- 54
-## 3 is_europe       18.2     0.639      28.5 1.77e-146
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         53.7     0.323     166.  0        
+## 2 is_americasTRUE     11.0     0.684      16.0 7.08e- 54
+## 3 is_europeTRUE       18.2     0.639      28.5 1.77e-146
 ```
 
 ---
@@ -717,11 +717,11 @@ tidy(dummy_mod2)
 
 ```
 ## # A tibble: 3 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     53.7     0.323     166.  0        
-## 2 is_americas     11.0     0.684      16.0 7.08e- 54
-## 3 is_europe       18.2     0.639      28.5 1.77e-146
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         53.7     0.323     166.  0        
+## 2 is_americasTRUE     11.0     0.684      16.0 7.08e- 54
+## 3 is_europeTRUE       18.2     0.639      28.5 1.77e-146
 ```
 ]
 
@@ -750,13 +750,13 @@ tidy(dummy_mod3)
 
 ```
 ## # A tibble: 5 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     48.9     0.370     132.  0        
-## 2 is_americas     15.8     0.649      24.3 1.38e-112
-## 3 is_europe       23.0     0.611      37.7 1.38e-226
-## 4 is_asia         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceania      25.5     1.92       13.3 2.99e- 38
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         48.9     0.370     132.  0        
+## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
+## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
+## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
+## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
 ```
 
 ---
@@ -768,13 +768,13 @@ tidy(dummy_mod3)
 
 ```
 ## # A tibble: 5 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     48.9     0.370     132.  0        
-## 2 is_americas     15.8     0.649      24.3 1.38e-112
-## 3 is_europe       23.0     0.611      37.7 1.38e-226
-## 4 is_asia         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceania      25.5     1.92       13.3 2.99e- 38
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         48.9     0.370     132.  0        
+## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
+## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
+## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
+## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
 ```
 
 ]
@@ -808,13 +808,13 @@ $$
 
 ```
 ## # A tibble: 5 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     48.9     0.370     132.  0        
-## 2 is_americas     15.8     0.649      24.3 1.38e-112
-## 3 is_europe       23.0     0.611      37.7 1.38e-226
-## 4 is_asia         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceania      25.5     1.92       13.3 2.99e- 38
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         48.9     0.370     132.  0        
+## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
+## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
+## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
+## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
 ```
 ]
 
@@ -928,13 +928,13 @@ tidy(dummy_cat)
 
 ```
 ## # A tibble: 5 × 5
-##   term        estimate std.error statistic   p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)     48.9     0.370     132.  0        
-## 2 is_americas     15.8     0.649      24.3 1.38e-112
-## 3 is_europe       23.0     0.611      37.7 1.38e-226
-## 4 is_asia         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceania      25.5     1.92       13.3 2.99e- 38
+##   term            estimate std.error statistic   p.value
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)         48.9     0.370     132.  0        
+## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
+## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
+## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
+## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
 ```
 ]
 
@@ -971,15 +971,15 @@ We now know (sorta) how to interpret the coefficients on those big tables in the
 
 
 
-# 🚨 Your turn: dealer's choice 🚨
+# 🚨 Your turn: number of kids 🚨
 
 --
 
-1. Using the `penguins` dataset, regress weight against penguin species. Interpret the output. 
+1. Do happier people tend to have more or fewer kids than less happy people? Using the `gss_sm` dataset, regress `childs` (outcome) against `happy` (treatment). Interpret the output.
 
 --
 
-2. Using any of the datasets we've used in class, regress a continuous-ish variable (outcome) against a categorical variable (treatment). Interpret the output. 
+2. Which religions have the biggest families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
 
 --
 
@@ -988,58 +988,9 @@ Hint: to figure out what values a categorical variable takes on, use the `distin
 ]
 
 
-<div class="countdown" id="timer_6171f9fd" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6310ddcc" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
-
-
----
-
-
-
-&lt;!-- # Can't fit every dummy --&gt;
-
-&lt;!-- Can't have **both** an intercept and every dummy in the model --&gt;
-
-&lt;!-- But there's no need; the intercept is the "missing" dummy --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- lm(lifeExp ~ is_africa + is_europe + is_asia + is_oceania + is_americas, data = gap_dummies) %&gt;% tidy() --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
-
-
-
-
-&lt;!-- # Outcome is a dummy variable --&gt;
-
-
-&lt;!-- We can also estimate models when the outcome is a dummy variable --&gt;
-
-
-&lt;!-- From `gss_sm`: does having more children make you more or less likely to have voted for Obama?  --&gt;
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- gss_sm %&gt;%  --&gt;
-&lt;!--   select(year, id, childs, obama) %&gt;%  --&gt;
-&lt;!--   knitr::kable() --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Outcome is a dummy variable --&gt;
-
-&lt;!-- ```{r, echo = TRUE} --&gt;
-&lt;!-- obama_kids = lm(obama ~ childs, data = gss_sm) --&gt;
-&lt;!-- tidy(obama_kids) --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- For every additional child a person has, the probability they vote for Obama decreases by 1.7 percentage points --&gt;
-
-&lt;!-- --- --&gt;
-
 
 
     </textarea>

@@ -3,7 +3,6 @@ library(tidyverse)
 library(socviz)
 library(fivethirtyeight)
 library(gapminder)
-library(nycflights13)
 library(ggcorrplot)
 library(broom)
 library(palmerpenguins)
@@ -105,6 +104,9 @@ ir_econ = read_csv("https://www.dropbox.com/s/5emig5psz1cpnjf/ir_econ.csv?dl=1")
 
 # Modeling categorical ----------------------------------------------------
 
+
+# data
+gss_sm
 
 # WORK HERE
 

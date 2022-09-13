@@ -23,27 +23,27 @@ editor_options:
 
 ## Slides
 
-### Tuesday
+<!-- ### Tuesday -->
 
-[Class slides here](/slides/06-modeling-I.html)
-
-
-```{r,echo=FALSE}
-xaringanExtra::embed_xaringan(
-   url = "/slides/06-modeling-I.html",
-   ratio = "16:9"
-)
-```
+<!-- [Class slides here](/slides/06-modeling-I.html) -->
 
 
-### Thursday
+<!-- ```{r,echo=FALSE} -->
+<!-- xaringanExtra::embed_xaringan( -->
+<!--    url = "/slides/06-modeling-I.html", -->
+<!--    ratio = "16:9" -->
+<!-- ) -->
+<!-- ``` -->
 
-[Class slides here](/slides/06-modeling-II.html)
+
+<!-- ### Thursday -->
+
+<!-- [Class slides here](/slides/06-modeling-II.html) -->
 
 
-```{r,echo=FALSE}
-xaringanExtra::embed_xaringan(
-   url = "/slides/06-modeling-II.html",
-   ratio = "16:9"
-)
-```
+<!-- ```{r,echo=FALSE} -->
+<!-- xaringanExtra::embed_xaringan( -->
+<!--    url = "/slides/06-modeling-II.html", -->
+<!--    ratio = "16:9" -->
+<!-- ) -->
+<!-- ``` -->

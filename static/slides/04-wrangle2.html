@@ -148,7 +148,7 @@ Using `elections`:
 3. Which counties in California did Romney beat Obama *by more than 20 percentage points*? Make a plot of your choosing about these counties.
 ]
 
-<div class="countdown" id="timer_630e5f43" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_630e7719" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -186,20 +186,22 @@ elections
 
 ```
 ## # A tibble: 3,152 × 17
-##    fips  name            state census_region    pop female white black travel_time land_area hh_income per_dem_2012
-##    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-##  1 01001 Autauga County  AL    South          55395   51.5  78.1  18.4        26.2      594.     53682        0.266
-##  2 01003 Baldwin County  AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221        0.216
-##  3 01005 Barbour County  AL    South          26887   46.5  50.2  47.6        24.6      885.     32911        0.513
-##  4 01007 Bibb County     AL    South          22506   46    76.3  22.1        27.6      623.     36447        0.262
-##  5 01009 Blount County   AL    South          57719   50.6  96     1.8        33.9      645.     44145        0.123
-##  6 01011 Bullock County  AL    South          10764   45.2  27.2  69.9        26.9      623.     32033        0.763
-##  7 01013 Butler County   AL    South          20296   53.4  54.3  43.6        24        777.     29918        0.461
-##  8 01015 Calhoun County  AL    South         115916   51.7  76    20.9        22.5      606.     39962        0.335
-##  9 01017 Chambers County AL    South          34076   52    58.8  39.1        24.6      597.     32402        0.471
-## 10 01019 Cherokee County AL    South          26037   50.4  93.2   4.5        26.9      554.     34907        0.218
-## # … with 3,142 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
-## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 01001 Autauga Coun… AL    South          55395   51.5  78.1  18.4        26.2
+##  2 01003 Baldwin Coun… AL    South         200111   51.2  87.3   9.5        25.9
+##  3 01005 Barbour Coun… AL    South          26887   46.5  50.2  47.6        24.6
+##  4 01007 Bibb County   AL    South          22506   46    76.3  22.1        27.6
+##  5 01009 Blount County AL    South          57719   50.6  96     1.8        33.9
+##  6 01011 Bullock Coun… AL    South          10764   45.2  27.2  69.9        26.9
+##  7 01013 Butler County AL    South          20296   53.4  54.3  43.6        24  
+##  8 01015 Calhoun Coun… AL    South         115916   51.7  76    20.9        22.5
+##  9 01017 Chambers Cou… AL    South          34076   52    58.8  39.1        24.6
+## 10 01019 Cherokee Cou… AL    South          26037   50.4  93.2   4.5        26.9
+## # … with 3,142 more rows, and 8 more variables: land_area &lt;dbl&gt;,
+## #   hh_income &lt;dbl&gt;, per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;,
+## #   per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -215,20 +217,21 @@ elections %&gt;%
 
 ```
 ## # A tibble: 58 × 17
-##    fips  name             state census_region    pop female white black travel_time land_area hh_income per_dem_2012
-##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-##  1 06001 Alameda County   CA    West          1.61e6   51    52    12.4        28.8      739.     72112        0.785
-##  2 06003 Alpine County    CA    West          1.12e3   47.4  71.8   0.4        23.7      738.     58636        0.601
-##  3 06005 Amador County    CA    West          3.67e4   46.9  90.9   2.1        30        595.     53684        0.392
-##  4 06007 Butte County     CA    West          2.24e5   50.4  87     1.8        20.3     1636.     43752        0.464
-##  5 06009 Calaveras County CA    West          4.46e4   50    92.1   1          35.5     1020.     55295        0.401
-##  6 06011 Colusa County    CA    West          2.14e4   48.3  91.6   1.2        21.2     1151.     52158        0.383
-##  7 06013 Contra Costa Co… CA    West          1.11e6   51.2  67.9   9.6        33.3      716.     78756        0.657
-##  8 06015 Del Norte County CA    West          2.72e4   44.6  78.6   3.7        14.2     1006.     37909        0.428
-##  9 06017 El Dorado County CA    West          1.83e5   50    90.1   0.9        28.8     1708.     69297        0.396
-## 10 06019 Fresno County    CA    West          9.66e5   50    77.4   5.9        22.1     5958.     45563        0.476
-## # … with 48 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
-## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 06001 Alameda Coun… CA    West          1.61e6   51    52    12.4        28.8
+##  2 06003 Alpine County CA    West          1.12e3   47.4  71.8   0.4        23.7
+##  3 06005 Amador County CA    West          3.67e4   46.9  90.9   2.1        30  
+##  4 06007 Butte County  CA    West          2.24e5   50.4  87     1.8        20.3
+##  5 06009 Calaveras Co… CA    West          4.46e4   50    92.1   1          35.5
+##  6 06011 Colusa County CA    West          2.14e4   48.3  91.6   1.2        21.2
+##  7 06013 Contra Costa… CA    West          1.11e6   51.2  67.9   9.6        33.3
+##  8 06015 Del Norte Co… CA    West          2.72e4   44.6  78.6   3.7        14.2
+##  9 06017 El Dorado Co… CA    West          1.83e5   50    90.1   0.9        28.8
+## 10 06019 Fresno County CA    West          9.66e5   50    77.4   5.9        22.1
+## # … with 48 more rows, and 8 more variables: land_area &lt;dbl&gt;, hh_income &lt;dbl&gt;,
+## #   per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;,
+## #   per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -244,20 +247,21 @@ elections %&gt;%
 
 ```
 ## # A tibble: 29 × 17
-##    fips  name             state census_region    pop female white black travel_time land_area hh_income per_dem_2012
-##    &lt;chr&gt; &lt;chr&gt;            &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-##  1 06005 Amador County    CA    West           36742   46.9  90.9   2.1        30        595.     53684        0.392
-##  2 06007 Butte County     CA    West          224241   50.4  87     1.8        20.3     1636.     43752        0.464
-##  3 06009 Calaveras County CA    West           44624   50    92.1   1          35.5     1020.     55295        0.401
-##  4 06011 Colusa County    CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158        0.383
-##  5 06015 Del Norte County CA    West           27212   44.6  78.6   3.7        14.2     1006.     37909        0.428
-##  6 06017 El Dorado County CA    West          183087   50    90.1   0.9        28.8     1708.     69297        0.396
-##  7 06019 Fresno County    CA    West          965974   50    77.4   5.9        22.1     5958.     45563        0.476
-##  8 06021 Glenn County     CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023        0.358
-##  9 06027 Inyo County      CA    West           18410   49.8  81.7   0.9        14.8    10181.     44796        0.427
-## 10 06029 Kern County      CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552        0.385
-## # … with 19 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
-## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 06005 Amador County CA    West           36742   46.9  90.9   2.1        30  
+##  2 06007 Butte County  CA    West          224241   50.4  87     1.8        20.3
+##  3 06009 Calaveras Co… CA    West           44624   50    92.1   1          35.5
+##  4 06011 Colusa County CA    West           21419   48.3  91.6   1.2        21.2
+##  5 06015 Del Norte Co… CA    West           27212   44.6  78.6   3.7        14.2
+##  6 06017 El Dorado Co… CA    West          183087   50    90.1   0.9        28.8
+##  7 06019 Fresno County CA    West          965974   50    77.4   5.9        22.1
+##  8 06021 Glenn County  CA    West           27955   49.5  90.1   1.1        21.8
+##  9 06027 Inyo County   CA    West           18410   49.8  81.7   0.9        14.8
+## 10 06029 Kern County   CA    West          874589   48.7  82.9   6.3        23.6
+## # … with 19 more rows, and 8 more variables: land_area &lt;dbl&gt;, hh_income &lt;dbl&gt;,
+## #   per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;,
+## #   per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -276,20 +280,21 @@ elections %&gt;%
 
 ```
 ## # A tibble: 10 × 17
-##    fips  name          state census_region    pop female white black travel_time land_area hh_income per_dem_2012
-##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-##  1 06011 Colusa County CA    West           21419   48.3  91.6   1.2        21.2     1151.     52158        0.383
-##  2 06021 Glenn County  CA    West           27955   49.5  90.1   1.1        21.8     1314.     43023        0.358
-##  3 06029 Kern County   CA    West          874589   48.7  82.9   6.3        23.6     8132.     48552        0.385
-##  4 06035 Lassen County CA    West           31749   36.6  81.8   8.5        19.4     4541.     53107        0.287
-##  5 06049 Modoc County  CA    West            9023   49.6  88.9   1.1        16.9     3918.     36212        0.279
-##  6 06061 Placer County CA    West          371694   51.2  86.3   1.7        26.9     1407.     72725        0.389
-##  7 06089 Shasta County CA    West          179804   50.9  88.8   1          20.1     3775.     44651        0.336
-##  8 06091 Sierra County CA    West            3003   49.7  94.7   0.4        27.5      953.     39009        0.366
-##  9 06101 Sutter County CA    West           95847   50.2  74.5   2.4        27.4      602.     50408        0.381
-## 10 06103 Tehama County CA    West           63067   50.2  90.9   0.9        23.3     2950.     41924        0.348
-## # … with 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;,
-## #   per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 06011 Colusa County CA    West           21419   48.3  91.6   1.2        21.2
+##  2 06021 Glenn County  CA    West           27955   49.5  90.1   1.1        21.8
+##  3 06029 Kern County   CA    West          874589   48.7  82.9   6.3        23.6
+##  4 06035 Lassen County CA    West           31749   36.6  81.8   8.5        19.4
+##  5 06049 Modoc County  CA    West            9023   49.6  88.9   1.1        16.9
+##  6 06061 Placer County CA    West          371694   51.2  86.3   1.7        26.9
+##  7 06089 Shasta County CA    West          179804   50.9  88.8   1          20.1
+##  8 06091 Sierra County CA    West            3003   49.7  94.7   0.4        27.5
+##  9 06101 Sutter County CA    West           95847   50.2  74.5   2.4        27.4
+## 10 06103 Tehama County CA    West           63067   50.2  90.9   0.9        23.3
+## # … with 8 more variables: land_area &lt;dbl&gt;, hh_income &lt;dbl&gt;,
+## #   per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;,
+## #   per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
 ```
 
 ---
@@ -316,20 +321,22 @@ elections
 
 ```
 ## # A tibble: 3,152 × 17
-##    fips  name            state census_region    pop female white black travel_time land_area hh_income per_dem_2012
-##    &lt;chr&gt; &lt;chr&gt;           &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-##  1 01001 Autauga County  AL    South          55395   51.5  78.1  18.4        26.2      594.     53682        0.266
-##  2 01003 Baldwin County  AL    South         200111   51.2  87.3   9.5        25.9     1590.     50221        0.216
-##  3 01005 Barbour County  AL    South          26887   46.5  50.2  47.6        24.6      885.     32911        0.513
-##  4 01007 Bibb County     AL    South          22506   46    76.3  22.1        27.6      623.     36447        0.262
-##  5 01009 Blount County   AL    South          57719   50.6  96     1.8        33.9      645.     44145        0.123
-##  6 01011 Bullock County  AL    South          10764   45.2  27.2  69.9        26.9      623.     32033        0.763
-##  7 01013 Butler County   AL    South          20296   53.4  54.3  43.6        24        777.     29918        0.461
-##  8 01015 Calhoun County  AL    South         115916   51.7  76    20.9        22.5      606.     39962        0.335
-##  9 01017 Chambers County AL    South          34076   52    58.8  39.1        24.6      597.     32402        0.471
-## 10 01019 Cherokee County AL    South          26037   50.4  93.2   4.5        26.9      554.     34907        0.218
-## # … with 3,142 more rows, and 5 more variables: per_gop_2012 &lt;dbl&gt;, per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;,
-## #   per_gop_2020 &lt;dbl&gt;, per_dem_2020 &lt;dbl&gt;
+##    fips  name          state census_region    pop female white black travel_time
+##    &lt;chr&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;
+##  1 01001 Autauga Coun… AL    South          55395   51.5  78.1  18.4        26.2
+##  2 01003 Baldwin Coun… AL    South         200111   51.2  87.3   9.5        25.9
+##  3 01005 Barbour Coun… AL    South          26887   46.5  50.2  47.6        24.6
+##  4 01007 Bibb County   AL    South          22506   46    76.3  22.1        27.6
+##  5 01009 Blount County AL    South          57719   50.6  96     1.8        33.9
+##  6 01011 Bullock Coun… AL    South          10764   45.2  27.2  69.9        26.9
+##  7 01013 Butler County AL    South          20296   53.4  54.3  43.6        24  
+##  8 01015 Calhoun Coun… AL    South         115916   51.7  76    20.9        22.5
+##  9 01017 Chambers Cou… AL    South          34076   52    58.8  39.1        24.6
+## 10 01019 Cherokee Cou… AL    South          26037   50.4  93.2   4.5        26.9
+## # … with 3,142 more rows, and 8 more variables: land_area &lt;dbl&gt;,
+## #   hh_income &lt;dbl&gt;, per_dem_2012 &lt;dbl&gt;, per_gop_2012 &lt;dbl&gt;,
+## #   per_dem_2016 &lt;dbl&gt;, per_gop_2016 &lt;dbl&gt;, per_gop_2020 &lt;dbl&gt;,
+## #   per_dem_2020 &lt;dbl&gt;
 ```
 
 
@@ -490,7 +497,7 @@ Say I want to know how **densely** populated all counties in the US are:
 
 # Density
 
-`\(Density = \frac{Population}{Area}\)`
+`\(Density = \frac{Population}{Area}\)` = "how many people per square mile"
 
 --
 
@@ -544,9 +551,11 @@ elections %&gt;% names()
 ```
 
 ```
-##  [1] "fips"          "name"          "state"         "census_region" "pop"           "female"        "white"        
-##  [8] "black"         "travel_time"   "land_area"     "hh_income"     "per_dem_2012"  "per_gop_2012"  "per_dem_2016" 
-## [15] "per_gop_2016"  "per_gop_2020"  "per_dem_2020"
+##  [1] "fips"          "name"          "state"         "census_region"
+##  [5] "pop"           "female"        "white"         "black"        
+##  [9] "travel_time"   "land_area"     "hh_income"     "per_dem_2012" 
+## [13] "per_gop_2012"  "per_dem_2016"  "per_gop_2016"  "per_gop_2020" 
+## [17] "per_dem_2020"
 ```
 
 ---
@@ -604,7 +613,7 @@ log_elec_density = elections %&gt;%
 ---
 
 
-# Plot again 🧘‍♂️
+# Plot again 🧘‍
 
 
 
@@ -648,7 +657,7 @@ ggplot(log_elec_density, aes(x = log_density, y = per_gop_2020)) +
 4. 🔥Challenge🔥: Create a variable that tells you whether a county **flipped** from 2016 to 2020 (e.g., Dems won it in 2016, Reps won it in 2020). 
 ]
 
-<div class="countdown" id="timer_630e5f11" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_630e7967" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 

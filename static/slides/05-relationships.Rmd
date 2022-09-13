@@ -23,6 +23,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+xaringanExtra::use_editable(id = "05-relationships")
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, 
@@ -602,6 +603,35 @@ So note that you have to *name* the new variables!
 
 ---
 
+## Sidenote: we can use summary functions in filter
+
+--
+
+
+.pull-left[
+which country had the lowest life expectancy in 2007?
+
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(lifeExp == min(lifeExp))
+```
+]
+
+--
+
+.pull-right[
+which countries had above average GPD but below average health?
+```{r, echo = TRUE}
+gapminder %>% 
+  filter(year == 2007) %>% 
+  filter(gdpPercap > mean(gdpPercap), lifeExp < mean(lifeExp))
+```
+]
+
+---
+
+
 # Bane of my existence: missing data
 
 --
@@ -676,22 +706,22 @@ pokemon %>%
 
 ---
 
-# 🚨 Your turn: elections 🚨
+# 🚨 Your turn: trade 🚨
 
 
-1. What is the average, minimum, and maximum percent of the vote that Republicans won in 2016? Bonus: where was that min and max? 
+Using the `trade` dataset:
 
---
-
-2. How many people live in the median county in Florida? 
+1. What is the average, minimum, and maximum level of imports any country had in 2010? 
 
 --
 
-3. Which *region* has the biggest variation in the land area of its counties?
+2. How many InterGovernmental Organizations (IGOs) is the median country member of?
 
 --
 
-4. 🔥**Semi-fire challenge**🔥: Compare the mean and median percent of the population that is Black and white, respectively. Why is the mean larger than the median in one case *but the opposite* in the other? Use plots to illustrate the point.
+3. Compare the variation in exports in the year 1950 against the year 2010. How has that variation changed over time?
+
+
 
 
 ```{r}
@@ -834,7 +864,8 @@ ggplot(life_continent_year, aes(x = year, y = avg_life, color = continent)) +
 
 ---
 
-# 🚨 Your turn: ugly prejudice! 🚨
+# 🔥 fire challenge: ugly prejudice 🔥
+
 
 --
 
@@ -849,30 +880,19 @@ Researchers use *feeling thermometers* to measure how people feel about differen
 .scroll-output[
 ```{r}
 therm %>% 
-  select(birth_year, sex, race, party_id, ft_black_2017, ft_white_2017) %>% 
+  #select(birth_year, sex, race, party_id, ft_black_2017, ft_white_2017) %>% 
   knitr::kable()
 ```
 ]
 
 ---
 
-# 🚨 Your turn: ugly prejudice! 🚨
+# 🔥 fire challenge: ugly prejudice 🔥
 
---
 
-1. How old is this panel, on average? Note: panel was fielded in 2017. 
+Using the `therm` dataset:
 
---
-
-2. Calculate average 🌡 towards a couple of groups of your choosing, broken down **by** one respondent characteristic. Make sense of the finding. 
-
---
-
-3. Calculate average 🌡 towards a couple of groups of your choosing, broken down **by** two (🤯🤯🤯) respondent characteristics. Make sense of the finding.  
-
---
-
-4. 🔥🔥**Mega-hellfire challenge**🔥🔥: Figure out how to use `pivot_longer()` to make the graph on the following slide. 
+.can-edit[Instructions.]
 
 ```{r}
 countdown::countdown(minutes = 10L)
@@ -901,16 +921,4 @@ ggplot(therm_long, aes(x = group, y = avg, color = party_id)) +
        color = "Party self-ID:") + 
   scale_color_manual(values = c("blue", "red")) + 
   theme(legend.position = "top")
-
-
-# ggplot(filter(therm_logn, party_id %in% c("Democrat", "Republican")), 
-#        aes(y = group, x = thermometer, fill = party_id)) + 
-#   geom_density_ridges(rel_min_height = 0.005, alpha = .8) + 
-#   scale_fill_manual(values = c("blue", "red")) + 
-#   hrbrthemes::theme_ipsum() + 
-#   theme(legend.position = "bottom")
-
 ```
-
-
----

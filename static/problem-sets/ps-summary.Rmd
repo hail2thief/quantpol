@@ -1,0 +1,140 @@
+---
+title: "Problem set 3: Relationships"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(socviz)
+```
+
+
+# Task 1: Money in politics
+
+
+We're going to work with the Database on Ideology, Money in Politics, and Elections (DIME), which has candidate-level information on campaign fundraising. 
+
+
+```{r}
+df = read_rds("https://www.dropbox.com/s/7hv94wqet172a9n/bonica.rds?dl=1")
+```
+
+
+The Senate is thought to be more politically important than the House. How much more money is spent on the average race in the Senate compared to the House? Calculate the average money spent (`total_disbursements`) on races, broken down by whether the election was for a Senate or House seat. 
+
+```{r}
+
+
+```
+
+
+**Q1: About how MUCH MORE money is spent on average in Senate races than House races?**
+
+
+
+Candidates don't always spend all the money they raise. How much do they save? Looking only at the latest election cycle (2018), calculate the average amount that candidates: a) raised in donations (`total_receipts`); b) their campaign spent during the election (`total_disbursements`). 
+
+
+```{r}
+
+
+```
+
+**Q2: Approximately how MUCH MORE did candidates raise, on average, than they spent?** 
+
+
+
+Where did Democrats and Republicans raise the most money in the very memorable 2016 election cycle? Calculate the *sum* of all money raised (`total_receipts`) in the 2016 election, broken down by state and party. Store this as an object so you can look at it. 
+
+
+```{r}
+
+
+```
+
+**Q3: In which state did Democrats raise the most money?** 
+**Q4: In which state did Republicans raise the THIRD MOST money?** 
+
+
+
+How is the amount of money being raised for elections changing over time? Calculate the average amount raised (`total_receipts`), broken down by cycle and party. Store this as an object.
+
+
+Plot your results as a line time-series, with election cycle on the x-axis, average raised on the y-axis, and mapping party to color. 
+
+```{r}
+
+
+```
+
+**Q5: Which party raised the most money, on average, in 2010?**
+
+
+**Q6: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+
+## Task 2: American voter bot (categories)
+
+
+Now let's look at that data on Americans' attitudes from the Cooperative Election Survey (CES). 
+
+```{r}
+ces = read_rds("https://www.dropbox.com/s/dw0vk82c9d2tfg1/voter-bot.rds?dl=1")
+```
+
+
+What percent of Americans support increasing spending on border security by $25 billion, including building a wall between the U.S. and Mexico (`wall`)? Tally the percent of supporters and opponents. 
+
+```{r}
+
+
+```
+**Q7: Roughly what percent support building the wall?** 
+
+
+How many Americans don't know or have never heard of their states' governor? Use `know_governor` (question asking respondents to identify their governor's party) to calculate the percent of respondents in either of these two categories. 
+
+
+```{r}
+
+
+```
+
+**Q8: Roughly what percent of the sample either doesn't know or have never heard of their states' governor?**
+
+
+
+Next: how do male and female respondents (`gender`) feel about abortion (`prochoice`)? Tally the percent of respondents who support and oppose abortion, broken down by gender. 
+
+```{r}
+
+
+```
+**Q9: Roughly how big is the gap (in percentage points) between supporters and opponents of abortion AMONG WOMEN?**  
+
+
+
+Finally: how much does age predict a person's ideology? Calculate the median `age` of respondents, broken down by their political ideology (`ideo5`). 
+
+
+```{r}
+
+
+```
+
+
+**Q10: About how much older is the median person who identifies as "very conservative" than the median person who identifies as "very liberal"? ** 

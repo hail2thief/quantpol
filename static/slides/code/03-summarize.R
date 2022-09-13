@@ -1,10 +1,10 @@
 # libraries
 library(tidyverse)
-library(fivethirtyeight)
+library(fivethirtyeight) # install if you don't have it!
 
 
 # elections data
-elections = read_csv("https://www.dropbox.com/s/kysv19u2m91e6gr/elections.csv?dl=1")
+trade = read_csv("https://github.com/hail2thief/poli-301/raw/master/static/files/ir_econ.csv")
 
 
 # do your work here!

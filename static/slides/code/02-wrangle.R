@@ -8,7 +8,7 @@ library(socviz)
 
 
 # read data
-df = read_rds("https://github.com/hail2thief/poli-301/raw/master/static/files/voter-bot.rds")
+df = read_rds("https://www.dropbox.com/s/dw0vk82c9d2tfg1/voter-bot.rds?dl=1")
 
 
 # do your work here!

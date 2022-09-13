@@ -404,7 +404,7 @@ elections %>%
 
 # Density
 
-$Density = \frac{Population}{Area}$
+$Density = \frac{Population}{Area}$ = "how many people per square mile"
 
 --
 
@@ -492,7 +492,7 @@ log_elec_density = elections %>%
 ---
 
 
-# Plot again 🧘‍♂️
+# Plot again 🧘‍
 
 
 ```{r, echo = TRUE, out.width="70%"}

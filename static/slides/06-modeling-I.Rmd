@@ -694,7 +694,7 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 # First candidate: the residuals
 
-How far is each point from the line?  This is the **residual**
+How far is each point from the line?  This is the **residual** $\approx$ how *wrong* the line is about each point
 
 
 ```{r}
@@ -721,9 +721,9 @@ What does a big line mean? What does a line above the point mean?
 
 ---
 
-# The residuals
+## How good is line 1 at explaining the data?
 
-Sum of squared residuals: 278
+We can add up the residuals to get a sense for how good (or bad) the line is **overall** (note: we **square** the residuals to deal with negatives/positives)
 
 .scroll-output[
 ```{r}
@@ -765,9 +765,9 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 ---
 
-# The residuals
+## How good is line 2?
 
-Sum of residuals: **1126**
+Sum of (squared) residuals: **1,126**
 
 .scroll-output[
 ```{r}
@@ -860,23 +860,6 @@ ggplot() + geom_abline(intercept = 6, slope = -2, size = 1) +
 
 ---
 
-# 🚨Your turn🚨 Draw the lines
-
-Using pen and paper, sketch the following lines: 
-
-* Y = 1 + 2x
-* Y = 6x + 3
-* Y = 1x - 7
-* Y = x - 1
-
-Then confirm your intuition with the R code
-
-```{r}
-countdown::countdown(minutes = 5L)
-```
-
-
----
 
 # What we want (and it's disgusting)
 
@@ -1025,5 +1008,3 @@ knitr::include_graphics("images/model2.jpeg")
 countdown::countdown(minutes = 5L)
 ```
 
-
----

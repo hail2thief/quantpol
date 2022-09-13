@@ -482,7 +482,8 @@ Note the variable is the same; only thing that has changed is the scale!
 
 ```{r}
 gapminder %>%
-  select(gdpPercap, gdp_10k) %>%
+  select(`GDP (in dollars)` = gdpPercap, 
+         `GDP (in tens of thousands of dollars)` = gdp_10k) %>%
   pivot_longer(everything()) %>%
   ggplot(aes(x = value)) +
   geom_histogram(fill = red, alpha = .8, color = "white", bins = 30) +
@@ -585,17 +586,17 @@ This is a dummy variable: a country either is, or isn't, in the Americas
 ---
 
 
-# Creating dummies with `ifelse()`
+# Creating dummies
 
-We can create that dummy using `ifelse()` and logical operators:
+We can create that dummy using logical operators:
 
 ```{r, echo = TRUE}
 gap_dummies = gapminder %>%
-  mutate(is_americas = ifelse(continent == "Americas", 1, 0))
+  mutate(is_americas = continent == "Americas")
 ```
 
 
-Read: "IF the observation's continent equals "Americas", assign a 1, otherwise 0"
+Read: "IF the observation's continent equals "Americas", assign a TRUE, otherwise FALSE"
 
 ---
 
@@ -637,9 +638,9 @@ tidy(americas_mod)
 
 .pull-left[
 
-Turn the light on (`is_america` goes from zero to one), the light *increases* by SLOPE
+Turn the light on (`is_america` goes from FALSE to TRUE), the light *increases* by SLOPE
 
-Turn the light off (`is_america` goes from one to zero), the light *decreases* by SLOPE
+Turn the light off (`is_america` goes from TRUE to FALSE), the light *decreases* by SLOPE
 
 The change is **instant**
 ]
@@ -680,7 +681,7 @@ Intercept (set is_americas = 0): Countries not in the Americas (i.e., in Africa,
 # Categorical variables
 
 
-The intercept here is "is_america = 0"; the slope is the **red line**
+The intercept here is "is_america = FALSE"; the slope is the **red line**
 
 ```{r}
 ggplot(gap_dummies, aes(x = factor(is_americas), y = lifeExp)) + 
@@ -695,7 +696,7 @@ ggplot(gap_dummies, aes(x = factor(is_americas), y = lifeExp)) +
                color = red) + 
   theme_fancy + 
   labs(x = NULL, y = "Life expectancy") + 
-  scale_x_discrete(labels = c("is_america = 0", "is_americas = 1"))
+  scale_x_discrete(labels = c("is_america = FALSE", "is_americas = TRUE"))
 ```
 
 ---
@@ -709,11 +710,11 @@ Say I go back and create a dummy for each continent:
 
 ```{r, echo = TRUE}
 gap_dummies = gapminder %>%
-  mutate(is_africa = ifelse(continent == "Africa", 1, 0),
-         is_europe = ifelse(continent == "Europe", 1, 0),
-         is_asia = ifelse(continent == "Asia", 1, 0),
-         is_oceania = ifelse(continent == "Oceania", 1, 0),
-         is_americas = ifelse(continent == "Americas", 1, 0))
+  mutate(is_africa = continent == "Africa",
+         is_europe = continent == "Europe",
+         is_asia = continent == "Asia",
+         is_oceania = continent == "Oceania",
+         is_americas = continent == "Americas")
 ```
 
 
@@ -933,15 +934,15 @@ knitr::include_graphics("images/reg-table.png")
 
 
 
-# 🚨 Your turn: dealer's choice 🚨
+# 🚨 Your turn: number of kids 🚨
 
 --
 
-1. Using the `penguins` dataset, regress weight against penguin species. Interpret the output. 
+1. Do happier people tend to have more or fewer kids than less happy people? Using the `gss_sm` dataset, regress `childs` (outcome) against `happy` (treatment). Interpret the output.
 
 --
 
-2. Using any of the datasets we've used in class, regress a continuous-ish variable (outcome) against a categorical variable (treatment). Interpret the output. 
+2. Which religions have the biggest families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
 
 --
 
@@ -953,54 +954,5 @@ Hint: to figure out what values a categorical variable takes on, use the `distin
 ```{r}
 countdown::countdown(minutes = 10L)
 ```
-
-
----
-
-
-
-<!-- # Can't fit every dummy -->
-
-<!-- Can't have **both** an intercept and every dummy in the model -->
-
-<!-- But there's no need; the intercept is the "missing" dummy -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- lm(lifeExp ~ is_africa + is_europe + is_asia + is_oceania + is_americas, data = gap_dummies) %>% tidy() -->
-<!-- ``` -->
-
-<!-- --- -->
-
-
-
-
-<!-- # Outcome is a dummy variable -->
-
-
-<!-- We can also estimate models when the outcome is a dummy variable -->
-
-
-<!-- From `gss_sm`: does having more children make you more or less likely to have voted for Obama?  -->
-
-<!-- ```{r} -->
-<!-- gss_sm %>%  -->
-<!--   select(year, id, childs, obama) %>%  -->
-<!--   knitr::kable() -->
-<!-- ``` -->
-
-
-<!-- --- -->
-
-<!-- # Outcome is a dummy variable -->
-
-<!-- ```{r, echo = TRUE} -->
-<!-- obama_kids = lm(obama ~ childs, data = gss_sm) -->
-<!-- tidy(obama_kids) -->
-<!-- ``` -->
-
-<!-- For every additional child a person has, the probability they vote for Obama decreases by 1.7 percentage points -->
-
-<!-- --- -->
-
 
 
