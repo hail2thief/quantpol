@@ -4,9 +4,15 @@
     <title>Visualization I</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-08-24" />
+    <meta name="date" content="2022-09-19" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
     <script type="application/json" id="xaringanExtra-editable-docid">{"id":"02-viz","expires":14}</script>
     <script src="libs/himalaya/himalaya.js"></script>
     <script src="libs/js-cookie/js.cookie.js"></script>
@@ -2168,7 +2174,7 @@ class: left
 2. Add `geom_text` layer to your plot
 
 
-<div class="countdown" id="timer_6306822b" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_63290f8c" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2226,43 +2232,43 @@ Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 ---
 
 
-## 🐧 palmerpenguins 🐧
+# 🇺🇸 The presidents 🇺🇸
 
 
 .scroll-output[
 
-|species |island    | bill_length_mm| bill_depth_mm| flipper_length_mm| body_mass_g|sex    | year|
-|:-------|:---------|--------------:|-------------:|-----------------:|-----------:|:------|----:|
-|Adelie  |Torgersen |           39.1|          18.7|               181|        3750|male   | 2007|
-|Adelie  |Torgersen |           39.5|          17.4|               186|        3800|female | 2007|
-|Adelie  |Torgersen |           40.3|          18.0|               195|        3250|female | 2007|
-|Adelie  |Torgersen |             NA|            NA|                NA|          NA|NA     | 2007|
-|Adelie  |Torgersen |           36.7|          19.3|               193|        3450|female | 2007|
-|Adelie  |Torgersen |           39.3|          20.6|               190|        3650|male   | 2007|
+| election| year|winner                 |win_party | ec_pct| popular_pct| popular_margin|   votes| margin|runner_up              |ru_part | turnout_pct|winner_lname |winner_label  |ru_lname |ru_label      |two_term | ec_votes| ec_denom|
+|--------:|----:|:----------------------|:---------|------:|-----------:|--------------:|-------:|------:|:----------------------|:-------|-----------:|:------------|:-------------|:--------|:-------------|:--------|--------:|--------:|
+|       10| 1824|John Quincy Adams      |D.-R.     | 0.3218|      0.3092|        -0.1044|  113142| -38221|Andrew Jackson         |D.-R.   |       0.269|Adams        |Adams 1824    |Jackson  |Jackson 1824  |FALSE    |       84|      261|
+|       11| 1828|Andrew Jackson         |Dem.      | 0.6820|      0.5593|         0.1225|  642806| 140839|John Quincy Adams      |N. R.   |       0.573|Jackson      |Jackson 1828  |Adams    |Adams 1828    |TRUE     |      178|      261|
+|       12| 1832|Andrew Jackson         |Dem.      | 0.7657|      0.5474|         0.1781|  702735| 228628|Henry Clay             |N. R.   |       0.570|Jackson      |Jackson 1832  |Clay     |Clay 1832     |TRUE     |      219|      286|
+|       13| 1836|Martin Van Buren       |Dem.      | 0.5782|      0.5079|         0.1420|  763291| 213384|William Henry Harrison |Whig    |       0.565|Buren        |Buren 1836    |Harrison |Harrison 1836 |FALSE    |      170|      294|
+|       14| 1840|William Henry Harrison |Whig      | 0.7959|      0.5287|         0.0605| 1275583| 145938|Martin Van Buren       |Dem.    |       0.803|Harrison     |Harrison 1840 |Buren    |Buren 1840    |FALSE    |      234|      294|
+|       15| 1844|James Polk             |Dem.      | 0.6182|      0.4954|         0.0145| 1339570|  39413|Henry Clay             |Whig    |       0.792|Polk         |Polk 1844     |Clay     |Clay 1844     |FALSE    |      170|      275|
 ]
 
 
 ---
 
 class: left
-## 🚨 Your turn 🚨
+# 🚨 Your turn 🚨
 
 
 --
 
-Make a plot using the `penguins` dataset
+Make a plot of presidential election results using the `elections_historic` dataset
 
 --
 
-flipper length (x-axis) and body mass (y-axis)
+% of popular vote (x-axis) and % of electoral college vote (y-axis)
 
 --
 
-map penguin **species** to the `color` and `shape` aesthetics
+map president's **party** to the `color` aesthetic, and whether or not president served two terms to `shape`
 
 
 
-<div class="countdown" id="timer_630680fc" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_63290f80" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2274,7 +2280,7 @@ map penguin **species** to the `color` and `shape` aesthetics
 
 
 ```r
-*ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g))
+*ggplot(elections_historic, aes(x = popular_pct, y = ec_pct))
 ```
 
 &lt;img src="02-viz_files/figure-html/unnamed-chunk-27-1.png" width="70%" /&gt;
@@ -2286,7 +2292,7 @@ map penguin **species** to the `color` and `shape` aesthetics
 
 
 ```r
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) + 
 * geom_point()
 ```
 
@@ -2294,13 +2300,12 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
 
 ---
 
-## Add point shape
+## Add point color and shape
 
 
 
 ```r
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-*                    shape = species)) +
+*ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term)) +
   geom_point()
 ```
 
@@ -2308,14 +2313,13 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g,
 
 ---
 
-## Add point color
+## Add point labels
 
 
 
 ```r
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-*                    color = species, shape = species)) +
-  geom_point()
+*ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) +
+* geom_point() + geom_text_repel()
 ```
 
 &lt;img src="02-viz_files/figure-html/unnamed-chunk-30-1.png" width="70%" /&gt;
@@ -2327,10 +2331,9 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g,
 
 
 ```r
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-                     color = species, shape = species)) + 
-* geom_point()  + theme_minimal() +
-* labs(x = "Flipper length (mm)", y = "Body mass (grams)")
+*ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) +
+* geom_point() +  geom_text_repel() + theme_minimal() +
+* labs(x = "Percent of popular vote", y = "Percent of Electoral College vote", title = "Presidential Elections: Popular &amp; Electoral College Margins", subtitle = "1824-2016")
 ```
 
 &lt;img src="02-viz_files/figure-html/unnamed-chunk-31-1.png" width="70%" /&gt;
@@ -2338,15 +2341,55 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g,
 ---
 
 
+.panelset[
+.panel[.panel-name[Output]
+&lt;img src="02-viz_files/figure-html/unnamed-chunk-32-1.png" width="100%" /&gt;
+]
+
+.panel[.panel-name[Code]
+.scroll-output[
+
+]
+
+```r
+# just if you're curious! Note you'd need to install the font "Fira Sans Condensed" on your computer
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
+                               color = win_party, shape = two_term, 
+                               label = winner_label)) + 
+  geom_point() +  
+  geom_text_repel(family = "Fira Sans Condensed") + 
+  theme_minimal(base_family = "Fira Sans Condensed") +
+  labs(x = "Percent of popular vote", 
+       y = "Percent of Electoral College vote", 
+       title = "Presidential Elections: Popular &amp; Electoral College Margins",
+       subtitle = "1824-2016", color = NULL, size = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  scale_color_manual(values = c(yellow, red, blue, "gray")) + 
+  geom_hline(yintercept = 0.5, size = 1.4, color = "gray80") +
+    geom_vline(xintercept = 0.5, size = 1.4, color = "gray80") +  theme(legend.position = "none") 
+```
+]
+]
+
+
+???
+What's going on here? all points above 50% EC, but not adams
+not all points above 50% pop vote
+"Because none of the candidates for president garnered an electoral vote majority, the U.S. House of Representatives, under the provisions of the Twelfth Amendment, held a contingent election. On February 9, 1825, John Quincy Adams was elected as president without getting the majority of the electoral vote or the popular vote, being the only president to do so."
+
+---
+
 ## What did we do?
 
 
-|Data              |Aesthetic |Geometry       |
-|:-----------------|:---------|:--------------|
-|flipper_length_mm |`x`       |`geom_point()` |
-|body_mass_g       |`y`       |`geom_point()` |
-|species           |`shape`   |`geom_point()` |
-|species           |`color`   |`geom_point()` |
+|Data         |Aesthetic |Geometry            |
+|:------------|:---------|:-------------------|
+|popular_pct  |`x`       |`geom_point()`      |
+|ec_pct       |`y`       |`geom_point()`      |
+|win_party    |`color`   |`geom_point()`      |
+|two_term     |`shape`   |`geom_point()`      |
+|winner_label |`label`   |`geom_text_repel()` |
 
 
 --
@@ -2356,7 +2399,7 @@ Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
+"highlightStyle": "default",
 "highlightLanguage": "r",
 "highlightLines": true,
 "countIncrementalSlides": false,

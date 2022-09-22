@@ -15,16 +15,21 @@ output:
 <div id="TOC">
 <ul>
 <li><a href="#install-r" id="toc-install-r">Install R</a></li>
-<li><a href="#install-rstudio" id="toc-install-rstudio">Install RStudio</a></li>
+<li><a href="#install-rstudio" id="toc-install-rstudio">Install RStudio</a>
+<ul>
 <li><a href="#extra-installation-help-mac-steps" id="toc-extra-installation-help-mac-steps">Extra installation help (Mac): steps</a></li>
 <li><a href="#extra-installation-help-windows-video" id="toc-extra-installation-help-windows-video">Extra installation help (Windows): video</a></li>
-<li><a href="#install-cran-packages" id="toc-install-cran-packages">Install (CRAN) packages</a></li>
+</ul></li>
+<li><a href="#install-packages" id="toc-install-packages">Install packages</a>
+<ul>
+<li><a href="#install-juanr-and-other-packages-from-github" id="toc-install-juanr-and-other-packages-from-github">Install <code>{juanr}</code> (and other packages from Github)</a></li>
+</ul></li>
 </ul>
 </div>
 
 <p>You will do all of your work in this class with the open source (and free!) programming language <a href="https://cran.r-project.org/">R</a>. You will use <a href="https://www.rstudio.com/">RStudio</a> as the main program to access R. Think of R as an engine and RStudio as a car dashboard—R handles all the calculations and the actual statistics, while RStudio provides a nice interface for running R code.</p>
-<div id="install-r" class="section level2">
-<h2>Install R</h2>
+<div id="install-r" class="section level1">
+<h1>Install R</h1>
 <p>First you need to install R itself (the engine).</p>
 <ol style="list-style-type: decimal">
 <li><p>If you have a <strong>WINDOWS</strong>, click here: <a href="https://cran.r-project.org/bin/windows/base/R-4.2.1-win.exe">Download R 4.2.1 for Windows</a></p></li>
@@ -33,8 +38,8 @@ output:
 <li><p>If you use macOS, <a href="https://www.xquartz.org/">download and install XQuartz</a>. You do not need to do this on Windows.</p></li>
 </ol>
 </div>
-<div id="install-rstudio" class="section level2">
-<h2>Install RStudio</h2>
+<div id="install-rstudio" class="section level1">
+<h1>Install RStudio</h1>
 <p>Next, you need to install RStudio, the nicer graphical user interface (GUI) for R (the dashboard). Once R and RStudio are both installed, you can ignore R and only use RStudio. RStudio will use R automatically and you won’t ever have to interact with R directly.</p>
 <ol style="list-style-type: decimal">
 <li>If you have a <strong>WINDOWS</strong>, click here: <a href="https://download1.rstudio.org/desktop/windows/RStudio-2022.07.1-554.exe">Download RStudio for Windows</a></li>
@@ -42,7 +47,6 @@ output:
 <li>Double click on the downloaded file (check your <code>Downloads</code> folder). Click yes through all the prompts to install like any other program.</li>
 </ol>
 <p>Double click on RStudio to run it (check your applications folder or start menu).</p>
-</div>
 <div id="extra-installation-help-mac-steps" class="section level2">
 <h2>Extra installation help (Mac): steps</h2>
 <p>Here’s a different <a href="https://scribehow.com/shared/Google_Workflow__ivjLMJ3_SIaV9LDOwaxQHQ">helpful walkthrough for Mac</a></p>
@@ -53,10 +57,17 @@ output:
 <iframe width="560" height="315" src="https://www.youtube.com/embed/TFGYlKvQEQ4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
 </iframe>
 </div>
-<div id="install-cran-packages" class="section level2">
-<h2>Install (CRAN) packages</h2>
-<p>Most R packages are easy to install with RStudio. Select the packages panel, click on “Install,” type the name of the package you want to install, and press enter.</p>
+</div>
+<div id="install-packages" class="section level1">
+<h1>Install packages</h1>
+<p>Most R packages are easy to install with RStudio. Select the packages panel, click on “Install,” type the name of the package you want to install, and press enter. R will download the package from the web, so make sure you are connected to wifi when you do it.</p>
 <p><img src="/img/install/install-r-package-panel.png" width="40%" /></p>
 <p>A less tedious way to do this is via the console or in your script (just make sure to delete afterwards!), by running the following code:</p>
 <pre class="r"><code>install.packages(&quot;name_of_package&quot;)</code></pre>
+<div id="install-juanr-and-other-packages-from-github" class="section level2">
+<h2>Install <code>{juanr}</code> (and other packages from Github)</h2>
+<p>Some packages, like <code>{juanr}</code> cannot be installed using <code>install.packages()</code> because they are hosted on <a href="https://github.com/">Github</a>. To install <code>{juanr}</code>, you will first need to install <code>{devtools}</code> and then use <code>install_github()</code>, like so:</p>
+<pre class="r"><code>install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;hail2thief/juanr&quot;)</code></pre>
+</div>
 </div>

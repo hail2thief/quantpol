@@ -1,7 +1,8 @@
 # load libraries -------------------------------------------------------------------------
 library(tidyverse)
 library(gapminder) # install this if you don't have it!
-library(palmerpenguins) # install this if you don't have it!
+library(socviz) # install this if you don't have it!
+library(ggrepel) # install this if you don't have it!
 
 
 # clean data ------------------------------------------------------------------------
@@ -60,11 +61,12 @@ ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
 
 
 
-# palmer penguins ---------------------------------------------------------
+# presidential elections ---------------------------------------------------------
 
 
 # look at the data
-penguins
+elections_historic
+?elections_historic
 
 
 # MAKE THE PLOT HERE!!

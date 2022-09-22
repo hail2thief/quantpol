@@ -18,7 +18,7 @@ You will do all of your work in this class with the open source (and free!) prog
 
 
 
-## Install R
+# Install R
 
 First you need to install R itself (the engine).
 
@@ -29,7 +29,7 @@ First you need to install R itself (the engine).
 4. If you use macOS, [download and install XQuartz](https://www.xquartz.org/). You do not need to do this on Windows.
 
 
-## Install RStudio
+# Install RStudio
 
 Next, you need to install RStudio, the nicer graphical user interface (GUI) for R (the dashboard). Once R and RStudio are both installed, you can ignore R and only use RStudio. RStudio will use R automatically and you won't ever have to interact with R directly.
 
@@ -56,9 +56,10 @@ Here's a different, [helpful walkthrough for Windows](https://www.youtube.com/wa
 <iframe width="560" height="315" src="https://www.youtube.com/embed/TFGYlKvQEQ4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
-## Install (CRAN) packages
+# Install packages
 
-Most R packages are easy to install with RStudio. Select the packages panel, click on "Install," type the name of the package you want to install, and press enter.
+Most R packages are easy to install with RStudio. Select the packages panel, click on "Install," type the name of the package you want to install, and press enter. R will download the package from the web, so make sure you are connected to wifi when you do it. 
+
 
 ```{r, echo=FALSE, out.width="40%"}
 include_graphics("/img/install/install-r-package-panel.png", error = FALSE)
@@ -69,6 +70,18 @@ A less tedious way to do this is via the console or in your script (just make su
 
 ```{r, eval=FALSE}
 install.packages("name_of_package")
+```
+
+
+## Install `{juanr}` (and other packages from Github)
+
+
+Some packages, like `{juanr}` cannot be installed using `install.packages()` because they are hosted on [Github](https://github.com/). To install `{juanr}`, you will first need to install `{devtools}` and then use `install_github()`, like so:
+
+
+```{r, eval = FALSE}
+install.packages("devtools")
+devtools::install_github("hail2thief/juanr")
 ```
 
 

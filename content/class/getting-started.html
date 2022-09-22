@@ -19,202 +19,75 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#in-class-example">In-class example</a></li>
-<li><a href="#example-un-voting-patterns">Example: UN voting patterns</a></li>
+<li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
 </ul>
 </div>
 
 <div id="in-class-example" class="section level2">
 <h2>In-class example</h2>
-<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as….”</p>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”.</p>
 <p><a href="/files/eat-cake.R"><i class="fas fa-file-archive"></i> <code>UN Voting Data</code></a></p>
-</div>
-<div id="example-un-voting-patterns" class="section level2">
-<h2>Example: UN voting patterns</h2>
-<p>Your first class script <code>eat-cake.R</code> does two things:</p>
-<ul>
-<li>takes a dataset that records every vote at the UN going back decades and cleans it</li>
-<li>visualizes voting patterns over time for the US and Turkey</li>
-</ul>
-<p>At this point, none of this should “make sense” to you. You do not need to understand what each line of code here does. I just want you to run the code and try to make sense of what the different parts are doing.</p>
-<p>Let’s break the script down:</p>
-<p>The first thing the script does is load a set of packages, or libraries, which will give us access to the UN data and functions to use with that data.</p>
-<pre class="r"><code>library(tidyverse)
-library(unvotes) # this is where the UN data lives
-library(lubridate)
-library(scales)</code></pre>
-<p>We can see some of the UN data below:</p>
-<pre class="r"><code>un_votes %&gt;% 
-  slice(1:5) %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="right">rcid</th>
-<th align="left">country</th>
-<th align="left">country_code</th>
-<th align="left">vote</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">United States</td>
-<td align="left">US</td>
-<td align="left">yes</td>
-</tr>
-<tr class="even">
-<td align="right">3</td>
-<td align="left">Canada</td>
-<td align="left">CA</td>
-<td align="left">no</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">Cuba</td>
-<td align="left">CU</td>
-<td align="left">yes</td>
-</tr>
-<tr class="even">
-<td align="right">3</td>
-<td align="left">Haiti</td>
-<td align="left">HT</td>
-<td align="left">yes</td>
-</tr>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">Dominican Republic</td>
-<td align="left">DO</td>
-<td align="left">yes</td>
-</tr>
-</tbody>
-</table>
-<p>The variable <code>rcid</code> is the way the data identifies the issue being voted on. So on RCID 3, the US voted “yes” while Canada voted “no.”</p>
-<p>Here are some of the issues:</p>
-<pre class="r"><code>un_roll_calls %&gt;% 
-  select(rcid, date, short) %&gt;% 
-  slice(1:5) %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="right">rcid</th>
-<th align="left">date</th>
-<th align="left">short</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="right">3</td>
-<td align="left">1946-01-01</td>
-<td align="left">AMENDMENTS, RULES OF PROCEDURE</td>
-</tr>
-<tr class="even">
-<td align="right">4</td>
-<td align="left">1946-01-02</td>
-<td align="left">SECURITY COUNCIL ELECTIONS</td>
-</tr>
-<tr class="odd">
-<td align="right">5</td>
-<td align="left">1946-01-04</td>
-<td align="left">VOTING PROCEDURE</td>
-</tr>
-<tr class="even">
-<td align="right">6</td>
-<td align="left">1946-01-04</td>
-<td align="left">DECLARATION OF HUMAN RIGHTS</td>
-</tr>
-<tr class="odd">
-<td align="right">7</td>
-<td align="left">1946-01-02</td>
-<td align="left">GENERAL ASSEMBLY ELECTIONS</td>
-</tr>
-</tbody>
-</table>
-<p>The next chunk of code takes the UN voting data and calculates the percentage of times the US and Turkey voted “yes” on an issue in each year for which there is data.</p>
-<pre class="r"><code>un_yes = un_votes %&gt;%
-  filter(country %in% c(&quot;United States&quot;, &quot;Turkey&quot;)) %&gt;%
-  inner_join(un_roll_calls, by = &quot;rcid&quot;) %&gt;%
-  inner_join(un_roll_call_issues, by = &quot;rcid&quot;) %&gt;%
-  group_by(country, year = year(date), issue) %&gt;%
-  summarize(
-    votes = n(),
-    percent_yes = mean(vote == &quot;yes&quot;)
-  ) %&gt;%
-  filter(votes &gt; 5)  # only use records where there are more than 5 votes</code></pre>
-<p>You can see the results of this below:</p>
-<pre class="r"><code>un_yes %&gt;% 
-  head() %&gt;% 
-  knitr::kable()</code></pre>
-<table>
-<thead>
-<tr class="header">
-<th align="left">country</th>
-<th align="right">year</th>
-<th align="left">issue</th>
-<th align="right">votes</th>
-<th align="right">percent_yes</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="left">Turkey</td>
-<td align="right">1946</td>
-<td align="left">Colonialism</td>
-<td align="right">15</td>
-<td align="right">0.8000000</td>
-</tr>
-<tr class="even">
-<td align="left">Turkey</td>
-<td align="right">1946</td>
-<td align="left">Economic development</td>
-<td align="right">10</td>
-<td align="right">0.6000000</td>
-</tr>
-<tr class="odd">
-<td align="left">Turkey</td>
-<td align="right">1947</td>
-<td align="left">Colonialism</td>
-<td align="right">9</td>
-<td align="right">0.2222222</td>
-</tr>
-<tr class="even">
-<td align="left">Turkey</td>
-<td align="right">1947</td>
-<td align="left">Palestinian conflict</td>
-<td align="right">7</td>
-<td align="right">0.1428571</td>
-</tr>
-<tr class="odd">
-<td align="left">Turkey</td>
-<td align="right">1948</td>
-<td align="left">Colonialism</td>
-<td align="right">12</td>
-<td align="right">0.4166667</td>
-</tr>
-<tr class="even">
-<td align="left">Turkey</td>
-<td align="right">1948</td>
-<td align="left">Arms control and disarmament</td>
-<td align="right">9</td>
-<td align="right">0.0000000</td>
-</tr>
-</tbody>
-</table>
-<p>So in 1946, Turkey voted 15 times on issues related to “Colonialism,” and of those votes, 80% were a “yes.”</p>
-<p>This last bit of code produces the visualization:</p>
-<pre class="r"><code>ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) +
-  geom_point() +
-  geom_smooth(method = &quot;loess&quot;, se = FALSE) +
-  facet_wrap(~ issue) +
-  labs(
-    title = &quot;Percentage of &#39;Yes&#39; votes in the UN General Assembly&quot;,
-    subtitle = &quot;1946 to 2015&quot;,
-    y = &quot;% Yes&quot;,
-    x = &quot;Year&quot;,
-    color = &quot;Country&quot;
-  ) + 
-  scale_y_continuous(labels = percent)</code></pre>
-<p><img src="/class/getting-started_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>Try playing around with the code! What happens when you replace the United States and/or Turkey with another country?</p>
+<!-- ## Example: UN voting patterns -->
+<!-- Your first class script `eat-cake.R` does two things:  -->
+<!-- - takes a dataset that records every vote at the UN going back decades and cleans it -->
+<!-- - visualizes voting patterns over time for the US and Turkey -->
+<!-- At this point, none of this should "make sense" to you. You do not need to understand what each line of code here does. I just want you to run the code and try to make sense of what the different parts are doing.  -->
+<!-- Let's break the script down:  -->
+<!-- The first thing the script does is load a set of packages, or libraries, which will give us access to the UN data and functions to use with that data.  -->
+<!-- ```{r library} -->
+<!-- library(tidyverse) -->
+<!-- library(unvotes) # this is where the UN data lives -->
+<!-- library(lubridate) -->
+<!-- library(scales) -->
+<!-- ``` -->
+<!-- We can see some of the UN data below:  -->
+<!-- ```{r} -->
+<!-- un_votes %>%  -->
+<!--   slice(1:5) %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
+<!-- The variable `rcid` is the way the data identifies the issue being voted on. So on RCID 3, the US voted "yes" while Canada voted "no".  -->
+<!-- Here are some of the issues:  -->
+<!-- ```{r} -->
+<!-- un_roll_calls %>%  -->
+<!--   select(rcid, date, short) %>%  -->
+<!--   slice(1:5) %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
+<!-- The next chunk of code takes the UN voting data and calculates the percentage of times the US and Turkey voted "yes" on an issue in each year for which there is data.  -->
+<!-- ```{r} -->
+<!-- un_yes = un_votes %>% -->
+<!--   filter(country %in% c("United States", "Turkey")) %>% -->
+<!--   inner_join(un_roll_calls, by = "rcid") %>% -->
+<!--   inner_join(un_roll_call_issues, by = "rcid") %>% -->
+<!--   group_by(country, year = year(date), issue) %>% -->
+<!--   summarize( -->
+<!--     votes = n(), -->
+<!--     percent_yes = mean(vote == "yes") -->
+<!--   ) %>% -->
+<!--   filter(votes > 5)  # only use records where there are more than 5 votes -->
+<!-- ``` -->
+<!-- You can see the results of this below:  -->
+<!-- ```{r} -->
+<!-- un_yes %>%  -->
+<!--   head() %>%  -->
+<!--   knitr::kable() -->
+<!-- ``` -->
+<!-- So in 1946, Turkey voted 15 times on issues related to "Colonialism", and of those votes, 80% were a "yes".  -->
+<!-- This last bit of code produces the visualization:  -->
+<!-- ```{r} -->
+<!-- ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) + -->
+<!--   geom_point() + -->
+<!--   geom_smooth(method = "loess", se = FALSE) + -->
+<!--   facet_wrap(~ issue) + -->
+<!--   labs( -->
+<!--     title = "Percentage of 'Yes' votes in the UN General Assembly", -->
+<!--     subtitle = "1946 to 2015", -->
+<!--     y = "% Yes", -->
+<!--     x = "Year", -->
+<!--     color = "Country" -->
+<!--   ) +  -->
+<!--   scale_y_continuous(labels = percent) -->
+<!-- ``` -->
+<!-- Try playing around with the code! What happens when you replace the United States and/or Turkey with another country?  -->
 </div>

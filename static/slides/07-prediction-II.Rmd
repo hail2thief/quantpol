@@ -45,14 +45,26 @@ library(socviz)
 library(broom)
 library(equatiomatic)
 library(gapminder)
+library(juanr)
 
 # dubois colors
 red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed") +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+
+theme_set(theme_nice())
 
 
 # set seed
@@ -123,9 +135,9 @@ knitr::include_graphics("images/spanish-civwar.jpeg")
 class: center, middle, inverse
 # ⚠️ WARNING ⚠️
 
-## We should not use `lm()` when the outcome is binary
+## We should mostly not use `lm()` when the outcome is binary
 
-## We should instead use another type of model (a *logit*)
+## We should instead use another type of model (a *logit* model)
 
 ## But we will illegally use `lm()` to build **intuition**
 

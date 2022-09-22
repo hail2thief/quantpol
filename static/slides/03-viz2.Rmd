@@ -78,7 +78,7 @@ class: center
 .box-1.large.sp-after[A graph for every season]
 
 --
-.box-2.large.sp-after[The four(-ish) graphs]
+.box-2.large.sp-after[The five(-ish) graphs]
 
 --
 .box-3.large.sp-after[Making graphs pretty (or ugly)]
@@ -191,7 +191,7 @@ It all depends on your data!
 
 ---
 
-## The scatterplot
+# Graph 1 - the scatterplot
 
 
 
@@ -264,7 +264,7 @@ Plot is mostly uninformative because continent is *discrete* (i.e., a category)
 
 ---
 
-## The time series
+# Graph 2: the time series
 
 
 ```{r,out.width="80%",echo = FALSE}
@@ -377,7 +377,7 @@ knitr::kable(life_region_yr)
 
 
 
-## Start from scratch
+# Start from scratch
 
 ```{r,echo =TRUE}
 ggplot(data = life_region_yr) #<<
@@ -386,7 +386,7 @@ ggplot(data = life_region_yr) #<<
 ---
 
 
-## Add aesthetics
+# Add aesthetics
 
 ```{r,echo=TRUE}
 ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
@@ -394,7 +394,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
 
 ---
 
-## Add geometry: 🤢
+# Add geometry: 🤢
 
 ```{r,echo=TRUE}
 ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
@@ -403,7 +403,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
 
 ---
 
-## using `color` to separate lines
+# using `color` to separate lines
 
 ```{r,echo=TRUE}
 ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
@@ -414,7 +414,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 ---
 
 
-## using `group` to separate lines
+# using `group` to separate lines
 
 ```{r,echo=TRUE}
 ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
@@ -426,7 +426,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 
 
 
-## Multiple time series
+# Multiple time series
 
 ```{r,out.width="80%"}
 ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
@@ -441,7 +441,7 @@ These are useful for comparing **trends** across units (countries, places, peopl
 ---
 
 
-## The histogram
+# Graph 3: the histogram
 
 
 ```{r, echo = FALSE,out.width="60%"}
@@ -460,7 +460,7 @@ Popular in social sciences -- can tell you a lot about a variable!
 ---
 
 
-## Interpreting histograms
+# Interpreting histograms
 
 
 ```{r}
@@ -481,7 +481,7 @@ What do we see here?
 ---
 
 
-## Making the histogram
+# Making the histogram
 
 
 .pull-left[
@@ -495,7 +495,7 @@ ggplot(gap_07, aes(x = lifeExp)) + #<<
 .pull-right[
 ```{r}
 tribble(~Data, ~`aes()`, ~`geom_`,
-          "Variable we want", "x", "histogram") %>%
+          "continuous variable", "x", "histogram") %>%
   knitr::kable()
 ```
 ]
@@ -507,9 +507,7 @@ Note that a histogram *only* uses the x-axis!
 ---
 
 
-
-
-## Histograms are for *continuous* variables 🤢
+# Histograms are for *continuous* variables 🤢
 
 
 ```{r, echo = TRUE,out.width="60%"}
@@ -576,9 +574,7 @@ countdown::countdown(minutes = 5L)
 ---
 
 
-
-
-# Compare groups: barplots
+# Graph 4: the barplot
 
 
 ```{r,out.width="80%"}
@@ -594,7 +590,7 @@ ggplot(tv, aes(x = fct_reorder(marital, tv), y = tv)) +
 ```
 
 
-Barplots place a *category* (place, country, person, etc) on one axis and a *value* (amount, average, median, etc.) on another
+Barplots place a *category* (place, country, person, etc) on one axis and a *quantity* (amount, average, median, etc.) on another
 
 --
 
@@ -666,8 +662,93 @@ Barplots are good for comparing averages, medians, etc., across a *small* number
 
 ---
 
+# Graph 5: the boxplot
 
-# The four(-ish) graphs
+
+```{r, out.width="80%"}
+gapminder %>% 
+  ggplot(aes(x = continent, 
+             y = lifeExp, color = continent)) + 
+  geom_boxplot() +
+  labs(y = "Life expectancy", 
+       x = NULL, 
+       title = "Distribution of life expectancy across continents") + 
+  theme_bw(base_family = "Fira Sans") + 
+  theme(legend.position = "none")
+```
+
+
+Boxplots compare the **distributions** of *continuous* variables across groups -- show us more than the barplot which only gives us a quantity for each group
+
+---
+
+
+# Compare distributions: the boxplot
+
+
+.pull-left[
+Boxplots contain a lot of info 🥵:
+
+- bold line is the median observation
+- box is the middle 50% of observations
+- thin vertical lines show you min and max value, except...
+- the dots, which are **outlier** observations
+]
+
+.pull-right[
+```{r}
+gapminder %>% 
+  ggplot(aes(x = continent, 
+             y = lifeExp, color = continent)) + 
+  geom_boxplot() +
+  labs(y = "Life expectancy", 
+       x = NULL, 
+       title = "Distribution of life expectancy across continents") + 
+  theme_bw(base_family = "Fira Sans") + 
+  theme(legend.position = "none")
+```
+]
+
+
+
+---
+
+
+# Mapping the boxplot
+
+
+.pull-left[
+```{r}
+knitr::kable(select(gapminder, country, continent, lifeExp))
+```
+]
+
+.pull-right[
+```{r}
+tribble(~Data, ~`aes()`, ~`geom_`,
+          "continent", "x", "boxplot",
+        "lifeExp", "y", "col") %>%
+  knitr::kable()
+```
+
+]
+
+---
+
+
+# Making the boxplot
+
+
+```{r,echo = TRUE}
+ggplot(gapminder, aes(x = continent, y = lifeExp)) + #<<
+         geom_boxplot() #<<
+```
+
+
+---
+
+
+# The five(-ish) graphs
 
 
 ```{r}
@@ -675,7 +756,8 @@ tribble(~Graph, ~`aes()`, ~`geom_`, ~Purpose,
         "Scatterplot", "x = cause, y = effect", "point()", "Relationships",
         "Time series", "x = date, y = variable", "line()", "Trends",
         "Histogram", "x = variable", "histogram()", "Distributions",
-        "Barplot", "x = category, y = amount", "col()", "Comparison") %>% 
+        "Barplot", "x = category, y = amount", "col()", "Compare", 
+        "Boxplot", "x = category, y = amount", "boxplot()", "Compare distributions") %>% 
   knitr::kable()
 ```
 
@@ -710,11 +792,11 @@ Here are some of my favorite ones
 ---
 
 
-## Uncluttering graphs using `facet_wrap()`
+# Showing movement using `facet_wrap()`
 
 
 ```{r, out.width="80%"}
-ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+ggplot(gapminder, aes(x = lifeExp)) + 
   geom_histogram() + 
   facet_wrap(vars(year)) +  #<<
   theme_minimal()
@@ -725,19 +807,19 @@ You can break out a plot into multiple panels using the `facet_wrap()` layer
 
 ---
 
-## Using facet_wrap
+# Using facet_wrap
 
 ```{r, echo = TRUE, out.width="60%"}
-ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+ggplot(gapminder, aes(x = lifeExp)) + 
   geom_histogram() + theme_minimal()
 ```
 
 ---
 
-## Using facet_wrap
+# Using facet_wrap
 
 ```{r, echo = TRUE, out.width="60%"}
-ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
+ggplot(gapminder, aes(x = lifeExp)) + 
   geom_histogram() + theme_minimal() +
   facet_wrap(vars(year)) #<<
 ```
@@ -749,12 +831,12 @@ Make sure the facetting variable is wrapped in `vars()`!
 ---
 
 
-## Make aesthetics static within the geometries
+# Make aesthetics static within the geometries
 
 
 ```{r,echo = TRUE, out.width="60%"}
 ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
-  geom_point(size = 3, color = "orange", shape = 2, alpha = .5) #<<
+  geom_point(size = 3, color = "orange", shape = 2, alpha = .8) #<<
 ```
 
 
@@ -763,7 +845,7 @@ Take your aesthetics out of `aes()` and into `geom()` to make them *static*
 
 ---
 
-## Show a trend-line using `geom_smooth()`
+# Show a trend-line using `geom_smooth()`
 
 
 ```{r, echo = TRUE, out.width="60%"}
@@ -777,7 +859,7 @@ Trend lines can reveal patterns in "clumpy" data
 ---
 
 
-## Show *separate* trend-lines
+# Show *separate* trend-lines
 
 
 ```{r, echo = TRUE, out.width="60%"}
@@ -792,6 +874,33 @@ Relationships can look different *within* groups
 
 ---
 
+
+# Ridge plots (better than grouped histograms)
+
+
+```{r, echo = TRUE, out.width="70%"}
+library(ggridges)
+ggplot(gapminder, aes(y = continent, x = lifeExp)) + theme_light() + 
+    geom_density_ridges() #<<
+```
+
+Ease visual comparison + kinda looks like the Joy Division album
+
+---
+
+
+# Beeswarm plots (alternative boxplots)
+
+
+```{r, echo = TRUE, out.width="60%"}
+library(ggbeeswarm)
+ggplot(gapminder, aes(x = continent, y = lifeExp)) + theme_light() + 
+    geom_quasirandom() #<<
+```
+
+Beeswarm plots tell us something boxplots don't: the number observations by group
+
+---
 
 
 
@@ -811,7 +920,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-## My favorite color scale
+# My favorite color scale
 
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
@@ -826,7 +935,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-## Many other themes
+# Many other themes
 
 ```{r,out.width="80%"}
 library(tvthemes)

@@ -46,8 +46,23 @@ library(ggdag)
 
 # dubois colors
 red = "#dc354a"
-yellow = "ecb025"
+yellow = "#ecb025"
 blue = "#213772"
+
+
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
 ```
 
 
@@ -151,8 +166,6 @@ ggplot(pDat, aes(x = factor(x),
                  color = factor(x))) + 
   geom_pointrange(size = 2, fatten = 2, 
                   alpha = .8) + 
-  theme_bw(base_size = 15, 
-           base_family = "Fira Sans Condensed") + 
   scale_y_continuous(labels = scales::percent, 
                      limits = c(0, .2)) + 
   scale_x_discrete(breaks = c(0, 1), labels = c("No", "Yes")) + 
@@ -279,7 +292,8 @@ Lots of this:
 
 ```{r,eval = FALSE,echo = TRUE}
 m1 = glm(failure ~ decap, data = df)
-pDat = ggeffects::ggeffect(m1, terms = "decap") %>%  as_tibble()
+pDat = ggeffects::ggeffect(m1, terms = "decap") %>%  
+  as_tibble()
 ggplot(pDat, aes(x = factor(x), y = predicted, 
                  ymin = conf.low, ymax = conf.high, 
                  color = factor(x))) + 
@@ -426,13 +440,16 @@ background-position: right
 ---
 
 
-class: middle, left
+class: left, bottom
 background-image: url("images/nc.jpg")
-background-size: 750px
-background-position: right
+background-size: 600px
+background-position: top
 
-### ...worked in Durham, NC
-### PhD at Duke University...
+PhD at Duke University in Durham, NC...
+
+I specialize in **political violence**, **development**, and **Latin America**
+
+Wrote a dissertation on the Colombian civil war
 
 ---
 
@@ -442,9 +459,31 @@ background-image: url("images/cocks.jpg")
 background-size: 750px
 background-position: right
 
-## ...Worked at UofSC
+## ...Worked at UofSC...
 ---
 
+class: middle, left
+background-image: url("images/boss-baby.jpg")
+background-size: 750px
+background-position: right
+## ...The baby
+
+Due: 10/4 (any day now)
+---
+
+class: center, middle, inverse
+# The TAs
+
+👨‍🎓 Jack Rametta
+
+
+👩‍🎓 RyuGyung (Rio) Park
+
+
+👩‍🎓 Alexa Federice
+
+
+---
 
 
 class: center, middle, inverse
@@ -455,7 +494,9 @@ class: center, middle, inverse
 # What year are you?
 
 ```{r spreadsheet}
-who = read_csv("/Users/juan/Dropbox/Mac/Downloads/pol51-responses - Form Responses 1-2.csv") %>% 
+f21 = read_csv("/Users/juan/Dropbox/teaching/davis/pol51/misc/intake/pol51-responses-f21.csv") %>% 
+  janitor::clean_names() 
+who = read_csv("/Users/juan/Dropbox/teaching/davis/pol51/misc/intake/pol51-responses-f22.csv") %>% 
   janitor::clean_names() %>% 
   rename(from = where_are_you_from_hometown_use_this_format_if_within_the_us_city_state_if_outside_the_us_city_country)
 
@@ -467,8 +508,6 @@ who %>%
              fill = what_year_are_you)) + 
   geom_col(alpha = .8, color = "white") + 
   coord_flip() + 
-  theme_light(base_family = "Fira Sans Condensed", 
-           base_size = 14) + 
   labs(x = NULL, y = NULL) + 
   scale_y_continuous(limits = c(0, 1), labels = scales::percent) + 
   theme(legend.position = "none") + 
@@ -489,18 +528,17 @@ knitr::kable(who$from, col.names = "")
 
 # Everyone's in the same boat
 
+.scroll-output[
 
+]
 ```{r}
 who %>% 
-  select(`Experience coding` = how_much_experience_if_any_do_you_have_with_computer_programming_coding, `Experience data` = how_much_experience_if_any_do_you_have_with_working_with_data) %>% 
+  select(`Experience with coding` = how_much_experience_if_any_do_you_have_with_computer_programming_coding, `Experience with data` = how_much_experience_if_any_do_you_have_with_working_with_data) %>% 
   pivot_longer(everything()) %>% 
   group_by(name, value) %>% 
   tally() %>% 
   ggplot(aes(x = value, y = n)) + 
-  geom_col(fill = red, alpha = .9) + 
-  hrbrthemes::theme_ipsum(base_family = "Fira Sans", 
-                          base_size = 14,
-                          grid = "Y") + 
+  geom_col(fill = red, color = "white", alpha = .9) + 
   facet_wrap(vars(name)) + 
   labs(x = NULL, y = NULL)
 ```
@@ -510,13 +548,17 @@ who %>%
 
 # Same concerns
 
+.scroll-output[
 ```{r}
+set.seed(1990)
 who %>% 
-  select(what_if_anything_concerns_you_about_this_class) %>% 
+  select(concern = what_if_anything_concerns_you_about_this_class) %>% 
   drop_na() %>% 
-  slice(2, 4, 7, 55, 41) %>% 
+  filter(str_detect(concern, "programming|coding|code|math")) %>% 
   knitr::kable(col.names = "What are you concerned about?")
 ```
+]
+
 
 
 ---
@@ -535,11 +577,71 @@ who %>%
 
 ---
 
+
+# No euthanasia
+
+.scroll-output[
+```{r}
+who %>% 
+  select(spain = contains("in_spain")) %>% 
+  knitr::kable(col.names = "What should happen with the mass shooter?")
+```
+]
+
+---
+
+# True crime: we all want to kill 
+
+
+```{r}
+who %>% 
+  select(crime = contains("true")) %>% 
+  slice(99, sample(x = c(1:150), size = 20)) %>% 
+  knitr::kable(col.names = "Why is true crime so popular?")
+```
+
+
+---
+
+# What is hair metal?
+
+
+
+```{r, out.width="80%", out.height="80%",fig.align='center'}
+knitr::include_graphics("images/hair-metal.jpeg")
+```
+
+
+---
+
+
+# Does Guns N' Roses count?
+
+```{r}
+who %>% 
+  select(guns = does_guns_n_roses_technically_count_as_hair_metal) %>% 
+  group_by(guns) %>% 
+  tally() %>% 
+  mutate(percent = n/sum(n)) %>% 
+  ggplot(aes(y = reorder(guns, percent), x = percent, fill = guns)) + 
+  geom_col(alpha = .9, color = "white") + 
+  scale_x_continuous(labels = scales::percent) + 
+  scale_y_discrete(labels = scales::label_wrap(15)) +
+  labs(x = "% of students", y = NULL, title = "Does Guns 'n Roses count as hair metal?") + 
+  paletteer::scale_fill_paletteer_d("nationalparkcolors::Badlands") +
+  theme(legend.position = "none")
+```
+
+
+
+---
+
+
 class: middle, left
 background-image: url("images/archie.jpeg")
 background-size: contain
 background-position: right
-# TV consensus: Riverdale
+## weak TV consensus: Riverdale
 ---
 
 

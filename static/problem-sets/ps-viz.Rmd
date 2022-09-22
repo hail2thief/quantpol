@@ -20,6 +20,7 @@ output: html_document
 ```{r load-libraries, warning=FALSE, message=FALSE}
 library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
 library(babynames) # loads babynames data, needs to install if not yet installed
+library(juanr) # install if not yet installed
 ```
 
 
@@ -115,18 +116,12 @@ Next, let's look at some data about movies. These data are about a selection of 
 
 ```{r clean-movie-data, message=FALSE, warning=FALSE}
 # read data
+?movies # look at the codebook
 movies = 
-  read_csv("https://www.dropbox.com/s/ti3d62yfqpgtkil/movies.csv?dl=1") %>% 
-  # exclude movies before 1980
-  filter(year >= 1980) %>% 
-  # make decades variable
-  mutate(decade = case_when(year >= 1980 & year < 1990 ~ "80s", 
-                            year >= 1990 & year < 2000 ~ "90s", 
-                            year >= 2000 & year < 2010 ~ "2000s", 
-                            year >= 2010 ~ "2010s"))
+  movies %>% 
+  # exclude films made before the 60s
+  filter(year >= 1960)
 
-
-# look at the data
 head(movies)
 ```
 
@@ -166,12 +161,12 @@ Make the plot below (hint: if hard to see, press the icon with an arrow and a bo
 **Question 5: What's the outlier movie?**
 
 
-
-
 **Question 6: What, if anything, does the movie's position on the graph tell us about how successful it was?**
 
 
-Are movies getting *longer* or *shorter* over time? Show the distribution of movie duration using a *histogram*, and map the `fill` aesthetic to `decade` so we can see the distribution within each decade. 
+
+
+Are movies getting *longer* or *shorter* over time? Compare the distribution of movie duration across decades using a *boxplot.* 
 
 Make the plot below: 
 
@@ -182,12 +177,12 @@ Make the plot below:
 ```
 
 
-**Question 7: compare the distribution of movie length across decades. Are movies getting longer over time, shorter over time, or are the distributions pretty similar?**
+**Question 7: how would you describe the change in movie duration over time?**
 
 
 
 
-Finally, let's look at who are the most/least *profitable* scary movie directors. First, we'll make a new dataset that only looks at scary movies, calculates each movie's profit (`gross` - `budget`) and finds the average profit for each director. To make this more manageable, let's look at directors who made at least 2 movies. 
+Finally, let's look at who are the most/least *profitable* horror movie directors. First, we'll make a new dataset that only looks at scary movies, calculates each movie's profit (`gross` - `budget`) and finds the average profit for each director. To make this more manageable, let's look at directors who made at least 2 movies.
 
 
 Run the code below:
@@ -196,7 +191,7 @@ Run the code below:
 ```{r summarize-profits-director}
 directors_profit = movies %>% 
   # only look at horror movies
-  filter(genre %in% c("Horror", "Thriller", "Mystery")) %>% 
+  filter(genre1 == "Horror" | genre2 == "Horror" | genre3 == "Horror") %>% 
   # calculate profit
   mutate(profit = gross - budget) %>% 
   # group by director name
@@ -204,8 +199,8 @@ directors_profit = movies %>%
   # calculate number of movies each director made, average profit, average rating
   summarise(n_movies = n(), 
             avg_profit = mean(profit)) %>% 
-  # include directors who made more than 1 movie
-  filter(n_movies > 1)
+  # include directors who made more than 2 movies
+  filter(n_movies > 2)
 
 # look at the data
 head(directors_profit)

@@ -3,7 +3,7 @@ library(tidyverse)
 library(unvotes)
 library(lubridate)
 library(scales)
-
+library(juanr)
 
 
 # Make a plot ------------------------------------------------------------------

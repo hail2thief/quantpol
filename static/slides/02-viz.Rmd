@@ -10,7 +10,7 @@ output:
     css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
     seal: false
     nature:
-      highlightStyle: github
+      highlightStyle: default
       highlightLanguage: ["r"]
       highlightLines: true
       countIncrementalSlides: false
@@ -22,6 +22,8 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+xaringanExtra::use_panelset()
+xaringanExtra::use_clipboard()
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, 
@@ -42,13 +44,13 @@ xaringanExtra::use_editable(id = "02-viz")
 ```{r packages}
 library(tidyverse)
 library(gapminder)
-library(palmerpenguins)
+library(socviz)
 library(ggbeeswarm)
-
+library(ggrepel)
 
 # dubois colors
 red = "#dc354a"
-yellow = "ecb025"
+yellow = "#ecb025"
 blue = "#213772"
 ```
 
@@ -571,12 +573,12 @@ Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 ---
 
 
-## 🐧 palmerpenguins 🐧
+# 🇺🇸 The presidents 🇺🇸
 
 
 .scroll-output[
 ```{r}
-penguins %>% 
+elections_historic %>% 
   head() %>% 
   knitr::kable()
 ```
@@ -586,20 +588,20 @@ penguins %>%
 ---
 
 class: left
-## 🚨 Your turn 🚨
+# 🚨 Your turn 🚨
 
 
 --
 
-Make a plot using the `penguins` dataset
+Make a plot of presidential election results using the `elections_historic` dataset
 
 --
 
-flipper length (x-axis) and body mass (y-axis)
+% of popular vote (x-axis) and % of electoral college vote (y-axis)
 
 --
 
-map penguin **species** to the `color` and `shape` aesthetics
+map president's **party** to the `color` aesthetic, and whether or not president served two terms to `shape`
 
 
 
@@ -614,7 +616,7 @@ countdown::countdown(minutes = 5L)
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) #<<
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) #<<
 ```
 
 ---
@@ -623,30 +625,28 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) #<<
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) + 
   geom_point() #<<
 ```
 
 ---
 
-## Add point shape
+## Add point color and shape
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-                     shape = species)) + #<<
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term)) + #<<
   geom_point()
 ```
 
 ---
 
-## Add point color
+## Add point labels
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-                     color = species, shape = species)) + #<<
-  geom_point()
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) + #<<
+  geom_point() + geom_text_repel() #<<
 ```
 
 ---
@@ -655,23 +655,72 @@ ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g,
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, 
-                     color = species, shape = species)) + 
-  geom_point()  + theme_minimal() + #<<
-  labs(x = "Flipper length (mm)", y = "Body mass (grams)") #<<
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) + #<<
+  geom_point() +  geom_text_repel() + theme_minimal() + #<<
+  labs(x = "Percent of popular vote", y = "Percent of Electoral College vote", title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "1824-2016") #<<
 ```
 
 ---
 
 
+.panelset[
+.panel[.panel-name[Output]
+```{r, echo = FALSE, eval = TRUE}
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
+                               color = win_party, 
+                               shape = two_term, label = winner_label)) + 
+  geom_point() +  geom_text_repel(family = "Fira Sans Condensed") + theme_minimal(base_family = "Fira Sans Condensed") +
+  labs(x = "Percent of popular vote", y = "Percent of Electoral College vote", title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "1824-2016", color = NULL, size = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  scale_color_manual(values = c(yellow, red, blue, "gray")) + 
+  geom_hline(yintercept = 0.5, size = 1.4, color = "gray80") +
+    geom_vline(xintercept = 0.5, size = 1.4, color = "gray80") +  theme(legend.position = "none") 
+```
+]
+
+.panel[.panel-name[Code]
+.scroll-output[
+
+]
+```{r, echo = TRUE, eval = FALSE}
+# just if you're curious! Note you'd need to install the font "Fira Sans Condensed" on your computer
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
+                               color = win_party, shape = two_term, 
+                               label = winner_label)) + 
+  geom_point() +  
+  geom_text_repel(family = "Fira Sans Condensed") + 
+  theme_minimal(base_family = "Fira Sans Condensed") +
+  labs(x = "Percent of popular vote", 
+       y = "Percent of Electoral College vote", 
+       title = "Presidential Elections: Popular & Electoral College Margins",
+       subtitle = "1824-2016", color = NULL, size = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  scale_color_manual(values = c(yellow, red, blue, "gray")) + 
+  geom_hline(yintercept = 0.5, size = 1.4, color = "gray80") +
+    geom_vline(xintercept = 0.5, size = 1.4, color = "gray80") +  theme(legend.position = "none") 
+```
+]
+]
+
+
+???
+What's going on here? all points above 50% EC, but not adams
+not all points above 50% pop vote
+"Because none of the candidates for president garnered an electoral vote majority, the U.S. House of Representatives, under the provisions of the Twelfth Amendment, held a contingent election. On February 9, 1825, John Quincy Adams was elected as president without getting the majority of the electoral vote or the popular vote, being the only president to do so."
+
+---
+
 ## What did we do?
 
 ```{r}
 df = tribble(~Data, ~Aesthetic, ~Geometry, 
-             "flipper_length_mm", "`x`", "`geom_point()`", 
-             "body_mass_g", "`y`", "`geom_point()`", 
-             "species", "`shape`", "`geom_point()`", 
-             "species", "`color`", "`geom_point()`")
+             "popular_pct", "`x`", "`geom_point()`", 
+             "ec_pct", "`y`", "`geom_point()`", 
+             "win_party", "`color`", "`geom_point()`", 
+             "two_term", "`shape`", "`geom_point()`",
+             "winner_label", "`label`", "`geom_text_repel()`")
 knitr::kable(df)
 ```
 
