@@ -3,12 +3,11 @@ library(tidyverse)
 library(unvotes)
 library(lubridate)
 library(scales)
-library(juanr)
 
 
 # Make a plot ------------------------------------------------------------------
 un_yes = un_votes %>%
-  filter(country %in% c("United States", "Turkey")) %>%
+  filter(country %in% c("Argentina", "Bolivia", "Brazil", "Chile", "Colombia", "Peru")) %>%
   inner_join(un_roll_calls, by = "rcid") %>%
   inner_join(un_roll_call_issues, by = "rcid") %>%
   group_by(country, year = year(date), issue) %>%

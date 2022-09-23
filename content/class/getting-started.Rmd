@@ -30,98 +30,98 @@ Here's the code we'll be using in class. Download it and store it with the rest 
 
 
 
-<!-- ## Example: UN voting patterns -->
+## Example: UN voting patterns
 
 
-<!-- Your first class script `eat-cake.R` does two things:  -->
+Your first class script `eat-cake.R` does two things:
 
-<!-- - takes a dataset that records every vote at the UN going back decades and cleans it -->
-<!-- - visualizes voting patterns over time for the US and Turkey -->
-
-
-<!-- At this point, none of this should "make sense" to you. You do not need to understand what each line of code here does. I just want you to run the code and try to make sense of what the different parts are doing.  -->
+- takes a dataset that records every vote at the UN going back decades and cleans it
+- visualizes voting patterns over time for the US and Turkey
 
 
-<!-- Let's break the script down:  -->
+At this point, none of this should "make sense" to you. You do not need to understand what each line of code here does. I just want you to run the code and try to make sense of what the different parts are doing.
 
 
-<!-- The first thing the script does is load a set of packages, or libraries, which will give us access to the UN data and functions to use with that data.  -->
+Let's break the script down:
 
 
-<!-- ```{r library} -->
-<!-- library(tidyverse) -->
-<!-- library(unvotes) # this is where the UN data lives -->
-<!-- library(lubridate) -->
-<!-- library(scales) -->
-<!-- ``` -->
-
-<!-- We can see some of the UN data below:  -->
-
-<!-- ```{r} -->
-<!-- un_votes %>%  -->
-<!--   slice(1:5) %>%  -->
-<!--   knitr::kable() -->
-<!-- ``` -->
+The first thing the script does is load a set of packages, or libraries, which will give us access to the UN data and functions to use with that data.
 
 
-<!-- The variable `rcid` is the way the data identifies the issue being voted on. So on RCID 3, the US voted "yes" while Canada voted "no".  -->
+```{r library}
+library(tidyverse)
+library(unvotes) # this is where the UN data lives
+library(lubridate)
+library(scales)
+```
+
+We can see some of the UN data below:
+
+```{r}
+un_votes %>%
+  slice(1:5) %>%
+  knitr::kable()
+```
 
 
-<!-- Here are some of the issues:  -->
+The variable `rcid` is the way the data identifies the issue being voted on. So on RCID 3, the US voted "yes" while Canada voted "no".
 
 
-<!-- ```{r} -->
-<!-- un_roll_calls %>%  -->
-<!--   select(rcid, date, short) %>%  -->
-<!--   slice(1:5) %>%  -->
-<!--   knitr::kable() -->
-<!-- ``` -->
+Here are some of the issues:
 
 
-<!-- The next chunk of code takes the UN voting data and calculates the percentage of times the US and Turkey voted "yes" on an issue in each year for which there is data.  -->
-
-<!-- ```{r} -->
-<!-- un_yes = un_votes %>% -->
-<!--   filter(country %in% c("United States", "Turkey")) %>% -->
-<!--   inner_join(un_roll_calls, by = "rcid") %>% -->
-<!--   inner_join(un_roll_call_issues, by = "rcid") %>% -->
-<!--   group_by(country, year = year(date), issue) %>% -->
-<!--   summarize( -->
-<!--     votes = n(), -->
-<!--     percent_yes = mean(vote == "yes") -->
-<!--   ) %>% -->
-<!--   filter(votes > 5)  # only use records where there are more than 5 votes -->
-<!-- ``` -->
-
-<!-- You can see the results of this below:  -->
+```{r}
+un_roll_calls %>%
+  select(rcid, date, short) %>%
+  slice(1:5) %>%
+  knitr::kable()
+```
 
 
-<!-- ```{r} -->
-<!-- un_yes %>%  -->
-<!--   head() %>%  -->
-<!--   knitr::kable() -->
-<!-- ``` -->
+The next chunk of code takes the UN voting data and calculates the percentage of times the US and Turkey voted "yes" on an issue in each year for which there is data.
 
-<!-- So in 1946, Turkey voted 15 times on issues related to "Colonialism", and of those votes, 80% were a "yes".  -->
+```{r}
+un_yes = un_votes %>%
+  filter(country %in% c("United States", "Turkey")) %>%
+  inner_join(un_roll_calls, by = "rcid") %>%
+  inner_join(un_roll_call_issues, by = "rcid") %>%
+  group_by(country, year = year(date), issue) %>%
+  summarize(
+    votes = n(),
+    percent_yes = mean(vote == "yes")
+  ) %>%
+  filter(votes > 5)  # only use records where there are more than 5 votes
+```
 
-
-<!-- This last bit of code produces the visualization:  -->
-
-
-<!-- ```{r} -->
-<!-- ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) + -->
-<!--   geom_point() + -->
-<!--   geom_smooth(method = "loess", se = FALSE) + -->
-<!--   facet_wrap(~ issue) + -->
-<!--   labs( -->
-<!--     title = "Percentage of 'Yes' votes in the UN General Assembly", -->
-<!--     subtitle = "1946 to 2015", -->
-<!--     y = "% Yes", -->
-<!--     x = "Year", -->
-<!--     color = "Country" -->
-<!--   ) +  -->
-<!--   scale_y_continuous(labels = percent) -->
-<!-- ``` -->
+You can see the results of this below:
 
 
-<!-- Try playing around with the code! What happens when you replace the United States and/or Turkey with another country?  -->
+```{r}
+un_yes %>%
+  head() %>%
+  knitr::kable()
+```
+
+So in 1946 Turkey voted 15 times on issues related to "Colonialism", and of those votes, 80% were a "yes".
+
+
+This last bit of code produces the visualization:
+
+
+```{r}
+ggplot(un_yes, aes(x = year, y = percent_yes, color = country)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE) +
+  facet_wrap(~ issue) +
+  labs(
+    title = "Percentage of 'Yes' votes in the UN General Assembly",
+    subtitle = "1946 to 2015",
+    y = "% Yes",
+    x = "Year",
+    color = "Country"
+  ) +
+  scale_y_continuous(labels = percent)
+```
+
+
+Try playing around with the code! What happens when you replace the United States and/or Turkey with another country?
