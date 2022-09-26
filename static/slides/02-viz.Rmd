@@ -13,6 +13,7 @@ output:
       highlightStyle: default
       highlightLanguage: ["r"]
       highlightLines: true
+      highlightSpans: true
       countIncrementalSlides: false
       ratio: "16:9"
       navigation:
@@ -406,7 +407,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp)) #<<
 
 ## add geometries and layers using `+`
 
-```{r,echo=TRUE}
+```{r,echo=TRUE, out.width="80%"}
 ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point() #<<
 ```
@@ -416,19 +417,29 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp)) +
 
 ## mapping population to size in `aes()`
 
-```{r,echo=TRUE, out.width="80%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop)) + #<< 
+```{r,echo=TRUE, eval = FALSE, out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, `size = pop`)) + 
   geom_point()
 ```
+
+```{r,echo=FALSE, out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop)) + 
+  geom_point()
+```
+
+
 
 ---
 
 ## mapping continent to color in `aes()`
 
-```{r,echo=TRUE,out.width="80%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop, color = continent)) + #<< 
+```{r,echo=TRUE, eval = FALSE, out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, `color = continent`)) + 
+  geom_point()
+```
+
+```{r,echo=FALSE, out.width="80%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent)) + 
   geom_point()
 ```
 
@@ -437,14 +448,16 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
 
 ## Other layers: add the missing titles with `labs()`
 
-```{r,echo = TRUE, out.width="50%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop, color = continent)) +
-  geom_point() + 
-  labs(x = "GDP per capita", y = "Life expectancy", #<<
-       title = "Global wealth and health in 2007") #<<
+```{r,echo = TRUE, eval = FALSE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent)) + 
+  geom_point() + `labs(x = "GDP per capita", y = "Life expectancy", title = "Global wealth and health in 2007")`
 ```
 
+```{r,echo = FALSE, out.width="70%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent)) + 
+  geom_point() + labs(x = "GDP per capita", y = "Life expectancy", 
+       title = "Global wealth and health in 2007")
+```
 
 Notice that text is placed within **quotation marks**!
 
@@ -452,17 +465,21 @@ Notice that text is placed within **quotation marks**!
 
 ## Other layers: add a theme
 
-```{r,echo = TRUE, out.width="40%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop, color = continent)) +
-  geom_point() + 
-  labs(x = "GDP per capita", y = "Life expectancy", 
+```{r,echo = TRUE, eval = FALSE}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent)) + 
+  geom_point() + labs(x = "GDP per capita", y = "Life expectancy", title = "Global wealth and health in 2007") + 
+  `theme_bw()`
+```
+
+```{r,echo = FALSE, out.width="60%"}
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent)) + 
+  geom_point() + labs(x = "GDP per capita", y = "Life expectancy", 
        title = "Global wealth and health in 2007") + 
-  theme_bw() #<<
+  theme_bw()
 ```
 
 
-There are many more, [here are a few](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+There are many more themes, [here are a few](https://ggplot2.tidyverse.org/reference/ggtheme.html)
 
 ---
 
@@ -494,7 +511,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
 ---
 
 
-## What's that big point on the bottom right? 
+## What's that country way out on the bottom right? 
 
 
 ```{r,echo = FALSE}
@@ -503,7 +520,10 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
   geom_point() + 
   labs(x = "GDP per capita", y = "Life expectancy", 
        title = "Global wealth and health in 2007") + 
-  theme_bw()
+  theme_bw() + 
+  geom_label_repel(data = filter(gap_07, country == "Gabon"), 
+                   aes(label = "???"), color = red, 
+                   nudge_x = 5e3, size = 4, fontface = "bold")
 ```
 
 
@@ -511,13 +531,13 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
 ---
 
 class: left
-## 🚨 Your turn: label the points 🚨
+## 🚨 Your turn: try labelling the points 🚨
 
 
 
 1. Add labels to each point by mapping country names onto the `label` aesthetic within `aes()`
 
-2. Add `geom_text` layer to your plot
+2. Add `geom_text` layer to your plot to plot the names
 
 
 ```{r}
@@ -527,11 +547,10 @@ countdown::countdown(minutes = 5L)
 ---
 
 
-## Adding labels
+## Map country names to label aesthetic
 
 ```{r, echo = TRUE,out.width="70%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop, color = continent, 
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent, 
                           label = country)) + #<<
   geom_point()
 ```
@@ -539,11 +558,10 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp,
 
 ---
 
-## Adding labels
+## Plot the labels
 
 ```{r, echo = TRUE,out.width="70%"}
-ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, 
-                          size = pop, color = continent, 
+ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = continent, 
                           label = country)) + 
   geom_point() + 
   geom_text() #<<
@@ -579,8 +597,9 @@ Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 .scroll-output[
 ```{r}
 elections_historic %>% 
+  select(year, winner, win_party, ec_pct, popular_pct, two_term, winner_label) %>% 
   head() %>% 
-  knitr::kable()
+  knitr::kable(caption = "Sample of presidential elections")
 ```
 ]
 
@@ -601,7 +620,7 @@ Make a plot of presidential election results using the `elections_historic` data
 
 --
 
-map president's **party** to the `color` aesthetic, and whether or not president served two terms to `shape`
+map the winner's party to the `color` aesthetic, whether or not president served two terms to `shape`, and add labels to each point (use `winner_label`)
 
 
 
@@ -634,7 +653,12 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) +
 ## Add point color and shape
 
 
-```{r,echo = TRUE,out.width="70%"}
+```{r,echo = TRUE,eval = FALSE, out.width="70%"}
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, `color = win_party, shape = two_term`)) +
+  geom_point()
+```
+
+```{r,echo = FALSE,out.width="70%"}
 ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term)) + #<<
   geom_point()
 ```
@@ -645,8 +669,10 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 
 ```{r,echo = TRUE,out.width="70%"}
-ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) + #<<
-  geom_point() + geom_text_repel() #<<
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term,
+                               label = winner_label)) + #<<
+  geom_point() + 
+  geom_text() #<<
 ```
 
 ---
@@ -654,11 +680,56 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 ## Add a theme and titles
 
 
-```{r,echo = TRUE,out.width="70%"}
-ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term, label = winner_label)) + #<<
-  geom_point() +  geom_text_repel() + theme_minimal() + #<<
+```{r,echo = TRUE,out.width="50%"}
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, shape = two_term,
+                               label = winner_label)) +
+  geom_point() +  
+  geom_text() + 
+  theme_minimal() + #<<
   labs(x = "Percent of popular vote", y = "Percent of Electoral College vote", title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "1824-2016") #<<
 ```
+
+---
+
+
+
+```{r, echo = FALSE, eval = TRUE, fig.height=5}
+ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
+                               color = win_party, 
+                               shape = two_term, label = winner_label)) + 
+  geom_point() +  geom_text_repel(family = "Fira Sans Condensed") + 
+  theme_minimal(base_family = "Fira Sans Condensed") +
+  labs(x = "Percent of popular vote", y = "Percent of Electoral College vote", title = "Presidential Elections: Popular & Electoral College Margins", subtitle = "1824-2016", color = NULL, size = NULL) + 
+  scale_y_continuous(labels = scales::percent) + 
+  scale_x_continuous(labels = scales::percent) + 
+  scale_color_manual(values = c(yellow, red, blue, "gray")) + 
+  geom_hline(yintercept = 0.5, size = 1.4, color = "gray80") +
+    geom_vline(xintercept = 0.5, size = 1.4, color = "gray80") +  theme(legend.position = "none") 
+```
+
+
+???
+What's going on here?
+
+---
+
+## What did we do?
+
+```{r}
+df = tribble(~Data, ~Aesthetic, ~Geometry, 
+             "popular_pct", "`x`", "`geom_point()`", 
+             "ec_pct", "`y`", "`geom_point()`", 
+             "win_party", "`color`", "`geom_point()`", 
+             "two_term", "`shape`", "`geom_point()`",
+             "winner_label", "`label`", "`geom_text_repel()`")
+knitr::kable(df)
+```
+
+
+--
+
+Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
+
 
 ---
 
@@ -684,13 +755,13 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label
 
 ]
 ```{r, echo = TRUE, eval = FALSE}
-# just if you're curious! Note you'd need to install the font "Fira Sans Condensed" on your computer
+# just if you're curious! Note you'd need the ggrepel package
 ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
                                color = win_party, shape = two_term, 
                                label = winner_label)) + 
   geom_point() +  
-  geom_text_repel(family = "Fira Sans Condensed") + 
-  theme_minimal(base_family = "Fira Sans Condensed") +
+  geom_text_repel() + 
+  theme_minimal() +
   labs(x = "Percent of popular vote", 
        y = "Percent of Electoral College vote", 
        title = "Presidential Elections: Popular & Electoral College Margins",
@@ -704,27 +775,3 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label
 ]
 ]
 
-
-???
-What's going on here? all points above 50% EC, but not adams
-not all points above 50% pop vote
-"Because none of the candidates for president garnered an electoral vote majority, the U.S. House of Representatives, under the provisions of the Twelfth Amendment, held a contingent election. On February 9, 1825, John Quincy Adams was elected as president without getting the majority of the electoral vote or the popular vote, being the only president to do so."
-
----
-
-## What did we do?
-
-```{r}
-df = tribble(~Data, ~Aesthetic, ~Geometry, 
-             "popular_pct", "`x`", "`geom_point()`", 
-             "ec_pct", "`y`", "`geom_point()`", 
-             "win_party", "`color`", "`geom_point()`", 
-             "two_term", "`shape`", "`geom_point()`",
-             "winner_label", "`label`", "`geom_text_repel()`")
-knitr::kable(df)
-```
-
-
---
-
-Take your *data*, map it onto an *aesthetic*, represent with a *geometry*

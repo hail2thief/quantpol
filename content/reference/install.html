@@ -66,8 +66,8 @@ output:
 <pre class="r"><code>install.packages(&quot;name_of_package&quot;)</code></pre>
 <div id="install-juanr-and-other-packages-from-github" class="section level2">
 <h2>Install <code>{juanr}</code> (and other packages from Github)</h2>
-<p>Some packages, like <code>{juanr}</code> cannot be installed using <code>install.packages()</code> because they are hosted on <a href="https://github.com/">Github</a>. To install <code>{juanr}</code>, you will first need to install <code>{devtools}</code> and then use <code>install_github()</code>, like so:</p>
-<pre class="r"><code>install.packages(&quot;devtools&quot;)
-devtools::install_github(&quot;hail2thief/juanr&quot;)</code></pre>
+<p>Some packages, like <code>{juanr}</code> cannot be installed using <code>install.packages()</code> because they are hosted on <a href="https://github.com/">Github</a>. To install <code>{juanr}</code>, you will first need to install <code>{remotes}</code> and then use <code>install_github()</code>, like so:</p>
+<pre class="r"><code>install.packages(&quot;remotes&quot;)
+remotes::install_github(&quot;hail2thief/juanr&quot;)</code></pre>
 </div>
 </div>
