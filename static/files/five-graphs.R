@@ -9,34 +9,12 @@ library(ggrepel) # install this if you don't have it!
 
 # look at data
 gapminder
-
+?gapminder # look at codebook
 
 # subset data to focus on 2007
 gap_07 = 
   gapminder %>% 
   filter(year == 2007)
-
-
-# calculate average life span by year
-life_yr = 
-  gapminder %>% 
-  select(year, lifeExp) %>% 
-  group_by(year) %>% 
-  summarise(avg_yrs = mean(lifeExp))
-
-# calculate average life expectancy by continent
-life_region = 
-  gap_07 %>% 
-  group_by(continent) %>% 
-  summarise(avg_yrs = mean(lifeExp))
-
-# calculate average life expectancy by continent-year
-life_region_yr = 
-  gapminder %>% 
-  group_by(continent, year) %>% 
-  summarise(avg_yrs = mean(lifeExp))
-
-
 
 
 # the big plot -------------------------------------------------------------------

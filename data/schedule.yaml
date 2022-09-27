@@ -9,7 +9,7 @@ lessons:
     
   - title: 'Week 2: Visualizing data with ggplot<br><i class="fas fa-star"></i> **Assignment 1**'
     date: "Sep 27, Sep 29"
-    #class: "dataviz"
+    class: "dataviz"
     reading: "02-viz"
     #assignment: "ps-viz"
     

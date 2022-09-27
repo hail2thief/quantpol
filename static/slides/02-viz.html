@@ -4,7 +4,7 @@
     <title>Visualization I</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-09-24" />
+    <meta name="date" content="2022-09-26" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/panelset/panelset.css" rel="stylesheet" />
@@ -2167,13 +2167,13 @@ class: left
 2. Add `geom_text` layer to your plot to plot the names
 
 
-<div class="countdown" id="timer_632f4bf4" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6331d603" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 ---
 
-
+exclude: true
 ## Map country names to label aesthetic
 
 
@@ -2188,6 +2188,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = contin
 
 ---
 
+exclude: true
 ## Plot the labels
 
 
@@ -2203,6 +2204,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = contin
 
 ---
 
+exclude: true
 ## What did we do?
 
 
@@ -2215,7 +2217,6 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = contin
 |country   |`label`   |`geom_text()`  |
 
 
---
 
 Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 
@@ -2261,13 +2262,13 @@ map the winner's party to the `color` aesthetic, whether or not president served
 
 
 
-<div class="countdown" id="timer_632f4dee" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6331d6e5" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 ---
 
-
+exclude: true
 ## Map the x and y axes
 
 
@@ -2280,6 +2281,7 @@ map the winner's party to the `color` aesthetic, whether or not president served
 
 ---
 
+exclude: true
 ## Add a point geometry
 
 
@@ -2293,6 +2295,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) +
 
 ---
 
+exclude: true
 ## Add point color and shape
 
 
@@ -2306,6 +2309,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, `color = win_party, 
 
 ---
 
+exclude: true
 ## Add point labels
 
 
@@ -2321,6 +2325,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 ---
 
+exclude: true
 ## Add a theme and titles
 
 
@@ -2338,7 +2343,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 ---
 
-
+exclude: true
 
 &lt;img src="02-viz_files/figure-html/unnamed-chunk-37-1.png" width="100%" /&gt;
 
@@ -2347,6 +2352,8 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 What's going on here?
 
 ---
+
+exclude: true
 
 ## What did we do?
 
@@ -2360,13 +2367,13 @@ What's going on here?
 |winner_label |`label`   |`geom_text_repel()` |
 
 
---
 
 Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 
 
 ---
 
+exclude:true
 
 .panelset[
 .panel[.panel-name[Output]

@@ -546,7 +546,7 @@ countdown::countdown(minutes = 5L)
 
 ---
 
-
+exclude: true
 ## Map country names to label aesthetic
 
 ```{r, echo = TRUE,out.width="70%"}
@@ -558,6 +558,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = contin
 
 ---
 
+exclude: true
 ## Plot the labels
 
 ```{r, echo = TRUE,out.width="70%"}
@@ -570,6 +571,7 @@ ggplot(data = gap_07, aes(x = gdpPercap, y = lifeExp, size = pop, color = contin
 
 ---
 
+exclude: true
 ## What did we do?
 
 ```{r}
@@ -583,7 +585,6 @@ knitr::kable(df)
 ```
 
 
---
 
 Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 
@@ -630,7 +631,7 @@ countdown::countdown(minutes = 5L)
 
 ---
 
-
+exclude: true
 ## Map the x and y axes
 
 
@@ -640,6 +641,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) #<<
 
 ---
 
+exclude: true
 ## Add a point geometry
 
 
@@ -650,6 +652,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct)) +
 
 ---
 
+exclude: true
 ## Add point color and shape
 
 
@@ -665,6 +668,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 ---
 
+exclude: true
 ## Add point labels
 
 
@@ -677,6 +681,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 ---
 
+exclude: true
 ## Add a theme and titles
 
 
@@ -691,7 +696,7 @@ ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, color = win_party, s
 
 ---
 
-
+exclude: true
 
 ```{r, echo = FALSE, eval = TRUE, fig.height=5}
 ggplot(elections_historic, aes(x = popular_pct, y = ec_pct, label = winner_label,
@@ -713,6 +718,8 @@ What's going on here?
 
 ---
 
+exclude: true
+
 ## What did we do?
 
 ```{r}
@@ -726,13 +733,13 @@ knitr::kable(df)
 ```
 
 
---
 
 Take your *data*, map it onto an *aesthetic*, represent with a *geometry*
 
 
 ---
 
+exclude:true
 
 .panelset[
 .panel[.panel-name[Output]

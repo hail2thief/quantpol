@@ -96,7 +96,7 @@ top_names = babynames %>%
 ```
 
 
-Make a barplot that puts the baby's name on the y-axis, and the proportion of babies with that name (the variable is called `prop`) on the x-axis. Map the sex variable to the fill aesthetic to create separate bars for male and female babies. 
+Using `top_names`, make a barplot that puts the baby's name on the y-axis, and the proportion of babies with that name (the variable is called `prop`) on the x-axis. Map the sex variable to the fill aesthetic to create separate bars for male and female babies. 
 
 ```{r}
 
