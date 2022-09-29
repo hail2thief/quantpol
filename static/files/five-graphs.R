@@ -3,6 +3,9 @@ library(tidyverse)
 library(gapminder) # install this if you don't have it!
 library(socviz) # install this if you don't have it!
 library(ggrepel) # install this if you don't have it!
+library(ggridges)
+library(ggbeeswarm)
+library(ggthemes)
 
 
 # clean data ------------------------------------------------------------------------
@@ -67,4 +70,15 @@ economics
 
 
 
-# penguins data: grouped histogram, MAKE PLOT HERE
+# organ data: grouped histogram, MAKE PLOT HERE
+organdata
+?organdata
+
+
+
+# datasets you can use
+starwars
+gapminder
+elections_historic
+organdata
+storms

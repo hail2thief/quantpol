@@ -13,6 +13,7 @@ output:
       highlightStyle: github
       highlightLanguage: ["r"]
       highlightLines: true
+      highlightSpans: true
       countIncrementalSlides: false
       ratio: "16:9"
       navigation:
@@ -22,6 +23,7 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+xaringanExtra::use_clipboard()
 xaringanExtra::use_editable(id = "03-viz")
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
@@ -194,27 +196,28 @@ It all depends on your data!
 # Graph 1 - the scatterplot
 
 
-
-.pull-left[
-The **scatterplot** visualizes the relatioship between two **continuous** variables
-
-
-Shows every point in the data, reveals *outliers*
-]
-
-.pull-right[
-```{r,out.width="100%"}
+```{r,out.width="80%"}
 ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
   theme_bw()
 ```
-]
+
+
+The **scatterplot** visualizes the relatioship between two **continuous** variables
+
+
+Shows every point in the data, reveals *outliers*
+
+
+
+
+
 
 
 ---
 
 
-## The grammar of scatterplots
+# The grammar of scatterplots
 
 
 
@@ -235,7 +238,7 @@ knitr::kable(df)
 --
 
 
-Typically, we put the **cause** on the x-axis and the **outcome** on the y-axis
+Typically, we put the **cause** on the x-axis and the **effect** on the y-axis
 
 --
 
@@ -269,7 +272,7 @@ Plot is mostly uninformative because continent is *discrete* (i.e., a category)
 
 ```{r,out.width="80%",echo = FALSE}
 ggplot(life_yr, aes(x = year, y = avg_yrs)) +
-  geom_line() +  #<<
+  geom_line(size = 1.8, color = red) +  #<<
   theme_bw(base_family = "Fira Sans") +
   labs(x = "Year", y = "Average life expectancy (years)",
        title = "Global average life expectancy over time")
@@ -305,9 +308,14 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 ## Making the time series
 
 .pull-left[
-```{r,echo = TRUE}
-ggplot(life_yr, aes(x = year,
-                    y = avg_yrs)) + #<<
+```{r,echo = TRUE, eval = FALSE}
+ggplot(life_yr, aes(x = year, `y = avg_yrs`)) +
+  geom_line() +  #<<
+  theme_bw()
+```
+
+```{r,echo = FALSE, eval = TRUE}
+ggplot(life_yr, aes(x = year, y = avg_yrs)) +
   geom_line() +  #<<
   theme_bw()
 ```
@@ -327,7 +335,7 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 
 
 class: left
-# 🚨 Your turn: Make a time series 🚨
+# 🚨 Your turn: 💸Recession💸 🚨
 
 --
 
@@ -343,7 +351,7 @@ Type and run `?economics` to read about the data
 
 --
 
-Make a time series of the mean duration of unemployment over time
+Make a time series of unemployment over time
 
 --
 
@@ -368,7 +376,11 @@ Sometimes we observe multiple *units* over time; how can we visualize these?
 
 .scroll-output[
 ```{r}
-knitr::kable(life_region_yr)
+gapminder_sample = 
+  gapminder %>% 
+  filter(country %in% c("Bolivia", "China", "Germany", "United States", "Denmark", 
+                        "Ghana", "Egypt"))
+knitr::kable(gapminder_sample)
 ```
 ]
 
@@ -380,7 +392,7 @@ knitr::kable(life_region_yr)
 # Start from scratch
 
 ```{r,echo =TRUE}
-ggplot(data = life_region_yr) #<<
+ggplot(data = gapminder_sample) #<<
 ```
 
 ---
@@ -389,7 +401,7 @@ ggplot(data = life_region_yr) #<<
 # Add aesthetics
 
 ```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp)) #<<
 ```
 
 ---
@@ -397,7 +409,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) #<<
 # Add geometry: 🤢
 
 ```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp)) +
   geom_line()
 ```
 
@@ -405,9 +417,9 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
 
 # using `color` to separate lines
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
-                                  color = continent)) + #<<
+```{r,echo=TRUE, out.width="80%"}
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp,
+                                  color = country)) + #<<
   geom_line()
 ```
 
@@ -416,9 +428,9 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 
 # using `group` to separate lines
 
-```{r,echo=TRUE}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
-                                  group = continent)) + #<<
+```{r,echo=TRUE, out.width="80%"}
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp,
+                                  group = country)) + #<<
   geom_line()
 ```
 
@@ -429,9 +441,9 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 # Multiple time series
 
 ```{r,out.width="80%"}
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
-                                  color = continent)) + 
-  geom_line() + theme_bw(base_family = "Fira Sans")
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp,
+                                  color = country)) + #<<
+  geom_line(size = 1.4) + theme_bw(base_family = "Fira Sans Condensed")
 ```
 
 
@@ -507,20 +519,6 @@ Note that a histogram *only* uses the x-axis!
 ---
 
 
-# Histograms are for *continuous* variables 🤢
-
-
-```{r, echo = TRUE,out.width="60%"}
-ggplot(gap_07, aes(x = year)) + #<<
-  geom_histogram() +
-  theme_bw()
-```
-
-
----
-
-
-
 # Grouped histograms
 
 
@@ -545,20 +543,20 @@ What does this plot show us?
 
 
 class: left
-# 🚨 Your turn: histograms 🚨
+# 🚨 Your turn: organs 🫁🧠 🚨 
 
 
 --
 
-Grab the penguins dataset again 🐧
+Grab the `organdata` dataset 
 
 --
 
-Make a histogram of a variable of your choice
+Make a histogram of country's organ donation rate (`donors`)
 
 --
 
-Now, make a grouped histogram, where groups are defined by **species**
+Then make a grouped histogram, where groups are defined by whether donors have to opt in or opt out of donating (`opt`)
 
 --
 
@@ -594,7 +592,7 @@ Barplots place a *category* (place, country, person, etc) on one axis and a *qua
 
 --
 
-Useful for making comparisons, highlighting differences
+Useful for making **comparisons**, highlighting **differences**
 
 ???
 
@@ -607,7 +605,8 @@ Causal difference between married and widowed? theory?
 
 .pull-left[
 ```{r}
-knitr::kable(tv)
+knitr::kable(select(tv, marital, tv), 
+                    digits = 1)
 ```
 ]
 
@@ -627,7 +626,7 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 
 
 ```{r,echo = TRUE}
-ggplot(life_region, aes(x = continent, y = avg_yrs)) + #<<
+ggplot(tv, aes(x = marital, y = tv)) + #<<
          geom_col() #<<
 ```
 
@@ -639,7 +638,7 @@ ggplot(life_region, aes(x = continent, y = avg_yrs)) + #<<
 
 
 ```{r,echo = TRUE, out.width="80%"}
-ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+ggplot(tv, aes(x = marital, y = tv)) +
          geom_col() + 
   coord_flip() #<<
 ```
@@ -647,7 +646,7 @@ ggplot(life_region, aes(x = continent, y = avg_yrs)) +
 
 ---
 
-
+exclude: false
 # Barplot: too many groups 🤢
 
 
@@ -678,7 +677,7 @@ gapminder %>%
 ```
 
 
-Boxplots compare the **distributions** of *continuous* variables across groups -- show us more than the barplot which only gives us a quantity for each group
+Boxplots compare the **distributions** of *continuous* variables across groups - they show us *more* than the barplot which only gives us a quantity for each group
 
 ---
 
@@ -689,9 +688,9 @@ Boxplots compare the **distributions** of *continuous* variables across groups -
 .pull-left[
 Boxplots contain a lot of info 🥵:
 
-- bold line is the median observation
+- bold line is the **median** observation
 - box is the middle 50% of observations
-- thin vertical lines show you min and max value, except...
+- thin vertical lines show you min and max value, *except...*
 - the dots, which are **outlier** observations
 ]
 
@@ -726,8 +725,8 @@ knitr::kable(select(gapminder, country, continent, lifeExp))
 .pull-right[
 ```{r}
 tribble(~Data, ~`aes()`, ~`geom_`,
-          "continent", "x", "boxplot",
-        "lifeExp", "y", "col") %>%
+          "continent", "x", "boxplot()",
+        "lifeExp", "y", "boxplot()") %>%
   knitr::kable()
 ```
 
@@ -739,7 +738,7 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 # Making the boxplot
 
 
-```{r,echo = TRUE}
+```{r,echo = TRUE, out.width="90%"}
 ggplot(gapminder, aes(x = continent, y = lifeExp)) + #<<
          geom_boxplot() #<<
 ```
@@ -836,7 +835,7 @@ Make sure the facetting variable is wrapped in `vars()`!
 
 ```{r,echo = TRUE, out.width="60%"}
 ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
-  geom_point(size = 3, color = "orange", shape = 2, alpha = .8) #<<
+  geom_point(size = 4, color = "orange", shape = 2) #<<
 ```
 
 
@@ -844,6 +843,8 @@ Take your aesthetics out of `aes()` and into `geom()` to make them *static*
 
 
 ---
+
+exclude: true
 
 # Show a trend-line using `geom_smooth()`
 
@@ -858,7 +859,7 @@ Trend lines can reveal patterns in "clumpy" data
 
 ---
 
-
+exclude: true
 # Show *separate* trend-lines
 
 
@@ -925,7 +926,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
   geom_histogram() + 
-  scale_fill_viridis_d(option = "mako") #<<
+  scale_fill_viridis_d(option = "magma") #<<
 ```
 
 
@@ -960,6 +961,6 @@ class: left
 
 
 ```{r}
-countdown::countdown(minutes = 10L)
+countdown::countdown(minutes = 20L)
 ```
 

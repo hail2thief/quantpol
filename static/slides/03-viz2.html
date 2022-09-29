@@ -4,9 +4,13 @@
     <title>Visualization II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-09-14" />
+    <meta name="date" content="2022-09-27" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/clipboard/clipboard.min.js"></script>
+    <link href="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-clipboard/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
     <script type="application/json" id="xaringanExtra-editable-docid">{"id":"03-viz","expires":14}</script>
     <script src="libs/himalaya/himalaya.js"></script>
     <script src="libs/js-cookie/js.cookie.js"></script>
@@ -144,23 +148,24 @@ It all depends on your data!
 # Graph 1 - the scatterplot
 
 
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-1-1.png" width="80%" /&gt;
 
-.pull-left[
+
 The **scatterplot** visualizes the relatioship between two **continuous** variables
 
 
 Shows every point in the data, reveals *outliers*
-]
 
-.pull-right[
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
-]
+
+
+
+
 
 
 ---
 
 
-## The grammar of scatterplots
+# The grammar of scatterplots
 
 
 
@@ -181,7 +186,7 @@ ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
 --
 
 
-Typically, we put the **cause** on the x-axis and the **outcome** on the y-axis
+Typically, we put the **cause** on the x-axis and the **effect** on the y-axis
 
 --
 
@@ -254,13 +259,12 @@ The **time series** uses a *line* to show you how a variable (y-axis) moves over
 .pull-left[
 
 ```r
-ggplot(life_yr, aes(x = year,
-*                   y = avg_yrs)) +
+ggplot(life_yr, aes(x = year, `y = avg_yrs`)) +
 * geom_line() +
   theme_bw()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-8-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-9-1.png" width="100%" /&gt;
 ]
 
 .pull-right[
@@ -276,7 +280,7 @@ ggplot(life_yr, aes(x = year,
 
 
 class: left
-# 🚨 Your turn: Make a time series 🚨
+# 🚨 Your turn: 💸Recession💸 🚨
 
 --
 
@@ -292,7 +296,7 @@ Type and run `?economics` to read about the data
 
 --
 
-Make a time series of the mean duration of unemployment over time
+Make a time series of unemployment over time
 
 --
 
@@ -301,7 +305,7 @@ Can you identify the recessions?
 
 --
 
-<div class="countdown" id="timer_63221da0" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6333e920" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">04</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -317,68 +321,92 @@ Sometimes we observe multiple *units* over time; how can we visualize these?
 
 .scroll-output[
 
-|continent | year|  avg_yrs|
-|:---------|----:|--------:|
-|Africa    | 1952| 39.13550|
-|Africa    | 1957| 41.26635|
-|Africa    | 1962| 43.31944|
-|Africa    | 1967| 45.33454|
-|Africa    | 1972| 47.45094|
-|Africa    | 1977| 49.58042|
-|Africa    | 1982| 51.59287|
-|Africa    | 1987| 53.34479|
-|Africa    | 1992| 53.62958|
-|Africa    | 1997| 53.59827|
-|Africa    | 2002| 53.32523|
-|Africa    | 2007| 54.80604|
-|Americas  | 1952| 53.27984|
-|Americas  | 1957| 55.96028|
-|Americas  | 1962| 58.39876|
-|Americas  | 1967| 60.41092|
-|Americas  | 1972| 62.39492|
-|Americas  | 1977| 64.39156|
-|Americas  | 1982| 66.22884|
-|Americas  | 1987| 68.09072|
-|Americas  | 1992| 69.56836|
-|Americas  | 1997| 71.15048|
-|Americas  | 2002| 72.42204|
-|Americas  | 2007| 73.60812|
-|Asia      | 1952| 46.31439|
-|Asia      | 1957| 49.31854|
-|Asia      | 1962| 51.56322|
-|Asia      | 1967| 54.66364|
-|Asia      | 1972| 57.31927|
-|Asia      | 1977| 59.61056|
-|Asia      | 1982| 62.61794|
-|Asia      | 1987| 64.85118|
-|Asia      | 1992| 66.53721|
-|Asia      | 1997| 68.02052|
-|Asia      | 2002| 69.23388|
-|Asia      | 2007| 70.72848|
-|Europe    | 1952| 64.40850|
-|Europe    | 1957| 66.70307|
-|Europe    | 1962| 68.53923|
-|Europe    | 1967| 69.73760|
-|Europe    | 1972| 70.77503|
-|Europe    | 1977| 71.93777|
-|Europe    | 1982| 72.80640|
-|Europe    | 1987| 73.64217|
-|Europe    | 1992| 74.44010|
-|Europe    | 1997| 75.50517|
-|Europe    | 2002| 76.70060|
-|Europe    | 2007| 77.64860|
-|Oceania   | 1952| 69.25500|
-|Oceania   | 1957| 70.29500|
-|Oceania   | 1962| 71.08500|
-|Oceania   | 1967| 71.31000|
-|Oceania   | 1972| 71.91000|
-|Oceania   | 1977| 72.85500|
-|Oceania   | 1982| 74.29000|
-|Oceania   | 1987| 75.32000|
-|Oceania   | 1992| 76.94500|
-|Oceania   | 1997| 78.19000|
-|Oceania   | 2002| 79.74000|
-|Oceania   | 2007| 80.71950|
+|country       |continent | year|  lifeExp|        pop|  gdpPercap|
+|:-------------|:---------|----:|--------:|----------:|----------:|
+|Bolivia       |Americas  | 1952| 40.41400|    2883315|  2677.3263|
+|Bolivia       |Americas  | 1957| 41.89000|    3211738|  2127.6863|
+|Bolivia       |Americas  | 1962| 43.42800|    3593918|  2180.9725|
+|Bolivia       |Americas  | 1967| 45.03200|    4040665|  2586.8861|
+|Bolivia       |Americas  | 1972| 46.71400|    4565872|  2980.3313|
+|Bolivia       |Americas  | 1977| 50.02300|    5079716|  3548.0978|
+|Bolivia       |Americas  | 1982| 53.85900|    5642224|  3156.5105|
+|Bolivia       |Americas  | 1987| 57.25100|    6156369|  2753.6915|
+|Bolivia       |Americas  | 1992| 59.95700|    6893451|  2961.6997|
+|Bolivia       |Americas  | 1997| 62.05000|    7693188|  3326.1432|
+|Bolivia       |Americas  | 2002| 63.88300|    8445134|  3413.2627|
+|Bolivia       |Americas  | 2007| 65.55400|    9119152|  3822.1371|
+|China         |Asia      | 1952| 44.00000|  556263527|   400.4486|
+|China         |Asia      | 1957| 50.54896|  637408000|   575.9870|
+|China         |Asia      | 1962| 44.50136|  665770000|   487.6740|
+|China         |Asia      | 1967| 58.38112|  754550000|   612.7057|
+|China         |Asia      | 1972| 63.11888|  862030000|   676.9001|
+|China         |Asia      | 1977| 63.96736|  943455000|   741.2375|
+|China         |Asia      | 1982| 65.52500| 1000281000|   962.4214|
+|China         |Asia      | 1987| 67.27400| 1084035000|  1378.9040|
+|China         |Asia      | 1992| 68.69000| 1164970000|  1655.7842|
+|China         |Asia      | 1997| 70.42600| 1230075000|  2289.2341|
+|China         |Asia      | 2002| 72.02800| 1280400000|  3119.2809|
+|China         |Asia      | 2007| 72.96100| 1318683096|  4959.1149|
+|Denmark       |Europe    | 1952| 70.78000|    4334000|  9692.3852|
+|Denmark       |Europe    | 1957| 71.81000|    4487831| 11099.6593|
+|Denmark       |Europe    | 1962| 72.35000|    4646899| 13583.3135|
+|Denmark       |Europe    | 1967| 72.96000|    4838800| 15937.2112|
+|Denmark       |Europe    | 1972| 73.47000|    4991596| 18866.2072|
+|Denmark       |Europe    | 1977| 74.69000|    5088419| 20422.9015|
+|Denmark       |Europe    | 1982| 74.63000|    5117810| 21688.0405|
+|Denmark       |Europe    | 1987| 74.80000|    5127024| 25116.1758|
+|Denmark       |Europe    | 1992| 75.33000|    5171393| 26406.7399|
+|Denmark       |Europe    | 1997| 76.11000|    5283663| 29804.3457|
+|Denmark       |Europe    | 2002| 77.18000|    5374693| 32166.5001|
+|Denmark       |Europe    | 2007| 78.33200|    5468120| 35278.4187|
+|Egypt         |Africa    | 1952| 41.89300|   22223309|  1418.8224|
+|Egypt         |Africa    | 1957| 44.44400|   25009741|  1458.9153|
+|Egypt         |Africa    | 1962| 46.99200|   28173309|  1693.3359|
+|Egypt         |Africa    | 1967| 49.29300|   31681188|  1814.8807|
+|Egypt         |Africa    | 1972| 51.13700|   34807417|  2024.0081|
+|Egypt         |Africa    | 1977| 53.31900|   38783863|  2785.4936|
+|Egypt         |Africa    | 1982| 56.00600|   45681811|  3503.7296|
+|Egypt         |Africa    | 1987| 59.79700|   52799062|  3885.4607|
+|Egypt         |Africa    | 1992| 63.67400|   59402198|  3794.7552|
+|Egypt         |Africa    | 1997| 67.21700|   66134291|  4173.1818|
+|Egypt         |Africa    | 2002| 69.80600|   73312559|  4754.6044|
+|Egypt         |Africa    | 2007| 71.33800|   80264543|  5581.1810|
+|Germany       |Europe    | 1952| 67.50000|   69145952|  7144.1144|
+|Germany       |Europe    | 1957| 69.10000|   71019069| 10187.8267|
+|Germany       |Europe    | 1962| 70.30000|   73739117| 12902.4629|
+|Germany       |Europe    | 1967| 70.80000|   76368453| 14745.6256|
+|Germany       |Europe    | 1972| 71.00000|   78717088| 18016.1803|
+|Germany       |Europe    | 1977| 72.50000|   78160773| 20512.9212|
+|Germany       |Europe    | 1982| 73.80000|   78335266| 22031.5327|
+|Germany       |Europe    | 1987| 74.84700|   77718298| 24639.1857|
+|Germany       |Europe    | 1992| 76.07000|   80597764| 26505.3032|
+|Germany       |Europe    | 1997| 77.34000|   82011073| 27788.8842|
+|Germany       |Europe    | 2002| 78.67000|   82350671| 30035.8020|
+|Germany       |Europe    | 2007| 79.40600|   82400996| 32170.3744|
+|Ghana         |Africa    | 1952| 43.14900|    5581001|   911.2989|
+|Ghana         |Africa    | 1957| 44.77900|    6391288|  1043.5615|
+|Ghana         |Africa    | 1962| 46.45200|    7355248|  1190.0411|
+|Ghana         |Africa    | 1967| 48.07200|    8490213|  1125.6972|
+|Ghana         |Africa    | 1972| 49.87500|    9354120|  1178.2237|
+|Ghana         |Africa    | 1977| 51.75600|   10538093|   993.2240|
+|Ghana         |Africa    | 1982| 53.74400|   11400338|   876.0326|
+|Ghana         |Africa    | 1987| 55.72900|   14168101|   847.0061|
+|Ghana         |Africa    | 1992| 57.50100|   16278738|   925.0602|
+|Ghana         |Africa    | 1997| 58.55600|   18418288|  1005.2458|
+|Ghana         |Africa    | 2002| 58.45300|   20550751|  1111.9846|
+|Ghana         |Africa    | 2007| 60.02200|   22873338|  1327.6089|
+|United States |Americas  | 1952| 68.44000|  157553000| 13990.4821|
+|United States |Americas  | 1957| 69.49000|  171984000| 14847.1271|
+|United States |Americas  | 1962| 70.21000|  186538000| 16173.1459|
+|United States |Americas  | 1967| 70.76000|  198712000| 19530.3656|
+|United States |Americas  | 1972| 71.34000|  209896000| 21806.0359|
+|United States |Americas  | 1977| 73.38000|  220239000| 24072.6321|
+|United States |Americas  | 1982| 74.65000|  232187835| 25009.5591|
+|United States |Americas  | 1987| 75.02000|  242803533| 29884.3504|
+|United States |Americas  | 1992| 76.09000|  256894189| 32003.9322|
+|United States |Americas  | 1997| 76.81000|  272911760| 35767.4330|
+|United States |Americas  | 2002| 77.31000|  287675526| 39097.0995|
+|United States |Americas  | 2007| 78.24200|  301139947| 42951.6531|
 ]
 
 
@@ -390,10 +418,10 @@ Sometimes we observe multiple *units* over time; how can we visualize these?
 
 
 ```r
-*ggplot(data = life_region_yr)
+*ggplot(data = gapminder_sample)
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
 
 ---
 
@@ -402,10 +430,10 @@ Sometimes we observe multiple *units* over time; how can we visualize these?
 
 
 ```r
-*ggplot(data = life_region_yr, aes(x = year, y = avg_yrs))
+*ggplot(data = gapminder_sample, aes(x = year, y = lifeExp))
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-14-1.png" width="100%" /&gt;
 
 ---
 
@@ -413,11 +441,11 @@ Sometimes we observe multiple *units* over time; how can we visualize these?
 
 
 ```r
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp)) +
   geom_line()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-14-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-15-1.png" width="100%" /&gt;
 
 ---
 
@@ -425,12 +453,12 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs)) +
 
 
 ```r
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
-*                                 color = continent)) +
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp,
+*                                 color = country)) +
   geom_line()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-15-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-16-1.png" width="80%" /&gt;
 
 ---
 
@@ -439,12 +467,12 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 
 
 ```r
-ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
-*                                 group = continent)) +
+ggplot(data = gapminder_sample, aes(x = year, y = lifeExp,
+*                                 group = country)) +
   geom_line()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-17-1.png" width="80%" /&gt;
 
 ---
 
@@ -452,7 +480,7 @@ ggplot(data = life_region_yr, aes(x = year, y = avg_yrs,
 
 # Multiple time series
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-17-1.png" width="80%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-18-1.png" width="80%" /&gt;
 
 
 These are useful for comparing **trends** across units (countries, places, people, etc)
@@ -464,7 +492,7 @@ These are useful for comparing **trends** across units (countries, places, peopl
 # Graph 3: the histogram
 
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-18-1.png" width="60%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-19-1.png" width="60%" /&gt;
 
 A **histogram** shows you how a continous variable is *distributed*
 
@@ -478,7 +506,7 @@ Popular in social sciences -- can tell you a lot about a variable!
 # Interpreting histograms
 
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-19-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-20-1.png" width="100%" /&gt;
 
 ???
 
@@ -498,7 +526,7 @@ What do we see here?
   theme_bw()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-20-1.png" width="60%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-21-1.png" width="60%" /&gt;
 ]
 
 .pull-right[
@@ -513,23 +541,6 @@ Note that a histogram *only* uses the x-axis!
 
 
 ---
-
-
-# Histograms are for *continuous* variables 🤢
-
-
-
-```r
-*ggplot(gap_07, aes(x = year)) +
-  geom_histogram() +
-  theme_bw()
-```
-
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-22-1.png" width="60%" /&gt;
-
-
----
-
 
 
 # Grouped histograms
@@ -559,20 +570,20 @@ What does this plot show us?
 
 
 class: left
-# 🚨 Your turn: histograms 🚨
+# 🚨 Your turn: organs 🫁🧠 🚨 
 
 
 --
 
-Grab the penguins dataset again 🐧
+Grab the `organdata` dataset 
 
 --
 
-Make a histogram of a variable of your choice
+Make a histogram of country's organ donation rate (`donors`)
 
 --
 
-Now, make a grouped histogram, where groups are defined by **species**
+Then make a grouped histogram, where groups are defined by whether donors have to opt in or opt out of donating (`opt`)
 
 --
 
@@ -581,7 +592,7 @@ What happens if instead of using `fill` you use `color`?
 --
 
 
-<div class="countdown" id="timer_63221d84" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6333e91e" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -598,7 +609,7 @@ Barplots place a *category* (place, country, person, etc) on one axis and a *qua
 
 --
 
-Useful for making comparisons, highlighting differences
+Useful for making **comparisons**, highlighting **differences**
 
 ???
 
@@ -611,14 +622,14 @@ Causal difference between married and widowed? theory?
 
 .pull-left[
 
-|marital       |       tv|
-|:-------------|--------:|
-|No answer     | 2.555556|
-|Never married | 3.105175|
-|Separated     | 3.549618|
-|Divorced      | 3.085407|
-|Widowed       | 3.912000|
-|Married       | 2.650425|
+|marital       |  tv|
+|:-------------|---:|
+|No answer     | 2.6|
+|Never married | 3.1|
+|Separated     | 3.5|
+|Divorced      | 3.1|
+|Widowed       | 3.9|
+|Married       | 2.7|
 ]
 
 .pull-right[
@@ -637,7 +648,7 @@ Causal difference between married and widowed? theory?
 
 
 ```r
-*ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+*ggplot(tv, aes(x = marital, y = tv)) +
 *        geom_col()
 ```
 
@@ -652,7 +663,7 @@ Causal difference between married and widowed? theory?
 
 
 ```r
-ggplot(life_region, aes(x = continent, y = avg_yrs)) +
+ggplot(tv, aes(x = marital, y = tv)) +
          geom_col() + 
 * coord_flip()
 ```
@@ -662,7 +673,7 @@ ggplot(life_region, aes(x = continent, y = avg_yrs)) +
 
 ---
 
-
+exclude: false
 # Barplot: too many groups 🤢
 
 
@@ -680,7 +691,7 @@ Barplots are good for comparing averages, medians, etc., across a *small* number
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-31-1.png" width="80%" /&gt;
 
 
-Boxplots compare the **distributions** of *continuous* variables across groups -- show us more than the barplot which only gives us a quantity for each group
+Boxplots compare the **distributions** of *continuous* variables across groups - they show us *more* than the barplot which only gives us a quantity for each group
 
 ---
 
@@ -691,9 +702,9 @@ Boxplots compare the **distributions** of *continuous* variables across groups -
 .pull-left[
 Boxplots contain a lot of info 🥵:
 
-- bold line is the median observation
+- bold line is the **median** observation
 - box is the middle 50% of observations
-- thin vertical lines show you min and max value, except...
+- thin vertical lines show you min and max value, *except...*
 - the dots, which are **outlier** observations
 ]
 
@@ -2421,10 +2432,10 @@ Boxplots contain a lot of info 🥵:
 
 .pull-right[
 
-|Data      |aes() |geom_   |
-|:---------|:-----|:-------|
-|continent |x     |boxplot |
-|lifeExp   |y     |col     |
+|Data      |aes() |geom_     |
+|:---------|:-----|:---------|
+|continent |x     |boxplot() |
+|lifeExp   |y     |boxplot() |
 
 ]
 
@@ -2440,7 +2451,7 @@ Boxplots contain a lot of info 🥵:
 *        geom_boxplot()
 ```
 
-&lt;img src="03-viz2_files/figure-html/unnamed-chunk-35-1.png" width="100%" /&gt;
+&lt;img src="03-viz2_files/figure-html/unnamed-chunk-35-1.png" width="90%" /&gt;
 
 
 ---
@@ -2535,7 +2546,7 @@ Make sure the facetting variable is wrapped in `vars()`!
 
 ```r
 ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() + 
-* geom_point(size = 3, color = "orange", shape = 2, alpha = .8)
+* geom_point(size = 4, color = "orange", shape = 2)
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-40-1.png" width="60%" /&gt;
@@ -2545,6 +2556,8 @@ Take your aesthetics out of `aes()` and into `geom()` to make them *static*
 
 
 ---
+
+exclude: true
 
 # Show a trend-line using `geom_smooth()`
 
@@ -2562,7 +2575,7 @@ Trend lines can reveal patterns in "clumpy" data
 
 ---
 
-
+exclude: true
 # Show *separate* trend-lines
 
 
@@ -2642,7 +2655,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ```r
 ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
   geom_histogram() + 
-* scale_fill_viridis_d(option = "mako")
+* scale_fill_viridis_d(option = "magma")
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-46-1.png" width="60%" /&gt;
@@ -2673,8 +2686,8 @@ class: left
 
 
 
-<div class="countdown" id="timer_63221e3e" style="right:0;bottom:0;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_6333e7e2" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">20</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
     </textarea>
@@ -2684,6 +2697,7 @@ class: left
 "highlightStyle": "github",
 "highlightLanguage": "r",
 "highlightLines": true,
+"highlightSpans": true,
 "countIncrementalSlides": false,
 "ratio": "16:9",
 "navigation": {

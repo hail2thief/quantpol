@@ -29,7 +29,7 @@ library(juanr) # install if not yet installed
 
 The `babynames` package includes data from the Social Security Administration with counts of baby names with at least 5 annual uses between 1880-2015.
 
-Because there are so many names, we'll look at "Riley".
+Because there are so many names, we'll look at "Riley". Run the code below:
 
 
 ```{r}
@@ -110,7 +110,7 @@ Using `top_names`, make a barplot that puts the baby's name on the y-axis, and t
 # Task 2: The Movies
 
 
-Next, let's look at some data about movies. These data are about a selection of films and info about how much they cost, how much they made in theaters, and what rating they received from reviewers. 
+Next, let's look at some data about movies. These data are about a selection of films and info about how much they cost, how much they made in theaters, and what rating they received from reviewers. Run the code below:
 
 
 
