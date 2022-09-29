@@ -27,7 +27,8 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
-[<i class="fas fa-file-archive"></i> `Five graphs`](/files/five-graphs.R)
+* Day one: [<i class="fas fa-file-archive"></i> `Five graphs`](/files/five-graphs.R)
+* Day two: [<i class="fas fa-file-archive"></i> `Day 2`](/files/viz-day2.R)
 
 
 

@@ -4,7 +4,7 @@
     <title>Visualization II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-09-27" />
+    <meta name="date" content="2022-09-29" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script src="libs/clipboard/clipboard.min.js"></script>
@@ -260,8 +260,7 @@ The **time series** uses a *line* to show you how a variable (y-axis) moves over
 
 ```r
 ggplot(life_yr, aes(x = year, `y = avg_yrs`)) +
-* geom_line() +
-  theme_bw()
+  `geom_line()`
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-9-1.png" width="100%" /&gt;
@@ -305,7 +304,7 @@ Can you identify the recessions?
 
 --
 
-<div class="countdown" id="timer_6333e920" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6335f7c5" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">04</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -592,7 +591,7 @@ What happens if instead of using `fill` you use `color`?
 --
 
 
-<div class="countdown" id="timer_6333e91e" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6335f7c0" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -664,8 +663,7 @@ Causal difference between married and widowed? theory?
 
 ```r
 ggplot(tv, aes(x = marital, y = tv)) +
-         geom_col() + 
-* coord_flip()
+*        geom_col() + coord_flip()
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-29-1.png" width="80%" /&gt;
@@ -2461,13 +2459,13 @@ Boxplots contain a lot of info 🥵:
 
 
 
-|Graph       |aes()                    |geom_       |Purpose               |
-|:-----------|:------------------------|:-----------|:---------------------|
-|Scatterplot |x = cause, y = effect    |point()     |Relationships         |
-|Time series |x = date, y = variable   |line()      |Trends                |
-|Histogram   |x = variable             |histogram() |Distributions         |
-|Barplot     |x = category, y = amount |col()       |Compare               |
-|Boxplot     |x = category, y = amount |boxplot()   |Compare distributions |
+|Graph       |aes()                            |geom_       |Purpose               |
+|:-----------|:--------------------------------|:-----------|:---------------------|
+|Scatterplot |x = cause, y = effect            |point()     |Relationships         |
+|Time series |x = date, y = variable           |line()      |Trends                |
+|Histogram   |x = cont. variable               |histogram() |Distributions         |
+|Barplot     |x = category, y = quantity       |col()       |Compare amounts       |
+|Boxplot     |x = category, y = cont. variable |boxplot()   |Compare distributions |
 
 
 Know how and when to use which!
@@ -2508,6 +2506,8 @@ Here are some of my favorite ones
 
 You can break out a plot into multiple panels using the `facet_wrap()` layer
 
+Shows *movement* of a variable across time, space, etc.
+
 ---
 
 # Using facet_wrap
@@ -2515,7 +2515,7 @@ You can break out a plot into multiple panels using the `facet_wrap()` layer
 
 ```r
 ggplot(gapminder, aes(x = lifeExp)) + 
-  geom_histogram() + theme_minimal()
+  geom_histogram()
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-38-1.png" width="60%" /&gt;
@@ -2527,8 +2527,7 @@ ggplot(gapminder, aes(x = lifeExp)) +
 
 ```r
 ggplot(gapminder, aes(x = lifeExp)) + 
-  geom_histogram() + theme_minimal() +
-* facet_wrap(vars(year))
+* geom_histogram() + facet_wrap(vars(year))
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-39-1.png" width="60%" /&gt;
@@ -2601,7 +2600,7 @@ Relationships can look different *within* groups
 
 ```r
 library(ggridges)
-ggplot(gapminder, aes(y = continent, x = lifeExp)) + theme_light() + 
+ggplot(gapminder, aes(y = continent, x = lifeExp)) + 
 *   geom_density_ridges()
 ```
 
@@ -2618,13 +2617,13 @@ Ease visual comparison + kinda looks like the Joy Division album
 
 ```r
 library(ggbeeswarm)
-ggplot(gapminder, aes(x = continent, y = lifeExp)) + theme_light() + 
+ggplot(gapminder, aes(x = continent, y = lifeExp)) +  
 *   geom_quasirandom()
 ```
 
 &lt;img src="03-viz2_files/figure-html/unnamed-chunk-44-1.png" width="60%" /&gt;
 
-Beeswarm plots tell us something boxplots don't: the number observations by group
+Beeswarm plots tell us something boxplots don't: the number observations by group; used recently by the [NYT](https://www.nytimes.com/2022/09/11/nyregion/hasidic-yeshivas-schools-new-york.html)
 
 ---
 
@@ -2649,7 +2648,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-# My favorite color scale
+# My favorite scale (right now)
 
 
 ```r
@@ -2686,7 +2685,7 @@ class: left
 
 
 
-<div class="countdown" id="timer_6333e7e2" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_6335f7d9" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">20</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 

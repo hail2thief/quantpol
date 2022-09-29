@@ -199,7 +199,9 @@ It all depends on your data!
 ```{r,out.width="80%"}
 ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) +
   geom_point() +
-  theme_bw()
+  theme_bw() + 
+  annotate(geom = "rect", xmin = 8500, xmax = 15000, ymin = 48, ymax = 58, 
+           fill = red, alpha = .4)
 ```
 
 
@@ -310,14 +312,12 @@ tribble(~Data, ~`aes()`, ~`geom_`,
 .pull-left[
 ```{r,echo = TRUE, eval = FALSE}
 ggplot(life_yr, aes(x = year, `y = avg_yrs`)) +
-  geom_line() +  #<<
-  theme_bw()
+  `geom_line()`
 ```
 
 ```{r,echo = FALSE, eval = TRUE}
 ggplot(life_yr, aes(x = year, y = avg_yrs)) +
-  geom_line() +  #<<
-  theme_bw()
+  geom_line() #<<
 ```
 ]
 
@@ -639,8 +639,7 @@ ggplot(tv, aes(x = marital, y = tv)) + #<<
 
 ```{r,echo = TRUE, out.width="80%"}
 ggplot(tv, aes(x = marital, y = tv)) +
-         geom_col() + 
-  coord_flip() #<<
+         geom_col() + coord_flip() #<<
 ```
 
 
@@ -754,9 +753,9 @@ ggplot(gapminder, aes(x = continent, y = lifeExp)) + #<<
 tribble(~Graph, ~`aes()`, ~`geom_`, ~Purpose,
         "Scatterplot", "x = cause, y = effect", "point()", "Relationships",
         "Time series", "x = date, y = variable", "line()", "Trends",
-        "Histogram", "x = variable", "histogram()", "Distributions",
-        "Barplot", "x = category, y = amount", "col()", "Compare", 
-        "Boxplot", "x = category, y = amount", "boxplot()", "Compare distributions") %>% 
+        "Histogram", "x = cont. variable", "histogram()", "Distributions",
+        "Barplot", "x = category, y = quantity", "col()", "Compare amounts", 
+        "Boxplot", "x = category, y = cont. variable", "boxplot()", "Compare distributions") %>% 
   knitr::kable()
 ```
 
@@ -804,13 +803,15 @@ ggplot(gapminder, aes(x = lifeExp)) +
 
 You can break out a plot into multiple panels using the `facet_wrap()` layer
 
+Shows *movement* of a variable across time, space, etc.
+
 ---
 
 # Using facet_wrap
 
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp)) + 
-  geom_histogram() + theme_minimal()
+  geom_histogram()
 ```
 
 ---
@@ -819,8 +820,7 @@ ggplot(gapminder, aes(x = lifeExp)) +
 
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp)) + 
-  geom_histogram() + theme_minimal() +
-  facet_wrap(vars(year)) #<<
+  geom_histogram() + facet_wrap(vars(year)) #<<
 ```
 
 
@@ -881,7 +881,7 @@ Relationships can look different *within* groups
 
 ```{r, echo = TRUE, out.width="70%"}
 library(ggridges)
-ggplot(gapminder, aes(y = continent, x = lifeExp)) + theme_light() + 
+ggplot(gapminder, aes(y = continent, x = lifeExp)) + 
     geom_density_ridges() #<<
 ```
 
@@ -895,11 +895,11 @@ Ease visual comparison + kinda looks like the Joy Division album
 
 ```{r, echo = TRUE, out.width="60%"}
 library(ggbeeswarm)
-ggplot(gapminder, aes(x = continent, y = lifeExp)) + theme_light() + 
+ggplot(gapminder, aes(x = continent, y = lifeExp)) +  
     geom_quasirandom() #<<
 ```
 
-Beeswarm plots tell us something boxplots don't: the number observations by group
+Beeswarm plots tell us something boxplots don't: the number observations by group; used recently by the [NYT](https://www.nytimes.com/2022/09/11/nyregion/hasidic-yeshivas-schools-new-york.html)
 
 ---
 
@@ -921,7 +921,7 @@ ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
 ---
 
 
-# My favorite color scale
+# My favorite scale (right now)
 
 ```{r, echo = TRUE, out.width="60%"}
 ggplot(gapminder, aes(x = lifeExp, fill = continent)) + 
