@@ -20,6 +20,25 @@ editor_options:
 <div id="TOC">
 <ul>
 <li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
+<li><a href="#making-graphs-with-ggplot" id="toc-making-graphs-with-ggplot">Making graphs with ggplot</a>
+<ul>
+<li><a href="#the-scatterplot" id="toc-the-scatterplot">The scatterplot</a></li>
+<li><a href="#the-time-series" id="toc-the-time-series">The time series</a></li>
+<li><a href="#multiple-time-series" id="toc-multiple-time-series">Multiple time series</a></li>
+<li><a href="#histogram-with-geom_histogram" id="toc-histogram-with-geom_histogram">Histogram with <code>geom_histogram()</code></a></li>
+<li><a href="#grouped-histogram" id="toc-grouped-histogram">Grouped histogram</a></li>
+<li><a href="#barplot-with-geom_col" id="toc-barplot-with-geom_col">Barplot with <code>geom_col()</code></a></li>
+<li><a href="#the-boxplot" id="toc-the-boxplot">The boxplot</a></li>
+</ul></li>
+<li><a href="#other-layers-and-features" id="toc-other-layers-and-features">Other layers and features</a>
+<ul>
+<li><a href="#multi-panel-plots-with-facet_wrap" id="toc-multi-panel-plots-with-facet_wrap">Multi-panel plots with <code>facet_wrap()</code></a></li>
+<li><a href="#make-aesthetics-static-within-the-geometries" id="toc-make-aesthetics-static-within-the-geometries">Make aesthetics static within the geometries</a></li>
+<li><a href="#show-a-trend-line-using-geom_smooth" id="toc-show-a-trend-line-using-geom_smooth">Show a trend-line using <code>geom_smooth()</code></a></li>
+<li><a href="#show-separate-trend-lines" id="toc-show-separate-trend-lines">Show <em>separate</em> trend-lines</a></li>
+<li><a href="#use-different-color-and-fill-scales" id="toc-use-different-color-and-fill-scales">Use different color and fill scales</a></li>
+<li><a href="#many-other-themes" id="toc-many-other-themes">Many other themes</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -30,145 +49,196 @@ editor_options:
 <li>Day one: <a href="/files/five-graphs.R"><i class="fas fa-file-archive"></i> <code>Five graphs</code></a></li>
 <li>Day two: <a href="/files/viz-day2.R"><i class="fas fa-file-archive"></i> <code>Day 2</code></a></li>
 </ul>
-<!-- # Making graphs with ggplot -->
-<!-- Here we will walk through how to make some of the basic graphs in R. -->
-<!-- The code chunk below loads our libraries and prepares the data. -->
-<!-- ```{r} -->
-<!-- # load libraries ------------------------------------------------------------------------- -->
-<!-- library(tidyverse) -->
-<!-- library(gapminder) # install this if you don't have it! -->
-<!-- library(ggbeeswarm) # install this if you don't have it! -->
-<!-- library(moderndive) -->
-<!-- # clean data ------------------------------------------------------------------------ -->
-<!-- # subset data to focus on 2007 -->
-<!-- gap_07 = -->
-<!--   gapminder %>% -->
-<!--   filter(year == 2007) -->
-<!-- # calculate average life span by year -->
-<!-- life_yr = -->
-<!--   gapminder %>% -->
-<!--   select(year, lifeExp) %>% -->
-<!--   group_by(year) %>% -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-<!-- # calculate average life expectancy by continent -->
-<!-- life_region = -->
-<!--   gap_07 %>% -->
-<!--   group_by(continent) %>% -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-<!-- # calculate average life expectancy by continent-year -->
-<!-- life_region_yr = -->
-<!--   gapminder %>% -->
-<!--   group_by(continent, year) %>% -->
-<!--   summarise(avg_yrs = mean(lifeExp)) -->
-<!-- ``` -->
-<!-- ## The scatterplot -->
-<!-- The scatterplot puts two variables on the same graph so we can see how they move together: -->
-<!-- ```{r} -->
-<!-- # the fancy, final product -->
-<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp, -->
-<!--                    color = continent, size = pop)) + -->
-<!--   geom_point() -->
-<!-- ``` -->
-<!-- We can add labels using `labs()` and a `theme` using `theme_bw()`: -->
-<!-- ```{r} -->
-<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp, -->
-<!--                    color = continent, size = pop)) + -->
-<!--   geom_point() + -->
-<!--   labs(x = "GDP per capita ($USD, inflation-adjusted)", -->
-<!--        y = "Life expectancy (in years)", -->
-<!--        title = "Wealth and Health Around the World", -->
-<!--        subtitle = "Data from 2007. Source: gapminder package.") + -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- Note that there are many [more themes out there](https://ggplot2.tidyverse.org/reference/ggtheme.html). -->
-<!-- ## The time series -->
-<!-- The time series shows you how a variable moves over time, using a line. For this one we will use the `life_yr` data object we constructed above, which looks like this: -->
-<!-- ```{r} -->
-<!-- ## look at the data -->
-<!-- life_yr -->
-<!-- ``` -->
-<!-- We make the plot below: -->
-<!-- ```{r} -->
-<!-- # make the plot -->
-<!-- ggplot(life_yr, aes(x = year, y = avg_yrs)) + -->
-<!--   geom_line() + -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- ## Multiple time series -->
-<!-- Sometimes we have data where we observe multiple *units* moving over time, like so: -->
-<!-- ```{r} -->
-<!-- life_region_yr -->
-<!-- ``` -->
-<!-- We can draw separate time series for each *unit* by either using the `color` aesthetic to separate the lines: -->
-<!-- ```{r} -->
-<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, color = continent)) + -->
-<!--   geom_line() + -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- Or the `group` aesthetic: -->
-<!-- ```{r} -->
-<!-- ggplot(life_region_yr, aes(x = year, y = avg_yrs, group = continent)) + -->
-<!--   geom_line() + -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- ## Histogram with `geom_histogram()` -->
-<!-- ```{r} -->
-<!-- ggplot(gap_07, aes(x = lifeExp)) +  -->
-<!--   geom_histogram() +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- ## Grouped histogram -->
-<!-- ```{r} -->
-<!-- ggplot(gap_07, aes(x = lifeExp, fill = continent)) +  -->
-<!--   geom_histogram() +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- ## Barplot with `geom_col()` -->
-<!-- ```{r} -->
-<!-- ggplot(life_region_yr, aes(x = continent, y = avg_yrs)) +  -->
-<!--   geom_col() -->
-<!-- ``` -->
-<!-- # Other layers and features -->
-<!-- ## Multi-panel plots with `facet_wrap()` -->
-<!-- ```{r} -->
-<!-- ggplot(gapminder, aes(x = lifeExp, fill = continent)) +  -->
-<!--   geom_histogram() +  -->
-<!--   facet_wrap(vars(year)) + -->
-<!--   theme_minimal() -->
-<!-- ``` -->
-<!-- ## Make aesthetics static within the geometries -->
-<!-- ```{r,echo = TRUE, out.width="60%"} -->
-<!-- ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() +  -->
-<!--   geom_point(size = 3, color = "orange", shape = 2, alpha = .5) #<< -->
-<!-- ``` -->
-<!-- Take your aesthetics out of `aes()` and into `geom()` to make them *static* -->
-<!-- ## Show a trend-line using `geom_smooth()` -->
-<!-- ```{r, echo = TRUE, out.width="60%"} -->
-<!-- ggplot(evals, aes(x = age, y = score)) +  -->
-<!--   geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") +  -->
-<!--   geom_smooth() #<< -->
-<!-- ``` -->
-<!-- Trend lines can reveal patterns in "clumpy" data -->
-<!-- ## Show *separate* trend-lines -->
-<!-- ```{r, echo = TRUE, out.width="60%"} -->
-<!-- ggplot(evals, aes(x = age, y = score, color = gender)) + #<< -->
-<!--   geom_point() + theme_bw() + labs(x = "Professor age", y = "Student evals") +  -->
-<!--   geom_smooth() #<< -->
-<!-- ``` -->
-<!-- Relationships can look different *within* groups -->
-<!-- ## Use different color and fill scales -->
-<!-- ```{r, echo = TRUE, out.width="60%"} -->
-<!-- ggplot(gapminder, aes(x = lifeExp, fill = continent)) +  -->
-<!--   geom_histogram() +  -->
-<!--   scale_fill_brewer(palette = "Blues") #<< -->
-<!-- ``` -->
-<!-- `fill_brewer()` for `fill`, `color_brewer` for `color` -->
-<!-- ## Many other themes -->
-<!-- ```{r,out.width="80%"} -->
-<!-- library(tvthemes) -->
-<!-- ggplot(gapminder, aes(x = lifeExp, fill = continent)) +  -->
-<!--   geom_histogram() + theme_spongeBob() + labs(title = "Horrible") +  -->
-<!--   scale_fill_spongeBob() -->
-<!-- ``` -->
-<!-- `theme_spongeBob()` from `tvthemes` package, many more online -->
+</div>
+<div id="making-graphs-with-ggplot" class="section level1">
+<h1>Making graphs with ggplot</h1>
+<p>Here we will walk through how to make some of the basic graphs in R.</p>
+<p>The code chunk below loads our libraries and prepares the data.</p>
+<pre class="r"><code># load libraries -------------------------------------------------------------------------
+library(tidyverse)
+library(gapminder) # install this if you don&#39;t have it!
+library(ggbeeswarm) # install this if you don&#39;t have it!
+library(moderndive)
+
+# clean data ------------------------------------------------------------------------
+
+
+# subset data to focus on 2007
+gap_07 =
+  gapminder %&gt;%
+  filter(year == 2007)
+
+
+# calculate average life span by year
+life_yr =
+  gapminder %&gt;%
+  select(year, lifeExp) %&gt;%
+  group_by(year) %&gt;%
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent
+life_region =
+  gap_07 %&gt;%
+  group_by(continent) %&gt;%
+  summarise(avg_yrs = mean(lifeExp))
+
+# calculate average life expectancy by continent-year
+life_region_yr =
+  gapminder %&gt;%
+  group_by(continent, year) %&gt;%
+  summarise(avg_yrs = mean(lifeExp))</code></pre>
+<div id="the-scatterplot" class="section level2">
+<h2>The scatterplot</h2>
+<p>The scatterplot puts two variables on the same graph so we can see how they move together:</p>
+<pre class="r"><code># the fancy, final product
+ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
+                   color = continent, size = pop)) +
+  geom_point()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>We can add labels using <code>labs()</code> and a <code>theme</code> using <code>theme_bw()</code>:</p>
+<pre class="r"><code>ggplot(gap_07, aes(x = gdpPercap, y = lifeExp,
+                   color = continent, size = pop)) +
+  geom_point() +
+  labs(x = &quot;GDP per capita ($USD, inflation-adjusted)&quot;,
+       y = &quot;Life expectancy (in years)&quot;,
+       title = &quot;Wealth and Health Around the World&quot;,
+       subtitle = &quot;Data from 2007. Source: gapminder package.&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Note that there are many <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">more themes out there</a>.</p>
+</div>
+<div id="the-time-series" class="section level2">
+<h2>The time series</h2>
+<p>The time series shows you how a variable moves over time, using a line. For this one we will use the <code>life_yr</code> data object we constructed above, which looks like this:</p>
+<pre class="r"><code>## look at the data
+life_yr</code></pre>
+<pre><code>## # A tibble: 12 × 2
+##     year avg_yrs
+##    &lt;int&gt;   &lt;dbl&gt;
+##  1  1952    49.1
+##  2  1957    51.5
+##  3  1962    53.6
+##  4  1967    55.7
+##  5  1972    57.6
+##  6  1977    59.6
+##  7  1982    61.5
+##  8  1987    63.2
+##  9  1992    64.2
+## 10  1997    65.0
+## 11  2002    65.7
+## 12  2007    67.0</code></pre>
+<p>We make the plot below:</p>
+<pre class="r"><code># make the plot
+ggplot(life_yr, aes(x = year, y = avg_yrs)) +
+  geom_line() +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="multiple-time-series" class="section level2">
+<h2>Multiple time series</h2>
+<p>Sometimes we have data where we observe multiple <em>units</em> moving over time, like so:</p>
+<pre class="r"><code>life_region_yr</code></pre>
+<pre><code>## # A tibble: 60 × 3
+## # Groups:   continent [5]
+##    continent  year avg_yrs
+##    &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;
+##  1 Africa     1952    39.1
+##  2 Africa     1957    41.3
+##  3 Africa     1962    43.3
+##  4 Africa     1967    45.3
+##  5 Africa     1972    47.5
+##  6 Africa     1977    49.6
+##  7 Africa     1982    51.6
+##  8 Africa     1987    53.3
+##  9 Africa     1992    53.6
+## 10 Africa     1997    53.6
+## # … with 50 more rows</code></pre>
+<p>We can draw separate time series for each <em>unit</em> by either using the <code>color</code> aesthetic to separate the lines:</p>
+<pre class="r"><code>ggplot(life_region_yr, aes(x = year, y = avg_yrs, color = continent)) +
+  geom_line() +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Or the <code>group</code> aesthetic:</p>
+<pre class="r"><code>ggplot(life_region_yr, aes(x = year, y = avg_yrs, group = continent)) +
+  geom_line() +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="histogram-with-geom_histogram" class="section level2">
+<h2>Histogram with <code>geom_histogram()</code></h2>
+<pre class="r"><code>ggplot(gap_07, aes(x = lifeExp)) +
+  geom_histogram() +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="grouped-histogram" class="section level2">
+<h2>Grouped histogram</h2>
+<pre class="r"><code>ggplot(gap_07, aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  theme_bw()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="barplot-with-geom_col" class="section level2">
+<h2>Barplot with <code>geom_col()</code></h2>
+<pre class="r"><code>ggplot(life_region_yr, aes(x = continent, y = avg_yrs)) +
+  geom_col()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="the-boxplot" class="section level2">
+<h2>The boxplot</h2>
+<pre class="r"><code>ggplot(data = gapminder, aes(x = continent, y = lifeExp)) + 
+  geom_boxplot()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+</div>
+<div id="other-layers-and-features" class="section level1">
+<h1>Other layers and features</h1>
+<div id="multi-panel-plots-with-facet_wrap" class="section level2">
+<h2>Multi-panel plots with <code>facet_wrap()</code></h2>
+<pre class="r"><code>ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  facet_wrap(vars(year)) +
+  theme_minimal()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="make-aesthetics-static-within-the-geometries" class="section level2">
+<h2>Make aesthetics static within the geometries</h2>
+<pre class="r"><code>ggplot(gap_07, aes(x = gdpPercap, y = lifeExp)) + theme_light() +
+  geom_point(size = 3, color = &quot;orange&quot;, shape = 2, alpha = .5) #&lt;&lt;</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-14-1.png" width="60%" /></p>
+<p>Take your aesthetics out of <code>aes()</code> and into <code>geom()</code> to make them <em>static</em></p>
+</div>
+<div id="show-a-trend-line-using-geom_smooth" class="section level2">
+<h2>Show a trend-line using <code>geom_smooth()</code></h2>
+<pre class="r"><code>ggplot(evals, aes(x = age, y = score)) +
+  geom_point() + theme_bw() + labs(x = &quot;Professor age&quot;, y = &quot;Student evals&quot;) +
+  geom_smooth() #&lt;&lt;</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-15-1.png" width="60%" /></p>
+<p>Trend lines can reveal patterns in “clumpy” data</p>
+</div>
+<div id="show-separate-trend-lines" class="section level2">
+<h2>Show <em>separate</em> trend-lines</h2>
+<pre class="r"><code>ggplot(evals, aes(x = age, y = score, color = gender)) + #&lt;&lt;
+  geom_point() + theme_bw() + labs(x = &quot;Professor age&quot;, y = &quot;Student evals&quot;) +
+  geom_smooth() #&lt;&lt;</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-16-1.png" width="60%" /></p>
+<p>Relationships can look different <em>within</em> groups</p>
+</div>
+<div id="use-different-color-and-fill-scales" class="section level2">
+<h2>Use different color and fill scales</h2>
+<pre class="r"><code>ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_histogram() +
+  scale_fill_brewer(palette = &quot;Blues&quot;) #&lt;&lt;</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-17-1.png" width="60%" /></p>
+<p><code>fill_brewer()</code> for <code>fill</code>, <code>color_brewer</code> for <code>color</code></p>
+</div>
+<div id="many-other-themes" class="section level2">
+<h2>Many other themes</h2>
+<pre class="r"><code>library(tvthemes)
+ggplot(gapminder, aes(x = lifeExp, fill = continent)) +
+  geom_histogram() + theme_spongeBob() + labs(title = &quot;Horrible&quot;) +
+  scale_fill_spongeBob()</code></pre>
+<p><img src="/class/dataviz_files/figure-html/unnamed-chunk-18-1.png" width="80%" /></p>
+<p><code>theme_spongeBob()</code> from <code>tvthemes</code> package, many more online</p>
+</div>
 </div>
