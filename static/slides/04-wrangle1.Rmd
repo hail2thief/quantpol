@@ -7,7 +7,7 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
-    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    css: ["default", "css/my-theme.css", "css/halloween.css"]
     seal: false
     nature:
       highlightStyle: github
@@ -42,11 +42,11 @@ knitr::opts_chunk$set(
 
 ```{r packages}
 library(tidyverse)
-library(nycflights13)
+library(juanr)
 
 # dubois colors
 red = "#dc354a"
-yellow = "ecb025"
+yellow = "#ecb025"
 blue = "#213772"
 
 
@@ -125,14 +125,11 @@ class: center, middle, inverse
 
 ```{r, echo = TRUE, eval = FALSE}
 # code from homework
-movies `%>%`
-  # exclude movies before 1980
-  filter(year >= 1980) `%>%`
-  # make decades variable
-  mutate(decade = case_when(year >= 1980 & year < 1990 ~ "80s", 
-                            year >= 1990 & year < 2000 ~ "90s", 
-                            year >= 2000 & year < 2010 ~ "2000s", 
-                            year >= 2010 ~ "2010s"))
+directors_profit = movies %>% 
+  # only look at horror movies
+  filter(genre1 == "Horror" | genre2 == "Horror" | genre3 == "Horror") %>% 
+  # calculate profit
+  mutate(profit = gross - budget)
 ```
 
 You've seen these before...
@@ -144,7 +141,7 @@ You've seen these before...
 
 
 .pull-left[
-- **Pipes** allow you to string together a series of function calls on an object
+- **Pipes** link .shout[data] to .shout[functions]
 
 - They look like this in R: ` %>% `
 
@@ -196,17 +193,14 @@ select(mutate(filter(penguins, species == "Adelie"), body_mass_kg = body_mass_g 
 
 ```{r, echo = TRUE, eval = FALSE}
 # code from homework
-movies `%>%`
-  # exclude movies before 1980
-  filter(year >= 1980) `%>%`
-  # make decades variable
-  mutate(decade = case_when(year >= 1980 & year < 1990 ~ "80s", 
-                            year >= 1990 & year < 2000 ~ "90s", 
-                            year >= 2000 & year < 2010 ~ "2000s", 
-                            year >= 2010 ~ "2010s"))
+movies %>% 
+  # only look at horror movies
+  filter(genre1 == "Horror" | genre2 == "Horror" | genre3 == "Horror") %>% 
+  # calculate profit
+  mutate(profit = gross - budget)
 ```
 
-> Take the object `movies`, AND THEN `filter` such that year is greater than or equal to 1980, AND THEN `mutate` so that...
+> Take the data object `movies`, AND THEN `filter` so that genres 1 2 or 3 equal horror, AND THEN `mutate` so that...
 
 
 ---
@@ -216,7 +210,7 @@ class: center, middle, inverse
 ---
 
 class: center
-# Our first wrangling function: `filter()`
+# Our first wrangling function 😢: `filter()`
 
 --
 
@@ -233,10 +227,10 @@ knitr::include_graphics("images/filter.png")
 
 ```{r, eval = FALSE, echo = TRUE}
 baby_subset <- babynames %>%
-  filter(name == "Elizabeth")
+  filter(name == "Riley")
 ```
 
-Subset `babynames` to only babies named `Elizabeth`
+Subset `babynames` to only babies named `Riley`
 
 ---
 
@@ -266,11 +260,11 @@ To use `filter()`, we need to tell R which **observations** we want to include (
 
 ```{r, eval = FALSE, echo = TRUE}
 baby_subset <- babynames %>%
-  filter(name == "Elizabeth")
+  filter(name == "Riley")
 ```
 
 
-Rule: return all observations from `babynames` where the `name` variable **is equal to** "Elizabeth"
+Rule: return all observations from `babynames` where the `name` variable **is equal to** "Riley"
 
 
 ---
@@ -307,7 +301,7 @@ tribble(~Operator, ~meaning,
         "<", "less than", 
         ">=", "greater than or equal to", 
         "<=", "less than or equal to", 
-        "%", "AND (both conditions true)", 
+        "&", "AND (both conditions true)", 
         "|", "OR (either condition is true)") %>% 
   knitr::kable(align = "cc")
 ```
@@ -435,7 +429,7 @@ The <kbd>|</kbd>  should be above your Return/Enter key!
 
 ---
 
-
+exclude: true
 # Let's try: students
 
 Put the below in human terms:
@@ -446,8 +440,22 @@ Put the below in human terms:
 
 ---
 
+# 🚨 Your turn: 👑 World leaders 👑 🚨
 
-## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+Using the `leader` dataset, identify: 
+
+
+1. A Vietnamese Emperor who, in his first year in office, was 11 years old. Famously depraved.
+
+2. Leaders with graduate degrees who in 2015 reached their 16th year in power. 
+
+3. The number of world leaders in the post-2000 period who have known physical or mental health issues. 
+
+---
+
+
+# 🔥 The (unusual) American voter 🔥
 
 There was once a Twitter bot that would randomly tweet profiles of real voters from the Cooperative Election Study:
 
@@ -459,10 +467,34 @@ knitr::include_graphics("images/american-voter-bot.png")
 
 ---
 
-## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+
+
+.scroll-output[
+```{r}
+juanr::bot %>% 
+  sample_n(5) %>% 
+  knitr::kable(caption = "A small sample of Americans")
+```
+]
+
+
+
+
+
+---
+
+
+# 🔥 The (unusual) American voter 🔥
 
 
 .can-edit[Instructions.]
+
+
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
 
 
 ---
@@ -510,7 +542,7 @@ new_object = stuff %>% filter(year == 1999)
 Or like this: 
 
 ```{r, echo = TRUE, eval = FALSE}
-new_object = stuff %>% filter(year == 1999)
+new_object <- stuff %>% filter(year == 1999)
 ```
 
 ---
@@ -576,16 +608,21 @@ ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
 
 Using the `elections` dataset:
 
-
-1. Make a histogram of Democratic performance in the South in 2020, excluding Florida.
+.small[
+1. Make a histogram (or beeswarm plot!) of Democratic performance in the South in 2020, excluding Florida.
 
 2. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020. Make a (nice) barplot of these counties and their 2020 Republican vote shares.
+
+3. Find the worst place I've lived: median income is less than $45,000, either in the South or the Northeast, the population is between 155k and 156k and Trump won with more than 53% of the vote. What county is it?
+
+]
+
 
 
 ```{r}
 countdown::countdown(minutes = 10L)
 ```
 
----
+
 
 

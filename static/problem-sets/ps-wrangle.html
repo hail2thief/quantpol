@@ -379,23 +379,13 @@ gray triangle at the top right of the code chunk</li>
 </ul></li>
 </ul>
 <pre class="r"><code>library(tidyverse)
-library(socviz)</code></pre>
+library(socviz)
+library(juanr)</code></pre>
 </div>
 <div id="task-1-pokemon" class="section level1">
 <h1>Task 1: Pokemon</h1>
 <p>First we’ll look at data on pokemon. Let’s load it below and look at
 it.</p>
-<pre class="r"><code>pokemon = 
-  read_csv(&quot;https://raw.githubusercontent.com/hail2thief/poli-301/master/static/files/pokemon.csv&quot;) %&gt;% 
-  mutate(capture_rate = as.numeric(capture_rate))</code></pre>
-<pre><code>## Rows: 801 Columns: 14
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr  (3): name, type1, type2
-## dbl (11): height_m, weight_kg, capture_rate, hp, attack, defense, sp_attack,...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>pokemon</code></pre>
 <pre><code>## # A tibble: 801 × 14
 ##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
@@ -412,6 +402,7 @@ it.</p>
 ## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
 ## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;,
 ## #   sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;</code></pre>
+<pre class="r"><code>?pokemon</code></pre>
 <p>Using <code>filter()</code>, tell me which Pokemon:</p>
 <ul>
 <li>is shorter than a meter</li>

@@ -22,113 +22,153 @@ editor_options:
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as..."
 
-[<i class="fas fa-file-archive"></i> `data-wrangle.R`](/slides/code/02-wrangle.R)
+[<i class="fas fa-file-archive"></i> `wrangle-day1.R`](/slides/code/wrangle-day1.R)
 
 
 
-## Filtering
+<!-- ## Filtering -->
 
-Often, we have a big dataset that covers lots of stuff (say, all flights coming out of NYC in 2013) but we're only interested in a *subset* of those things (say, flights that arrived late over that time period). The `filter()` function is a way to subset operations that match some rule or set of rules (e.g., rule = "flights that arrived late"). We define these rules using [logical operators](https://www.statmethods.net/management/operators.html).
-
-
-### Examples
+<!-- Often, we have a big dataset that covers lots of stuff (say, all flights coming out of NYC in 2013) but we're only interested in a *subset* of those things (say, flights that arrived late over that time period). The `filter()` function is a way to subset operations that match some rule or set of rules (e.g., rule = "flights that arrived late"). We define these rules using [logical operators](https://www.statmethods.net/management/operators.html). -->
 
 
-Let's load the libraries.
-
-```{r, message=F,warning=F}
-# libraries
-library(tidyverse)
-library(nycflights13)
-```
+<!-- ### Examples -->
 
 
-Remember you can look at the data like this.
+<!-- Let's load the libraries. -->
 
-```{r, eval=F}
-# look at the data
-View(flights) # open data in viewer
-?flights # read data documentation
-```
-
-
-Let's look at flights from February.
-
-```{r}
-# look at fights, but only from February
-flights %>%
-  filter(month == 2)
-```
+<!-- ```{r, message=F,warning=F} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- library(nycflights13) -->
+<!-- ``` -->
 
 
-Let's look at flights on Valentine's Day.
+<!-- Remember you can look at the data like this. -->
 
-```{r}
-# now let's look at flights on Valentine's Day
-flights %>%
-  filter(month == 2) %>%
-  filter(day == 14)
-```
-
-
-Let's try the OR logical operator by looking at flights going to ATL or SFO.
-
-```{r}
-# try one using text and the OR symbol
-# look at fights going to ATL or SFO
-flights %>%
-  filter(dest == "ATL" | dest == "SFO")
-
-```
+<!-- ```{r, eval=F} -->
+<!-- # look at the data -->
+<!-- View(flights) # open data in viewer -->
+<!-- ?flights # read data documentation -->
+<!-- ``` -->
 
 
-Let's look at flights between noon and 5pm.
+<!-- Let's look at flights from February. -->
 
-```{r}
-# try one using greater than or less than
-# look at flights departing between 12pm and 5pm
-flights %>%
-  filter(dep_time >= 1200) %>%
-  filter(dep_time <= 1700)
-
-```
-
-Let's look at how many flights arrived late on christmas day.
-
-```{r}
-## how many flights arrived LATE, on christmas day?
-late_xmas = flights %>%
-  filter(arr_time > sched_arr_time) %>%
-  filter(month == 12, day == 25)
-
-```
+<!-- ```{r} -->
+<!-- # look at fights, but only from February -->
+<!-- flights %>% -->
+<!--   filter(month == 2) -->
+<!-- ``` -->
 
 
+<!-- Let's look at flights on Valentine's Day. -->
+
+<!-- ```{r} -->
+<!-- # now let's look at flights on Valentine's Day -->
+<!-- flights %>% -->
+<!--   filter(month == 2) %>% -->
+<!--   filter(day == 14) -->
+<!-- ``` -->
 
 
-## Mutating
+<!-- Let's try the OR logical operator by looking at flights going to ATL or SFO. -->
 
-Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this.
+<!-- ```{r} -->
+<!-- # try one using text and the OR symbol -->
+<!-- # look at fights going to ATL or SFO -->
+<!-- flights %>% -->
+<!--   filter(dest == "ATL" | dest == "SFO") -->
 
-
-Let's convert arrival delay from minutes to hours.
-
-```{r}
-## convert arrival_delay to hours
-new_flights = flights %>%
-  mutate(arr_delay_hrs = arr_delay/60)
-```
-
-If you look in the dataset you will see a new variable called `arr_delay_hrs`.
+<!-- ``` -->
 
 
-Let's convert distance traveled from miles to thousands of miles.
+<!-- Let's look at flights between noon and 5pm. -->
 
-```{r}
-## convert distance to thousands of miles
-new_flights2 = flights %>%
-  mutate(dist_miles = distance/1000)
-```
+<!-- ```{r} -->
+<!-- # try one using greater than or less than -->
+<!-- # look at flights departing between 12pm and 5pm -->
+<!-- flights %>% -->
+<!--   filter(dep_time >= 1200) %>% -->
+<!--   filter(dep_time <= 1700) -->
+
+<!-- ``` -->
+
+<!-- Let's look at how many flights arrived late on christmas day. -->
+
+<!-- ```{r} -->
+<!-- ## how many flights arrived LATE, on christmas day? -->
+<!-- late_xmas = flights %>% -->
+<!--   filter(arr_time > sched_arr_time) %>% -->
+<!--   filter(month == 12, day == 25) -->
+
+<!-- ``` -->
+
+
+<!-- ### Leaders -->
+
+
+<!-- ```{r} -->
+<!-- library(juanr) -->
+<!-- leader -->
+<!-- ``` -->
+
+
+<!-- 1. A Vietnamese Emperor who, in his first year in office, was 11 years old. Famously depraved. -->
+
+
+<!-- ```{r} -->
+<!-- leader %>%  -->
+<!--   # first year in office -->
+<!--   filter(yr_office == 1) %>%  -->
+<!--   # age at that point -->
+<!--   filter(age == 11) %>%  -->
+<!--   # vietnamese -->
+<!--   filter(country == "VNM") -->
+<!-- ``` -->
+
+
+
+<!-- 2. Leaders with graduate degrees who in 2015 reached their 16th year in power.  -->
+
+<!-- ```{r} -->
+<!-- leader %>%  -->
+<!--   filter(edu == "Graduate", yr_office == 16, year == 2015) -->
+<!-- ``` -->
+
+
+<!-- 3. The number of world leaders in the post-2000 period who have known physical or mental health issues.  -->
+
+
+<!-- ```{r} -->
+<!-- leader %>%  -->
+<!--   filter((year > 2000) & (phys_health == 1 | mental_health == 1)) -->
+<!-- ``` -->
+
+
+
+<!-- ## Mutating -->
+
+<!-- Sometimes we want to create new variables. For example, we might want to combine or alter existing variables in our dataset. The `mutate()` function is one way of doing this. -->
+
+
+<!-- Let's convert arrival delay from minutes to hours. -->
+
+<!-- ```{r} -->
+<!-- ## convert arrival_delay to hours -->
+<!-- new_flights = flights %>% -->
+<!--   mutate(arr_delay_hrs = arr_delay/60) -->
+<!-- ``` -->
+
+<!-- If you look in the dataset you will see a new variable called `arr_delay_hrs`. -->
+
+
+<!-- Let's convert distance traveled from miles to thousands of miles. -->
+
+<!-- ```{r} -->
+<!-- ## convert distance to thousands of miles -->
+<!-- new_flights2 = flights %>% -->
+<!--   mutate(dist_miles = distance/1000) -->
+<!-- ``` -->
 
 
 <!-- ### Creating categorical variables -->

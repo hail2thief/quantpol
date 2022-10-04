@@ -20,6 +20,7 @@ output: html_document
 ```{r load-libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(socviz)
+library(juanr)
 ```
 
 
@@ -31,10 +32,8 @@ First we'll look at data on pokemon. Let's load it below and look at it.
 
 
 ```{r load-pokemon}
-pokemon = 
-  read_csv("https://raw.githubusercontent.com/hail2thief/poli-301/master/static/files/pokemon.csv") %>% 
-  mutate(capture_rate = as.numeric(capture_rate))
 pokemon
+?pokemon
 ```
 
 

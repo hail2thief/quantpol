@@ -4,7 +4,7 @@
     <title>Wrangling I</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-08-25" />
+    <meta name="date" content="2022-10-04" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script type="application/json" id="xaringanExtra-editable-docid">{"id":"wrangle1","expires":14}</script>
@@ -15,7 +15,7 @@
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
     <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
-    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/halloween.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -101,14 +101,11 @@ class: center, middle, inverse
 
 ```r
 # code from homework
-movies `%&gt;%`
-  # exclude movies before 1980
-  filter(year &gt;= 1980) `%&gt;%`
-  # make decades variable
-  mutate(decade = case_when(year &gt;= 1980 &amp; year &lt; 1990 ~ "80s", 
-                            year &gt;= 1990 &amp; year &lt; 2000 ~ "90s", 
-                            year &gt;= 2000 &amp; year &lt; 2010 ~ "2000s", 
-                            year &gt;= 2010 ~ "2010s"))
+directors_profit = movies %&gt;% 
+  # only look at horror movies
+  filter(genre1 == "Horror" | genre2 == "Horror" | genre3 == "Horror") %&gt;% 
+  # calculate profit
+  mutate(profit = gross - budget)
 ```
 
 You've seen these before...
@@ -120,7 +117,7 @@ You've seen these before...
 
 
 .pull-left[
-- **Pipes** allow you to string together a series of function calls on an object
+- **Pipes** link .shout[data] to .shout[functions]
 
 - They look like this in R: ` %&gt;% `
 
@@ -173,17 +170,14 @@ select(mutate(filter(penguins, species == "Adelie"), body_mass_kg = body_mass_g 
 
 ```r
 # code from homework
-movies `%&gt;%`
-  # exclude movies before 1980
-  filter(year &gt;= 1980) `%&gt;%`
-  # make decades variable
-  mutate(decade = case_when(year &gt;= 1980 &amp; year &lt; 1990 ~ "80s", 
-                            year &gt;= 1990 &amp; year &lt; 2000 ~ "90s", 
-                            year &gt;= 2000 &amp; year &lt; 2010 ~ "2000s", 
-                            year &gt;= 2010 ~ "2010s"))
+movies %&gt;% 
+  # only look at horror movies
+  filter(genre1 == "Horror" | genre2 == "Horror" | genre3 == "Horror") %&gt;% 
+  # calculate profit
+  mutate(profit = gross - budget)
 ```
 
-&gt; Take the object `movies`, AND THEN `filter` such that year is greater than or equal to 1980, AND THEN `mutate` so that...
+&gt; Take the data object `movies`, AND THEN `filter` so that genres 1 2 or 3 equal horror, AND THEN `mutate` so that...
 
 
 ---
@@ -193,7 +187,7 @@ class: center, middle, inverse
 ---
 
 class: center
-# Our first wrangling function: `filter()`
+# Our first wrangling function 😢: `filter()`
 
 --
 
@@ -209,10 +203,10 @@ class: center
 
 ```r
 baby_subset &lt;- babynames %&gt;%
-  filter(name == "Elizabeth")
+  filter(name == "Riley")
 ```
 
-Subset `babynames` to only babies named `Elizabeth`
+Subset `babynames` to only babies named `Riley`
 
 ---
 
@@ -243,11 +237,11 @@ To use `filter()`, we need to tell R which **observations** we want to include (
 
 ```r
 baby_subset &lt;- babynames %&gt;%
-  filter(name == "Elizabeth")
+  filter(name == "Riley")
 ```
 
 
-Rule: return all observations from `babynames` where the `name` variable **is equal to** "Elizabeth"
+Rule: return all observations from `babynames` where the `name` variable **is equal to** "Riley"
 
 
 ---
@@ -283,7 +277,7 @@ Rules rely on **logical operators**:
 |    &lt;     |           less than           |
 |    &gt;=    |   greater than or equal to    |
 |    &lt;=    |     less than or equal to     |
-|    %     |  AND (both conditions true)   |
+|    &amp;     |  AND (both conditions true)   |
 |  &amp;#124;  | OR (either condition is true) |
 
 ???
@@ -462,7 +456,7 @@ The &lt;kbd&gt;|&lt;/kbd&gt;  should be above your Return/Enter key!
 
 ---
 
-
+exclude: true
 # Let's try: students
 
 Put the below in human terms:
@@ -473,8 +467,22 @@ Put the below in human terms:
 
 ---
 
+# 🚨 Your turn: 👑 World leaders 👑 🚨
 
-## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+Using the `leader` dataset, identify: 
+
+
+1. A Vietnamese Emperor who, in his first year in office, was 11 years old. Famously depraved.
+
+2. Leaders with graduate degrees who in 2015 reached their 16th year in power. 
+
+3. The number of world leaders in the post-2000 period who have known physical or mental health issues. 
+
+---
+
+
+# 🔥 The (unusual) American voter 🔥
 
 There was once a Twitter bot that would randomly tweet profiles of real voters from the Cooperative Election Study:
 
@@ -484,10 +492,39 @@ There was once a Twitter bot that would randomly tweet profiles of real voters f
 
 ---
 
-## 🔥 Fire challenge: The (unusual) American voter 🔥
+
+
+
+.scroll-output[
+
+Table: A small sample of Americans
+
+|state        |sex    | age|educ                 |race       |pid7                     |ideo5             |religion       |votechoice                   |hispanic |know_governor |conceal |prochoice |cleanair |wall    |mandmin |aca     |minwage |newsint          |
+|:------------|:------|---:|:--------------------|:----------|:------------------------|:-----------------|:--------------|:----------------------------|:--------|:-------------|:-------|:---------|:--------|:-------|:-------|:-------|:-------|:----------------|
+|Pennsylvania |Female |  21|High school graduate |White      |Independent              |Liberal           |Agnostic       |NA                           |No       |Democrat      |Oppose  |Oppose    |Support  |Oppose  |Support |Oppose  |Favor   |Hardly at all    |
+|Michigan     |Male   |  64|High school graduate |White      |Strong Democrat          |Moderate          |Roman Catholic |Joe Biden (Democrat)         |No       |Democrat      |Oppose  |Support   |Support  |Oppose  |Support |Oppose  |Favor   |Most of the time |
+|New York     |Male   |  30|High school graduate |Other race |Not very strong Democrat |Moderate          |Muslim         |Joe Biden (Democrat)         |No       |Democrat      |Oppose  |Oppose    |Oppose   |Oppose  |Oppose  |Support |Favor   |Hardly at all    |
+|Wisconsin    |Male   |  56|High school graduate |White      |Strong Republican        |Very conservative |Protestant     |Donald J. Trump (Republican) |No       |Democrat      |Support |Oppose    |Oppose   |Support |Support |Support |Oppose  |Most of the time |
+|New York     |Male   |  44|Some college         |Other race |Lean Democrat            |Very liberal      |Atheist        |Other                        |No       |Democrat      |Oppose  |Support   |Support  |Oppose  |Support |Support |Favor   |Most of the time |
+]
+
+
+
+
+
+---
+
+
+# 🔥 The (unusual) American voter 🔥
 
 
 .can-edit[Instructions.]
+
+
+
+<div class="countdown" id="timer_633c662b" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+</div>
 
 
 ---
@@ -539,7 +576,7 @@ Or like this:
 
 
 ```r
-new_object = stuff %&gt;% filter(year == 1999)
+new_object &lt;- stuff %&gt;% filter(year == 1999)
 ```
 
 ---
@@ -609,17 +646,22 @@ ggplot(sour_apples, aes(x = name, y = pounds)) + geom_col()
 
 Using the `elections` dataset:
 
-
-1. Make a histogram of Democratic performance in the South in 2020, excluding Florida.
+.small[
+1. Make a histogram (or beeswarm plot!) of Democratic performance in the South in 2020, excluding Florida.
 
 2. Identify the counties that both Obama and Hillary won in 2012 and 2016 (respectively), but Trump won in 2020. Make a (nice) barplot of these counties and their 2020 Republican vote shares.
 
+3. Find the worst place I've lived: median income is less than $45,000, either in the South or the Northeast, the population is between 155k and 156k and Trump won with more than 53% of the vote. What county is it?
 
-<div class="countdown" id="timer_6307c790" style="right:0;bottom:0;" data-warnwhen="0">
+]
+
+
+
+<div class="countdown" id="timer_633c63fd" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
----
+
 
 
     </textarea>

@@ -30,20 +30,20 @@ editor_options:
 ## Slides
 
 
-<!-- **Tip**: You can navigate through the slides with <kbd>←</kbd> and <kbd>→</kbd>. If you type <kbd>F</kbd> you can go full-screen. -->
+**Tip**: You can navigate through the slides with <kbd>←</kbd> and <kbd>→</kbd>. If you type <kbd>F</kbd> you can go full-screen.
 
 
-<!-- ### Tuesday -->
+### Tuesday
 
-<!-- [Class slides here](/slides/04-wrangle1.html) -->
+[Class slides here](/slides/04-wrangle1.html)
 
 
-<!-- ```{r,echo=FALSE} -->
-<!-- xaringanExtra::embed_xaringan( -->
-<!--    url = "/slides/04-wrangle1.html", -->
-<!--    ratio = "16:9" -->
-<!-- ) -->
-<!-- ``` -->
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/04-wrangle1.html",
+   ratio = "16:9"
+)
+```
 
 <!-- ### Thursday -->
 
