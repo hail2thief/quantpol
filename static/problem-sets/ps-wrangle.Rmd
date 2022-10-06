@@ -56,7 +56,7 @@ Using `filter()`, tell me which Pokemon:
 
 Now, look at Pokemon that: 
 
-- are heavier than they are tall
+- are taller than they are heavy
 - are not legendary
 
 ```{r}

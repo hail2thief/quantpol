@@ -17,7 +17,7 @@ lessons:
     date: "Oct 4, Oct 6"
     class: "data-wrangle"
     reading: "03-wrangle"
-    #assignment: "ps-wrangle"  
+    assignment: "ps-wrangle"  
 
   - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
     date: "Oct 11, Oct 13"
