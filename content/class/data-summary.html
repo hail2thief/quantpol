@@ -19,114 +19,89 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#in-class-example">In-class example</a></li>
-<li><a href="#summarize">Summarize</a></li>
-<li><a href="#summarize-group_by">Summarize + group_by()</a></li>
-<li><a href="#the-bob-ross-example">The Bob Ross example</a></li>
-<li><a href="#the-flying-etiquette-example">The flying etiquette example</a></li>
+<li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
 </ul>
 </div>
 
 <div id="in-class-example" class="section level2">
 <h2>In-class example</h2>
 <p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”</p>
-<p><a href="/slides/code/03-summarize.R"><i class="fas fa-file-archive"></i> <code>data-summary.R</code></a></p>
-</div>
-<div id="summarize" class="section level2">
-<h2>Summarize</h2>
-<p>Let’s load the libraries.</p>
-<pre class="r"><code># libraries
-library(tidyverse)
-library(nycflights13)
-library(fivethirtyeight)</code></pre>
-<p>Say we want to take the average of a variable in our dataset. <code>summarize()</code> can help us do that.</p>
-<p>Say we wanted to know how late in departure is the <em>average</em> flight in our dataset and what’s the latest a flight has ever been?</p>
-<pre class="r"><code>## on average, how late are flights in departing?
-flights %&gt;%
-  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
-            most_late = max(dep_delay, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 2
-##   avg_late most_late
-##      &lt;dbl&gt;     &lt;dbl&gt;
-## 1     12.6      1301</code></pre>
-<p>Not the <code>na.rm = TRUE</code> above and what happens if you remove it. The problem is there are missing values (<code>NA</code>) in our data, and R can’t take the average of a bunch of numbers where some are missing. <code>na.rm = TRUE</code> tells R to ignore those missing numbers and use only the complete observations.</p>
-</div>
-<div id="summarize-group_by" class="section level2">
-<h2>Summarize + group_by()</h2>
-<p>Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining <code>group_by()</code> and <code>summarise()</code>.</p>
-<pre class="r"><code># what if we wanted to know these statistics
-## for each month in our dataset?
-carrier_late = flights %&gt;%
-  group_by(carrier) %&gt;%
-  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
-            most_late = max(dep_delay, na.rm = TRUE))
-
-
-# make a plot
-ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
-  geom_col() +
-  coord_flip()</code></pre>
-<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-</div>
-<div id="the-bob-ross-example" class="section level2">
-<h2>The Bob Ross example</h2>
-<p>Happy tree?</p>
-<pre class="r"><code>bob_ross %&gt;% 
-  summarise(prop_tree = mean(tree, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 1
-##   prop_tree
-##       &lt;dbl&gt;
-## 1     0.896</code></pre>
-<p>Clouds over time?</p>
-<pre class="r"><code>bob_clouds = bob_ross %&gt;% 
-  group_by(season) %&gt;% 
-  summarise(prop_clouds = mean(clouds, na.rm = TRUE))
-
-ggplot(bob_clouds, aes(x = season, y = prop_clouds)) + geom_line()</code></pre>
-<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p>snowy mountain?</p>
-<pre class="r"><code>bob_ross %&gt;% 
-  filter(mountain == 1) %&gt;% 
-  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 1 × 1
-##   snowiness
-##       &lt;dbl&gt;
-## 1     0.681</code></pre>
-<pre class="r"><code>bob_ross %&gt;% 
-  group_by(mountain) %&gt;% 
-  summarise(snowiness = mean(snowy_mountain, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 2 × 2
-##   mountain snowiness
-##      &lt;int&gt;     &lt;dbl&gt;
-## 1        0     0    
-## 2        1     0.681</code></pre>
-<p>Steve ross?</p>
-<pre class="r"><code>bob_ross %&gt;% 
-  group_by(steve_ross) %&gt;% 
-  summarise(lake_chance = mean(lake, na.rm = TRUE))</code></pre>
-<pre><code>## # A tibble: 2 × 2
-##   steve_ross lake_chance
-##        &lt;int&gt;       &lt;dbl&gt;
-## 1          0       0.339
-## 2          1       0.909</code></pre>
-</div>
-<div id="the-flying-etiquette-example" class="section level2">
-<h2>The flying etiquette example</h2>
-<p>Middle arm rest?</p>
-<pre class="r"><code>middle_arm_rests = flying %&gt;% 
-  group_by(two_arm_rests) %&gt;% 
-  tally() %&gt;% 
-  mutate(percent = n/sum(n))
-
-ggplot(middle_arm_rests, aes(x = percent, y = two_arm_rests)) + 
-  geom_col()</code></pre>
-<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>Unruly children?</p>
-<pre class="r"><code>nasty_kids = flying %&gt;% 
-  group_by(children_under_18, unruly_child) %&gt;% 
-  tally() %&gt;% 
-  mutate(p_unruly = n/sum(n))
-
-ggplot(nasty_kids, aes(x = unruly_child, y = p_unruly, fill = children_under_18)) + geom_col(position = &quot;dodge&quot;)</code></pre>
-<p><img src="/class/data-summary_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><a href="/slides/code/day1-summarise.R"><i class="fas fa-file-archive"></i> <code>day1-summarise.R</code></a></p>
+<!-- ## Summarize -->
+<!-- Let's load the libraries. -->
+<!-- ```{r, message=F,warning=F} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- library(nycflights13) -->
+<!-- library(fivethirtyeight) -->
+<!-- ``` -->
+<!-- Say we want to take the average of a variable in our dataset. `summarize()` can help us do that. -->
+<!-- Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been? -->
+<!-- ```{r} -->
+<!-- ## on average, how late are flights in departing? -->
+<!-- flights %>% -->
+<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE), -->
+<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
+<!-- ``` -->
+<!-- Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. -->
+<!-- ## Summarize + group_by() -->
+<!-- Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`. -->
+<!-- ```{r} -->
+<!-- # what if we wanted to know these statistics -->
+<!-- ## for each month in our dataset? -->
+<!-- carrier_late = flights %>% -->
+<!--   group_by(carrier) %>% -->
+<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE), -->
+<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
+<!-- # make a plot -->
+<!-- ggplot(carrier_late, aes(x = carrier, y = avg_late)) + -->
+<!--   geom_col() + -->
+<!--   coord_flip() -->
+<!-- ``` -->
+<!-- ## The Bob Ross example -->
+<!-- Happy tree? -->
+<!-- ```{r} -->
+<!-- bob_ross %>%  -->
+<!--   summarise(prop_tree = mean(tree, na.rm = TRUE)) -->
+<!-- ``` -->
+<!-- Clouds over time? -->
+<!-- ```{r} -->
+<!-- bob_clouds = bob_ross %>%  -->
+<!--   group_by(season) %>%  -->
+<!--   summarise(prop_clouds = mean(clouds, na.rm = TRUE)) -->
+<!-- ggplot(bob_clouds, aes(x = season, y = prop_clouds)) + geom_line() -->
+<!-- ``` -->
+<!-- snowy mountain? -->
+<!-- ```{r} -->
+<!-- bob_ross %>%  -->
+<!--   filter(mountain == 1) %>%  -->
+<!--   summarise(snowiness = mean(snowy_mountain, na.rm = TRUE)) -->
+<!-- bob_ross %>%  -->
+<!--   group_by(mountain) %>%  -->
+<!--   summarise(snowiness = mean(snowy_mountain, na.rm = TRUE)) -->
+<!-- ``` -->
+<!-- Steve ross? -->
+<!-- ```{r} -->
+<!-- bob_ross %>%  -->
+<!--   group_by(steve_ross) %>%  -->
+<!--   summarise(lake_chance = mean(lake, na.rm = TRUE)) -->
+<!-- ``` -->
+<!-- ## The flying etiquette example -->
+<!-- Middle arm rest? -->
+<!-- ```{r} -->
+<!-- middle_arm_rests = flying %>%  -->
+<!--   group_by(two_arm_rests) %>%  -->
+<!--   tally() %>%  -->
+<!--   mutate(percent = n/sum(n)) -->
+<!-- ggplot(middle_arm_rests, aes(x = percent, y = two_arm_rests)) +  -->
+<!--   geom_col() -->
+<!-- ``` -->
+<!-- Unruly children? -->
+<!-- ```{r} -->
+<!-- nasty_kids = flying %>%  -->
+<!--   group_by(children_under_18, unruly_child) %>%  -->
+<!--   tally() %>%  -->
+<!--   mutate(p_unruly = n/sum(n)) -->
+<!-- ggplot(nasty_kids, aes(x = unruly_child, y = p_unruly, fill = children_under_18)) + geom_col(position = "dodge") -->
+<!-- ``` -->
 </div>

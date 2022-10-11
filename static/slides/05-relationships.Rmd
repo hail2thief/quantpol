@@ -7,7 +7,7 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
-    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    css: ["default", "css/my-theme.css", "css/halloween.css"]
     seal: false
     nature:
       highlightStyle: github
@@ -43,6 +43,7 @@ knitr::opts_chunk$set(
 ```{r packages}
 library(tidyverse)
 library(gapminder)
+library(juanr)
 
 # dubois colors
 red = "#dc354a"
@@ -50,13 +51,19 @@ yellow = "#ecb025"
 blue = "#213772"
 
 
-
-# elections
-pokemon = read_csv("../files/pokemon.csv")
-
-
-# thermometer
-therm = read_csv("../files/voter-files-therm.csv")
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
 
 
 ```
@@ -372,7 +379,7 @@ We almost always compare averages, but medians are helpful in some cases:
 ```{r, out.width = "100%"}
 set.seed(1990)
 fake = tibble(income = rexp(n = 500, rate = .005)) %>% 
-  mutate(income = income * 1000)
+  mutate(income = income * 350)
 
 ggplot(fake, aes(x = income)) + 
   geom_histogram(color = "white", fill = red, alpha = .8) + 
@@ -388,12 +395,12 @@ ggplot(fake, aes(x = income)) +
              lty = 2, 
              size = 2, 
              color = blue) + 
-  geom_text(aes(x = 500000, y = 75,
+  geom_text(aes(x = 300000, y = 75,
                 label = glue::glue("median: {scales::dollar(round(median(fake$income), 0))}")), 
-            color = blue, family = "Fira Sans", size = 5) + 
-  geom_text(aes(x = 500000, y = 65,
+            color = blue, family = "Fira Sans Condensed", size = 5) + 
+  geom_text(aes(x = 300000, y = 65,
                 label = glue::glue("mean: {scales::dollar(round(mean(fake$income), 0))}")), 
-            color = yellow, family = "Fira Sans", size = 5)
+            color = yellow, family = "Fira Sans Condensed", size = 5)
 ```
 
 ???
@@ -436,7 +443,7 @@ But in human terms, the *bigger* the standard deviation the *wider* the distribu
 # Measuring variation
 
 
-Same average (~$50,000) different **standard deviations**
+Same average (~$50,000) different **standard deviations**. Can we use standard deviation to measure *equality*?
 
 
 ```{r}
@@ -458,6 +465,7 @@ ggplot(fake, aes(x = value, fill = name)) +
   scale_fill_viridis_d(option = "rocket", end = .8) + 
   labs(x = NULL, y = NULL, title = "Household income across three fake towns")
 ```
+
 
 ---
 
@@ -706,20 +714,36 @@ pokemon %>%
 
 ---
 
-# 🚨 Your turn: trade 🚨
+# 🚨 Your turn: 🚢 trade 🚢 🚨
+
+
+Dataset from `juanr` on international trade:
+
+
+```{r}
+trade %>% 
+  head() %>% 
+  knitr::kable(caption = "Trade patterns around the world")
+```
+
+
+---
+
+
+# 🚨 Your turn: 🚢 trade 🚢 🚨
 
 
 Using the `trade` dataset:
 
-1. What is the average, minimum, and maximum level of imports any country had in 2010? 
 
---
+.small[
+1. How has InterGovernmental Organizations (IGOs) membership expanded over time? Calculate the *median* number of IGOs that countries belonged to in 1960. Repeat for 2010. About how much has IGO membership grown in 50 years? 
 
-2. How many InterGovernmental Organizations (IGOs) is the median country member of?
+2. What is having a sea border worth? Look only at countries that have at least one sea border in the year 2010. What is the average value of exports among these countries? Do the same for countries with no sea borders. About how much more do countries with sea borders export than countries without?
 
---
+3. Tricky: what was the country with the *most* exports in 1960? What about in 2012?
+]
 
-3. Compare the variation in exports in the year 1950 against the year 2010. How has that variation changed over time?
 
 
 
@@ -746,38 +770,47 @@ This is at the heart of making **comparisons**!
 ---
 
 
-# Life expectancy over time: the brutal way
+# Variation in trade over time: the brutal way
 
-Need to find the average life expectancy in the world *in each* year that we have data
+Say I wanted to know how much imports have **varied** for each country over time; how to do it?
 
 --
 
+I could use `filter()` to calculate the standard deviation of imports for each country, say, starting with China
+
 ```{r, echo = TRUE}
-gapminder %>% 
-  filter(year == 1952) %>% #<< 
-  summarise(avg_life = mean(lifeExp)) #<<
+trade %>% 
+  filter(country == "China") %>% #<< 
+  summarise(var_trade = sd(imports, na.rm = TRUE)) #<<
 ```
 
 
 ---
 
-# Life expectancy over time: the brutal way
+# Variation in trade over time: the brutal way
+
+
+I could go on to another country:
 
 ```{r, echo = TRUE}
-gapminder %>% 
-  filter(year == 1957) %>% #<< 
-  summarise(avg_life = mean(lifeExp)) #<<
+trade %>% 
+  filter(country == "Algeria") %>% #<< 
+  summarise(var_trade = sd(imports, na.rm = TRUE)) #<<
 ```
 
 
 ---
 
-# Life expectancy over time: the brutal way
+# Variation in trade over time: the brutal way
+
+
+And so on for all countries... but this is brutally tedious; there are so many countries in the world! (some say millions)
+
 
 ```{r, echo = TRUE}
-gapminder %>% 
-  filter(year == 1962) %>% #<< 
-  summarise(avg_life = mean(lifeExp)) #<<
+trade %>% 
+  filter(country == "Nepal") %>% #<< 
+  summarise(var_trade = sd(imports, na.rm = TRUE)) #<<
 ```
 
 
@@ -792,9 +825,9 @@ We can use `group_by()` in combination with `summarize()` to calculate some stat
 --
 
 ```{r, echo = TRUE}
-gapminder %>% 
-  group_by(year) %>% #<<
-  summarise(avg_life = mean(lifeExp))
+trade %>% 
+  group_by(country) %>%  #<<
+  summarise(var_trade = sd(imports, na.rm = TRUE)) #<<
 ```
 
 ---
@@ -806,9 +839,9 @@ Like with anything else, we can store our results as a new object:
 
 
 ```{r, echo = TRUE}
-life_year = gapminder %>%
-  group_by(year) %>% #<<
-  summarise(avg_life = mean(lifeExp))
+var_time = trade %>% #<<
+  group_by(country) %>% 
+  summarise(var_trade = sd(imports, na.rm = TRUE))
 ```
 
 ---
@@ -817,11 +850,44 @@ life_year = gapminder %>%
 
 And use our object to make plots:
 
-```{r, echo = TRUE, out.width="70%"}
-ggplot(life_year, aes(x = year, y = avg_life)) + geom_line(size = 2, color = "#213772", alpha = .8) + labs(x = "Year", y = "Average life expectancy") + 
-  theme_bw(base_family = "Fira Sans", base_size = 14)
+```{r, echo = FALSE, out.width="100%"}
+top = var_time %>% 
+  slice_max(var_trade, n = 10) %>% 
+  mutate(type = "Top 10")
+bottom = var_time %>% 
+  slice_min(var_trade, n = 10) %>% 
+  mutate(type = "Bottom 10")
+
+bind_rows(top, bottom) %>% 
+  ggplot(aes(x = reorder(country, var_trade), 
+             y = var_trade, color = type)) + 
+  ggalt::geom_lollipop(size = 1.2, alpha = .8) + 
+  facet_wrap(vars(type), scales = "free_y") + 
+  coord_flip() + 
+  scale_x_discrete(labels = scales::label_wrap(10)) + 
+  theme(legend.position = "none") + 
+  scale_color_manual(values = c(red, blue)) + 
+  scale_y_continuous(labels = scales::dollar) + 
+  labs(x = NULL, y = "Variation in trade over time\n(in millions of USD)")
 ```
 
+???
+What does this graph tell us? 
+
+---
+
+# Using `group_by()`
+
+
+We can even `group_by()` multiple variables 🤯: 
+
+--
+
+```{r, echo = TRUE}
+gapminder %>%
+  group_by(year) %>% #<<
+  summarise(avg_life = mean(lifeExp))
+```
 
 ---
 
@@ -838,6 +904,7 @@ gapminder %>%
   summarise(avg_life = mean(lifeExp))
 ```
 
+
 ---
 
 # Using `group_by()`
@@ -846,8 +913,8 @@ gapminder %>%
 Store as object:
 
 ```{r, echo = TRUE}
-life_continent_year = gapminder %>%
-  group_by(year, continent) %>% #<<
+life_continent_year = gapminder %>% #<<
+  group_by(year, continent) %>%
   summarise(avg_life = mean(lifeExp))
 ```
 
@@ -858,13 +925,12 @@ life_continent_year = gapminder %>%
 
 ```{r, echo = TRUE, out.width="80%"}
 ggplot(life_continent_year, aes(x = year, y = avg_life, color = continent)) + 
-  geom_line(size = 2, alpha = .8) + labs(x = "Year", y = "Average life expectancy") + theme_bw(base_family = "Fira Sans", base_size = 14) + 
-  theme(legend.position = "bottom") + scale_color_viridis_d(option = "rocket", end = .8)
+  geom_line(size = 2, alpha = .8) + labs(x = "Year", y = "Average life expectancy") + scale_color_viridis_d(option = "rocket", end = .8)
 ```
 
 ---
 
-# 🔥 fire challenge: ugly prejudice 🔥
+# 🚨 Your turn: 🌡️ ugly prejudice 🌡️ 🚨
 
 
 --
@@ -880,6 +946,7 @@ Researchers use *feeling thermometers* to measure how people feel about differen
 .scroll-output[
 ```{r}
 therm %>% 
+  head() %>% 
   #select(birth_year, sex, race, party_id, ft_black_2017, ft_white_2017) %>% 
   knitr::kable()
 ```
@@ -887,12 +954,22 @@ therm %>%
 
 ---
 
-# 🔥 fire challenge: ugly prejudice 🔥
+# 🚨 Your turn: 🌡️ ugly prejudice 🌡️ 🚨
 
 
 Using the `therm` dataset:
 
-.can-edit[Instructions.]
+
+1. Calculate average 🌡 towards **two** groups of your choosing, broken down **by** one respondent characteristic. Make sense of the finding. 
+
+--
+
+2. Calculate average 🌡 towards **two** groups of your choosing, broken down **by** two (🤯🤯🤯) respondent characteristics. Make sense of the finding.  
+
+--
+
+3. 🔥🔥**Mega-hellfire challenge**🔥🔥: Figure out how to use `pivot_longer()` to make the graph on the following slide. 
+
 
 ```{r}
 countdown::countdown(minutes = 10L)
@@ -905,10 +982,10 @@ countdown::countdown(minutes = 10L)
 # cool
 therm_long = therm %>% 
   filter(party_id %in% c("Democrat", "Republican")) %>% 
-  pivot_longer(cols = ft_black_2017:ft_rep_2017, 
+  pivot_longer(cols = contains("ft_"), 
                names_to = "group", 
                values_to = "thermometer", 
-               names_pattern = "ft_?(.*)_2017") %>% 
+               names_pattern = "ft_?(.*)") %>% 
   group_by(party_id, group) %>% 
   summarise(avg = mean(thermometer, na.rm = TRUE))
 
