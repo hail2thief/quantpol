@@ -4,10 +4,10 @@ linktitle: "Data summaries"
 output:
   blogdown::html_page:
     toc: false
-# menu:
-#   assignment:
-#     parent: Problem sets
-#     weight: 3
+menu:
+  assignment:
+    parent: Problem sets
+    weight: 3
 type: docs
 editor_options: 
   chunk_output_type: console

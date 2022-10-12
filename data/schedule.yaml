@@ -23,7 +23,7 @@ lessons:
     date: "Oct 11, Oct 13"
     class: "data-summary"
     reading: "04-relationships"
-    #assignment: "ps-summary"
+    assignment: "ps-summary"
 
   - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
     date: "Oct 18, Oct 20"

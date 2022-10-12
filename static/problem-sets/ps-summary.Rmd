@@ -18,7 +18,7 @@ output: html_document
 
 ```{r load-libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
-library(socviz)
+library(juanr)
 ```
 
 
@@ -29,14 +29,14 @@ We're going to work with the Database on Ideology, Money in Politics, and Electi
 
 
 ```{r}
-df = read_rds("https://www.dropbox.com/s/7hv94wqet172a9n/bonica.rds?dl=1")
+bonica
+?bonica
 ```
 
 
 The Senate is thought to be more politically important than the House. How much more money is spent on the average race in the Senate compared to the House? Calculate the average money spent (`total_disbursements`) on races, broken down by whether the election was for a Senate or House seat. 
 
 ```{r}
-
 
 ```
 
@@ -50,40 +50,59 @@ Candidates don't always spend all the money they raise. How much do they save? L
 
 ```{r}
 
-
 ```
 
-**Q2: Approximately how MUCH MORE did candidates raise, on average, than they spent?** 
+**Q2: Approximately how MUCH MORE did candidates raise, on average, than they spent?**
 
 
 
-Where did Democrats and Republicans raise the most money in the very memorable 2016 election cycle? Calculate the *sum* of all money raised (`total_receipts`) in the 2016 election, broken down by state and party. Store this as an object so you can look at it. 
+Where did Democrats and Republicans raise the most money in the very memorable 2016 election cycle? Calculate the *sum* (`sum()`) of all money raised (`total_receipts`) in the 2016 election, broken down by state and party. Store this as an object so you can look at it. 
 
 
 ```{r}
 
-
 ```
 
-**Q3: In which state did Democrats raise the most money?** 
-**Q4: In which state did Republicans raise the THIRD MOST money?** 
+**Q3: In which state did Republicans raise the most money?**
 
 
-
-How is the amount of money being raised for elections changing over time? Calculate the average amount raised (`total_receipts`), broken down by cycle and party. Store this as an object.
-
-
-Plot your results as a line time-series, with election cycle on the x-axis, average raised on the y-axis, and mapping party to color. 
+How much does campaign fundraising vary *within* states? Calculate the standard deviation of all money raised (`total_receipts`), broken down by state. 
 
 ```{r}
 
-
 ```
 
-**Q5: Which party raised the most money, on average, in 2010?**
+**Q4: In which state is the standard deviation of fundraising lowest?**
 
+
+
+**Q5: What can we infer from the fact that this state has the lowest standard deviation of fundraising?**
+
+
+
+
+What is the relationship between a candidate's ideology and the amount of money they are able to raise? Make a scatterplot with candidate ideology on the x-axis (`dwnom1`), total disbursments on the y-axis, and color the points by party. Add a theme and axis labels. 
+
+```{r}
+
+```
 
 **Q6: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+
+There is a huge outlier in this plot; a candidate who was able to raise a ton of money. Who is it? Add labels to your plot to see:
+
+
+```{r}
+
+```
+
+
+**Q7: who is the outlier candidate?**
+
+
+
 
 
 
@@ -93,17 +112,17 @@ Plot your results as a line time-series, with election cycle on the x-axis, aver
 Now let's look at that data on Americans' attitudes from the Cooperative Election Survey (CES). 
 
 ```{r}
-ces = read_rds("https://www.dropbox.com/s/dw0vk82c9d2tfg1/voter-bot.rds?dl=1")
+bot
+?bot
 ```
 
 
-What percent of Americans support increasing spending on border security by $25 billion, including building a wall between the U.S. and Mexico (`wall`)? Tally the percent of supporters and opponents. 
+What percent of Americans support "increasing spending on border security by $25 billion, including building a wall between the U.S. and Mexico" (`wall`)? Tally the percent of supporters and opponents. 
 
 ```{r}
 
-
 ```
-**Q7: Roughly what percent support building the wall?** 
+**Q8: Roughly what percent support building the wall?**
 
 
 How many Americans don't know or have never heard of their states' governor? Use `know_governor` (question asking respondents to identify their governor's party) to calculate the percent of respondents in either of these two categories. 
@@ -111,10 +130,9 @@ How many Americans don't know or have never heard of their states' governor? Use
 
 ```{r}
 
-
 ```
 
-**Q8: Roughly what percent of the sample either doesn't know or have never heard of their states' governor?**
+**Q9: Roughly what percent of the sample either is not sure or has never heard of their states' governor?**
 
 
 
@@ -122,9 +140,9 @@ Next: how do male and female respondents (`gender`) feel about abortion (`procho
 
 ```{r}
 
-
 ```
-**Q9: Roughly how big is the gap (in percentage points) between supporters and opponents of abortion AMONG WOMEN?**  
+
+**Q10: Roughly how big is the gap (in percentage points) between supporters and opponents of abortion AMONG WOMEN?**
 
 
 
@@ -133,8 +151,7 @@ Finally: how much does age predict a person's ideology? Calculate the median `ag
 
 ```{r}
 
-
 ```
 
 
-**Q10: About how much older is the median person who identifies as "very conservative" than the median person who identifies as "very liberal"? ** 
+**Q11: About how much older is the median person who identifies as "very conservative" than the median person who identifies as "very liberal"? **

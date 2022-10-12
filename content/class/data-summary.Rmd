@@ -23,59 +23,60 @@ editor_options:
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as..."
 
-[<i class="fas fa-file-archive"></i> `day1-summarise.R`](/slides/code/day1-summarise.R)
+* [<i class="fas fa-file-archive"></i> `day1-summarise.R`](/slides/code/day1-summarise.R)
+* [<i class="fas fa-file-archive"></i> `day2-summarise.R`](/slides/code/day2-summarise.R)
 
 
 
-<!-- ## Summarize -->
+## Summarize
 
 
-<!-- Let's load the libraries. -->
+Let's load the libraries.
 
-<!-- ```{r, message=F,warning=F} -->
-<!-- # libraries -->
-<!-- library(tidyverse) -->
-<!-- library(nycflights13) -->
-<!-- library(fivethirtyeight) -->
-<!-- ``` -->
-
-
-<!-- Say we want to take the average of a variable in our dataset. `summarize()` can help us do that. -->
+```{r, message=F,warning=F}
+# libraries
+library(tidyverse)
+library(nycflights13)
+library(fivethirtyeight)
+```
 
 
-<!-- Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been? -->
-
-<!-- ```{r} -->
-<!-- ## on average, how late are flights in departing? -->
-<!-- flights %>% -->
-<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE), -->
-<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
-<!-- ``` -->
+Say we want to take the average of a variable in our dataset. `summarize()` can help us do that.
 
 
-<!-- Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations. -->
+Say we wanted to know how late in departure is the *average* flight in our dataset and what's the latest a flight has ever been?
+
+```{r}
+## on average, how late are flights in departing?
+flights %>%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))
+```
 
 
-<!-- ## Summarize + group_by() -->
+Not the `na.rm = TRUE` above and what happens if you remove it. The problem is there are missing values (`NA`) in our data, and R can't take the average of a bunch of numbers where some are missing. `na.rm = TRUE` tells R to ignore those missing numbers and use only the complete observations.
 
 
-<!-- Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`. -->
+## Summarize + group_by()
 
 
-<!-- ```{r} -->
-<!-- # what if we wanted to know these statistics -->
-<!-- ## for each month in our dataset? -->
-<!-- carrier_late = flights %>% -->
-<!--   group_by(carrier) %>% -->
-<!--   summarise(avg_late = mean(dep_delay, na.rm = TRUE), -->
-<!--             most_late = max(dep_delay, na.rm = TRUE)) -->
+Say we wanted to know how average departure delays vary across airlines. Conceptually, this means taking the average of departure delays for each airline in the dataset separately. We can do this by combining `group_by()` and `summarise()`.
 
 
-<!-- # make a plot -->
-<!-- ggplot(carrier_late, aes(x = carrier, y = avg_late)) + -->
-<!--   geom_col() + -->
-<!--   coord_flip() -->
-<!-- ``` -->
+```{r}
+# what if we wanted to know these statistics
+## for each month in our dataset?
+carrier_late = flights %>%
+  group_by(carrier) %>%
+  summarise(avg_late = mean(dep_delay, na.rm = TRUE),
+            most_late = max(dep_delay, na.rm = TRUE))
+
+
+# make a plot
+ggplot(carrier_late, aes(x = carrier, y = avg_late)) +
+  geom_col() +
+  coord_flip()
+```
 
 
 
