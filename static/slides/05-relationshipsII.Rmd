@@ -7,7 +7,7 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
-    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    css: ["default", "css/my-theme.css", "css/halloween.css"]
     seal: false
     nature:
       highlightStyle: github
@@ -43,6 +43,7 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(gapminder)
 library(fivethirtyeight)
+library(juanr)
 
 # dubois colors
 red = "#dc354a"
@@ -51,16 +52,19 @@ blue = "#213772"
 
 
 
-# elections
-pokemon = read_csv("../files/pokemon.csv")
-
-
-# thermometer
-therm = read_csv("../files/voter-files-therm.csv")
-
-
-# fancy theme
-fancy_theme <- theme_bw(base_family = "Fira Sans", base_size = 14)
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
 
 ```
 
@@ -106,7 +110,7 @@ We can use `summarise()` to measure average support for different groups:
 
 ```{r, echo = TRUE}
 therm %>% 
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE)) #<<
+  summarise(avg_police = mean(ft_police, na.rm = TRUE)) #<<
 ```
 
 
@@ -119,12 +123,12 @@ We can *compare* where support is highest and lowest:
 
 ```{r, echo = TRUE}
 therm %>% 
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE), 
-            avg_muslim = mean(ft_muslim_2017, na.rm = TRUE), #<<
-            avg_white = mean(ft_white_2017, na.rm = TRUE), #<<
-            avg_immig = mean(ft_christ_2017, na.rm = TRUE), #<<
-            avg_fem = mean(ft_fem_2017, na.rm = TRUE), #<<
-            avg_black = mean(ft_black_2017, na.rm = TRUE)) #<<
+  summarise(avg_police = mean(ft_police, na.rm = TRUE), 
+            avg_muslim = mean(ft_muslim, na.rm = TRUE), #<<
+            avg_white = mean(ft_white, na.rm = TRUE), #<<
+            avg_immig = mean(ft_christ, na.rm = TRUE), #<<
+            avg_fem = mean(ft_fem, na.rm = TRUE), #<<
+            avg_black = mean(ft_black, na.rm = TRUE)) #<<
 ```
 
 ??? 
@@ -136,7 +140,7 @@ Patterns?
 
 ```{r, echo = TRUE}
 therm %>% 
-  summarise(across(c(ft_black_2017:ft_rep_2017), ~mean(.,na.rm = TRUE))) #<<
+  summarise(across(c(ft_black:ft_rep), ~mean(.,na.rm = TRUE))) #<<
 ```
 
 
@@ -155,7 +159,7 @@ We can look for patterns by using `group_by()` to separate average support *by* 
 ```{r, echo = TRUE}
 therm %>% 
   group_by(party_id) %>% #<<
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE), avg_muslim = mean(ft_muslim_2017, na.rm = TRUE), avg_white = mean(ft_white_2017, na.rm = TRUE), avg_immig = mean(ft_christ_2017, na.rm = TRUE), avg_fem = mean(ft_fem_2017, na.rm = TRUE), avg_black = mean(ft_black_2017, na.rm = TRUE))
+  summarise(avg_police = mean(ft_police, na.rm = TRUE), avg_muslim = mean(ft_muslim, na.rm = TRUE), avg_white = mean(ft_white, na.rm = TRUE), avg_immig = mean(ft_christ, na.rm = TRUE), avg_fem = mean(ft_fem, na.rm = TRUE), avg_black = mean(ft_black, na.rm = TRUE))
 ```
 ]
 
@@ -175,49 +179,49 @@ We can use `filter()` to focus our search on fewer categories:
 therm %>% 
   filter(party_id %in% c("Democrat", "Republican", "Independent")) %>% #<<
   group_by(party_id) %>% 
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE),avg_muslim = mean(ft_muslim_2017, na.rm = TRUE), avg_white = mean(ft_white_2017, na.rm = TRUE),avg_immig = mean(ft_christ_2017, na.rm = TRUE),avg_fem = mean(ft_fem_2017, na.rm = TRUE),avg_black = mean(ft_black_2017, na.rm = TRUE))
+  summarise(avg_police = mean(ft_police, na.rm = TRUE),avg_muslim = mean(ft_muslim, na.rm = TRUE), avg_white = mean(ft_white, na.rm = TRUE),avg_immig = mean(ft_christ, na.rm = TRUE),avg_fem = mean(ft_fem, na.rm = TRUE),avg_black = mean(ft_black, na.rm = TRUE))
 ```
 ]
 
 
 ???
 Where are the biggest partisan gaps? 
-What's going on with feminism? Is this really an apples-to-apples comparison? 
+What's going on with immigrants? Is this really an apples-to-apples comparison? 
 
 ---
 
 class: center, middle, inverse
-# Making sense of the feminism gap
+# Making sense of the immigration gap
 
 --
 
-The problem with the feminism finding is that women trend Democrat
+The problem with interpreting the immigration attitudes gap is that immigrants are disproportionately Democrat
 
 --
 
-Might be that Republicans have much worse opinions of feminists than Democrats
+How much of the difference we are observing across parties solely about **parties** and how much is it about *demographic* differences?
 
 --
 
-**or**: it might be that there are just more women who ID as Democrats, 
+It might be, for instance, that the attitudes of non-migrants don't differ much across parties
 
 --
 
-**and** women are more likely to be feminists than men
+that is, the big gap we see is all because immigrants are *both* more likely to be Democrats *and* have stronger views of own community
 
 ---
 
-# Making sense of the feminism gap
+# Making sense of the migration gap
 
-We can "test" this concern by breaking the data down further, by sex: 
+We can (very imperfectly with this data!) "test" this concern by breaking the data down further, by race: 
 
 --
 
 ```{r, echo = TRUE}
 therm %>% 
   filter(party_id %in% c("Democrat", "Republican", "Independent")) %>%
-  group_by(party_id, sex) %>% #<<
-  summarise(avg_fem = mean(ft_fem_2017, na.rm = TRUE))
+  group_by(party_id, race) %>% #<<
+  summarise(avg_imm = mean(ft_immig, na.rm = TRUE))
 ```
 
 
@@ -229,10 +233,11 @@ therm %>%
 We can create a new object to make a nice plot:
 
 ```{r, echo = TRUE}
-therm_party_sex = therm %>% #<<
+therm_party_immig = therm %>% 
   filter(party_id %in% c("Democrat", "Republican", "Independent")) %>%
-  group_by(party_id, sex) %>%
-  summarise(avg_fem = mean(ft_fem_2017, na.rm = TRUE))
+  filter(race %in% c("White", "Black", "Hispanic", "Asian", "Native American")) %>% 
+  group_by(party_id, race) %>% #<<
+  summarise(avg_imm = mean(ft_immig, na.rm = TRUE))
 ```
 
 ---
@@ -240,7 +245,8 @@ therm_party_sex = therm %>% #<<
 # The plot
 
 ```{r, echo = TRUE, out.width="80%"}
-ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) + 
+ggplot(therm_party_immig, aes(x = party_id, 
+                              y = avg_imm, fill = race)) + 
   geom_col() #<<
 ```
 
@@ -250,10 +256,27 @@ ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) +
 
 `position = "dodge"` "unstacks" the columns
 
-```{r,echo = TRUE, out.width="80%"}
-ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) + 
+```{r,echo = TRUE, out.width="70%"}
+ggplot(therm_party_immig, aes(x = party_id, 
+                              y = avg_imm, fill = race)) + 
   geom_col(position = "dodge") #<<
 ```
+
+---
+
+
+# The immigration attitudes gap
+
+
+```{r,echo = FALSE, out.width="100%"}
+ggplot(therm_party_immig, aes(x = party_id, 
+                              y = avg_imm, fill = race)) + 
+  geom_col(position = "dodge") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  labs(x = "Party Identification", y = "Average thermometer level\nfor immigrants", fill = "Respondent race:") + 
+  theme(legend.position = "top")
+```
+
 
 ---
 
@@ -261,13 +284,15 @@ class: center, middle, inverse
 # Big picture
 
 
-The feminism gap persists, even comparing men against men and women against women
+The immigration gap persists, even comparing non-immigrants against non-immigrants and immigrants against immigrants
 
 --
 
-We can use `summarise` and `group_by` to compare averages across groups
+Our analysis is a way of **accounting** for differences in groups (Democrats versus Republicans); it's closer to an "apples to apples" comparison
+
 
 --
+
 
 Big differences **across groups** should raise eyebrows; what's going on here? 
 
@@ -282,8 +307,8 @@ We can break the data down further to see what's going on beneath the surface
 
 ```{r, echo = TRUE}
 therm %>% 
-  summarise(avg_dems = mean(ft_dem_2017, na.rm = TRUE), 
-            avg_reps = mean(ft_rep_2017, na.rm = TRUE))
+  summarise(avg_dems = mean(ft_dem, na.rm = TRUE), 
+            avg_reps = mean(ft_rep, na.rm = TRUE))
 ```
 
 --
@@ -301,8 +326,8 @@ Breaking down data says something different
 ```{r}
 therm %>% 
   group_by(party_id) %>% #<<
-  summarise(dems = mean(ft_dem_2017, na.rm = TRUE), 
-            reps = mean(ft_rep_2017, na.rm = TRUE))
+  summarise(dems = mean(ft_dem, na.rm = TRUE), 
+            reps = mean(ft_rep, na.rm = TRUE))
 ```
 
 ---
@@ -312,11 +337,11 @@ therm %>%
 ```{r}
 therm %>% 
   filter(party_id %in% c("Democrat", "Republican")) %>% 
-  select(party_id, ft_dem_2017, ft_rep_2017) %>% 
+  select(party_id, ft_dem, ft_rep) %>% 
   pivot_longer(-party_id) %>% 
   ggplot(aes(x = value, y = name, fill = party_id)) + 
   ggridges::geom_density_ridges(color = "white", alpha = .8) + 
-  fancy_theme + 
+  theme_nice() + 
   scale_y_discrete(labels = c("Democrats", "Republicans")) + 
   theme(legend.position = "top") + 
   labs(y = "How respondents feel about...", 
@@ -446,16 +471,16 @@ legend_gen = pokemon %>% #<<
 
 ```{r,echo = TRUE, out.width = "90%"}
 ggplot(legend_gen, aes(x = generation, y = prop_legendary)) + 
-  geom_col(fill = "#324200") + theme_bw()
+  geom_col(fill = "#324200")
 ```
 
 ---
 
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
 
-All dummy data on the paintings of Bob Ross
+All dummy data on the paintings of Bob Ross (the media market is so saturated with true crime there is **even** a true crime show about Bob Ross)
 
 
 ```{r, out.width="60%",fig.align='center'}
@@ -467,7 +492,7 @@ knitr::include_graphics("images/bob-ross.png")
 ---
 
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
 
 .scroll-output[
@@ -478,9 +503,9 @@ knitr::kable(bob_ross)
 
 ---
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
-Using the `bob_ross` data (use `?bob_ross` to read about the variables):
+Using the `bob_ross` data
 
 .small[
 1. How likely was Bob Ross to include a happy little `tree` in one of his paintings? 
@@ -494,7 +519,7 @@ Using the `bob_ross` data (use `?bob_ross` to read about the variables):
 
 
 ```{r}
-countdown::countdown(minutes = 10L)
+countdown::countdown(minutes = 15L)
 ```
 
 ---
@@ -647,13 +672,13 @@ ggplot(type_pct, aes(x = reorder(type1, percent), y = percent)) + #<<
 
 ```{r}
 ggplot(type_pct, aes(x = reorder(type1, percent), y = percent, fill = type1)) + #<<
-  geom_col() + coord_flip() + fancy_theme + theme(legend.position = "none") + 
+  geom_col() + coord_flip() + theme_nice() + theme(legend.position = "none") + 
   labs(x = "Type", y = "Percent of Pokemon") + scale_y_continuous(labels = scales::percent)
 ```
 
 ---
 
-# 🚨 Your turn: Flying etiquette 🚨
+# 🚨 Your turn: 💺 Flying etiquette 💺 🚨
 
 A survey of what's rude to do on a plane: 
 --
@@ -668,7 +693,7 @@ knitr::kable(flying %>% select(-respondent_id) %>% drop_na(gender))
 ---
 
 
-# 🚨 Your turn: flying etiquette 🚨
+# 🚨 Your turn: 💺 flying etiquette 💺 🚨
 
 Using the `flying` data (use `?flying` to read about the variables):
 
@@ -683,7 +708,7 @@ Using the `flying` data (use `?flying` to read about the variables):
 
 
 ```{r}
-countdown::countdown(minutes = 10L)
+countdown::countdown(minutes = 15L)
 ```
 
 ---
@@ -696,17 +721,6 @@ countdown::countdown(minutes = 10L)
 
 > There was a burrito that I got after the last home game. I found that exciting. 
 
----
+> I have highly confused about how to use the mutate and case_when functions and am struggling to apply them in the code.
 
-# Weekly check-in
-
-- Mutate is hard
-- `facet_wrap()` confusion
-- Horrified some of you are manually typing out pipes: 
-    - OSX: <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
-    - Windows: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>M</kbd> 
-- When to use a pipe? When a +? 
-    - Pipes are for connecting data to functions, and functions to other functions
-    - `+` is only for plotting! to **add** `geom_` and `labs` and `facet_wrap`
-
-
+> One thing that is pretty muddy is creating new variables and being able to use objects.

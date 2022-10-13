@@ -4,13 +4,13 @@
     <title>Relationships II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-08-31" />
+    <meta name="date" content="2022-10-13" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
     <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
-    <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
+    <link rel="stylesheet" href="css/halloween.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -65,7 +65,7 @@ We can use `summarise()` to measure average support for different groups:
 
 ```r
 therm %&gt;% 
-* summarise(avg_police = mean(ft_police_2017, na.rm = TRUE))
+* summarise(avg_police = mean(ft_police, na.rm = TRUE))
 ```
 
 ```
@@ -86,12 +86,12 @@ We can *compare* where support is highest and lowest:
 
 ```r
 therm %&gt;% 
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE), 
-*           avg_muslim = mean(ft_muslim_2017, na.rm = TRUE),
-*           avg_white = mean(ft_white_2017, na.rm = TRUE),
-*           avg_immig = mean(ft_christ_2017, na.rm = TRUE),
-*           avg_fem = mean(ft_fem_2017, na.rm = TRUE),
-*           avg_black = mean(ft_black_2017, na.rm = TRUE))
+  summarise(avg_police = mean(ft_police, na.rm = TRUE), 
+*           avg_muslim = mean(ft_muslim, na.rm = TRUE),
+*           avg_white = mean(ft_white, na.rm = TRUE),
+*           avg_immig = mean(ft_christ, na.rm = TRUE),
+*           avg_fem = mean(ft_fem, na.rm = TRUE),
+*           avg_black = mean(ft_black, na.rm = TRUE))
 ```
 
 ```
@@ -111,18 +111,15 @@ Patterns?
 
 ```r
 therm %&gt;% 
-* summarise(across(c(ft_black_2017:ft_rep_2017), ~mean(.,na.rm = TRUE)))
+* summarise(across(c(ft_black:ft_rep), ~mean(.,na.rm = TRUE)))
 ```
 
 ```
 ## # A tibble: 1 × 16
-##   ft_black_2017 ft_white_2017 ft_hisp_2017 ft_asian_2017 ft_muslim_2017 ft_jew_2017
-##           &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt;
-## 1          71.3          76.1         70.2          74.2           50.0        76.8
-## # … with 10 more variables: ft_christ_2017 &lt;dbl&gt;, ft_fem_2017 &lt;dbl&gt;,
-## #   ft_immig_2017 &lt;dbl&gt;, ft_gays_2017 &lt;dbl&gt;, ft_unions_2017 &lt;dbl&gt;,
-## #   ft_police_2017 &lt;dbl&gt;, ft_altright_2017 &lt;dbl&gt;, ft_evang_2017 &lt;dbl&gt;,
-## #   ft_dem_2017 &lt;dbl&gt;, ft_rep_2017 &lt;dbl&gt;
+##   ft_black ft_white ft_hisp ft_asian ft_muslim ft_jew ft_christ ft_fem ft_immig ft_gays ft_unions ft_police ft_altright ft_evang ft_dem
+##      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1     71.3     76.1    70.2     74.2      50.0   76.8      71.9   52.1     61.9    60.9      53.4      75.7        30.1     54.1   49.4
+## # … with 1 more variable: ft_rep &lt;dbl&gt;
 ```
 
 
@@ -142,18 +139,18 @@ We can look for patterns by using `group_by()` to separate average support *by* 
 ```r
 therm %&gt;% 
 * group_by(party_id) %&gt;%
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE), avg_muslim = mean(ft_muslim_2017, na.rm = TRUE), avg_white = mean(ft_white_2017, na.rm = TRUE), avg_immig = mean(ft_christ_2017, na.rm = TRUE), avg_fem = mean(ft_fem_2017, na.rm = TRUE), avg_black = mean(ft_black_2017, na.rm = TRUE))
+  summarise(avg_police = mean(ft_police, na.rm = TRUE), avg_muslim = mean(ft_muslim, na.rm = TRUE), avg_white = mean(ft_white, na.rm = TRUE), avg_immig = mean(ft_christ, na.rm = TRUE), avg_fem = mean(ft_fem, na.rm = TRUE), avg_black = mean(ft_black, na.rm = TRUE))
 ```
 
 ```
 ## # A tibble: 5 × 7
 ##   party_id    avg_police avg_muslim avg_white avg_immig avg_fem avg_black
-##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+##   &lt;fct&gt;            &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 Democrat          67.8       64.6      74.1      63.0    73.9      78.3
-## 2 Independent       74.2       49.0      74.1      69.2    48.3      69.1
-## 3 Not sure          70.1       47.1      70.8      69.1    54.0      66.7
+## 2 Republican        87.6       33.3      81.7      86.1    30.3      65.6
+## 3 Independent       74.2       49.0      74.1      69.2    48.3      69.1
 ## 4 Other             72.7       45.1      71.1      69.1    40.7      70.2
-## 5 Republican        87.6       33.3      81.7      86.1    30.3      65.6
+## 5 Not sure          70.1       47.1      70.8      69.1    54.0      66.7
 ```
 ]
 
@@ -174,50 +171,50 @@ We can use `filter()` to focus our search on fewer categories:
 therm %&gt;% 
 * filter(party_id %in% c("Democrat", "Republican", "Independent")) %&gt;%
   group_by(party_id) %&gt;% 
-  summarise(avg_police = mean(ft_police_2017, na.rm = TRUE),avg_muslim = mean(ft_muslim_2017, na.rm = TRUE), avg_white = mean(ft_white_2017, na.rm = TRUE),avg_immig = mean(ft_christ_2017, na.rm = TRUE),avg_fem = mean(ft_fem_2017, na.rm = TRUE),avg_black = mean(ft_black_2017, na.rm = TRUE))
+  summarise(avg_police = mean(ft_police, na.rm = TRUE),avg_muslim = mean(ft_muslim, na.rm = TRUE), avg_white = mean(ft_white, na.rm = TRUE),avg_immig = mean(ft_christ, na.rm = TRUE),avg_fem = mean(ft_fem, na.rm = TRUE),avg_black = mean(ft_black, na.rm = TRUE))
 ```
 
 ```
 ## # A tibble: 3 × 7
 ##   party_id    avg_police avg_muslim avg_white avg_immig avg_fem avg_black
-##   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
+##   &lt;fct&gt;            &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
 ## 1 Democrat          67.8       64.6      74.1      63.0    73.9      78.3
-## 2 Independent       74.2       49.0      74.1      69.2    48.3      69.1
-## 3 Republican        87.6       33.3      81.7      86.1    30.3      65.6
+## 2 Republican        87.6       33.3      81.7      86.1    30.3      65.6
+## 3 Independent       74.2       49.0      74.1      69.2    48.3      69.1
 ```
 ]
 
 
 ???
 Where are the biggest partisan gaps? 
-What's going on with feminism? Is this really an apples-to-apples comparison? 
+What's going on with immigrants? Is this really an apples-to-apples comparison? 
 
 ---
 
 class: center, middle, inverse
-# Making sense of the feminism gap
+# Making sense of the immigration gap
 
 --
 
-The problem with the feminism finding is that women trend Democrat
+The problem with interpreting the immigration attitudes gap is that immigrants are disproportionately Democrat
 
 --
 
-Might be that Republicans have much worse opinions of feminists than Democrats
+How much of the difference we are observing across parties solely about **parties** and how much is it about *demographic* differences?
 
 --
 
-**or**: it might be that there are just more women who ID as Democrats, 
+It might be, for instance, that the attitudes of non-migrants don't differ much across parties
 
 --
 
-**and** women are more likely to be feminists than men
+that is, the big gap we see is all because immigrants are *both* more likely to be Democrats *and* have stronger views of own community
 
 ---
 
-# Making sense of the feminism gap
+# Making sense of the migration gap
 
-We can "test" this concern by breaking the data down further, by sex: 
+We can (very imperfectly with this data!) "test" this concern by breaking the data down further, by race: 
 
 --
 
@@ -225,21 +222,26 @@ We can "test" this concern by breaking the data down further, by sex:
 ```r
 therm %&gt;% 
   filter(party_id %in% c("Democrat", "Republican", "Independent")) %&gt;%
-* group_by(party_id, sex) %&gt;%
-  summarise(avg_fem = mean(ft_fem_2017, na.rm = TRUE))
+* group_by(party_id, race) %&gt;%
+  summarise(avg_imm = mean(ft_immig, na.rm = TRUE))
 ```
 
 ```
-## # A tibble: 6 × 3
+## # A tibble: 22 × 3
 ## # Groups:   party_id [3]
-##   party_id    sex    avg_fem
-##   &lt;chr&gt;       &lt;chr&gt;    &lt;dbl&gt;
-## 1 Democrat    Female    76.8
-## 2 Democrat    Male      68.9
-## 3 Independent Female    54.5
-## 4 Independent Male      43.4
-## 5 Republican  Female    33.7
-## 6 Republican  Male      26.9
+##    party_id   race            avg_imm
+##    &lt;fct&gt;      &lt;fct&gt;             &lt;dbl&gt;
+##  1 Democrat   White              71.2
+##  2 Democrat   Black              71.1
+##  3 Democrat   Hispanic           76.2
+##  4 Democrat   Asian              75.5
+##  5 Democrat   Native American    62.9
+##  6 Democrat   Mixed              74.6
+##  7 Democrat   Other              84.1
+##  8 Republican White              49.8
+##  9 Republican Black              54.6
+## 10 Republican Hispanic           58.0
+## # … with 12 more rows
 ```
 
 
@@ -252,10 +254,11 @@ We can create a new object to make a nice plot:
 
 
 ```r
-*therm_party_sex = therm %&gt;%
+therm_party_immig = therm %&gt;% 
   filter(party_id %in% c("Democrat", "Republican", "Independent")) %&gt;%
-  group_by(party_id, sex) %&gt;%
-  summarise(avg_fem = mean(ft_fem_2017, na.rm = TRUE))
+  filter(race %in% c("White", "Black", "Hispanic", "Asian", "Native American")) %&gt;% 
+* group_by(party_id, race) %&gt;%
+  summarise(avg_imm = mean(ft_immig, na.rm = TRUE))
 ```
 
 ---
@@ -264,7 +267,8 @@ We can create a new object to make a nice plot:
 
 
 ```r
-ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) + 
+ggplot(therm_party_immig, aes(x = party_id, 
+                              y = avg_imm, fill = race)) + 
 * geom_col()
 ```
 
@@ -278,11 +282,21 @@ ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) +
 
 
 ```r
-ggplot(therm_party_sex, aes(x = party_id, y = avg_fem, fill = sex)) + 
+ggplot(therm_party_immig, aes(x = party_id, 
+                              y = avg_imm, fill = race)) + 
 * geom_col(position = "dodge")
 ```
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-9-1.png" width="80%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-9-1.png" width="70%" /&gt;
+
+---
+
+
+# The immigration attitudes gap
+
+
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+
 
 ---
 
@@ -290,13 +304,15 @@ class: center, middle, inverse
 # Big picture
 
 
-The feminism gap persists, even comparing men against men and women against women
+The immigration gap persists, even comparing non-immigrants against non-immigrants and immigrants against immigrants
 
 --
 
-We can use `summarise` and `group_by` to compare averages across groups
+Our analysis is a way of **accounting** for differences in groups (Democrats versus Republicans); it's closer to an "apples to apples" comparison
+
 
 --
+
 
 Big differences **across groups** should raise eyebrows; what's going on here? 
 
@@ -312,8 +328,8 @@ We can break the data down further to see what's going on beneath the surface
 
 ```r
 therm %&gt;% 
-  summarise(avg_dems = mean(ft_dem_2017, na.rm = TRUE), 
-            avg_reps = mean(ft_rep_2017, na.rm = TRUE))
+  summarise(avg_dems = mean(ft_dem, na.rm = TRUE), 
+            avg_reps = mean(ft_rep, na.rm = TRUE))
 ```
 
 ```
@@ -339,19 +355,19 @@ Breaking down data says something different
 ```
 ## # A tibble: 5 × 3
 ##   party_id     dems  reps
-##   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
+##   &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Democrat     79.9  22.1
-## 2 Independent  41.2  39.6
-## 3 Not sure     43.2  42.3
+## 2 Republican   21.5  72.4
+## 3 Independent  41.2  39.6
 ## 4 Other        31.9  38.7
-## 5 Republican   21.5  72.4
+## 5 Not sure     43.2  42.3
 ```
 
 ---
 
 # Negative polarization
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-13-1.png" width="100%" /&gt;
 
 ---
 
@@ -378,18 +394,18 @@ Often, *categorical* variables are coded 0/1 to represent "yes/no" or "presence/
 --
 
 
-|name      |type1    | weight_kg| height_m| is_legendary|
-|:---------|:--------|---------:|--------:|------------:|
-|Victini   |psychic  |       4.0|      0.4|            1|
-|Shaymin   |grass    |       2.1|      0.2|            1|
-|Azelf     |psychic  |       0.3|      0.3|            1|
-|Thundurus |electric |      61.0|      1.5|            1|
-|Nihilego  |rock     |      55.5|      1.2|            1|
-|Necrozma  |psychic  |     230.0|      2.4|            1|
-|Giratina  |ghost    |     750.0|      4.5|            1|
-|Kartana   |grass    |       0.1|      0.3|            1|
-|Tapu Koko |electric |      20.5|      1.8|            1|
-|Kyurem    |dragon   |     325.0|      3.0|            1|
+|name      |type1   | weight_kg| height_m| is_legendary|
+|:---------|:-------|---------:|--------:|------------:|
+|Regigigas |normal  |     420.0|      3.7|            1|
+|Magearna  |steel   |      80.5|      1.0|            1|
+|Kartana   |grass   |       0.1|      0.3|            1|
+|Rayquaza  |dragon  |     206.5|      7.0|            1|
+|Pheromosa |bug     |      25.0|      1.8|            1|
+|Lunala    |psychic |     120.0|      4.0|            1|
+|Articuno  |ice     |      55.4|      1.7|            1|
+|Zekrom    |dragon  |     345.0|      2.9|            1|
+|Victini   |psychic |       4.0|      0.4|            1|
+|Heatran   |fire    |     430.0|      1.7|            1|
 
 ---
 
@@ -501,18 +517,18 @@ We can store as an object, to make a plot:
 
 ```r
 ggplot(legend_gen, aes(x = generation, y = prop_legendary)) + 
-  geom_col(fill = "#324200") + theme_bw()
+  geom_col(fill = "#324200")
 ```
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-17-1.png" width="90%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-18-1.png" width="90%" /&gt;
 
 ---
 
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
 
-All dummy data on the paintings of Bob Ross
+All dummy data on the paintings of Bob Ross (the media market is so saturated with true crime there is **even** a true crime show about Bob Ross)
 
 
 &lt;img src="images/bob-ross.png" width="60%" style="display: block; margin: auto;" /&gt;
@@ -522,7 +538,7 @@ All dummy data on the paintings of Bob Ross
 ---
 
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
 
 .scroll-output[
@@ -936,9 +952,9 @@ All dummy data on the paintings of Bob Ross
 
 ---
 
-# 🚨 Your turn: Bob Ross 🚨
+# 🚨 Your turn: 🎨 Bob Ross 🎨 🚨
 
-Using the `bob_ross` data (use `?bob_ross` to read about the variables):
+Using the `bob_ross` data
 
 .small[
 1. How likely was Bob Ross to include a happy little `tree` in one of his paintings? 
@@ -951,8 +967,8 @@ Using the `bob_ross` data (use `?bob_ross` to read about the variables):
 ]
 
 
-<div class="countdown" id="timer_630fac2b" style="right:0;bottom:0;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_63487faa" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">15</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 ---
@@ -982,18 +998,18 @@ How many Pokemon are there of each type? What are the most and least common type
 
 
 
-|name       |type1  |
-|:----------|:------|
-|Teddiursa  |normal |
-|Munchlax   |normal |
-|Quagsire   |water  |
-|Weepinbell |grass  |
-|Tyrunt     |rock   |
-|Oranguru   |normal |
-|Spinda     |normal |
-|Pelipper   |water  |
-|Foongus    |grass  |
-|Victreebel |grass  |
+|name       |type1    |
+|:----------|:--------|
+|Volbeat    |bug      |
+|Lycanroc   |rock     |
+|Weepinbell |grass    |
+|Maractus   |grass    |
+|Pikipek    |normal   |
+|Lucario    |fighting |
+|Fletchling |normal   |
+|Venipede   |bug      |
+|Makuhita   |fighting |
+|Deoxys     |psychic  |
 
 ---
 
@@ -1009,20 +1025,19 @@ pokemon
 
 ```
 ## # A tibble: 801 × 14
-##    name    type1 type2 height_m weight_kg capture_rate    hp attack defense sp_attack
-##    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
-##  1 Bulbas… grass pois…      0.7       6.9           45    45     49      49        65
-##  2 Ivysaur grass pois…      1        13             45    60     62      63        80
-##  3 Venusa… grass pois…      2       100             45    80    100     123       122
-##  4 Charma… fire  &lt;NA&gt;       0.6       8.5           45    39     52      43        60
-##  5 Charme… fire  &lt;NA&gt;       1.1      19             45    58     64      58        80
-##  6 Chariz… fire  flyi…      1.7      90.5           45    78    104      78       159
-##  7 Squirt… water &lt;NA&gt;       0.5       9             45    44     48      65        50
-##  8 Wartor… water &lt;NA&gt;       1        22.5           45    59     63      80        65
-##  9 Blasto… water &lt;NA&gt;       1.6      85.5           45    79    103     120       135
-## 10 Caterp… bug   &lt;NA&gt;       0.3       2.9          255    45     30      35        20
-## # … with 791 more rows, and 4 more variables: sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;,
-## #   generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense sp_attack sp_defense speed generation is_legendary
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49        65         65    45          1            0
+##  2 Ivysaur    grass poison      1        13             45    60     62      63        80         80    60          1            0
+##  3 Venusaur   grass poison      2       100             45    80    100     123       122        120    80          1            0
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43        60         50    65          1            0
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58        80         65    80          1            0
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78       159        115   100          1            0
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65        50         64    43          1            0
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80        65         80    58          1            0
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120       135        115    78          1            0
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35        20         20    45          1            0
+## # … with 791 more rows
 ```
 
 ---
@@ -1042,20 +1057,19 @@ pokemon %&gt;%
 ```
 ## # A tibble: 801 × 14
 ## # Groups:   type1 [18]
-##    name    type1 type2 height_m weight_kg capture_rate    hp attack defense sp_attack
-##    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;
-##  1 Bulbas… grass pois…      0.7       6.9           45    45     49      49        65
-##  2 Ivysaur grass pois…      1        13             45    60     62      63        80
-##  3 Venusa… grass pois…      2       100             45    80    100     123       122
-##  4 Charma… fire  &lt;NA&gt;       0.6       8.5           45    39     52      43        60
-##  5 Charme… fire  &lt;NA&gt;       1.1      19             45    58     64      58        80
-##  6 Chariz… fire  flyi…      1.7      90.5           45    78    104      78       159
-##  7 Squirt… water &lt;NA&gt;       0.5       9             45    44     48      65        50
-##  8 Wartor… water &lt;NA&gt;       1        22.5           45    59     63      80        65
-##  9 Blasto… water &lt;NA&gt;       1.6      85.5           45    79    103     120       135
-## 10 Caterp… bug   &lt;NA&gt;       0.3       2.9          255    45     30      35        20
-## # … with 791 more rows, and 4 more variables: sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;,
-## #   generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense sp_attack sp_defense speed generation is_legendary
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49        65         65    45          1            0
+##  2 Ivysaur    grass poison      1        13             45    60     62      63        80         80    60          1            0
+##  3 Venusaur   grass poison      2       100             45    80    100     123       122        120    80          1            0
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43        60         50    65          1            0
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58        80         65    80          1            0
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78       159        115   100          1            0
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65        50         64    43          1            0
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80        65         80    58          1            0
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120       135        115    78          1            0
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35        20         20    45          1            0
+## # … with 791 more rows
 ```
 
 ---
@@ -1172,7 +1186,7 @@ ggplot(type_pct, aes(x = type1, y = percent)) +
   geom_col()
 ```
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-27-1.png" width="80%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-28-1.png" width="80%" /&gt;
 
 ---
 
@@ -1187,7 +1201,7 @@ ggplot(type_pct, aes(x = type1, y = percent)) +
 * geom_col() + coord_flip()
 ```
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-28-1.png" width="80%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-29-1.png" width="80%" /&gt;
 
 ---
 
@@ -1203,17 +1217,17 @@ Pro-tip: you can reorder the x-axis **by** another variable using `reorder()`
   geom_col() + coord_flip()
 ```
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-29-1.png" width="80%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-30-1.png" width="80%" /&gt;
 
 ---
 
 # group_by + tally()
 
-&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-30-1.png" width="100%" /&gt;
+&lt;img src="05-relationshipsII_files/figure-html/unnamed-chunk-31-1.png" width="100%" /&gt;
 
 ---
 
-# 🚨 Your turn: Flying etiquette 🚨
+# 🚨 Your turn: 💺 Flying etiquette 💺 🚨
 
 A survey of what's rude to do on a plane: 
 --
@@ -2235,7 +2249,7 @@ A survey of what's rude to do on a plane:
 ---
 
 
-# 🚨 Your turn: flying etiquette 🚨
+# 🚨 Your turn: 💺 flying etiquette 💺 🚨
 
 Using the `flying` data (use `?flying` to read about the variables):
 
@@ -2249,8 +2263,8 @@ Using the `flying` data (use `?flying` to read about the variables):
 
 
 
-<div class="countdown" id="timer_630fae58" style="right:0;bottom:0;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_63487ec4" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">15</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 ---
@@ -2263,20 +2277,9 @@ Using the `flying` data (use `?flying` to read about the variables):
 
 &gt; There was a burrito that I got after the last home game. I found that exciting. 
 
----
+&gt; I have highly confused about how to use the mutate and case_when functions and am struggling to apply them in the code.
 
-# Weekly check-in
-
-- Mutate is hard
-- `facet_wrap()` confusion
-- Horrified some of you are manually typing out pipes: 
-    - OSX: &lt;kbd&gt;Cmd&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;M&lt;/kbd&gt; 
-    - Windows: &lt;kbd&gt;Ctrl&lt;/kbd&gt; + &lt;kbd&gt;Shift&lt;/kbd&gt; + &lt;kbd&gt;M&lt;/kbd&gt; 
-- When to use a pipe? When a +? 
-    - Pipes are for connecting data to functions, and functions to other functions
-    - `+` is only for plotting! to **add** `geom_` and `labs` and `facet_wrap`
-
-
+&gt; One thing that is pretty muddy is creating new variables and being able to use objects.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
