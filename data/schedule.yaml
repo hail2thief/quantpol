@@ -27,7 +27,7 @@ lessons:
 
   - title: 'Week 5: Modeling<br><i class="fas fa-star"></i> **Assignment 4**'
     date: "Oct 18, Oct 20"
-    #class: "regression"
+    class: "regression"
     reading: "05-reg"
     #assignment: "ps-reg"
     

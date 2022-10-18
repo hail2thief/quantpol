@@ -19,89 +19,115 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#in-class-example">In-class example</a></li>
-<li><a href="#drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a></li>
-<li><a href="#ggcorrplot">ggcorrplot</a></li>
-<li><a href="#draw-the-line">Draw the line</a></li>
-<li><a href="#convince-yourself">Convince yourself</a></li>
+<li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
 </ul>
 </div>
 
 <div id="in-class-example" class="section level2">
 <h2>In-class example</h2>
 <p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”</p>
-<p><a href="/slides/code/04-models.R"><i class="fas fa-file-archive"></i> <code>04-models.R</code></a></p>
-</div>
-<div id="drawing-lines-geom_smooth" class="section level2">
-<h2>Drawing lines (geom_smooth)</h2>
-<p>Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using <code>geom_smooth</code>, as below. Notice <code>method = "lm"</code>.</p>
-<pre class="r"><code># libraries
-library(tidyverse)
-
-# mtcars
-ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
-  geom_smooth(method = &quot;lm&quot;)</code></pre>
-<p><img src="/class/regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
-</div>
-<div id="ggcorrplot" class="section level2">
-<h2>ggcorrplot</h2>
-<pre class="r"><code># libraries
-library(tidyverse)
-library(socviz)
-library(fivethirtyeight)
-library(gapminder)
-library(nycflights13)
-library(ggcorrplot)
-
-# load data
-therm = read_csv(&quot;../../static/files/voter-files-therm.csv&quot;)
-
-issues = read_csv(&quot;../../static/files/voter-files-issues.csv&quot;)</code></pre>
-<p>Look at the correlations:</p>
-<pre class="r"><code># switch out gapminder with a dataset you want below
-therm %&gt;% 
-  # correlation only works with numeric columns; keep only those
-  select(where(is.numeric)) %&gt;% 
-  # the cor() function doesn&#39;t take NA; drop them all
-  drop_na() %&gt;% 
-  # get the correlation
-  cor() %&gt;% 
-  # plot the correlation
-  ggcorrplot(lab = TRUE)</code></pre>
-<p><img src="/class/regression_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
-</div>
-<div id="draw-the-line" class="section level2">
-<h2>Draw the line</h2>
-<pre class="r"><code># draw a line: alter the intercept and slope in geom_abline()
-# to draw the line
-  ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) + 
-  # change the limits on the x and y-axis
-  scale_x_continuous(limits = c(-10, 10)) + 
-  scale_y_continuous(limits = c(-10, 10)) + 
-  # add a vertical and horizontal line at 0
-  geom_hline(yintercept = 0, lty = 2) + 
-  geom_vline(xintercept = 0, lty = 2) + 
-  theme_bw()</code></pre>
-<p><img src="/class/regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
-</div>
-<div id="convince-yourself" class="section level2">
-<h2>Convince yourself</h2>
-<p>Make the scatterplot:</p>
-<pre class="r"><code># convince yourself about the line of best fit: run this code below
-# set the seed
-set.seed(1990)
-
-# make the fake data
-df = tibble(x = rnorm(50, mean = 10), 
-            y = 3 + 2*x + rnorm(50))
-
-# line of best fit?
-model = lm(y ~ x, df)
-true = tibble(true_intercept = coef(model)[1], 
-              true_slope = coef(model)[2])
-
-ggplot(data = df, aes(x = x, y = y)) + 
-  geom_point() + 
-  geom_smooth(method = &quot;lm&quot;)</code></pre>
-<p><img src="/class/regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><a href="/slides/code/day1-models.R"><i class="fas fa-file-archive"></i> <code>day1-models.R</code></a></p>
+<!-- ## Drawing lines (geom_smooth) -->
+<!-- Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using `geom_smooth`, as below. Notice `method = "lm"`.  -->
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE) -->
+<!-- ``` -->
+<!-- ```{r, warning=F,message=F} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- # mtcars -->
+<!-- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() +  -->
+<!--   geom_smooth(method = "lm") -->
+<!-- ``` -->
+<!-- ## ggcorrplot -->
+<!-- ```{r} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- library(socviz) -->
+<!-- library(fivethirtyeight) -->
+<!-- library(gapminder) -->
+<!-- library(nycflights13) -->
+<!-- library(ggcorrplot) -->
+<!-- # load data -->
+<!-- therm = read_csv("static/files/voter-files-therm.csv") -->
+<!-- issues = read_csv("static/files/voter-files-issues.csv") -->
+<!-- ir_econ = read_csv("static/files/ir_econ.csv") -->
+<!-- ``` -->
+<!-- Look at the correlations: -->
+<!-- ```{r} -->
+<!-- # switch out gapminder with a dataset you want below -->
+<!-- therm %>%  -->
+<!--   # correlation only works with numeric columns; keep only those -->
+<!--   select(where(is.numeric)) %>%  -->
+<!--   # the cor() function doesn't take NA; drop them all -->
+<!--   drop_na() %>%  -->
+<!--   # get the correlation -->
+<!--   cor() %>%  -->
+<!--   # plot the correlation -->
+<!--   ggcorrplot(lab = TRUE) -->
+<!-- ``` -->
+<!-- ## Draw the line -->
+<!-- ```{r} -->
+<!-- # draw a line: alter the intercept and slope in geom_abline() -->
+<!-- # to draw the line -->
+<!--   ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) +  -->
+<!--   # change the limits on the x and y-axis -->
+<!--   scale_x_continuous(limits = c(-10, 10)) +  -->
+<!--   scale_y_continuous(limits = c(-10, 10)) +  -->
+<!--   # add a vertical and horizontal line at 0 -->
+<!--   geom_hline(yintercept = 0, lty = 2) +  -->
+<!--   geom_vline(xintercept = 0, lty = 2) +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+<!-- ## Convince yourself -->
+<!-- Make the scatterplot: -->
+<!-- ```{r} -->
+<!-- # convince yourself about the line of best fit: run this code below -->
+<!-- # set the seed -->
+<!-- set.seed(1990) -->
+<!-- # make the fake data -->
+<!-- df = tibble(x = rnorm(50, mean = 10),  -->
+<!--             y = 3 + 2*x + rnorm(50)) -->
+<!-- # line of best fit? -->
+<!-- model = lm(y ~ x, df) -->
+<!-- true = tibble(true_intercept = coef(model)[1],  -->
+<!--               true_slope = coef(model)[2]) -->
+<!-- ggplot(data = df, aes(x = x, y = y)) +  -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(method = "lm") -->
+<!-- ``` -->
+<!-- ## IR Econ -->
+<!-- The plot -->
+<!-- ```{r} -->
+<!-- ir_1959 = ir_econ %>%  -->
+<!--   filter(year == 2008) -->
+<!-- ggplot(ir_1959, aes(x = imports, y = exports,  -->
+<!--                     label = country)) + geom_point() + geom_smooth(method = "lm") +  -->
+<!--   geom_text() -->
+<!-- ``` -->
+<!-- Estimate a model, and interpret: -->
+<!-- ```{r} -->
+<!-- library(broom) -->
+<!-- igo_pop = lm(exports ~ pop, data = ir_econ) -->
+<!-- tidy(igo_pop) -->
+<!-- ``` -->
+<!-- Penguins regression:  -->
+<!-- ```{r} -->
+<!-- penguins_model = lm(body_mass_g ~ species,  -->
+<!--                     data = penguins) -->
+<!-- tidy(penguins_model) -->
+<!-- ``` -->
+<!-- Interpretation:  -->
+<!-- * Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins.  -->
+<!-- * Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins.  -->
+<!-- * Adelie penguins weigh, on average, 3,700 grams.  -->
+<!-- another one: -->
+<!-- ```{r} -->
+<!-- lm(tvhours ~ race, data = gss_cat) %>%  -->
+<!--   tidy() -->
+<!-- ``` -->
+<!-- Interpretation:  -->
+<!-- * Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as "Other".  -->
+<!-- * White respondents watch .009 more hours of tv, on average, than respondents who identify as "Other".  -->
+<!-- * Respondents who identify as "Other" watch, on average, 2.76 hours of TV.  -->
 </div>

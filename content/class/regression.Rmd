@@ -21,169 +21,169 @@ editor_options:
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as..."
 
-[<i class="fas fa-file-archive"></i> `04-models.R`](/slides/code/04-models.R)
+[<i class="fas fa-file-archive"></i> `day1-models.R`](/slides/code/day1-models.R)
 
 
 
 
-## Drawing lines (geom_smooth)
+<!-- ## Drawing lines (geom_smooth) -->
 
 
-Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using `geom_smooth`, as below. Notice `method = "lm"`. 
+<!-- Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using `geom_smooth`, as below. Notice `method = "lm"`.  -->
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
-```
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE) -->
+<!-- ``` -->
 
-```{r, warning=F,message=F}
-# libraries
-library(tidyverse)
+<!-- ```{r, warning=F,message=F} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
 
-# mtcars
-ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() + 
-  geom_smooth(method = "lm")
-```
-
-
-
-## ggcorrplot
-
-
-```{r}
-# libraries
-library(tidyverse)
-library(socviz)
-library(fivethirtyeight)
-library(gapminder)
-library(nycflights13)
-library(ggcorrplot)
-
-# load data
-therm = read_csv("static/files/voter-files-therm.csv")
-
-issues = read_csv("static/files/voter-files-issues.csv")
-
-ir_econ = read_csv("static/files/ir_econ.csv")
-
-```
-
-
-Look at the correlations:
-
-```{r}
-# switch out gapminder with a dataset you want below
-therm %>% 
-  # correlation only works with numeric columns; keep only those
-  select(where(is.numeric)) %>% 
-  # the cor() function doesn't take NA; drop them all
-  drop_na() %>% 
-  # get the correlation
-  cor() %>% 
-  # plot the correlation
-  ggcorrplot(lab = TRUE)
-```
-
-
-## Draw the line
-
-```{r}
-# draw a line: alter the intercept and slope in geom_abline()
-# to draw the line
-  ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) + 
-  # change the limits on the x and y-axis
-  scale_x_continuous(limits = c(-10, 10)) + 
-  scale_y_continuous(limits = c(-10, 10)) + 
-  # add a vertical and horizontal line at 0
-  geom_hline(yintercept = 0, lty = 2) + 
-  geom_vline(xintercept = 0, lty = 2) + 
-  theme_bw()
-
-```
-
-
-## Convince yourself
-
-
-Make the scatterplot:
-
-```{r}
-# convince yourself about the line of best fit: run this code below
-# set the seed
-set.seed(1990)
-
-# make the fake data
-df = tibble(x = rnorm(50, mean = 10), 
-            y = 3 + 2*x + rnorm(50))
-
-# line of best fit?
-model = lm(y ~ x, df)
-true = tibble(true_intercept = coef(model)[1], 
-              true_slope = coef(model)[2])
-
-ggplot(data = df, aes(x = x, y = y)) + 
-  geom_point() + 
-  geom_smooth(method = "lm")
-```
+<!-- # mtcars -->
+<!-- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() +  -->
+<!--   geom_smooth(method = "lm") -->
+<!-- ``` -->
 
 
 
-## IR Econ
+<!-- ## ggcorrplot -->
 
 
-The plot
+<!-- ```{r} -->
+<!-- # libraries -->
+<!-- library(tidyverse) -->
+<!-- library(socviz) -->
+<!-- library(fivethirtyeight) -->
+<!-- library(gapminder) -->
+<!-- library(nycflights13) -->
+<!-- library(ggcorrplot) -->
 
-```{r}
-ir_1959 = ir_econ %>% 
-  filter(year == 2008)
+<!-- # load data -->
+<!-- therm = read_csv("static/files/voter-files-therm.csv") -->
 
+<!-- issues = read_csv("static/files/voter-files-issues.csv") -->
 
-ggplot(ir_1959, aes(x = imports, y = exports, 
-                    label = country)) + geom_point() + geom_smooth(method = "lm") + 
-  geom_text()
+<!-- ir_econ = read_csv("static/files/ir_econ.csv") -->
 
-```
-
-Estimate a model, and interpret:
-
-```{r}
-library(broom)
-
-igo_pop = lm(exports ~ pop, data = ir_econ)
-
-tidy(igo_pop)
-```
+<!-- ``` -->
 
 
+<!-- Look at the correlations: -->
 
-Penguins regression: 
-
-```{r}
-penguins_model = lm(body_mass_g ~ species, 
-                    data = penguins)
-
-tidy(penguins_model)
-```
-
-Interpretation: 
-
-* Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins. 
-* Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins. 
-* Adelie penguins weigh, on average, 3,700 grams. 
-
+<!-- ```{r} -->
+<!-- # switch out gapminder with a dataset you want below -->
+<!-- therm %>%  -->
+<!--   # correlation only works with numeric columns; keep only those -->
+<!--   select(where(is.numeric)) %>%  -->
+<!--   # the cor() function doesn't take NA; drop them all -->
+<!--   drop_na() %>%  -->
+<!--   # get the correlation -->
+<!--   cor() %>%  -->
+<!--   # plot the correlation -->
+<!--   ggcorrplot(lab = TRUE) -->
+<!-- ``` -->
 
 
+<!-- ## Draw the line -->
 
-another one:
+<!-- ```{r} -->
+<!-- # draw a line: alter the intercept and slope in geom_abline() -->
+<!-- # to draw the line -->
+<!--   ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) +  -->
+<!--   # change the limits on the x and y-axis -->
+<!--   scale_x_continuous(limits = c(-10, 10)) +  -->
+<!--   scale_y_continuous(limits = c(-10, 10)) +  -->
+<!--   # add a vertical and horizontal line at 0 -->
+<!--   geom_hline(yintercept = 0, lty = 2) +  -->
+<!--   geom_vline(xintercept = 0, lty = 2) +  -->
+<!--   theme_bw() -->
 
-```{r}
-lm(tvhours ~ race, data = gss_cat) %>% 
-  tidy()
-```
+<!-- ``` -->
 
-Interpretation: 
 
-* Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as "Other". 
-* White respondents watch .009 more hours of tv, on average, than respondents who identify as "Other". 
-* Respondents who identify as "Other" watch, on average, 2.76 hours of TV. 
+<!-- ## Convince yourself -->
+
+
+<!-- Make the scatterplot: -->
+
+<!-- ```{r} -->
+<!-- # convince yourself about the line of best fit: run this code below -->
+<!-- # set the seed -->
+<!-- set.seed(1990) -->
+
+<!-- # make the fake data -->
+<!-- df = tibble(x = rnorm(50, mean = 10),  -->
+<!--             y = 3 + 2*x + rnorm(50)) -->
+
+<!-- # line of best fit? -->
+<!-- model = lm(y ~ x, df) -->
+<!-- true = tibble(true_intercept = coef(model)[1],  -->
+<!--               true_slope = coef(model)[2]) -->
+
+<!-- ggplot(data = df, aes(x = x, y = y)) +  -->
+<!--   geom_point() +  -->
+<!--   geom_smooth(method = "lm") -->
+<!-- ``` -->
+
+
+
+<!-- ## IR Econ -->
+
+
+<!-- The plot -->
+
+<!-- ```{r} -->
+<!-- ir_1959 = ir_econ %>%  -->
+<!--   filter(year == 2008) -->
+
+
+<!-- ggplot(ir_1959, aes(x = imports, y = exports,  -->
+<!--                     label = country)) + geom_point() + geom_smooth(method = "lm") +  -->
+<!--   geom_text() -->
+
+<!-- ``` -->
+
+<!-- Estimate a model, and interpret: -->
+
+<!-- ```{r} -->
+<!-- library(broom) -->
+
+<!-- igo_pop = lm(exports ~ pop, data = ir_econ) -->
+
+<!-- tidy(igo_pop) -->
+<!-- ``` -->
+
+
+
+<!-- Penguins regression:  -->
+
+<!-- ```{r} -->
+<!-- penguins_model = lm(body_mass_g ~ species,  -->
+<!--                     data = penguins) -->
+
+<!-- tidy(penguins_model) -->
+<!-- ``` -->
+
+<!-- Interpretation:  -->
+
+<!-- * Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins.  -->
+<!-- * Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins.  -->
+<!-- * Adelie penguins weigh, on average, 3,700 grams.  -->
+
+
+
+
+<!-- another one: -->
+
+<!-- ```{r} -->
+<!-- lm(tvhours ~ race, data = gss_cat) %>%  -->
+<!--   tidy() -->
+<!-- ``` -->
+
+<!-- Interpretation:  -->
+
+<!-- * Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as "Other".  -->
+<!-- * White respondents watch .009 more hours of tv, on average, than respondents who identify as "Other".  -->
+<!-- * Respondents who identify as "Other" watch, on average, 2.76 hours of TV.  -->
 

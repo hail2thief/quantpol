@@ -7,7 +7,7 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
-    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    css: ["default", "css/my-theme.css", "css/halloween.css"]
     seal: false
     nature:
       highlightStyle: github
@@ -47,24 +47,28 @@ library(patchwork)
 library(gapminder)
 library(broom)
 library(equatiomatic)
+library(juanr)
 
 # dubois colors
 red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
 
 
-# pokemon
-pokemon = read_csv("../files/pokemon.csv")
-
-# elections
-elections = read_csv("../files/elections.csv")
-
-# ir econ
-ir_econ = read_csv("../files/ir_econ.csv")
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
 
 
 # set seed
@@ -394,7 +398,7 @@ Say we want to estimate the relationship between **GDP per capita** and **life e
 
 ```{r}
 ggplot(gapminder, aes(x = gdpPercap, y = lifeExp)) +
-  geom_point(color = red, alpha = .8) + theme_fancy
+  geom_point(color = red, alpha = .8)
 ```
 
 ---
@@ -458,7 +462,7 @@ No! It is a problem with the **scale** that GDP is in
 
 --
 
-one dollar differences in GDP are tiny, meaningless
+one dollar differences in GDP are tiny, meaningless; GDP changes by much more from year to year
 
 
 ---
@@ -514,29 +518,7 @@ Mind your *scales*: if a coefficient is tiny, ask yourself if the scale makes se
 
 ---
 
-# 🚨 Your turn: international trade 🚨
-
-
-`ir_econ` has data on international trade: 
-
-.scroll-output[
-```{r}
-tribble(~variable, ~meaning, 
-        "imports", "total imports, in current million USD",
-        "exports", "total exports, in current million USD",
-        "gdp", "GDP in 2011, USD", 
-        "pop", "Estimated population", 
-        "land_borders", "Number of land borders", 
-        "mincapdist", "Distance to closest foreign capital, KM",
-        "percent_mountain", "Percent of territory that is mountainous",
-        "number_of_igos", "Number of international orgs country is part of") %>% 
-  knitr::kable()
-```
-]
-
----
-
-## 🚨 Why do some countries export more than others? 🚨
+# 🚨 🚢 Why do some countries export more than others? 🚢 🚨
 
 --
 
@@ -544,7 +526,7 @@ tribble(~variable, ~meaning,
 
 --
 
-2. Estimate a model that tries to explain how much a country exports, using a treatment variable of your choosing. Interpret the model output. 
+2. Estimate a model that models how much a country exports, using a treatment variable of your choosing. Interpret the model output. 
 
 
 
@@ -569,58 +551,40 @@ We can also use categorical variables in our models
 
 --
 
-The simplest categorical variable is a *dummy variable*: 1/0, TRUE/FALSE
+The simplest categorical variable is a *binary variable*: Men vs. women, young vs. old, has a policy in place (vs. not), TRUE/FALSE
 
 --
 
-Men vs. women, young vs. old, has a policy in place (vs. not)
+Dummy variables (1/0) are a common type of binary variable
 
 --
 
-Let's say I wanted to look at the relationship between a country *being in the Americas* and life expectancy
+Let's say I wanted to look at the relationship between a country's organ donation policy and its organ donation rate
 
---
-
-This is a dummy variable: a country either is, or isn't, in the Americas
 
 ---
 
 
-# Creating dummies
-
-We can create that dummy using logical operators:
-
-```{r, echo = TRUE}
-gap_dummies = gapminder %>%
-  mutate(is_americas = continent == "Americas")
-```
-
-
-Read: "IF the observation's continent equals "Americas", assign a TRUE, otherwise FALSE"
-
----
-
-
-# Dummy variables
+# Organ data
 
 ```{r}
 set.seed(1990)
-gap_dummies %>%
+organdata %>%
   sample_n(10) %>%
-  select(country, year, is_americas) %>%
+  select(country, year, opt, donors) %>%
   knitr::kable()
 ```
 
 ---
 
 
-# Dummy variables in models
+# Binary variables in models
 
 
-I can include the dummy in a regression model:
+I can include the binary variable in a regression model:
 
 ```{r, echo = TRUE}
-americas_mod = lm(lifeExp ~ is_americas, data = gap_dummies)
+donor_mod = lm(donors ~ opt, data = organdata)
 ```
 
 --
@@ -628,7 +592,7 @@ americas_mod = lm(lifeExp ~ is_americas, data = gap_dummies)
 And look at the output:
 
 ```{r}
-tidy(americas_mod)
+tidy(donor_mod)
 ```
 
 ---
@@ -638,9 +602,9 @@ tidy(americas_mod)
 
 .pull-left[
 
-Turn the light on (`is_america` goes from FALSE to TRUE), the light *increases* by SLOPE
+Turn the light on (`opt` goes from "In" to "Out"), the light *increases* by SLOPE
 
-Turn the light off (`is_america` goes from TRUE to FALSE), the light *decreases* by SLOPE
+Turn the light off (`opt` goes from "Out" to "In"), the light *decreases* by SLOPE
 
 The change is **instant**
 ]
@@ -654,25 +618,38 @@ knitr::include_graphics("images/switch.jpeg")
 ---
 
 
-# Interpreting dummies
+# Modeling binary variables
+
+
+With a binary variable, R will pick one level of the variable to make the .shout[reference category]
+
+--
+
+The other level is the **change**, or **offset**, from that reference
+
+
+---
+
+
+# Interpreting categories
 
 .small[
-$\operatorname{\widehat{lifeExp}} = 58.37 + 6.29(\operatorname{is\_americas})$
+$\operatorname{\widehat{donors}} = 14.31 + 5.5(\operatorname{opt}_{\operatorname{Out}})$
 ]
 
 ```{r}
-tidy(americas_mod)
+tidy(donor_mod)
 ```
 
 .small[
-Slope: Countries that are *in the Americas* have, on average, 6.3 years more of life expectancy than countries *not in the Americas* (i.e., in Africa, Europe, Asia, Oceania)
+Slope: Country-years where people have to OPT OUT of donating their organs have, on average, 5.5 more donations per million residents than country-years where people have to OPT IN
 
 ]
 
 --
 
 .small[
-Intercept (set is_americas = 0): Countries not in the Americas (i.e., in Africa, Europe, Asia, Oceania) have an average life expectancy of 58.4 years
+Intercept (set `opt` = "In"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
 ]
 
 
@@ -681,22 +658,24 @@ Intercept (set is_americas = 0): Countries not in the Americas (i.e., in Africa,
 # Categorical variables
 
 
-The intercept here is "is_america = FALSE"; the slope is the **red line**
+The difference between the .red[red line] and the .blue[blue line] is `r round(lines$mean[2] - lines$mean[1], 2)`
 
 ```{r}
-ggplot(gap_dummies, aes(x = factor(is_americas), y = lifeExp)) + 
-  geom_jitter(width = .02, alpha = .3) + 
-  stat_summary(geom = "point", 
-               fun = "mean", 
-               size = 5, 
-               color = red) + 
-  geom_segment(data = NULL, x = "0", xend = "1", 
-               y = coef(americas_mod)[1], 
-               yend = coef(americas_mod)[1] + coef(americas_mod)[2], 
-               color = red) + 
-  theme_fancy + 
-  labs(x = NULL, y = "Life expectancy") + 
-  scale_x_discrete(labels = c("is_america = FALSE", "is_americas = TRUE"))
+lines = organdata %>% 
+  drop_na(opt) %>% 
+  group_by(opt) %>% 
+  summarise(mean = mean(donors, na.rm = TRUE))
+
+ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
+                                    color = opt)) + 
+  ggbeeswarm::geom_beeswarm(alpha = .8) + 
+  geom_segment(data = lines, aes(x = c(.5, 2.5), y = mean, xend = 1.5, 
+                                 yend = mean, color = opt), 
+               size = 2) + 
+  scale_color_manual(values = c(blue, red)) + 
+  theme(legend.position = "none") + 
+  labs(x = "Organ donation: opt in or out?", 
+       y = "Average donation rate\n(donors per million residents)")
 ```
 
 ---

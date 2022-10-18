@@ -4,7 +4,7 @@
     <title>Relationships</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-10-11" />
+    <meta name="date" content="2022-10-18" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <script type="application/json" id="xaringanExtra-editable-docid">{"id":"05-relationships","expires":14}</script>
@@ -103,21 +103,20 @@ pokemon
 
 ```
 ## # A tibble: 801 × 14
-##    name       type1 type2  height_m weight_kg capture_rate    hp attack
-##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49
-##  2 Ivysaur    grass poison      1        13             45    60     62
-##  3 Venusaur   grass poison      2       100             45    80    100
-##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52
-##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64
-##  6 Charizard  fire  flying      1.7      90.5           45    78    104
-##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48
-##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63
-##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103
-## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30
-## # … with 791 more rows, and 6 more variables: defense &lt;dbl&gt;,
-## #   sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;,
-## #   is_legendary &lt;dbl&gt;
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;,
+## #   sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
 ```
 
 ---
@@ -136,21 +135,20 @@ pokemon
 
 ```
 ## # A tibble: 801 × 14
-##    name       type1 type2  height_m weight_kg capture_rate    hp attack
-##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49
-##  2 Ivysaur    grass poison      1        13             45    60     62
-##  3 Venusaur   grass poison      2       100             45    80    100
-##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52
-##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64
-##  6 Charizard  fire  flying      1.7      90.5           45    78    104
-##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48
-##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63
-##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103
-## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30
-## # … with 791 more rows, and 6 more variables: defense &lt;dbl&gt;,
-## #   sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;,
-## #   is_legendary &lt;dbl&gt;
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;,
+## #   sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
 ```
 
 ---
@@ -171,21 +169,20 @@ pokemon %&gt;%
 
 ```
 ## # A tibble: 78 × 15
-##    name       type1 type2  height_m weight_kg capture_rate    hp attack
-##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49
-##  2 Ivysaur    grass poison      1        13             45    60     62
-##  3 Venusaur   grass poison      2       100             45    80    100
-##  4 Oddish     grass poison      0.5       5.4          255    45     50
-##  5 Gloom      grass poison      0.8       8.6          120    60     65
-##  6 Vileplume  grass poison      1.2      18.6           45    75     80
-##  7 Bellsprout grass poison      0.7       4            255    50     75
-##  8 Weepinbell grass poison      1         6.4          120    65     90
-##  9 Victreebel grass poison      1.7      15.5           45    80    105
-## 10 Exeggcute  grass psych…      0.4       2.5           90    60     40
-## # … with 68 more rows, and 7 more variables: defense &lt;dbl&gt;,
-## #   sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;,
-## #   is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
+##    name       type1 type2   height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison       0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison       1        13             45    60     62      63
+##  3 Venusaur   grass poison       2       100             45    80    100     123
+##  4 Oddish     grass poison       0.5       5.4          255    45     50      55
+##  5 Gloom      grass poison       0.8       8.6          120    60     65      70
+##  6 Vileplume  grass poison       1.2      18.6           45    75     80      85
+##  7 Bellsprout grass poison       0.7       4            255    50     75      35
+##  8 Weepinbell grass poison       1         6.4          120    65     90      50
+##  9 Victreebel grass poison       1.7      15.5           45    80    105      65
+## 10 Exeggcute  grass psychic      0.4       2.5           90    60     40      80
+## # … with 68 more rows, and 6 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
 ```
 
 
@@ -203,21 +200,20 @@ pokemon
 
 ```
 ## # A tibble: 801 × 14
-##    name       type1 type2  height_m weight_kg capture_rate    hp attack
-##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49
-##  2 Ivysaur    grass poison      1        13             45    60     62
-##  3 Venusaur   grass poison      2       100             45    80    100
-##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52
-##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64
-##  6 Charizard  fire  flying      1.7      90.5           45    78    104
-##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48
-##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63
-##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103
-## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30
-## # … with 791 more rows, and 6 more variables: defense &lt;dbl&gt;,
-## #   sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;,
-## #   is_legendary &lt;dbl&gt;
+##    name       type1 type2  height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison      1        13             45    60     62      63
+##  3 Venusaur   grass poison      2       100             45    80    100     123
+##  4 Charmander fire  &lt;NA&gt;        0.6       8.5           45    39     52      43
+##  5 Charmeleon fire  &lt;NA&gt;        1.1      19             45    58     64      58
+##  6 Charizard  fire  flying      1.7      90.5           45    78    104      78
+##  7 Squirtle   water &lt;NA&gt;        0.5       9             45    44     48      65
+##  8 Wartortle  water &lt;NA&gt;        1        22.5           45    59     63      80
+##  9 Blastoise  water &lt;NA&gt;        1.6      85.5           45    79    103     120
+## 10 Caterpie   bug   &lt;NA&gt;        0.3       2.9          255    45     30      35
+## # … with 791 more rows, and 5 more variables: sp_attack &lt;dbl&gt;,
+## #   sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;
 ```
 
 ---
@@ -264,21 +260,20 @@ grass_pokemon
 
 ```
 ## # A tibble: 78 × 15
-##    name       type1 type2  height_m weight_kg capture_rate    hp attack
-##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
-##  1 Bulbasaur  grass poison      0.7       6.9           45    45     49
-##  2 Ivysaur    grass poison      1        13             45    60     62
-##  3 Venusaur   grass poison      2       100             45    80    100
-##  4 Oddish     grass poison      0.5       5.4          255    45     50
-##  5 Gloom      grass poison      0.8       8.6          120    60     65
-##  6 Vileplume  grass poison      1.2      18.6           45    75     80
-##  7 Bellsprout grass poison      0.7       4            255    50     75
-##  8 Weepinbell grass poison      1         6.4          120    65     90
-##  9 Victreebel grass poison      1.7      15.5           45    80    105
-## 10 Exeggcute  grass psych…      0.4       2.5           90    60     40
-## # … with 68 more rows, and 7 more variables: defense &lt;dbl&gt;,
-## #   sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;, speed &lt;dbl&gt;, generation &lt;dbl&gt;,
-## #   is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
+##    name       type1 type2   height_m weight_kg capture_rate    hp attack defense
+##    &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+##  1 Bulbasaur  grass poison       0.7       6.9           45    45     49      49
+##  2 Ivysaur    grass poison       1        13             45    60     62      63
+##  3 Venusaur   grass poison       2       100             45    80    100     123
+##  4 Oddish     grass poison       0.5       5.4          255    45     50      55
+##  5 Gloom      grass poison       0.8       8.6          120    60     65      70
+##  6 Vileplume  grass poison       1.2      18.6           45    75     80      85
+##  7 Bellsprout grass poison       0.7       4            255    50     75      35
+##  8 Weepinbell grass poison       1         6.4          120    65     90      50
+##  9 Victreebel grass poison       1.7      15.5           45    80    105      65
+## 10 Exeggcute  grass psychic      0.4       2.5           90    60     40      80
+## # … with 68 more rows, and 6 more variables: sp_attack &lt;dbl&gt;, sp_defense &lt;dbl&gt;,
+## #   speed &lt;dbl&gt;, generation &lt;dbl&gt;, is_legendary &lt;dbl&gt;, height_mm &lt;dbl&gt;
 ```
 
 ---
@@ -967,7 +962,7 @@ Using the `trade` dataset:
 
 
 
-<div class="countdown" id="timer_6345af3e" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_634f062d" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -1259,7 +1254,7 @@ Using the `therm` dataset:
 3. 🔥🔥**Mega-hellfire challenge**🔥🔥: Figure out how to use `pivot_longer()` to make the graph on the following slide. 
 
 
-<div class="countdown" id="timer_6345b17a" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_634f0607" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 

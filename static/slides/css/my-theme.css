@@ -95,6 +95,16 @@ font-weight: bold;
   font-weight: 300;
 }
 
+.red {
+  color: #dc354a;
+  font-weight: bold;
+}
+
+.blue {
+  color: #213772;
+  font-weight: bold;
+}
+
 
 figure {
   margin: 15px;
