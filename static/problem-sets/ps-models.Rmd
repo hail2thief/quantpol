@@ -23,6 +23,7 @@ library(broom)
 library(palmerpenguins)
 library(ggcorrplot)
 library(fivethirtyeight)
+library(juanr)
 ```
 
 
@@ -40,8 +41,7 @@ Look at the following example of a data analysis task:
 
 
 
-
-Now, look at the correlation below: 
+Now, run the code to look at the correlation below: 
 
 
 ```{r}
@@ -57,7 +57,6 @@ penguins %>%
 ```
 
 **Q2: Interpret the correlation between bill length (in millimeters), and bill depth (in millimeters)**
-
 
 
 
@@ -82,9 +81,10 @@ Fit a model to explore whether changes in foreign aid are associated with change
 
 ```{r}
 
+
 ```
 
-**Q3: rounding to the first decimal place, what is the coefficient on aid?** 
+**Q3: rounding to the first decimal place, what is the coefficient on aid?**
 
 
 This is the overall relationship, across all countries, but countries are different in many ways and the effect of aid might differ across different kinds of countries. 
@@ -94,10 +94,10 @@ Fit the same model as above, except this time you will do it **separately** for 
 
 ```{r}
 
+
 ```
 
 **Q4: Interpret the coefficient on aid for LOW corruption countries**
-
 
 
 
@@ -105,10 +105,10 @@ Fit the same model as above, except this time you will do it **separately** for 
 
 
 
-
 Finally, make a scatterplot of the relationship between `conflict` and `funding`, with a trend line so you can see the general pattern. Use `facet_wrap` to create separate plots for countries with low and high corruption. Add labels and a theme. 
 
 ```{r}
+
 
 ```
 
@@ -121,30 +121,28 @@ Finally, make a scatterplot of the relationship between `conflict` and `funding`
 
 
 
-
-
 # Task 3: Regressing with categories
 
 
-Look at the `county_data` dataset from `socviz`, which provides county-level information on vote results and other variables. 
+Look at the `bonica` dataset again from `juanr`, which provides candidate-level information on campaign fundraising. 
 
 
 ```{r}
-county_data = county_data %>% 
-  drop_na(per_dem_2016)
-
-county_data
+bonica
+?bonica
 ```
 
 
-Run a regression where you try to explain GOP performance in 2016 using the region of the country that the county is in. Note: to see what values a specific variable takes on, you can use: `data %>% distinct(variable)`
+Run a regression where you look at how candidate `gender` impacts their ability to raise money (`total_receipts`). Note: remember that to see what values a specific variable takes on, you can use: `data %>% distinct(variable)`. Also note: some candidates have a gender listed as "U". U = unknown. The reason their gender is unknown is the creators of the dataset used an algorithm to try to guess candidates' gender based on their name, rather than manually code. 
 
 ```{r}
 
+
 ```
 
-**Q8: Using SPECIFIC language, interpret the coefficient estimate for the intercept (i.e., you need to identify the region)**
+**Q8: Using SPECIFIC language, interpret the coefficient estimate for the INTERCEPT**
 
 
 
-**Q9: Based on the above, in which region did Republicans perform the worst?**
+**Q9: Based on the above, which gender category performed the worst at campaign fundraising?**
+

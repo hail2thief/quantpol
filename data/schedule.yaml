@@ -29,7 +29,7 @@ lessons:
     date: "Oct 18, Oct 20"
     class: "regression"
     reading: "05-reg"
-    #assignment: "ps-reg"
+    assignment: "ps-reg"
     
   - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
     date: "Oct 25, Oct 27"

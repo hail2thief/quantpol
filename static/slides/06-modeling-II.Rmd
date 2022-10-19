@@ -48,6 +48,8 @@ library(gapminder)
 library(broom)
 library(equatiomatic)
 library(juanr)
+library(kableExtra) 
+
 
 # dubois colors
 red = "#dc354a"
@@ -151,7 +153,7 @@ $mpg = \beta_0 + \beta1 \times weight$
 ```{r, out.width="80%"}
 ggplot(mtcars, aes(x = wt, y = mpg)) + 
   geom_point(color = blue, alpha = .8) + 
-  theme_fancy + labs(x = "Weight (1000 lbs)", 
+  theme_nice() + labs(x = "Weight (1000 lbs)", 
                      y = "Miles/gallon (mpg)") + 
   geom_smooth(method = "lm", fullrange = TRUE)
 ```
@@ -165,7 +167,7 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
 
 We can use the `lm()` function to create models in R, using this formula:
 
-> lm(Y ~ X1, data = DATA)
+> lm(.red[Outcome] ~ .blue[Treatment_1 + Treatment_2 + ...], data = DATA)
 
 
 --
@@ -217,7 +219,8 @@ $mpg = \beta_0 + \beta_1 \times weight$
 
 ```{r}
 tidy(weight_model) %>%
-  knitr::kable(digits = 2)
+  kableExtra::kbl(digits = 2) %>% 
+  column_spec(2, background = "yellow")
 ```
 
 --
@@ -248,7 +251,7 @@ How do we interpret the slope on *weight*?
 ```{r, out.width="80%"}
 ggplot(mtcars, aes(x = wt, y = mpg)) + 
   geom_point(color = blue, alpha = .8) + 
-  theme_fancy + labs(x = "Weight (1000 lbs)", 
+  theme_nice() + labs(x = "Weight (1000 lbs)", 
                      y = "Miles/gallon (mpg)") + 
   geom_smooth(method = "lm", fullrange = TRUE)
 ```
@@ -352,14 +355,14 @@ $mpg = 37.29 + -5.3 \times weight$
 ggplot(mtcars, aes(x = wt, y = mpg)) +
   coord_cartesian(xlim = c(0, 7), ylim = c(0, 40)) +
   geom_point(color = blue, alpha = .8) +
-  theme_fancy + labs(x = "Weight (1000 lbs)",
+  theme_nice() + labs(x = "Weight (1000 lbs)",
                      y = "Miles/gallon (mpg)") +
   geom_smooth(method = "lm", fullrange = TRUE) +
   geom_abline(data = NULL, intercept = coef(weight_model)[1],
               slope = coef(weight_model)[2], lty = 2, color = "black")
 ```
 
-We can confirm we're not crazy if we zoom out
+We can confirm we're not crazy if we zoom out; the line crosses y-axis at 37.2
 
 ---
 
@@ -492,7 +495,7 @@ gapminder %>%
   ggplot(aes(x = value)) +
   geom_histogram(fill = red, alpha = .8, color = "white", bins = 30) +
   facet_wrap(vars(name), scales = "free") +
-  theme_fancy + scale_x_continuous(labels = scales::dollar)
+  theme_nice() + scale_x_continuous(labels = scales::dollar)
 ```
 
 ---
@@ -509,7 +512,7 @@ tidy(wealth_mod_10k)
 
 --
 
-for every additional $10,000 of GDP, a country gains about 7 years
+for every additional $10,000 of GDP, a country gains about 7.65 years
 
 --
 
@@ -559,21 +562,8 @@ Dummy variables (1/0) are a common type of binary variable
 
 --
 
-Let's say I wanted to look at the relationship between a country's organ donation policy and its organ donation rate
+Let's say I wanted to look at the relationship between a country's .blue[organ donation policy] and its .red[organ donation rate]
 
-
----
-
-
-# Organ data
-
-```{r}
-set.seed(1990)
-organdata %>%
-  sample_n(10) %>%
-  select(country, year, opt, donors) %>%
-  knitr::kable()
-```
 
 ---
 
@@ -594,6 +584,132 @@ And look at the output:
 ```{r}
 tidy(donor_mod)
 ```
+
+
+But how do we interpret the "slope" of a binary variable?
+
+
+---
+
+
+# Binary variables
+
+
+Remember, with categorical variables we are **comparing groups**
+
+```{r}
+ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
+                                    color = opt)) + 
+  ggbeeswarm::geom_beeswarm(alpha = .8) + 
+  scale_color_manual(values = c(blue, red)) + 
+  theme(legend.position = "none") + 
+  labs(x = "Organ donation: opt in or out?", 
+       y = "Average donation rate\n(donors per million residents)")
+```
+
+---
+
+# Binary variables: line of best fit
+
+
+For these variables, each group has "its own" line of best fit
+
+```{r}
+lines = organdata %>% 
+  drop_na(opt) %>% 
+  group_by(opt) %>% 
+  summarise(mean = mean(donors, na.rm = TRUE))
+
+ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
+                                    color = opt)) + 
+  ggbeeswarm::geom_beeswarm(alpha = .8) + 
+  scale_color_manual(values = c(blue, red)) + 
+  theme(legend.position = "none") + 
+  labs(x = "Organ donation: opt in or out?", 
+       y = "Average donation rate\n(donors per million residents)") + 
+  geom_segment(data = lines, aes(x = c(.75, 2.25), y = mean,
+                                 xend = c(1.25, 1.75), 
+                                 yend = mean, color = opt), 
+               size = 2)
+```
+
+---
+
+
+# Binary variables: the slope
+
+
+What we want to know is how much higher or lower one group is, on average, than the other; this is the difference between the .red[red line] and the .blue[blue line]
+
+In this case it is `r round(lines$mean[2] - lines$mean[1], 2)` $\rightarrow$ how many more organ donors countries with an "opt out" policy have, on average, than countries with an "opt in" policy
+
+```{r, out.width="80%"}
+ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
+                                    color = opt)) + 
+  ggbeeswarm::geom_beeswarm(alpha = .8) + 
+  geom_segment(data = lines, aes(x = c(.75, 2.25), y = mean,
+                                 xend = c(1.25, 1.75), 
+                                 yend = mean, color = opt), 
+               size = 2) + 
+  scale_color_manual(values = c(blue, red)) + 
+  theme(legend.position = "none") + 
+  labs(x = "Organ donation: opt in or out?", 
+       y = "Average donation rate\n(donors per million residents)") + 
+  annotate(geom = "rect", xmin = 1.25, xmax = 1.75, 
+           ymin = lines$mean[lines$opt == "In"], 
+           ymax = lines$mean[lines$opt == "Out"], 
+           fill = yellow, alpha = .8)
+```
+
+---
+
+
+# Back to the regression output
+
+Note that this is what the model output is giving us:
+
+```{r}
+tidy(donor_mod)
+```
+
+--
+
+The model is picking one of the categories ("Opt in") and treating it as a **baseline category**
+
+--
+
+It then tells us how much **higher**/**lower** on average, the other category is ("Opt out")
+
+
+---
+
+
+# Back to the plot
+
+
+```{r}
+organdata %>% 
+  drop_na(opt) %>% 
+  mutate(donors = donors - lines$mean[lines$opt == "In"]) %>% 
+  ggplot(aes(x = opt, y = donors, 
+                                    color = opt)) + 
+  ggbeeswarm::geom_beeswarm(alpha = .8) + 
+  geom_segment(data = lines, aes(x = c(.75, 2.25), 
+                                 y = mean - lines$mean[lines$opt == "In"],
+                                 xend = c(1.25, 1.75), 
+                                 yend = mean - lines$mean[lines$opt == "In"], color = opt), 
+               size = 2) + 
+  scale_color_manual(values = c(blue, red)) + 
+  theme(legend.position = "none") + 
+  scale_x_discrete(labels = c("In\n(BASELINE)", "Out")) + 
+  labs(x = "Organ donation: opt in or out?", 
+       y = "Average donation rate\n(donors per million residents)") + 
+  annotate(geom = "rect", xmin = 1.25, xmax = 1.75, 
+           ymin = lines$mean[lines$opt == "In"] - lines$mean[lines$opt == "In"], 
+           ymax = lines$mean[lines$opt == "Out"] - lines$mean[lines$opt == "In"], 
+           fill = yellow, alpha = .8)
+```
+
 
 ---
 
@@ -618,18 +734,6 @@ knitr::include_graphics("images/switch.jpeg")
 ---
 
 
-# Modeling binary variables
-
-
-With a binary variable, R will pick one level of the variable to make the .shout[reference category]
-
---
-
-The other level is the **change**, or **offset**, from that reference
-
-
----
-
 
 # Interpreting categories
 
@@ -649,186 +753,18 @@ Slope: Country-years where people have to OPT OUT of donating their organs have,
 --
 
 .small[
-Intercept (set `opt` = "In"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
+Intercept (set `optOut` = 0 or "off"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
 ]
 
 
 ---
 
-# Categorical variables
-
-
-The difference between the .red[red line] and the .blue[blue line] is `r round(lines$mean[2] - lines$mean[1], 2)`
-
-```{r}
-lines = organdata %>% 
-  drop_na(opt) %>% 
-  group_by(opt) %>% 
-  summarise(mean = mean(donors, na.rm = TRUE))
-
-ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
-                                    color = opt)) + 
-  ggbeeswarm::geom_beeswarm(alpha = .8) + 
-  geom_segment(data = lines, aes(x = c(.5, 2.5), y = mean, xend = 1.5, 
-                                 yend = mean, color = opt), 
-               size = 2) + 
-  scale_color_manual(values = c(blue, red)) + 
-  theme(legend.position = "none") + 
-  labs(x = "Organ donation: opt in or out?", 
-       y = "Average donation rate\n(donors per million residents)")
-```
-
----
-
-
-# What if I have more than one dummy?
-
-
-Say I go back and create a dummy for each continent:
-
-
-```{r, echo = TRUE}
-gap_dummies = gapminder %>%
-  mutate(is_africa = continent == "Africa",
-         is_europe = continent == "Europe",
-         is_asia = continent == "Asia",
-         is_oceania = continent == "Oceania",
-         is_americas = continent == "Americas")
-```
-
-
----
-
-# Multiple dummies
-
-
-I can include more than one dummy in a regression:
-
-```{r, echo = TRUE}
-dummy_mod2 = lm(lifeExp ~ is_americas + is_europe, data = gap_dummies)
-
-tidy(dummy_mod2)
-```
-
----
-
-
-# Multiple dummies
-
-.small[
-$\operatorname{\widehat{lifeExp}} = 53.7 + 10.96(\operatorname{is\_americas}) + 18.2(\operatorname{is\_europe})$
-]
-
---
-
-.small[
-```{r}
-tidy(dummy_mod2)
-```
-]
-
---
-
-.small[
-`is_americas` = countries in the Americas have, on average, 11 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
-
-`is_europe` = countries in Europe have, on average, 18 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
-
-`intercept` = set `is_americas` and `is_europe` equal to 0. Countries in Africa, Oceania, and Asia (not in Americas or Europe) have an average life expectancy of 53.7 years
-]
-
----
-
-# One last time
-
-
-```{r, echo = TRUE}
-dummy_mod3 = lm(lifeExp ~ is_americas + is_europe + is_asia + is_oceania, 
-                data = gap_dummies)
-
-tidy(dummy_mod3)
-```
-
----
-
-
-# One last time
-
-.small[
-```{r}
-tidy(dummy_mod3)
-```
-
-]
-
---
-
-.small[
-* `is_americas` = countries in the Americas have, on average, 15 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-* `is_europe` = countries in Europe have, on average, 23 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-* `is_asia` = countries in Asia have, on average, 11 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-]
-
----
-
-# One last time
-
-.small[
-$$
-\begin{aligned}
-\operatorname{\widehat{lifeExp}} &= 48.87 + 15.79(\operatorname{is\_americas}) + 23.04(\operatorname{is\_europe}) + 11.2(\operatorname{is\_asia})\ + \\
-&\quad 25.46(\operatorname{is\_oceania})
-\end{aligned}
-$$
-]
-
-
-.small[
-```{r}
-tidy(dummy_mod3)
-
-```
-]
-
---
-
-.small[
-
-* `is_oceania` = countries in Oceania have, on average, 25 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (Africa)
-
-* `intercept` = countries in Africa (**not in Americas or Europe or Asia or Oceania**) have an average life expectancy of 48.9 years
-]
-
-
----
-
-# The pattern
-
-Notice how the coefficient in each dummy is how much *higher* or *lower* the continent is, relative to the intercept (every other continent)
-
---
-
-As you add more continent dummies, the coefficient changes
-
---
-
-It becomes: how much higher or lower that continent is relative to the intercept, which now **excludes** the other continent dummies in the model
-
---
-
-This means that as the number of dummies increases, the number of continents in the intercept **decreases**
-
-
----
 
 
 # More complicated categorical variables
 
 
-Most of the variables we care about are not just dummies
+Most of the variables we care about are not just binary
 
 --
 
@@ -842,39 +778,119 @@ E.g., education levels, sex, race, religion, etc.
 
 What happens when we include one of these in a model? 
 
----
+--
 
-
-# Categorical variables = dummies
-
-If you fit a model with a categorical variable, R will automatically break it up into n-1 dummies
-
-```{r, echo = TRUE}
-continent_model = lm(lifeExp ~ continent, data = gapminder)
-
-tidy(continent_model)
-```
-
+Say we wanted to look at how .blue[life expectancy] varies across .red[continents]
 
 ---
 
-# The same!
+# The model
 
-.pull-left[
-```{r,echo = TRUE}
-bigcat = lm(lifeExp ~ continent, 
-   data = gapminder)
-tidy(bigcat)
-```
-]
+We can estimate the model, same as before:
 
-.pull-right[
 ```{r, echo = TRUE}
-dummy_cat = lm(lifeExp ~ is_americas + is_europe + 
-     is_asia + is_oceania,
-   data = gap_dummies)
-tidy(dummy_cat)
+continent_mod = lm(lifeExp ~ continent, data = gapminder)
 ```
+
+And look at the output with `tidy()`:
+
+```{r}
+tidy(continent_mod)
+```
+
+
+Now we get more coefficients! What do they mean?
+
+
+---
+
+
+# The plot
+
+
+Same as before, but now multiple groups, each with own "line of best fit"
+
+```{r, out.width="80%"}
+lines = 
+  gapminder %>% 
+  group_by(continent) %>% 
+  summarise(lifeExp = mean(lifeExp, na.rm = TRUE))
+
+ggplot(gapminder, aes(x = continent, y = lifeExp, color = continent)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  geom_segment(data = lines, aes(x = c(.5, 1.5, 2.5, 3.5, 4.5), 
+                                 y = lifeExp,
+                                 xend = c(1.5, 2.5, 3.5, 4.5, 5.5), 
+                                 yend = lifeExp), 
+               size = 2, color = "black") + 
+  theme(legend.position = "none") + 
+  labs(x = "Continent", y = "Life expectancy (in years)")
+```
+
+What is the "slope"? We have multiple groups, what are we comparing each group to?
+
+---
+
+
+# Multiple categories
+
+
+Just like before, R will pick one of the groups to treat as the "baseline"
+
+--
+
+It will then tell us how much higher/lower the other categories are, on average, *relative to that baseline*
+
+--
+
+```{r}
+tidy(continent_mod)
+```
+
+What group is the baseline here?
+
+---
+
+
+# Multiple categories
+
+
+R treats Africa as the baseline and tells us how much higher (or lower) life expectancy is in the other continents, on average
+
+```{r}
+lines = 
+  gapminder %>% 
+  group_by(continent) %>% 
+  summarise(lifeExp = mean(lifeExp, na.rm = TRUE))
+
+gapminder %>% 
+  mutate(lifeExp = lifeExp - lines$lifeExp[lines$continent == "Africa"]) %>% 
+  ggplot(aes(x = continent, y = lifeExp, color = continent)) + 
+  ggbeeswarm::geom_quasirandom() + 
+  stat_summary(fun.data = "mean_cl_boot", color = "black", size = 1.2) + 
+  theme(legend.position = "none") + 
+  labs(x = "Continent", y = "Life expectancy (in years)") + 
+  geom_hline(yintercept = 0, lty = 2, size = 1.2)
+```
+
+
+---
+
+
+# Interpretation
+
+```{r}
+tidy(continent_mod)
+```
+
+.small[
+
+* `continentAmericas` = countries in the Americas have, on average, 15.8 years more life expectancy than countries in *Africa* (the baseline)
+
+* `continentAsia` = countries in Asia have, on average, 11.2 years more life expectancy than countries in *Africa*
+
+* `Intercept` = (set Americas = 0, Asia = 0, Europe = 0, Oceania = 0) $\rightarrow$ the average life expectancy in **Africa** is 48.9 years
+
 ]
 
 
@@ -908,20 +924,25 @@ We now know (sorta) how to interpret the coefficients on those big tables in the
 knitr::include_graphics("images/reg-table.png")
 ```
 
+???
+Imagine that `prior war` is a binary variable for whether the country had a war in the previous year (or not); how to interpret?
 
 ---
 
 
 
-# 🚨 Your turn: number of kids 🚨
+# 🚨 Your turn: 👨‍👧‍👦 Kids 👨‍👧‍👦 🚨
+
+
+Using the `gss_sm` dataset:
 
 --
 
-1. Do happier people tend to have more or fewer kids than less happy people? Using the `gss_sm` dataset, regress `childs` (outcome) against `happy` (treatment). Interpret the output.
+1. Do happier people tend to have more or fewer kids than less happy people? Regress `childs` (outcome) against `happy` (treatment). Interpret the output.
 
 --
 
-2. Which religions have the biggest families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
+2. How does religious belief affect the decision to have bigger or smaller families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
 
 --
 

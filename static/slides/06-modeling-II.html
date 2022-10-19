@@ -4,9 +4,11 @@
     <title>Modeling II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-10-17" />
+    <meta name="date" content="2022-10-19" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
+    <link href="libs/lightable/lightable.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
     <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
@@ -103,7 +105,7 @@ Remember, we want the underlying model from this line
 
 We can use the `lm()` function to create models in R, using this formula:
 
-&gt; lm(Y ~ X1, data = DATA)
+&gt; lm(.red[Outcome] ~ .blue[Treatment_1 + Treatment_2 + ...], data = DATA)
 
 
 --
@@ -172,11 +174,33 @@ Note! We only care about the first two columns of `tidy()` so far
 `\(mpg = \beta_0 + \beta_1 \times weight\)`
 
 
-
-|term        | estimate| std.error| statistic| p.value|
-|:-----------|--------:|---------:|---------:|-------:|
-|(Intercept) |    37.29|      1.88|     19.86|       0|
-|wt          |    -5.34|      0.56|     -9.56|       0|
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow !important;"&gt; 37.29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; wt &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow !important;"&gt; -5.34 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -9.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 --
 
@@ -234,11 +258,33 @@ The change is **gradual**
 
 
 
-
-|term        | estimate| std.error| statistic| p.value|
-|:-----------|--------:|---------:|---------:|-------:|
-|(Intercept) |    37.29|      1.88|     19.86|       0|
-|wt          |    -5.34|      0.56|     -9.56|       0|
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.88 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; wt &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.34 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -9.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 
 --
@@ -301,7 +347,7 @@ Set X (weight) equal to 0 `\(\rightarrow\)` `\(\color{red}{37.2} + (-5.3 \times 
 
 &lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-10-1.png" width="80%" /&gt;
 
-We can confirm we're not crazy if we zoom out
+We can confirm we're not crazy if we zoom out; the line crosses y-axis at 37.2
 
 ---
 
@@ -464,7 +510,7 @@ tidy(wealth_mod_10k)
 
 --
 
-for every additional $10,000 of GDP, a country gains about 7 years
+for every additional $10,000 of GDP, a country gains about 7.65 years
 
 --
 
@@ -485,7 +531,7 @@ Mind your *scales*: if a coefficient is tiny, ask yourself if the scale makes se
 
 
 
-<div class="countdown" id="timer_634ddb07" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_635032ca" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -514,27 +560,8 @@ Dummy variables (1/0) are a common type of binary variable
 
 --
 
-Let's say I wanted to look at the relationship between a country's organ donation policy and its organ donation rate
+Let's say I wanted to look at the relationship between a country's .blue[organ donation policy] and its .red[organ donation rate]
 
-
----
-
-
-# Organ data
-
-
-|country       |year       |opt | donors|
-|:-------------|:----------|:---|------:|
-|Canada        |1996-01-01 |In  |  14.00|
-|Finland       |NA         |NA  |     NA|
-|Denmark       |1999-01-01 |In  |  14.30|
-|Australia     |1993-01-01 |In  |  12.51|
-|Belgium       |1995-01-01 |Out |  19.60|
-|France        |1995-01-01 |Out |  15.10|
-|Germany       |1998-01-01 |In  |  13.40|
-|United States |1993-01-01 |In  |  18.70|
-|Norway        |1998-01-01 |Out |  15.60|
-|France        |2002-01-01 |Out |  20.00|
 
 ---
 
@@ -562,6 +589,75 @@ And look at the output:
 ## 2 optOut          5.50     0.705      7.80 5.00e-13
 ```
 
+
+But how do we interpret the "slope" of a binary variable?
+
+
+---
+
+
+# Binary variables
+
+
+Remember, with categorical variables we are **comparing groups**
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-21-1.png" width="100%" /&gt;
+
+---
+
+# Binary variables: line of best fit
+
+
+For these variables, each group has "its own" line of best fit
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-22-1.png" width="100%" /&gt;
+
+---
+
+
+# Binary variables: the slope
+
+
+What we want to know is how much higher or lower one group is, on average, than the other; this is the difference between the .red[red line] and the .blue[blue line]
+
+In this case it is 5.5 `\(\rightarrow\)` how many more organ donors countries with an "opt out" policy have, on average, than countries with an "opt in" policy
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-23-1.png" width="80%" /&gt;
+
+---
+
+
+# Back to the regression output
+
+Note that this is what the model output is giving us:
+
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)    14.3      0.446     32.1  7.10e-76
+## 2 optOut          5.50     0.705      7.80 5.00e-13
+```
+
+--
+
+The model is picking one of the categories ("Opt in") and treating it as a **baseline category**
+
+--
+
+It then tells us how much **higher**/**lower** on average, the other category is ("Opt out")
+
+
+---
+
+
+# Back to the plot
+
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+
+
 ---
 
 # How to interpret categorical variables?
@@ -582,18 +678,6 @@ The change is **instant**
 
 ---
 
-
-# Modeling binary variables
-
-
-With a binary variable, R will pick one level of the variable to make the .shout[reference category]
-
---
-
-The other level is the **change**, or **offset**, from that reference
-
-
----
 
 
 # Interpreting categories
@@ -619,214 +703,18 @@ Slope: Country-years where people have to OPT OUT of donating their organs have,
 --
 
 .small[
-Intercept (set `opt` = "In"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
+Intercept (set `optOut` = 0 or "off"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
 ]
 
 
 ---
 
-# Categorical variables
-
-
-The difference between the .red[red line] and the .blue[blue line] is 5.5
-
-&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-24-1.png" width="100%" /&gt;
-
----
-
-
-# What if I have more than one dummy?
-
-
-Say I go back and create a dummy for each continent:
-
-
-
-```r
-gap_dummies = gapminder %&gt;%
-  mutate(is_africa = continent == "Africa",
-         is_europe = continent == "Europe",
-         is_asia = continent == "Asia",
-         is_oceania = continent == "Oceania",
-         is_americas = continent == "Americas")
-```
-
-
----
-
-# Multiple dummies
-
-
-I can include more than one dummy in a regression:
-
-
-```r
-dummy_mod2 = lm(lifeExp ~ is_americas + is_europe, data = gap_dummies)
-
-tidy(dummy_mod2)
-```
-
-```
-## # A tibble: 3 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         53.7     0.323     166.  0        
-## 2 is_americasTRUE     11.0     0.684      16.0 7.08e- 54
-## 3 is_europeTRUE       18.2     0.639      28.5 1.77e-146
-```
-
----
-
-
-# Multiple dummies
-
-.small[
-`\(\operatorname{\widehat{lifeExp}} = 53.7 + 10.96(\operatorname{is\_americas}) + 18.2(\operatorname{is\_europe})\)`
-]
-
---
-
-.small[
-
-```
-## # A tibble: 3 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         53.7     0.323     166.  0        
-## 2 is_americasTRUE     11.0     0.684      16.0 7.08e- 54
-## 3 is_europeTRUE       18.2     0.639      28.5 1.77e-146
-```
-]
-
---
-
-.small[
-`is_americas` = countries in the Americas have, on average, 11 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
-
-`is_europe` = countries in Europe have, on average, 18 years more of life expectancy than countries not **in the Americas or Europe** (so: Asia, Africa, Oceania)
-
-`intercept` = set `is_americas` and `is_europe` equal to 0. Countries in Africa, Oceania, and Asia (not in Americas or Europe) have an average life expectancy of 53.7 years
-]
-
----
-
-# One last time
-
-
-
-```r
-dummy_mod3 = lm(lifeExp ~ is_americas + is_europe + is_asia + is_oceania, 
-                data = gap_dummies)
-
-tidy(dummy_mod3)
-```
-
-```
-## # A tibble: 5 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         48.9     0.370     132.  0        
-## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
-## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
-## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
-```
-
----
-
-
-# One last time
-
-.small[
-
-```
-## # A tibble: 5 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         48.9     0.370     132.  0        
-## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
-## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
-## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
-```
-
-]
-
---
-
-.small[
-* `is_americas` = countries in the Americas have, on average, 15 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-* `is_europe` = countries in Europe have, on average, 23 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-* `is_asia` = countries in Asia have, on average, 11 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (so: Africa)
-
-]
-
----
-
-# One last time
-
-.small[
-$$
-`\begin{aligned}
-\operatorname{\widehat{lifeExp}} &amp;= 48.87 + 15.79(\operatorname{is\_americas}) + 23.04(\operatorname{is\_europe}) + 11.2(\operatorname{is\_asia})\ + \\
-&amp;\quad 25.46(\operatorname{is\_oceania})
-\end{aligned}`
-$$
-]
-
-
-.small[
-
-```
-## # A tibble: 5 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         48.9     0.370     132.  0        
-## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
-## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
-## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
-```
-]
-
---
-
-.small[
-
-* `is_oceania` = countries in Oceania have, on average, 25 years more of life expectancy than countries **not in the Americas or Europe or Asia or Oceania** (Africa)
-
-* `intercept` = countries in Africa (**not in Americas or Europe or Asia or Oceania**) have an average life expectancy of 48.9 years
-]
-
-
----
-
-# The pattern
-
-Notice how the coefficient in each dummy is how much *higher* or *lower* the continent is, relative to the intercept (every other continent)
-
---
-
-As you add more continent dummies, the coefficient changes
-
---
-
-It becomes: how much higher or lower that continent is relative to the intercept, which now **excludes** the other continent dummies in the model
-
---
-
-This means that as the number of dummies increases, the number of continents in the intercept **decreases**
-
-
----
 
 
 # More complicated categorical variables
 
 
-Most of the variables we care about are not just dummies
+Most of the variables we care about are not just binary
 
 --
 
@@ -840,19 +728,23 @@ E.g., education levels, sex, race, religion, etc.
 
 What happens when we include one of these in a model? 
 
+--
+
+Say we wanted to look at how .blue[life expectancy] varies across .red[continents]
+
 ---
 
+# The model
 
-# Categorical variables = dummies
-
-If you fit a model with a categorical variable, R will automatically break it up into n-1 dummies
+We can estimate the model, same as before:
 
 
 ```r
-continent_model = lm(lifeExp ~ continent, data = gapminder)
-
-tidy(continent_model)
+continent_mod = lm(lifeExp ~ continent, data = gapminder)
 ```
+
+And look at the output with `tidy()`:
+
 
 ```
 ## # A tibble: 5 × 5
@@ -866,17 +758,35 @@ tidy(continent_model)
 ```
 
 
+Now we get more coefficients! What do they mean?
+
+
 ---
 
-# The same!
 
-.pull-left[
+# The plot
 
-```r
-bigcat = lm(lifeExp ~ continent, 
-   data = gapminder)
-tidy(bigcat)
-```
+
+Same as before, but now multiple groups, each with own "line of best fit"
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-30-1.png" width="80%" /&gt;
+
+What is the "slope"? We have multiple groups, what are we comparing each group to?
+
+---
+
+
+# Multiple categories
+
+
+Just like before, R will pick one of the groups to treat as the "baseline"
+
+--
+
+It will then tell us how much higher/lower the other categories are, on average, *relative to that baseline*
+
+--
+
 
 ```
 ## # A tibble: 5 × 5
@@ -888,27 +798,45 @@ tidy(bigcat)
 ## 4 continentEurope       23.0     0.611      37.7 1.38e-226
 ## 5 continentOceania      25.5     1.92       13.3 2.99e- 38
 ```
-]
 
-.pull-right[
+What group is the baseline here?
 
-```r
-dummy_cat = lm(lifeExp ~ is_americas + is_europe + 
-     is_asia + is_oceania,
-   data = gap_dummies)
-tidy(dummy_cat)
-```
+---
+
+
+# Multiple categories
+
+
+R treats Africa as the baseline and tells us how much higher (or lower) life expectancy is in the other continents, on average
+
+&lt;img src="06-modeling-II_files/figure-html/unnamed-chunk-32-1.png" width="100%" /&gt;
+
+
+---
+
+
+# Interpretation
+
 
 ```
 ## # A tibble: 5 × 5
-##   term            estimate std.error statistic   p.value
-##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 (Intercept)         48.9     0.370     132.  0        
-## 2 is_americasTRUE     15.8     0.649      24.3 1.38e-112
-## 3 is_europeTRUE       23.0     0.611      37.7 1.38e-226
-## 4 is_asiaTRUE         11.2     0.593      18.9 2.44e- 72
-## 5 is_oceaniaTRUE      25.5     1.92       13.3 2.99e- 38
+##   term              estimate std.error statistic   p.value
+##   &lt;chr&gt;                &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)           48.9     0.370     132.  0        
+## 2 continentAmericas     15.8     0.649      24.3 1.38e-112
+## 3 continentAsia         11.2     0.593      18.9 2.44e- 72
+## 4 continentEurope       23.0     0.611      37.7 1.38e-226
+## 5 continentOceania      25.5     1.92       13.3 2.99e- 38
 ```
+
+.small[
+
+* `continentAmericas` = countries in the Americas have, on average, 15.8 years more life expectancy than countries in *Africa* (the baseline)
+
+* `continentAsia` = countries in Asia have, on average, 11.2 years more life expectancy than countries in *Africa*
+
+* `Intercept` = (set Americas = 0, Asia = 0, Europe = 0, Oceania = 0) `\(\rightarrow\)` the average life expectancy in **Africa** is 48.9 years
+
 ]
 
 
@@ -917,11 +845,27 @@ tidy(dummy_cat)
 # Interpretation formula
 
 
-
-|Type       |Approach                                                    |Intercept                                          |
-|:----------|:-----------------------------------------------------------|:--------------------------------------------------|
-|Continuous |A one unit increase in X, SLOPE unit change in Y            |Average value of Y when X = 0                      |
-|Category   |The category is SLOPE units higher/lower than the intercept |Average value of Y for baseline (missing) category |
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Type &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Approach &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Intercept &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Continuous &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; A one unit increase in X, SLOPE unit change in Y &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Average value of Y when X = 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Category &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The category is SLOPE units higher/lower than the intercept &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Average value of Y for baseline (missing) category &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
 
 Interpreting coefficients is pretty confusing; it just requires practice
@@ -939,20 +883,25 @@ We now know (sorta) how to interpret the coefficients on those big tables in the
 
 &lt;img src="images/reg-table.png" width="100%" /&gt;
 
+???
+Imagine that `prior war` is a binary variable for whether the country had a war in the previous year (or not); how to interpret?
 
 ---
 
 
 
-# 🚨 Your turn: number of kids 🚨
+# 🚨 Your turn: 👨‍👧‍👦 Kids 👨‍👧‍👦 🚨
+
+
+Using the `gss_sm` dataset:
 
 --
 
-1. Do happier people tend to have more or fewer kids than less happy people? Using the `gss_sm` dataset, regress `childs` (outcome) against `happy` (treatment). Interpret the output.
+1. Do happier people tend to have more or fewer kids than less happy people? Regress `childs` (outcome) against `happy` (treatment). Interpret the output.
 
 --
 
-2. Which religions have the biggest families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
+2. How does religious belief affect the decision to have bigger or smaller families? Regress the number of siblings `sibs` (outcome) against respondent religion `relig`. Based on the output: which religion has the largest families, on average?
 
 --
 
@@ -961,7 +910,7 @@ Hint: to figure out what values a categorical variable takes on, use the `distin
 ]
 
 
-<div class="countdown" id="timer_634dda5b" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_635033a0" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 

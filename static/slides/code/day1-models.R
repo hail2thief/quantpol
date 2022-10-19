@@ -21,7 +21,7 @@ gapminder
 
 
 # switch out gapminder with a dataset you want below
-gapminder %>% 
+penguins %>% 
   # correlation only works with numeric columns; keep only those
   select(where(is.numeric)) %>% 
   # the cor() function doesn't take NA; drop them all
@@ -35,6 +35,13 @@ gapminder %>%
 
 # Models ------------------------------------------------------------------
 
+
+# data
+organdata
+?organdata
+
+
+# plot
 
 
 # run this code below to create function to calculate sum of squared residuals
