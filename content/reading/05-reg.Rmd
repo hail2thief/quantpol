@@ -36,14 +36,14 @@ xaringanExtra::embed_xaringan(
 ```
 
 
-<!-- ### Thursday -->
+### Thursday
 
-<!-- [Class slides here](/slides/06-modeling-II.html) -->
+[Class slides here](/slides/06-modeling-II.html)
 
 
-<!-- ```{r,echo=FALSE} -->
-<!-- xaringanExtra::embed_xaringan( -->
-<!--    url = "/slides/06-modeling-II.html", -->
-<!--    ratio = "16:9" -->
-<!-- ) -->
-<!-- ``` -->
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/06-modeling-II.html",
+   ratio = "16:9"
+)
+```

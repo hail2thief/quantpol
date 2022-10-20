@@ -534,7 +534,7 @@ Mind your *scales*: if a coefficient is tiny, ask yourself if the scale makes se
 
 
 ```{r}
-countdown::countdown(minutes = 5L)
+countdown::countdown(minutes = 10L)
 ```
 
 
@@ -641,8 +641,6 @@ ggplot(drop_na(organdata, opt), aes(x = opt, y = donors,
 
 What we want to know is how much higher or lower one group is, on average, than the other; this is the difference between the .red[red line] and the .blue[blue line]
 
-In this case it is `r round(lines$mean[2] - lines$mean[1], 2)` $\rightarrow$ how many more organ donors countries with an "opt out" policy have, on average, than countries with an "opt in" policy
-
 ```{r, out.width="80%"}
 ggplot(drop_na(organdata, opt), aes(x = opt, y = donors, 
                                     color = opt)) + 
@@ -661,12 +659,17 @@ ggplot(drop_na(organdata, opt), aes(x = opt, y = donors,
            fill = yellow, alpha = .8)
 ```
 
+--
+
+In this case it is `r round(lines$mean[2] - lines$mean[1], 2)` $\rightarrow$ how many more organ donors countries with an "opt out" policy have, on average, than countries with an "opt in" policy
+
+
 ---
 
 
 # Back to the regression output
 
-Note that this is what the model output is giving us:
+Note that this is exactly what the model output is giving us:
 
 ```{r}
 tidy(donor_mod)
@@ -683,7 +686,7 @@ It then tells us how much **higher**/**lower** on average, the other category is
 
 ---
 
-
+exclude: true
 # Back to the plot
 
 
@@ -738,7 +741,7 @@ knitr::include_graphics("images/switch.jpeg")
 # Interpreting categories
 
 .small[
-$\operatorname{\widehat{donors}} = 14.31 + 5.5(\operatorname{opt}_{\operatorname{Out}})$
+$\operatorname{\widehat{donors}} = \color{red}{14.31} + \color{blue}{5.5}(\operatorname{opt}_{\operatorname{Out}})$
 ]
 
 ```{r}
@@ -746,14 +749,14 @@ tidy(donor_mod)
 ```
 
 .small[
-Slope: Country-years where people have to OPT OUT of donating their organs have, on average, 5.5 more donations per million residents than country-years where people have to OPT IN
+Slope: Country-years where people have to OPT OUT of donating their organs have, on average, .blue[5.5] more donations per million residents than country-years where people have to OPT IN
 
 ]
 
 --
 
 .small[
-Intercept (set `optOut` = 0 or "off"): Country-years where people have to OPT IN to organ donation have, on average, 14.3 donations per million residents
+Intercept (set `optOut` = 0 or "off", i.e., countries where `opt == "in"`): Country-years where people have to OPT IN to organ donation have, on average, .red[14.31] donations per million residents
 ]
 
 
@@ -790,11 +793,6 @@ We can estimate the model, same as before:
 
 ```{r, echo = TRUE}
 continent_mod = lm(lifeExp ~ continent, data = gapminder)
-```
-
-And look at the output with `tidy()`:
-
-```{r}
 tidy(continent_mod)
 ```
 
@@ -808,7 +806,7 @@ Now we get more coefficients! What do they mean?
 # The plot
 
 
-Same as before, but now multiple groups, each with own "line of best fit"
+With complex categorical variables, we are also comparing across groups
 
 ```{r, out.width="80%"}
 lines = 
@@ -835,11 +833,11 @@ What is the "slope"? We have multiple groups, what are we comparing each group t
 # Multiple categories
 
 
-Just like before, R will pick one of the groups to treat as the "baseline"
+Just like before, R will pick one of the groups to treat as the "**baseline**"
 
 --
 
-It will then tell us how much higher/lower the other categories are, on average, *relative to that baseline*
+It will then tell us how much higher/lower the other categories are, on average, .shout[relative to that baseline]
 
 --
 
@@ -852,6 +850,7 @@ What group is the baseline here?
 ---
 
 
+exclude: true
 # Multiple categories
 
 
