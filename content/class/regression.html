@@ -20,6 +20,11 @@ editor_options:
 <div id="TOC">
 <ul>
 <li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
+<li><a href="#drawing-lines-geom_smooth" id="toc-drawing-lines-geom_smooth">Drawing lines (geom_smooth)</a></li>
+<li><a href="#ggcorrplot" id="toc-ggcorrplot">ggcorrplot</a></li>
+<li><a href="#draw-the-line" id="toc-draw-the-line">Draw the line</a></li>
+<li><a href="#convince-yourself" id="toc-convince-yourself">Convince yourself</a></li>
+<li><a href="#ir-econ" id="toc-ir-econ">IR Econ</a></li>
 </ul>
 </div>
 
@@ -30,107 +35,129 @@ editor_options:
 <li><a href="/slides/code/day1-models.R"><i class="fas fa-file-archive"></i> <code>day1-models.R</code></a></li>
 <li><a href="/slides/code/day2-models.R"><i class="fas fa-file-archive"></i> <code>day2-models.R</code></a></li>
 </ul>
-<!-- ## Drawing lines (geom_smooth) -->
-<!-- Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using `geom_smooth`, as below. Notice `method = "lm"`.  -->
-<!-- ```{r setup, include=FALSE} -->
-<!-- knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE) -->
-<!-- ``` -->
-<!-- ```{r, warning=F,message=F} -->
-<!-- # libraries -->
-<!-- library(tidyverse) -->
-<!-- # mtcars -->
-<!-- ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() +  -->
-<!--   geom_smooth(method = "lm") -->
-<!-- ``` -->
-<!-- ## ggcorrplot -->
-<!-- ```{r} -->
-<!-- # libraries -->
-<!-- library(tidyverse) -->
-<!-- library(socviz) -->
-<!-- library(fivethirtyeight) -->
-<!-- library(gapminder) -->
-<!-- library(nycflights13) -->
-<!-- library(ggcorrplot) -->
-<!-- # load data -->
-<!-- therm = read_csv("static/files/voter-files-therm.csv") -->
-<!-- issues = read_csv("static/files/voter-files-issues.csv") -->
-<!-- ir_econ = read_csv("static/files/ir_econ.csv") -->
-<!-- ``` -->
-<!-- Look at the correlations: -->
-<!-- ```{r} -->
-<!-- # switch out gapminder with a dataset you want below -->
-<!-- therm %>%  -->
-<!--   # correlation only works with numeric columns; keep only those -->
-<!--   select(where(is.numeric)) %>%  -->
-<!--   # the cor() function doesn't take NA; drop them all -->
-<!--   drop_na() %>%  -->
-<!--   # get the correlation -->
-<!--   cor() %>%  -->
-<!--   # plot the correlation -->
-<!--   ggcorrplot(lab = TRUE) -->
-<!-- ``` -->
-<!-- ## Draw the line -->
-<!-- ```{r} -->
-<!-- # draw a line: alter the intercept and slope in geom_abline() -->
-<!-- # to draw the line -->
-<!--   ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) +  -->
-<!--   # change the limits on the x and y-axis -->
-<!--   scale_x_continuous(limits = c(-10, 10)) +  -->
-<!--   scale_y_continuous(limits = c(-10, 10)) +  -->
-<!--   # add a vertical and horizontal line at 0 -->
-<!--   geom_hline(yintercept = 0, lty = 2) +  -->
-<!--   geom_vline(xintercept = 0, lty = 2) +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- ## Convince yourself -->
-<!-- Make the scatterplot: -->
-<!-- ```{r} -->
-<!-- # convince yourself about the line of best fit: run this code below -->
-<!-- # set the seed -->
-<!-- set.seed(1990) -->
-<!-- # make the fake data -->
-<!-- df = tibble(x = rnorm(50, mean = 10),  -->
-<!--             y = 3 + 2*x + rnorm(50)) -->
-<!-- # line of best fit? -->
-<!-- model = lm(y ~ x, df) -->
-<!-- true = tibble(true_intercept = coef(model)[1],  -->
-<!--               true_slope = coef(model)[2]) -->
-<!-- ggplot(data = df, aes(x = x, y = y)) +  -->
-<!--   geom_point() +  -->
-<!--   geom_smooth(method = "lm") -->
-<!-- ``` -->
-<!-- ## IR Econ -->
-<!-- The plot -->
-<!-- ```{r} -->
-<!-- ir_1959 = ir_econ %>%  -->
-<!--   filter(year == 2008) -->
-<!-- ggplot(ir_1959, aes(x = imports, y = exports,  -->
-<!--                     label = country)) + geom_point() + geom_smooth(method = "lm") +  -->
-<!--   geom_text() -->
-<!-- ``` -->
-<!-- Estimate a model, and interpret: -->
-<!-- ```{r} -->
-<!-- library(broom) -->
-<!-- igo_pop = lm(exports ~ pop, data = ir_econ) -->
-<!-- tidy(igo_pop) -->
-<!-- ``` -->
-<!-- Penguins regression:  -->
-<!-- ```{r} -->
-<!-- penguins_model = lm(body_mass_g ~ species,  -->
-<!--                     data = penguins) -->
-<!-- tidy(penguins_model) -->
-<!-- ``` -->
-<!-- Interpretation:  -->
-<!-- * Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins.  -->
-<!-- * Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins.  -->
-<!-- * Adelie penguins weigh, on average, 3,700 grams.  -->
-<!-- another one: -->
-<!-- ```{r} -->
-<!-- lm(tvhours ~ race, data = gss_cat) %>%  -->
-<!--   tidy() -->
-<!-- ``` -->
-<!-- Interpretation:  -->
-<!-- * Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as "Other".  -->
-<!-- * White respondents watch .009 more hours of tv, on average, than respondents who identify as "Other".  -->
-<!-- * Respondents who identify as "Other" watch, on average, 2.76 hours of TV.  -->
+</div>
+<div id="drawing-lines-geom_smooth" class="section level2">
+<h2>Drawing lines (geom_smooth)</h2>
+<p>Why draw trend lines? Trend lines give us a good, educated guess as to what the value of a Y variable is given some value of X. We can draw a trend line (or line of best fit) using <code>geom_smooth</code>, as below. Notice <code>method = "lm"</code>.</p>
+<pre class="r"><code># libraries
+library(tidyverse)
+
+# mtcars
+ggplot(mtcars, aes(x = wt, y = mpg)) + geom_point() +
+  geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+</div>
+<div id="ggcorrplot" class="section level2">
+<h2>ggcorrplot</h2>
+<pre class="r"><code># libraries
+library(tidyverse)
+library(socviz)
+library(fivethirtyeight)
+library(gapminder)
+library(nycflights13)
+library(ggcorrplot)
+library(juanr)
+library(palmerpenguins)</code></pre>
+<p>Look at the correlations:</p>
+<pre class="r"><code># switch out gapminder with a dataset you want below
+therm %&gt;%
+  # correlation only works with numeric columns; keep only those
+  select(where(is.numeric)) %&gt;%
+  # the cor() function doesn&#39;t take NA; drop them all
+  drop_na() %&gt;%
+  # get the correlation
+  cor() %&gt;%
+  # plot the correlation
+  ggcorrplot(lab = TRUE)</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="draw-the-line" class="section level2">
+<h2>Draw the line</h2>
+<pre class="r"><code># draw a line: alter the intercept and slope in geom_abline()
+# to draw the line
+  ggplot() + geom_abline(intercept = 1, slope = 2, size = 1) +
+  # change the limits on the x and y-axis
+  scale_x_continuous(limits = c(-10, 10)) +
+  scale_y_continuous(limits = c(-10, 10)) +
+  # add a vertical and horizontal line at 0
+  geom_hline(yintercept = 0, lty = 2) +
+  geom_vline(xintercept = 0, lty = 2) +
+  theme_bw()</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="convince-yourself" class="section level2">
+<h2>Convince yourself</h2>
+<p>Make the scatterplot:</p>
+<pre class="r"><code># convince yourself about the line of best fit: run this code below
+# set the seed
+set.seed(1990)
+
+# make the fake data
+df = tibble(x = rnorm(50, mean = 10),
+            y = 3 + 2*x + rnorm(50))
+
+# line of best fit?
+model = lm(y ~ x, df)
+true = tibble(true_intercept = coef(model)[1],
+              true_slope = coef(model)[2])
+
+ggplot(data = df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;)</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="ir-econ" class="section level2">
+<h2>IR Econ</h2>
+<p>The plot</p>
+<pre class="r"><code>ir_1959 = trade %&gt;%
+  filter(year == 2008)
+
+
+ggplot(ir_1959, aes(x = imports, y = exports,
+                    label = country)) + geom_point() + geom_smooth(method = &quot;lm&quot;) +
+  geom_text()</code></pre>
+<p><img src="/class/regression_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Estimate a model, and interpret:</p>
+<pre class="r"><code>library(broom)
+
+igo_pop = lm(exports ~ pop, data = trade)
+
+tidy(igo_pop)</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   term            estimate     std.error statistic  p.value
+##   &lt;chr&gt;              &lt;dbl&gt;         &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept) 13322.       1023.              13.0 1.81e-38
+## 2 pop             0.000393    0.00000920      42.7 0</code></pre>
+<p>Penguins regression:</p>
+<pre class="r"><code>penguins_model = lm(body_mass_g ~ species,
+                    data = penguins)
+
+tidy(penguins_model)</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   term             estimate std.error statistic   p.value
+##   &lt;chr&gt;               &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)        3701.       37.6    98.4   2.49e-251
+## 2 speciesChinstrap     32.4      67.5     0.480 6.31e-  1
+## 3 speciesGentoo      1375.       56.1    24.5   5.42e- 77</code></pre>
+<p>Interpretation:</p>
+<ul>
+<li>Chinstrap penguins weigh 32 more grams, on average, than Adelie penguins.</li>
+<li>Gentoo penguins weigh 1,375 more grams, on average, than Adelie penguins.</li>
+<li>Adelie penguins weigh, on average, 3,700 grams.</li>
+</ul>
+<p>another one:</p>
+<pre class="r"><code>lm(tvhours ~ race, data = gss_cat) %&gt;%
+  tidy()</code></pre>
+<pre><code>## # A tibble: 3 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)  2.76       0.0792    34.9   3.90e-253
+## 2 raceBlack    1.42       0.100     14.1   5.90e- 45
+## 3 raceWhite    0.00894    0.0838     0.107 9.15e-  1</code></pre>
+<p>Interpretation:</p>
+<ul>
+<li>Black respondents watch 1.42 more hours of tv, on average, than respondents who identify as “Other”.</li>
+<li>White respondents watch .009 more hours of tv, on average, than respondents who identify as “Other”.</li>
+<li>Respondents who identify as “Other” watch, on average, 2.76 hours of TV.</li>
+</ul>
 </div>

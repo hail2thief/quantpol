@@ -7,7 +7,7 @@ date: '`r Sys.Date()`'
 output:
   xaringan::moon_reader:
     lib_dir: "libs"
-    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    css: ["default", "css/my-theme.css", "css/halloween.css"]
     seal: false
     nature:
       highlightStyle: github
@@ -47,15 +47,27 @@ library(patchwork)
 library(gapminder)
 library(broom)
 library(equatiomatic)
+library(juanr) 
 
 # dubois colors
 red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
 
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
 
 # set seed
 set.seed(1990)
@@ -89,10 +101,10 @@ class: center
 .box-1.large.sp-after[Review of modeling]
 
 --
-.box-2.large.sp-after[Why predict?]
+.box-2.large.sp-after[Making predictions]
 
 --
-.box-3.large.sp-after[Prediction in R]
+.box-3.large.sp-after[How right are we?]
 
 ---
 
@@ -103,7 +115,7 @@ class: middle, center, inverse
 
 # Modeling
 
-We're using models to estimate the relationship between one variable (the treatment) and another (the outcome)
+We're using models to estimate the relationship between one variable (.blue[the treatment]) and another (.red[the outcome])
 
 --
 
@@ -132,128 +144,11 @@ There are two scenarios:
 
 --
 
-1. The treatment variable is **continuous** (takes on many, numerical values, like age)
+1. The treatment variable is **continuous** (takes on many, numerical values, like age) $\rightarrow$ as the .blue[treatment] gradually increases, the .red[outcome] gradually increases by **slope** amount
 
 --
 
-2. The treatment variable is **categorical** (takes on a few, "text" values, like race)
-
----
-
-
-# Scenario 1: treatment is continuous
-
-In this case, we follow this interpretation formula:
-
->For every UNIT INCREASE in X, there is an associated COEFFICIENT ESTIMATE change in Y
-
---
-
-The coefficient estimate is the *rate of change* in Y as X increases or decreases
-
---
-
-Things to figure out: 
-
-* What does a "one unit increase in X" mean with this data? The same for Y: what units is it in? 
-
----
-
-# Scenario 1: Example
-
-```{r, echo = TRUE}
-age_tv = lm(tvhours ~ age, data = gss_cat)
-tidy(age_tv)
-```
-
-.small[
-* Age = for every *additional year* (this is the unit of X!) of a person's life, there is an associated increase of .02 hours of tv watched per day (this is the unit of Y!)
-
-* Intercept = the model estimates that, on average, someone who is zero years old watches about 2 hours of tv per day
-]
-
-
----
-
-# Scenario 2: treatment is categorical
-
-
->**Formula**: Observations in category X have, on average, COEFFICIENT ESTIMATE higher lower than observations with INTERCEPT CATEGORY
-
-The coefficient estimate is the  *difference across groups* in Y, comparing X to the category that is the intercept
-
-Things to figure out: 
-
-* What are the categories that X takes on? And which is the baseline/intercept category? 
-* What units is Y in?
-
-
----
-
-# Scenario 2: Example
-
-Estimating the relationship between tv consumption and marital status: 
-
-First, what values does `marital` take on?
-
-```{r,echo = TRUE}
-gss_cat %>% distinct(marital)
-```
-
-
----
-
-# Scenario 2: Example
-
-Estimate the model:
-
-```{r, echo = TRUE}
-married_tv = lm(tvhours ~ marital, data = gss_cat)
-tidy(married_tv)
-```
-
-
----
-
-# Scenario 2: Example
-
-.pull-left[
-By comparing the values X takes on with the output, we can see that the "Intercept" is "No answer"
-
-This means that each coefficient estimate will be interpreted *relative to* respondents who did not answer the question about whether they were married
-]
-
-.pull-right[
-```{r}
-married_tv = lm(tvhours ~ marital, data = gss_cat)
-tidy(married_tv) %>% 
-  select(term, estimate) %>% 
-  knitr::kable(digits = 3)
-```
-]
-
----
-
-# Scenario 2: Example
-
-
-.pull-left[
-.small[
-* Never married: respondents who never married watch, on average, .54 more hours of tv a day than respondents who did not answer
-* Separated: respondents who are separated watch, on average, 1 hour more of tv a day than respondents who did not answer
-* And so on...
-* The intercept = the average amount of tv watched by respondents who did not answer the question is about 2.5 hours a day
-]
-]
-
-.pull-right[
-```{r}
-tidy(married_tv) %>% 
-  select(term, estimate) %>% 
-  knitr::kable(digits = 3)
-```
-]
-
+2. The treatment variable is **categorical** (takes on a few, "text" values, like race) $\rightarrow$ we are comparing **groups**. How much higher (or lower) are observations with .blue[one category] than the **baseline category**
 
 
 
@@ -313,7 +208,7 @@ Remeber our model is an equation:
 
 --
 
-$\widehat{mpg} = 37.29 - 5.34(wt)$
+$\widehat{mpg} = 37.29 - 5.34(\color{red}{wt})$
 
 --
 
@@ -321,9 +216,9 @@ To get an estimate of `mpg`, we simply plug in the value of "weight" we are inte
 
 --
 
-Estimate for weight = 3.25
+Estimate for weight = .red[3.25]
 
-$\widehat{mpg} = 37.29 - 5.34 \times 3.25 = 19.935$
+$\widehat{mpg} = 37.29 - 5.34 \times \color{red}{3.25} = 19.935$
 
 ---
 
@@ -340,7 +235,7 @@ weight_scenario
 
 --
 
-Note that `crossing` creates a dataframe, and that the variables in `crossing` have to have the same name as the variables in the model
+Note that `crossing` creates a dataframe, and that **the variables in `crossing` have to have the same name as the variables in the model**
 
 ---
 
@@ -364,9 +259,12 @@ Note too that we got the same answer as when we did it by hand
 
 We can also look at multiple scenarios, maybe a light, medium, and heavy car:
 
+
+--
+
 .scroll-output[
 ```{r, echo = TRUE}
-weight_scenario = crossing(wt = c(1.5, 3, 5))
+weight_scenario = crossing(wt = c(1.5, 3, 5)) #<<
 weight_scenario
 augment(weight_model, newdata = weight_scenario)
 ```
@@ -377,7 +275,7 @@ augment(weight_model, newdata = weight_scenario)
 
 # Prediction (in R)
 
-Or we can look at a ton of scenarios using the `seq()` function
+Or we can look at a *sequence* of scenarios using the `seq()` function
 
 Here, we tell R to look at every weight between 2 and 6 tons, in .1 ton increments
 
@@ -417,7 +315,7 @@ Do we really need a model to predict MPG when weight = 3.25? Probably not
 ```{r}
 ggplot(mtcars, aes(x = wt, y = mpg)) + 
   geom_point() + geom_smooth(method = "lm") + 
-  theme_fancy
+  theme_nice()
 ```
 
 
@@ -451,6 +349,31 @@ Here, a car's fuel efficiency is a function of its weight (`wt`), number of cyli
 big_model = lm(mpg ~ wt + cyl + hp + am, data = mtcars)
 ```
 
+
+The model equation we want in the end is this one: 
+
+$$\operatorname{mpg} = \alpha + \color{red}{\beta_{1}}(\operatorname{wt}) + \color{red}{\beta_{2}}(\operatorname{cyl}) + \color{red}{\beta_{3}}(\operatorname{hp}) + \color{red}{\beta_{4}}(\operatorname{am})$$
+
+
+---
+
+# Multiple regression
+
+
+.pull-left[
+* Just as when we had one variable, our model is trying to find the values of  $\color{red}{\beta}$ that best fits the data
+
+* best = smallest sum of squared residuals
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/spin-plates.jpeg")
+```
+*`lm()` hard at work*
+]
+
 ---
 
 # Interpretation
@@ -458,10 +381,9 @@ big_model = lm(mpg ~ wt + cyl + hp + am, data = mtcars)
 
 
 .pull-left[
-```{r}
+```{r, echo = TRUE}
 tidy(big_model) %>% 
-  select(term, estimate) %>% 
-  knitr::kable(digits = 3)
+  select(term, estimate)
 ```
 ]
 
@@ -478,18 +400,38 @@ tidy(big_model) %>%
 
 --
 
-Note how the estimate on weight changed as we added more variables; this the relationship between weight and mpg, *after adjusting for other factors*. More on this later
+.small[Note how the estimate on weight changed as we added more variables; the relationship between weight and mpg, *after adjusting for other factors*. More on this later...]
 
 
 ---
 
-# Prediction
+# Prediction (by hand)
 
-We can make predictions just as before, only adding more variables to our scenario
+We can make predictions just as before, plugging in values for our .blue[treatment variables]
 
-For example: a car that weighs 3 tons, has 4 cylinders, 120 horse power, and has a manual transmission
+$$
+\operatorname{\widehat{mpg}} = 36.15 - 2.61(\operatorname{wt}) - 0.75(\operatorname{cyl}) - 0.02(\operatorname{hp}) + 1.48(\operatorname{am})
+$$
 
 --
+
+For example: a car that weighs .blue[3 tons], has .blue[4 cylinders], .blue[120 horse power], and has a .blue[manual transmission]
+
+--
+
+$$
+\operatorname{\widehat{mpg}} = 36.15 - 2.61 \times \color{blue}{3} - 0.75 \times  \color{blue}{4} - 0.02 \times  \color{blue}{120} + 1.48 \times  \color{blue}{1}
+$$
+--
+
+$$
+\operatorname{\widehat{mpg}} = 24
+$$
+---
+
+# Prediction (in R)
+
+We can do this in R with `crossing()` and `augment()`
 
 ```{r, echo = TRUE}
 big_scenario = crossing(wt = 3, cyl = 4, hp = 120, am = 1)
@@ -499,9 +441,9 @@ augment(big_model, newdata = big_scenario)
 
 ---
 
-# Prediction
+# Holding all else constant
 
-We can also look at what happens when one variable changes a lot, while the others stay the same, using the `seq()` function
+We can also look at what happens when one variable changes a lot, while the others are *held constant*, using the `seq()` function
 
 .scroll-output[
 ```{r, echo = TRUE}
@@ -515,13 +457,13 @@ augment(big_model, newdata = varying_hp)
 
 ---
 
-# Prediction
+# Visualizing predictions
 
 We could then store our estimate, and use it for plotting
 
 ```{r, echo = TRUE, out.width="70%"}
 hp_pred = augment(big_model, newdata = varying_hp)
-ggplot(hp_pred, aes(x = hp, y = .fitted)) + geom_point() + theme_bw() + 
+ggplot(hp_pred, aes(x = hp, y = .fitted)) + geom_point() + 
   labs(x = "Horsepower", y = "Predicted fuel efficiency")
 ```
 
@@ -590,8 +532,7 @@ What if we wanted to predict the life expectancy of a country with a GDP per cap
 
 ```{r, echo = TRUE}
 life_scenario = crossing(gdpPercap = 7000, 
-                       pop = 20000000, 
-                       year = 2005, 
+                       pop = 20000000, year = 2005, 
                        continent = "Asia")
 augment(life_model, newdata = life_scenario)
 ```
@@ -599,19 +540,15 @@ augment(life_model, newdata = life_scenario)
 ---
 
 
-# Predicting health
+# Imaginary changes
 
-We could go further, and vary GDP per capita as the other values stay the same:
-
+What if we could "dial up" this country's GDP slowly? How would its life expectancy change? We can vary GDP and keep all else constant
 --
 
 .scroll-output[
 ```{r, echo = TRUE}
-life_scenario = crossing(gdpPercap = seq(from = 5000, 
-                                       to = 100000, 
-                                       by = 5000), 
-                       pop = 20000000, 
-                       year = 2005, 
+life_scenario = crossing(gdpPercap = seq(from = 5000, to = 100000, by = 5000), #<<
+                       pop = 20000000, year = 2005, 
                        continent = "Asia")
 augment(life_model, newdata = life_scenario)
 ```
@@ -620,20 +557,17 @@ augment(life_model, newdata = life_scenario)
 
 ---
 
-# Predicting health
+# Imaginary scenarios
 
-We could go *even* further, and also vary the continent the country is in
+How different would this all look in different continents? We can vary continents too:
 
 --
 
 .scroll-output[
 ```{r, echo = TRUE}
-life_continent_scenario = crossing(gdpPercap = seq(from = 5000, 
-                                       to = 100000, 
-                                       by = 5000), 
-                       pop = 20000000, 
-                       year = 2005, 
-                       continent = c("Asia", "Africa", "Americas", "Europe"))
+life_continent_scenario = crossing(gdpPercap = seq(from = 5000, to = 100000, by = 5000), 
+                       pop = 20000000, year = 2005, 
+                       continent = c("Asia", "Africa", "Americas", "Europe")) #<<
 augment(life_model, newdata = life_continent_scenario)
 ```
 
@@ -646,21 +580,101 @@ augment(life_model, newdata = life_continent_scenario)
 
 We can then save our predictions as an object, and plot them: 
 
-```{r,echo = TRUE}
+
+```{r, echo = TRUE, out.width="70%"}
 pred_health = augment(life_model, newdata = life_continent_scenario)
-```
-
-
-```{r, echo = TRUE, out.width="60%"}
 ggplot(pred_health, aes(x = gdpPercap, y = .fitted, color = continent)) + 
-  geom_point() + labs(x = "GDP per capita", y = "Estimated life expectancy", color = "Continent") + theme_bw() + scale_color_brewer(palette = "Dark2")
+  geom_point() + labs(x = "GDP per capita", y = "Estimated life expectancy", color = "Continent") + scale_color_brewer(palette = "Dark2")
 ```
+
+---
+
+
+# Your turn: 🤴 Colonial fire sale 🤴
+
+
+.pull-left[
+* During the 1600s and 1700s the Spanish Crown would sell colonial governorships to raise money
+* Governorships were valuable because you could tax / exploit the local population
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/charles-ii.jpeg")
+```
+Charles II. His wife: *"The Catholic King is so ugly as to cause fear and he looks ill."*
+]
+
+
+---
+
+
+# Your turn: 🤴 Colonial fire sale 🤴
+
+
+.scroll-output[
+```{r}
+colony %>% 
+  knitr::kable()
+```
+]
+
+
+
+---
+
+
+# Your turn: 🤴 Colonial fire sale 🤴
+
+
+.small[
+
+Using `colony`: 
+
+
+1. How much would a noble (`noble`), without military experience (`military`) expect to pay (`rprice1`) for a governorship with a suitability index of .8 (`suitindex`) that also had a forced labor system (`mita`)?
+
+2. About how much or less would you have to pay for a governorship in a year when Spain was fighting a war in Europe? Estimate the cost for a province with a bishiop (`bishop`), 200 km from Lima (`distlima`), with an indigenous population of 10k (`ind54`), but varying whether or not Spain is at war (`war`). 
+
+3. How valuable was it to have a *repartimiento system* in place? And how different was this for places with and without mines? Estimate the cost of the governorship, varying both: 1) whether or not the place has a mine (`mine`) and 2) the assigned repartimiento quota from its minimum to its maximum (`reparto2`), in increments of 100. Make a plot. 
+
+]
+
+```{r}
+countdown::countdown(minutes = 10L, font_size = 3)
+```
+
+---
+
+class: center, middle, inverse
+# How right are we?
+---
+
+
+# Prediction accuracy
+
+
+.pull-left[
+* The question with prediction is always: how accurate were we?
+* If our model is predicting the outcome accurately that might be:
+    * a good sign that we are modeling the process that generates the outcome well 
+    * useful for forcasting the future, or situations we don't know about
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/medieval-archer.jpeg")
+```
+
+]
+
 
 ---
 
 # Comparing to reality
 
-We can also compare our model estimate to a real country, for instance, Jamaica in 2007:
+How good are our predictions? We could compare our estimate to a real country, say Jamaica in 2007:
 
 --
 
@@ -695,30 +709,97 @@ gapminder %>%
 
 Estimate:
 
-```{r}
+```{r, echo = TRUE}
 augment(life_model, newdata = jamaica)
 ```
 
 ---
 
-# This is not really prediction
+# Is this really a prediction?
 
-Our estimate of Jamaica is not *really* prediction, since we *used* that observation to fit our model, but it is a way of seeing how well the model we estimated fits the data
+
+.pull-left[
+Our estimate of Jamaica is not *really* prediction, since we *used* that observation to fit our model
+
+
+This is an **in-sample** prediction $\rightarrow$ seeing how well our model does at predicting the data that we used to generate it
+
+
+True prediction is **out-of-sample** $\rightarrow$ using a model to generate predictions about something that *hasn't happened yet*
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/prediction-meme.jpeg")
+```
+
+]
+
+
+
+---
+
+
+# Out of sample prediction
+
+
+Imagine the year was 2002, so we don't have any data after that:
 
 --
 
-For true prediction, we could either: 
+```{r, echo = TRUE}
+gap_2002 = gapminder %>% filter(year <= 2002)
+mod_2002 = lm(lifeExp ~ gdpPercap + pop + continent, data = gap_2002)
+```
+
+--
+
+How well would our model predict life expectancy **in-sample** (up to 2002)? What about **out-of-sample**, in the **future** (2007)?
+
+---
+
+# Out of sample prediction
+
+
+As a general rule, models will tend to perform **worse** out-of-sample than in-sample
 
 --
 
 
-1. Fit a model with current data, and predict the outcome of some future event (e.g., an election, an NBA match)
-
---
+This is because the model is **over-fitting** the data $\rightarrow$ tailoring the model equation too closely to the data we have
 
 
-2. Break off ~1/3 of our data, estimate the model on the rest of the data, and then see how well it predicts the outcome in the 1/3
+.pull-left[
+```{r}
+augment(mod_2002, newdata = filter(gapminder, year != 2007)) %>% 
+  summarise(`Overall inaccuracy (RMSE):` = sqrt(mean((.resid)^2))) %>% 
+  knitr::kable(caption = "Years: 1952 - 2002.", digits = 2)
+```
+]
 
---
 
-Our prediction on this **out-of-sample** data would probably be (much) worse; but that whole deal would be a separate class!
+.pull-left[
+```{r}
+augment(mod_2002, newdata = filter(gapminder, year == 2007)) %>% 
+  summarise(`Overall inaccuracy (RMSE):` = sqrt(mean((.resid)^2))) %>% 
+  knitr::kable(caption = "Years: 2007.", digits = 2)
+```
+]
+
+
+
+---
+
+
+# 🚨 Your turn: 🎥 The movies 🎥🚨
+
+
+Using `movies`:
+
+
+1. Fit a model that predicts profit (outcome) using genre1, duration, budget, imdb_score, whether or not it's color and it's content rating. 
+
+2. Look up a movie in the dataset. How well does the model predict that movie?
+
+3. Look up a movie on IMDB that came out after the data ends (2016). How well does your model predict that movie's profit level? 
+

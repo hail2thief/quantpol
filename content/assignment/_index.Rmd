@@ -43,7 +43,7 @@ From time to time, I will hold in-lecture 🔥🔥 **coding challenges** 🔥�
 ## Final project
 
 
-You will code -- using all of the tools from the course -- an original data analysis of a mystery dataset. Details TBD.
+You will code -- using all of the tools from the course -- an original data analysis of a mystery dataset. The format will be similar to the homeworks: a take-home RMD file with instructions and empty code chunks for you to fill in. Plus places to write your own analysis. 
 
 
 ## Grade disputes

@@ -19,12 +19,20 @@ editor_options:
 
 <div id="TOC">
 <ul>
-<li><a href="#predictions-simple-model-one-explanatory-variable">Predictions (simple model, one explanatory variable)</a></li>
-<li><a href="#more-complicated-models-multiple-explanatory-variables">More complicated models (multiple explanatory variables)</a></li>
-<li><a href="#interpreting-regression-output">Interpreting regression output</a></li>
+<li><a href="#in-class-example" id="toc-in-class-example">In-class example</a></li>
+<li><a href="#predictions-simple-model-one-explanatory-variable" id="toc-predictions-simple-model-one-explanatory-variable">Predictions (simple model, one explanatory variable)</a></li>
+<li><a href="#more-complicated-models-multiple-explanatory-variables" id="toc-more-complicated-models-multiple-explanatory-variables">More complicated models (multiple explanatory variables)</a></li>
+<li><a href="#interpreting-regression-output" id="toc-interpreting-regression-output">Interpreting regression output</a></li>
 </ul>
 </div>
 
+<div id="in-class-example" class="section level2">
+<h2>In-class example</h2>
+<p>Here’s the code we’ll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn’t trigger download, you should right-click and select “save link as…”</p>
+<ul>
+<li><a href="/slides/code/day1-prediction.R"><i class="fas fa-file-archive"></i> <code>day1-prediction.R</code></a></li>
+</ul>
+</div>
 <div id="predictions-simple-model-one-explanatory-variable" class="section level2">
 <h2>Predictions (simple model, one explanatory variable)</h2>
 <pre class="r"><code># libraries
@@ -180,6 +188,6 @@ tidy(mod_evals)</code></pre>
 <li><code>gendermale</code> = MALE professors have, on average, .2 more points on their STUDENT EVALUATION SCORE than FEMALE professors (continuous)</li>
 <li><code>ranktenure track</code> = TENURE TRACK professors have, on average, .226 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)</li>
 <li><code>ranktenured</code> = TENURED professors have, on average, .153 fewer points on their STUDENT EVALUATION SCORE than TEACHING (the baseline!) professors (categorical)</li>
-<li><code>intercept</code> = the average STUDENT EVALUATION SCORE for a professor who is <em>0 years old (age = 0)</em>, has a <em>beauty score of 0 (bty_avg = 0)</em>, is <em>female (gendermale = 0)</em>, is <em>not tenure track (ranktenure track = 0)</em> and <em>not tenured (ranktenured = 0)</em> (i.e., they are “teaching track,” the baseline category)</li>
+<li><code>intercept</code> = the average STUDENT EVALUATION SCORE for a professor who is <em>0 years old (age = 0)</em>, has a <em>beauty score of 0 (bty_avg = 0)</em>, is <em>female (gendermale = 0)</em>, is <em>not tenure track (ranktenure track = 0)</em> and <em>not tenured (ranktenured = 0)</em> (i.e., they are “teaching track”, the baseline category)</li>
 </ul>
 </div>

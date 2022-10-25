@@ -1,5 +1,5 @@
 lessons:
-  - title: '<span class="fake-header-table">Programming</span>'
+  - title: '<span class="fake-header-table">Data wrangling</span>'
     header: True
 
   - title: 'Week 1: Introduction'
@@ -17,7 +17,10 @@ lessons:
     date: "Oct 4, Oct 6"
     class: "data-wrangle"
     reading: "03-wrangle"
-    assignment: "ps-wrangle"  
+    assignment: "ps-wrangle"
+ 
+  - title: '<span class="fake-header-table">Relationships in data</span>'
+    header: True
 
   - title: 'Week 4: Relationships between variables<br><i class="fas fa-star"></i> **Assignment 3**'
     date: "Oct 11, Oct 13"
@@ -34,7 +37,7 @@ lessons:
   - title: 'Week 6: Prediction<br><i class="fas fa-star"></i> **Assignment 5**'
     date: "Oct 25, Oct 27"
     reading: "06-pred"
-    #class: "prediction"
+    class: "prediction"
     #assignment: "ps-predict"
     
   - title: '<span class="fake-header-table">Causality</span>'
@@ -72,6 +75,6 @@ lessons:
     #assignment: "ps-uncertainty"
     
   - title: '<i class="fas fa-star"></i> **Final Project Due**'
-    date: "Dec 9, 10:30AM"
+    date: "Dec 7th, 11:59PM"
     #assignment: "final-project"
  
