@@ -38,7 +38,7 @@ lessons:
     date: "Oct 25, Oct 27"
     reading: "06-pred"
     class: "prediction"
-    #assignment: "ps-predict"
+    assignment: "ps-predict"
     
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
