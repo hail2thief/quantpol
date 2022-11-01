@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap');
 
 body, h1, h2, h3 {
-  font-family: 'Fira Sans Condensed', sans;
+  font-family: 'Barlow', sans-serif;
 }
 
 h1, h2, h3 {
@@ -10,5 +10,6 @@ h1, h2, h3 {
 }
 
 .remark-code, .remark-inline-code {
-  font-family: 'Source Code Pro','Lucida Console', Monaco, monospace;
+  font-family: 'Fira Code', monospace;
+  font-size: 80%;
 }

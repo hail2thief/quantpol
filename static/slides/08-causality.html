@@ -4,9 +4,14 @@
     <title>Causality</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-11-02" />
+    <meta name="date" content="2022-11-01" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"causal1","expires":14}</script>
+    <script src="libs/himalaya/himalaya.js"></script>
+    <script src="libs/js-cookie/js.cookie.js"></script>
+    <link href="libs/editable/editable.css" rel="stylesheet" />
+    <script src="libs/editable/editable.js"></script>
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
     <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
@@ -46,10 +51,10 @@ class: center
 ]
 
 --
-.box-1.large.sp-after[Prediction]
+.box-1.large.sp-after[Why causality? And what is it?]
 
 --
-.box-2.large.sp-after[Causal inference]
+.box-2.large.sp-after[Fake data]
 
 --
 .box-3.large.sp-after[The problem with causality]
@@ -95,7 +100,7 @@ Who the hell knows, but we can use models to make an educated **guess**
 --
 
 
-&lt;img src="08-causality_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-1-1.png" width="90%" /&gt;
 
 ---
 
@@ -223,7 +228,7 @@ American politics: do voter ID laws hurt general **turnout**? Do elites move **p
 
 Some are not: 
 
-Facebook (Meta?) might want to know: "Is there a person in this photo?"
+Instagram might want to know: "Is there a person in this photo?"
 
 But not care about what factors **cause** the picture to be a photo of a person
 
@@ -257,9 +262,11 @@ Does this policy work (or not)? Did it do what was intended? How effective or co
 .pull-left[
 In this class, we say **X causes Y** if...
 
-An *intervention* that **changes** the value of X (without changing anything else)
+An **intervention** that changes the value of X produces a **probabilistic** change in Y
 
-Produces a **change** in Y
+* .blue[Intervention] = X is being **changed** or altered
+
+* .red[Probabilistic] = Y should change, *on average*, but need not in every instance
 
 ]
 
@@ -269,6 +276,36 @@ Produces a **change** in Y
 
 
 ---
+
+# Interventions and probability
+
+
+How do the two parts of our definition fit here?
+
+&gt; Aspirin causes a reduction in fever symptoms
+
+--
+
+.blue[Intervention] = someone **takes** aspirin, we administer aspirin, we sneak it into someone's food, etc. 
+
+--
+
+.red[Probabilistic] = Taking aspirin doesn't work 100% of the time; but *in general*, *on average*, *more often than not*, etc., taking aspirin `\(\rightarrow\)` less fever
+
+--
+
+What about this example?
+
+.can-edit.key-democracy[Instructions.]
+
+???
+Democratic institutions reduce the incidence of interstate war
+
+---
+
+
+
+
 
 # Terminology
 
@@ -284,6 +321,10 @@ We've seen this before:
 
 ---
 
+
+class: center, middle, inverse
+# The problem with causality
+---
 
 # Obviously causal relationships
 
@@ -308,7 +349,7 @@ A bigger house is more desirable
 ---
 
 
-# Not obvious
+# Not obvious: education and earnings
 
 .pull-left[
 People who are already wealthy (or likely to become wealthy) get more education than people who are poor
@@ -324,7 +365,7 @@ People who are already wealthy (or likely to become wealthy) get more education 
 ---
 
 
-# Not obvious
+# Not obvious: voter ID and turnout
 
 States that pass these laws are different from states that don't pass these laws
 
@@ -381,7 +422,12 @@ But sometimes it does! that's the tricky part
 ---
 
 
-# Make up data to convince ourselves
+## Make up (simulate) data to convince ourselves
+
+
+A good way to see that we correlation **can** equal causation is to make up (**simulate**) data where we know that X causes Y
+
+--
 
 
 We can make up data in R with the `rnorm()` function
@@ -403,62 +449,110 @@ Generate 100 random numbers, most of which are +/- 2 away from 10
 ---
 
 
-# Simulating an election
+# Do winners keep winning?
 
 --
 
-Let's say we want to fake county voting outcomes in the 2024 election, and make it look like most elections are pretty close
+Say we wanted to simulate data to show that doing well in .blue[elections] (treatment) **causes** increases in .red[campaign funding] (outcome). That is, that funders seek out winners
 
 --
 
+First step is generating the .blue[treatment variable] (performance in elections). 
 
-We can generate random numbers that are pretty close to 50 (a tie), plus or minus 5 points
+--
+
+Let's say 500 fake elections that are pretty close to 50 (a tie), plus or minus 5 points
+
+
+---
+
+# Faking (simulating) the treatment
+
+
+We can use `tibble()` to make a data object and `rnorm()` to generate the variables
+
+--
+
+.blue[Treatment variable] 500 elections, vote share is 50% of the vote on average, +/- 5%
 
 --
 
 .scroll-output[
 
 ```r
-*fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5))
+*fake_election = tibble(party_share = rnorm(n = 500, mean = 50, sd = 5))
 fake_election
 ```
 
 ```
-## # A tibble: 100 × 1
-##    gop_share
-##        &lt;dbl&gt;
-##  1      47.5
-##  2      58.8
-##  3      50.9
-##  4      50.3
-##  5      48.0
-##  6      54.0
-##  7      46.5
-##  8      49.5
-##  9      41.4
-## 10      46.5
-## # … with 90 more rows
+## # A tibble: 500 × 1
+##    party_share
+##          &lt;dbl&gt;
+##  1        47.5
+##  2        58.8
+##  3        50.9
+##  4        50.3
+##  5        48.0
+##  6        54.0
+##  7        46.5
+##  8        49.5
+##  9        41.4
+## 10        46.5
+## # … with 490 more rows
 ```
 ]
-
-
 
 ---
 
 # And we can plot it
 
 
-
-```r
-ggplot(fake_election, aes(x = gop_share)) + 
-* geom_density(fill = "darkred", color = "white")  +
-  theme_bw(base_size = 14)
-```
-
-&lt;img src="08-causality_files/figure-html/unnamed-chunk-16-1.png" width="80%" /&gt;
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
 
 
 ---
+
+
+# Making the outcome
+
+
+Next we want to make up the .red[outcome] (how much each party raises in funding)
+
+--
+
+Let's say parties raise about 20k on average, plus or minus 4k
+
+--
+
+.scroll-output[
+
+```r
+fake_election = tibble(party_share = rnorm(n = 500, mean = 50, sd = 5), 
+*                      funding = rnorm(n = 500, mean = 20000, sd = 4000))
+fake_election
+```
+
+```
+## # A tibble: 500 × 2
+##    party_share funding
+##          &lt;dbl&gt;   &lt;dbl&gt;
+##  1        54.5  23515.
+##  2        55.8  22406.
+##  3        52.0  20658.
+##  4        49.6  14602.
+##  5        45.5  22900.
+##  6        56.7  21524.
+##  7        49.4  15449.
+##  8        50.4  18854.
+##  9        54.6  18177.
+## 10        54.0  17170.
+## # … with 490 more rows
+```
+]
+
+
+---
+
 
 # Making X cause Y
 
@@ -468,7 +562,7 @@ Now let's say we wanted to make it so that getting more votes **increased** camp
 
 --
 
-Say for every percent of the vote you get, you get $2,000 ore in donations
+Say for every percent of the vote a party gets, they get 2,000 (USD) more in donations `\(\rightarrow\)` this is the causal effect of .blue[vote share] on .red[donations]
 
 --
 
@@ -477,29 +571,38 @@ We can do that in R like so:
 .scroll-output[
 
 ```r
-fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
-*                      donations = 2000 * gop_share)
+fake_election = tibble(party_share = rnorm(n = 500, mean = 50, sd = 5), 
+*                      funding = rnorm(n = 500, mean = 20000, sd = 4000) + 2000*party_share)
 fake_election
 ```
 
 ```
-## # A tibble: 100 × 2
-##    gop_share donations
-##        &lt;dbl&gt;     &lt;dbl&gt;
-##  1      48.2    96423.
-##  2      50.2   100401.
-##  3      48.4    96780.
-##  4      33.6    67241.
-##  5      48.2    96409.
-##  6      53.0   106053.
-##  7      45.5    91033.
-##  8      51.6   103182.
-##  9      47.9    95884.
-## 10      47.3    94570.
-## # … with 90 more rows
+## # A tibble: 500 × 2
+##    party_share funding
+##          &lt;dbl&gt;   &lt;dbl&gt;
+##  1        50.6 120186.
+##  2        48.6 116252.
+##  3        46.7 113977.
+##  4        45.4 111470.
+##  5        51.8 127143.
+##  6        50.1 119179.
+##  7        50.2 123414.
+##  8        52.5 131026.
+##  9        45.4 103973.
+## 10        57.3 133077.
+## # … with 490 more rows
 ```
 ]
 
+
+---
+
+# Eyeballing it
+
+
+Is our fake data convincing? We can plot it to see:
+
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-19-1.png" width="100%" /&gt;
 
 ---
 
@@ -517,97 +620,44 @@ Yes!
 
 
 ```r
-lm(donations ~ gop_share, data = fake_election) %&gt;% tidy()
+lm(funding ~ party_share, data = fake_election) %&gt;% tidy()
 ```
 
 ```
 ## # A tibble: 2 × 5
-##   term        estimate std.error statistic p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept) 8.15e-11  3.93e-11   2.07e 0  0.0407
-## 2 gop_share   2   e+ 3  7.86e-13   2.55e15  0
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   19891.    1778.       11.2 4.55e- 26
+## 2 party_share    1995.      35.4      56.4 2.11e-218
 ```
 
 
 ---
 
 
-# This works even if we add noise
+# Hope?
 
+.pull-left[
 
-In the last example, donations were **exactly** 2,000 `\(\times\)` the vote 
-
---
-
-You could technically just do: `\(\frac{donations}{vote} = 2,000\)`
-
---
-
-What if we make this more difficult on the model? Let's add some random **noise**
-
---
-
-.scroll-output[
-
-```r
-fake_election = tibble(gop_share = rnorm(n = 100, mean = 50, sd = 5), 
-*                      donations = 2000 * gop_share + rnorm(n = 100, mean = 10, sd = 2))
-fake_election
-```
-
-```
-## # A tibble: 100 × 2
-##    gop_share donations
-##        &lt;dbl&gt;     &lt;dbl&gt;
-##  1      47.3    94593.
-##  2      49.4    98761.
-##  3      56.3   112645.
-##  4      46.2    92386.
-##  5      43.8    87699.
-##  6      49.7    99381.
-##  7      51.8   103541.
-##  8      54.1   108169.
-##  9      50.1   100274.
-## 10      52.5   105003.
-## # … with 90 more rows
-```
+* There are at least *some* scenarios where X causes Y, and 
+    * This effect will be reflected in the data
+    * And we can **estimate** the effect with a model
 ]
 
-
-
----
-
-# Pretty damn close
-
-Even with noise, we can use a model to get pretty close to the true effect: 
-
---
-
-
-```r
-lm(donations ~ gop_share, data = fake_election) %&gt;% tidy()
-```
-
-```
-## # A tibble: 2 × 5
-##   term        estimate std.error statistic    p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-## 1 (Intercept)     8.23    1.63        5.04 0.00000211
-## 2 gop_share    2000.      0.0329  60803.   0
-```
+.pull-right[
+&lt;img src="08-causality_files/figure-html/unnamed-chunk-21-1.png" width="100%" /&gt;
+]
 
 ---
 
-
-# 🚨 Your turn: Michael Lacour 🚨
+# 🕵️ Your turn: Michael Lacour 🕵️
 
 --
 
 .pull-left[
-* Lacour published a huge study in *Science*
-* Study showed huge improvements in attitudes towards LGBT issues (gay marriage) from exposure to LGBT canvassers
-* Data was completely forged, using some of the same functions I showed you
-* Created patterns that got him the answer he wanted to get
+* Lacour published a big study in *Science*
+* Study showed talking to LGBT canvasser `\(\rightarrow\)` huge improvements in attitudes towards LGBT policy (gay marriage)
+* Data was completely **fabricated**, using some of the same functions I showed you
 ]
 
 .pull-right[
@@ -617,26 +667,31 @@ lm(donations ~ gop_share, data = fake_election) %&gt;% tidy()
 
 ---
 
-# 🚨 Your turn: Michael Lacour 🚨
+# 🕵️ Your turn: Michael Lacour 🕵️
 
 
-Using the steps I just went through above, make up some data that pre-confirms some pattern about the world you wish were true and plot it. Some ideas: 
+Using the steps I just went through above, make up some data that pre-confirms some pattern about the world you wish were true:
 
 --
+.small[
+1. Change the .blue[treatment] and .red[outcome] variables in the code to ones of your choosing
+
+2. Alter the parameters in `rnorm()` so the values make sense for your variables
+
+3. Make a scatterplot with a trend line -- use `labs()` to help us make sense of the plot axes!
+]
+
+--
+
+Some ideas: 
+
 
 * Amount of alcohol consumption and your overall health
 * Time spent studying for Prof. Tellez’s class and future income
-* Number of Pokemon you can name from memory and the number of dates you go on per month
 
 
---
-
-Experiment with other random number generators: `rpois()` for whole numbers, `rexp()` for skewed distributions
-
-
-
-<div class="countdown" id="timer_6181d578" style="right:0;bottom:0;font-size:2em;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_63618e81" style="right:0;bottom:0;font-size:1.5em;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">15</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 
@@ -655,13 +710,13 @@ class: middle, center, inverse
 
 Does democracy reduce international conflict?
 
-Theory: war is costly and the costs are borne by citizens; countries where citizens have input `\(\rightarrow\)` less conflict
+Theory: war is costly and the costs are borne by citizens; countries where citizens have more input `\(\rightarrow\)` less conflict
 
 --
 
-X here is **whether the country is a democracy** (versus autocracy)
+X here is .blue[whether the country is a democracy] (versus autocracy)
 
-Y is **the number of wars the country is involved in**
+Y is .red[the number of wars the country is involved in]
 
 --
 
@@ -678,30 +733,29 @@ Do this for all countries, take the average
 # Potential outcomes
 
 
-Magical world where we can compare the number of wars when a country is a democracy versus when it is not
+This magical world where we can compare the number of wars when a country is a democracy versus when it is not is called the **potential outcomes**
 
 
 |country | democracy| war|
 |:-------|---------:|---:|
-|Canada  |         0|   1|
-|Canada  |         1|   1|
-|China   |         0|   1|
-|China   |         1|   3|
-|USA     |         0|   4|
-|USA     |         1|   6|
+|Canada  |         0|   5|
+|Canada  |         1|   4|
+|China   |         0|   0|
+|China   |         1|   1|
+|USA     |         0|   1|
+|USA     |         1|   0|
 
 
 
 ---
 
 
-# The problem
+# The fundamental problem of causality
 
 
 .pull-left[
-What's weird here?
 
-In reality, we can only observe democracy at one value for each country
+In reality, we can only *observe* democracy at *one value* for each country
 
 The US is a democracy, we can observe wars when democracy = 1, **but not when democracy = 0**
 
@@ -712,12 +766,12 @@ China is not a democracy, we can observe wars when democracy = 0, **but not when
 
 |country | democracy| war|
 |:-------|---------:|---:|
-|Canada  |         0|   1|
-|Canada  |         1|   1|
-|China   |         0|   1|
-|China   |         1|   3|
-|USA     |         0|   4|
-|USA     |         1|   6|
+|Canada  |         0|   5|
+|Canada  |         1|   4|
+|China   |         0|   0|
+|China   |         1|   1|
+|USA     |         0|   1|
+|USA     |         1|   0|
 
 ]
 
@@ -731,26 +785,30 @@ We only **observe** the world on the right, but not the left
 
 .pull-left[
 
+Table: Potential outcomes world
+
 |country | democracy| war|
 |:-------|---------:|---:|
-|Canada  |         0|   1|
-|Canada  |         1|   1|
-|China   |         0|   1|
-|China   |         1|   3|
-|USA     |         0|   4|
-|USA     |         1|   6|
+|Canada  |         0|   5|
+|Canada  |         1|   4|
+|China   |         0|   0|
+|China   |         1|   1|
+|USA     |         0|   1|
+|USA     |         1|   0|
 ]
 
 .pull-left[
 
+Table: Observed outcomes world
+
 |country | democracy| war|
 |:-------|---------:|---:|
 |Canada  |         0|  NA|
-|Canada  |         1|   1|
-|China   |         0|   1|
+|Canada  |         1|   4|
+|China   |         0|   0|
 |China   |         1|  NA|
 |USA     |         0|  NA|
-|USA     |         1|   6|
+|USA     |         1|   0|
 ]
 
 
@@ -797,8 +855,8 @@ observed %&gt;%
 ## # A tibble: 2 × 2
 ##   democracy  wars
 ##       &lt;dbl&gt; &lt;dbl&gt;
-## 1         0   1  
-## 2         1   3.5
+## 1         0     0
+## 2         1     2
 ```
 
 ---
@@ -820,7 +878,7 @@ But China and the US are different in so many ways! They are not good **counterf
 --
 
 
-We cannot be confident that the differences we find are **only** because of democracy, and not some other variable
+We will see *exactly why* this is a problem in the following weeks
 
 ---
 
@@ -833,11 +891,11 @@ In an experiment, we *randomly* expose participants to some treatment, while oth
 
 | Person|Shown an ad? | Democrats thermometer|
 |------:|:------------|---------------------:|
-|      1|Yes          |                 33.33|
-|      2|No           |                 76.39|
-|      3|Yes          |                 22.39|
-|      4|No           |                 14.02|
-|      5|No           |                  86.6|
+|      1|Yes          |                  41.5|
+|      2|No           |                 19.83|
+|      3|Yes          |                 84.91|
+|      4|No           |                 76.44|
+|      5|No           |                 48.58|
 
 --
 
@@ -855,16 +913,17 @@ Experiments have the same "problem" as the democracy and war example: we can't o
 
 | Person|Shown an ad? | Democrats thermometer|
 |------:|:------------|---------------------:|
-|      1|Yes          |                 33.33|
-|      2|No           |                 76.39|
-|      3|Yes          |                 22.39|
-|      4|No           |                 14.02|
-|      5|No           |                  86.6|
+|      1|Yes          |                  41.5|
+|      2|No           |                 19.83|
 
 
 --
 
 But since the experimental ad was *randomly* assigned, the people that did and didn't see the ad are good **counterfactuals** of one another
+
+--
+
+it is, **by definition**, just as likely a person who received treatment could have instead received the control/placebo (note how this differs from .blue[democracy] `\(\rightarrow\)` .red[war])
 
 
 ---
@@ -894,68 +953,27 @@ So we'll have to take other measures to try to overcome these problems with obse
 ---
 
 
-# 🚨 Your turn: counterfactuals 🚨
+# 🧩 Your turn: counterfactuals 🧩
 
 
-Think through the counterfactual scenarios in these examples. What are the comparisons being made? And are they good counterfactuals? 
+With neighbor, think through the counterfactual scenarios in these examples. What are the comparisons being made? And are they good counterfactuals? 
 
 --
 
 1. A study on whether international trade between two countries makes them more likely to form a defensive alliance.
 
-2. A study on whether being a victim of a crime makes someone more supportive of harsher penalties for criminals. 
 
-3. A study on whether those who were drafted to the military are more likely to vote for "dove" candidates.
+2. A study on whether being a victim of a crime makes someone more supportive of authoritarian leaders
 
 
-<div class="countdown" id="timer_6181d679" style="right:0;bottom:0;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">05</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+3. A study on whether those who served in the military are more likely to vote for "dovish" or "hawkish" candidates
+
+
+<div class="countdown" id="timer_63618ea4" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 ---
-
-
-
-&lt;!-- # Simulation --&gt;
-
-
-&lt;!-- Same mean, different standard deviation: --&gt;
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- tibble(`rnorm(n = 200, mean = 10, sd = 5)` = rnorm(n = 200,  --&gt;
-&lt;!--                                                    mean = 10, sd = 5),  --&gt;
-&lt;!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  --&gt;
-&lt;!--                                                   mean = 10, sd = 2),  --&gt;
-&lt;!--        `rnorm(n = 200, mean = 10, sd = 1)` = rnorm(n = 200,  --&gt;
-&lt;!--                                                   mean = 10, sd = 1)) %&gt;%  --&gt;
-&lt;!--   pivot_longer(everything()) %&gt;%  --&gt;
-&lt;!--   ggplot(aes(x = value)) +  --&gt;
-&lt;!--   geom_density(fill = yellow, color = "white") +  --&gt;
-&lt;!--   facet_wrap(vars(name)) + theme_fancy --&gt;
-&lt;!-- ``` --&gt;
-
-
-&lt;!-- --- --&gt;
-
-&lt;!-- # Simulation --&gt;
-
-
-&lt;!-- Different mean, different standard deviation: --&gt;
-
-&lt;!-- ```{r} --&gt;
-&lt;!-- tibble(`rnorm(n = 200, mean = 8, sd = 5)` = rnorm(n = 200,  --&gt;
-&lt;!--                                                    mean = 8, sd = 5),  --&gt;
-&lt;!--        `rnorm(n = 200, mean = 10, sd = 2)`= rnorm(n = 200,  --&gt;
-&lt;!--                                                   mean = 10, sd = 2),  --&gt;
-&lt;!--        `rnorm(n = 200, mean = 5, sd = 1)` = rnorm(n = 200,  --&gt;
-&lt;!--                                                   mean = 5, sd = 1)) %&gt;%  --&gt;
-&lt;!--   pivot_longer(everything()) %&gt;%  --&gt;
-&lt;!--   ggplot(aes(x = value)) +  --&gt;
-&lt;!--   geom_density(fill = yellow, color = "white") +  --&gt;
-&lt;!--   facet_wrap(vars(name)) + theme_fancy --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- --- --&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
