@@ -45,7 +45,7 @@ lessons:
 
   - title: "Week 7: Causality and DAGs"
     date: "Nov 1, Nov 3"
-    #class: "causality"
+    class: "causality"
     reading: "07-causal"
     
   - title: 'Week 8: ggdag<br><i class="fas fa-star"></i> **Assignment 6**'
