@@ -4,9 +4,14 @@
     <title>Causality II</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-11-04" />
+    <meta name="date" content="2022-11-03" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script type="application/json" id="xaringanExtra-editable-docid">{"id":"causal2","expires":14}</script>
+    <script src="libs/himalaya/himalaya.js"></script>
+    <script src="libs/js-cookie/js.cookie.js"></script>
+    <link href="libs/editable/editable.css" rel="stylesheet" />
+    <script src="libs/editable/editable.js"></script>
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
     <script src="libs/countdown/countdown.js"></script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
@@ -86,34 +91,50 @@ How can we tell?
 # Causal diagram
 
 .pull-left[
-We need a *causal diagram* to get at causality
+We need a *causal model*
 
 
-The diagram is our idea of the data came to be (the **data-generating process**)
+The model is our idea of how the data came to be (the **data-generating process**)
 
 
-The diagram tells us how to *identify* a causal effect (if it's possible!)
+The model tells us how to *identify* a causal effect (if it's possible!)
 
 ]
 
 .pull-right[
-&lt;img src="images/models.jpeg" width="100%" /&gt;
+&lt;img src="images/models.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
 
 
-# Directed acyclical graphs (DAGs)
+# Directed Acyclical Graphs (DAGs)
+
+A popular modeling tool for thinking about causality is the **DAG**
+
+Nodes (points) = variables; Edges (arrows) = direction of *causality*
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+---
+
+
+class: center
+# DAGs
 
 
 Nodes = variables; Arrows = direction of *causality*
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-2-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
-X1 has an effect on Y
+Read: X1 has an effect on Y
 
 ---
 
@@ -122,11 +143,16 @@ X1 has an effect on Y
 
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-3-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 --
 
-X1 has an effect on Y; X2 has an effect on X1; X2 does not affect Y
+X1 has an effect on Y; X2 has an effect on X1; X2 affects Y *only through* X1
+
+*Missing* arrows matter!
+
+???
+Example of x2 - x1 - y?
 
 ---
 
@@ -134,7 +160,7 @@ X1 has an effect on Y; X2 has an effect on X1; X2 does not affect Y
 # DAGs
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-4-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-5-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -157,7 +183,7 @@ Variables in the literature: Income (I), Liberal (L), Age (A), Media (M), Parent
 --
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-5-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-6-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ???
 What are our assumptions? What's this DAG saying?
@@ -165,7 +191,7 @@ What are our assumptions? What's this DAG saying?
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 # DAGs
 
 DAGs encode everything we know about some process
@@ -191,7 +217,7 @@ Missing arrows also matter: we are assuming that Age has *no effect* on Media di
 # 🚨 Our turn: let's make our own DAG 🚨
 
 
-On [daggity.net](http://www.dagitty.net/dags.html#) about civil war
+On [daggity.net](http://www.dagitty.net/dags.html#) about why people choose to vote (or not)
 
 ---
 
@@ -199,11 +225,11 @@ On [daggity.net](http://www.dagitty.net/dags.html#) about civil war
 # Identification
 
 
-DAGs are important because they help us figure out how to estimate the effect of one variable on another
+Why do this? As we will see, DAGs help us figure out how to estimate the effect of one variable on another
 
 --
 
-While at the same time being mindful of all the other variables that we need to **adjust**, or **control**
+While at the same time being mindful of all the other variables that we need to **adjust**, or **control** for
 
 --
 
@@ -225,10 +251,7 @@ class: center, middle, inverse
 
 
 
-# Waffle House 
-
-
-&lt;img src="images/waffle-house.png" width="100%" /&gt;
+&lt;img src="images/waffle-house.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -238,7 +261,7 @@ class: center, middle, inverse
 # Waffle House Index
 
 .pull-left[
-&lt;img src="images/waffle-house-index.jpeg" width="100%" /&gt;
+&lt;img src="images/waffle-house-index.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -246,7 +269,7 @@ class: center, middle, inverse
 
 
 .pull-right[
-&lt;img src="images/waffle-index.png" width="100%" /&gt;
+&lt;img src="images/waffle-index.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -328,14 +351,17 @@ Do cheap, delicious waffles put marriages at risk?
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
+???
+Speculate on underlying mechanism
 
 ---
 
-
+class: middle, center, inverse
 # Does Waffle House cause divorce?
 
+--
 
 Almost certainly *not*
 
@@ -345,7 +371,7 @@ No one thinks there is a *plausible* way in which Waffle House causes divorce
 
 --
 
-Instead, when we see a correlation of this kind we wonder about other variables that are "*actually*" driving the relationship
+When we see a correlation of this kind we wonder about other variables that are **actually** driving the relationship
 
 --
 
@@ -377,7 +403,7 @@ The South also happens to have some of the highest divorce rates in the country
 So the DAG might look something like this: South **has an effect on** Waffle Houses and Divorce, but Waffles **do not cause** Divorce
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-11-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -385,7 +411,7 @@ So the DAG might look something like this: South **has an effect on** Waffle Hou
 # The problem
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-12-1.png" width="60%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-13-1.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -401,14 +427,14 @@ This is called **confounding**: the South is **confounding** the relationship be
 ---
 
 
-# Simulation to convince ourselves
+# How does this happen?
 
 
 Let's make up data to convince ourselves this is true
 
 --
 
-fifty states, about half of them are in the South in this made-up example
+fifty states, about half of them are in the South
 
 --
 
@@ -422,96 +448,140 @@ tibble(south = sample(c(0, 1), size = 50, replace = TRUE))
 ##    south
 ##    &lt;dbl&gt;
 ##  1     0
-##  2     1
-##  3     1
+##  2     0
+##  3     0
 ##  4     1
 ##  5     0
-##  6     1
-##  7     0
+##  6     0
+##  7     1
 ##  8     0
 ##  9     0
-## 10     0
+## 10     1
 ## # … with 40 more rows
 ```
 
 ---
 
 
-# Simulation to convince ourselves
+# Simulate the treatment
 
 
-Step 2: make Waffle houses, which are more **common** in the South
+Step 2: make Waffle houses, let's say about 20 per million residents, +/- 4
 
 
 ```r
 tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-*      waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south)
+*      waffle = rnorm(n = 50, mean = 20, sd = 4))
 ```
 
 ```
 ## # A tibble: 50 × 2
 ##    south waffle
 ##    &lt;dbl&gt;  &lt;dbl&gt;
-##  1     1   25.5
-##  2     1   29.1
-##  3     0   18.6
-##  4     1   28.0
-##  5     1   34.4
-##  6     0   16.6
-##  7     1   36.1
-##  8     1   30.8
-##  9     0   11.8
-## 10     0   19.0
+##  1     0   18.6
+##  2     0   16.6
+##  3     0   16.1
+##  4     1   14.6
+##  5     0   23.3
+##  6     0   24.2
+##  7     1   23.1
+##  8     1   17.4
+##  9     0   24.7
+## 10     0   23.0
+## # … with 40 more rows
+```
+
+---
+
+# Make Waffles more common in the South
+
+
+Step 3: The arrow from South to Waffles, let's say Southern states have about 10 more Waffles, on average
+
+
+```r
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+*      waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south)
+```
+
+```
+## # A tibble: 50 × 2
+##    south waffle
+##    &lt;dbl&gt;  &lt;dbl&gt;
+##  1     1   33.9
+##  2     0   12.3
+##  3     0   22.6
+##  4     0   19.4
+##  5     0   20.5
+##  6     0   29.4
+##  7     1   25.7
+##  8     1   31.6
+##  9     0   12.7
+## 10     1   35.6
 ## # … with 40 more rows
 ```
 
 ---
 
 
-# Simulation to convince ourselves
+# Simulate the outcome
 
 
-Step 3: make a divorce rate, which is **higher** in the South
+Step 4: make a divorce rate, let's say about 20 divorces per 1,000 adults
 
 
 ```r
 fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
-*             divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south)
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south,
+*             divorce = rnorm(n = 50, mean = 20, sd = 2))
 ```
 
 
-Notice! Waffles do not **cause** divorce
+---
+
+
+# Make the South have more divorce
+
+
+Step 5: the arrow from South to divorce, let's say southern states have about 8 more divorces per 1,000 residents
+
+
+```r
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south,
+*             divorce = rnorm(n = 50, mean = 20, sd = 2) + 8 * south)
+```
+
+**NOTICE!** Waffles have no effect on divorce in our fake data
+
+---
+
+# A totally confounded relationship
+
+
+The South's **effect** on Waffle House and on Divorce creates a **confounded** correlation between the two
+
+
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
 
-# A totally spurious relationship
 
 
-The South's **effect** on Waffle House and on Divorce creates a **spurious** correlation between the two
-
-
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
-
-
----
-
-
-
-
-# A totally spurious relationship
+# A totally confounded relationship
 
 
 The DAG on the left will produce an association like the one on the right
 
 .pull-left[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-17-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 .pull-right[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-18-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-21-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -520,25 +590,22 @@ Even if Waffles and Divorce are **causally** unrelated
 ---
 
 
-# 🚨 Your turn: make a spurious correlation 🚨
+# 🧇 Your turn: confounded waffles 🧇
 
 
-Using code like this:
+Make up data where a lurking variable creates a confounded relationship between two other variables that isn't truly causal:
+
+.small[
+1. Change the .yellow[confound], .blue[treatment] and .red[outcome] variables in the code to ones of your choosing
+
+2. Alter the parameters in `rnorm()` so the values make sense for your variables
+
+3. Make a scatterplot with a trend line -- use `labs()` to help us make sense of the plot axes and tell us what the confound is with the `title = ` argument in `labs()`
+]
 
 
-```r
-tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
-              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south)
-```
-
-
-Make your own spurious correlation by changing the names and values of the variables, where the effect of X on Y is totally the result of some third variable, Z. Plot it and throw it in the Slack. 
-
-
-
-<div class="countdown" id="timer_61843d9e" style="right:0;bottom:0;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">08</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_63642e6c" style="right:0;bottom:0;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">15</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
 
@@ -552,19 +619,23 @@ Make your own spurious correlation by changing the names and values of the varia
 
 
 .pull-left[
-Think of causality as water flowing through the DAG, flowing in the direction of the arrows
+Think of causality as water flowing in the direction of the arrows
 
 
 We want look at water flowing **directly** from a **treatment** to an **outcome**
 
-But **account** for the fact that there is often *indirect* flows that *contaminate* our estimates
+But **account** for the fact that there is often *indirect* flow that *contaminates* our estimates
 
 
 ]
 
 .pull-right[
-&lt;img src="images/mario-pipes.jpg" width="100%" /&gt;
 
+&lt;video width="100%" height="100%" controls id="my_video"&gt;
+    &lt;source src="images/confound-heiss.mp4" type="video/mp4"&gt;
+&lt;/video&gt;
+
+Source: the mighty Andrew Heiss
 ]
 
 
@@ -581,7 +652,7 @@ Otherwise we will be *confounded*
 
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-22-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -602,7 +673,7 @@ Otherwise we will be *confounded*
 # What do we need to control? 
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-23-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -614,7 +685,7 @@ Nothing
 # What do we need to control? 
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-24-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -625,7 +696,7 @@ Nothing! No indirect flow to X
 # What do we need to control? 
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-26-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -641,7 +712,7 @@ Nothing! No indirect flow to X!
 Media consumption (M) `\(\rightarrow\)` Liberal (L)
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-26-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-27-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -654,7 +725,7 @@ Media consumption (M) `\(\rightarrow\)` Liberal (L)
 ---
 
 
-# The confounding fork
+# The confounding fork 🍴
 
 Y `\(\leftarrow\)` Z `\(\rightarrow\)` X
 
@@ -664,7 +735,7 @@ There is a third variable, Z, that is a **common cause** of X and Y
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-28-1.png" width="90%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-29-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -676,14 +747,20 @@ We've already seen this!
 
 
 .pull-left[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-29-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-30-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Creates an association between X and Y that isn't causal
+
 ]
 
 .pull-right[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-30-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-31-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+Distorts the true causal relation between X and Y
+
 ]
 
-But note that **both** of these fork scenarios will mess us up!
+Note that **both** of these fork scenarios will mess us up!
 
 
 ---
@@ -716,18 +793,17 @@ lm(divorce ~ waffle, data = fake) %&gt;% tidy()
 
 ```
 ## # A tibble: 2 × 5
-##   term        estimate std.error statistic    p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-## 1 (Intercept)   10.6      2.52        4.22 0.000107  
-## 2 waffle         0.530    0.0978      5.42 0.00000189
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)   11.8      1.59        7.41 1.75e- 9
+## 2 waffle         0.504    0.0617      8.16 1.27e-10
 ```
 
 
 --
 
-Estimate is many, many times larger than the true effect
+Estimate is 5040 times larger than the true effect!
 
-In some cases can even produce an opposite relationship!
 
 ---
 
@@ -737,13 +813,13 @@ In some cases can even produce an opposite relationship!
 We need to figure out what Z is, measure it, and **adjust for it** in our analysis
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-33-1.png" width="90%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-34-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 
 
 ---
 
-# The perplexing pipe
+# The perplexing pipe 🪠
 
 
 X `\(\rightarrow\)` Z `\(\rightarrow\)` Y
@@ -753,10 +829,10 @@ X causes Z, which causes Y (or: Z *mediates* the effect of X on Y)
 --
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-34-1.png" width="70%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-35-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
-What happens if we **adjust for Z**?  We **block** the effect of X on Y; so we leave Z alone
+What happens if we **adjust for Z**?  We **block** the effect of X on Y
 
 
 ---
@@ -765,16 +841,16 @@ What happens if we **adjust for Z**?  We **block** the effect of X on Y; so we l
 # An example: foreign intervention
 
 
-What effect does US foreign intervention have on US support abroad?
+What effect does .blue[US foreign intervention] have on .red[US support abroad]?
 
 --
 
 Say the DAG looks like this:
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-35-1.png" width="70%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-36-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
-If we control for *Infrastructure* we are *blocking* the effect of intervention on support
+If we control for *casualties* we are *blocking* the effect of intervention on support
 
 ---
 
@@ -784,7 +860,7 @@ If we control for *Infrastructure* we are *blocking* the effect of intervention 
 
 What if the DAG instead looked like this:
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-36-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-37-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ???
 What does it mean
@@ -795,14 +871,12 @@ What does it mean
 # An example: foreign intervention
 
 
-Two ways that Intervention affects US sentiment: direclty and indirectly
+Two ways that Intervention affects US sentiment: directly and indirectly
 
-Adjusting for **Infrastructure** blocks the *indirect* effect
-
-So we are still **missing** part of the effect!
+Adjusting for **casualties** blocks the *indirect* effect; if that's what we want, fine -- But if we want the full effect then we'll be wrong!
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-37-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-38-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 ???
 What does it mean
@@ -839,18 +913,26 @@ Researcher might think they need to control for a study subject's **cholesterol*
 
 --
 
+"We should compare people who smoke but have similar levels of cholesterol, because cholesterol affects heart health"
+
+---
+
+# Example: where pipes go wrong
+
+
+
 If the DAG looks like this, **cholesterol** is a pipe and controlling is bad!
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-38-1.png" width="80%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-39-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 
 
 ---
 
-# The explosive collider
+# The explosive collider 💥
 
 `\(X \rightarrow Z \leftarrow Y\)`
 
@@ -865,7 +947,7 @@ Left alone, it's no problem; but **controlling for Z** creates strange patterns
 --
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-39-1.png" width="70%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-40-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -873,7 +955,7 @@ Left alone, it's no problem; but **controlling for Z** creates strange patterns
 # Example: the NBA
 
 
-&lt;img src="images/nba-height.png" width="50%" /&gt;
+&lt;img src="images/nba-height.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -899,7 +981,7 @@ But **among NBA players** there might be no relationship between height and scor
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-41-1.png" width="70%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-42-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -909,11 +991,15 @@ But **among NBA players** there might be no relationship between height and scor
 
 # Another example: bad findings
 
+.pull-left[
 Richard McElreath asks: why are surprising findings so often untrustworthy? 
 
---
+]
 
-&lt;img src="images/hurricanes.png" width="60%" /&gt;
+.pull-right[
+&lt;img src="images/hurricanes.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
 
 
 ---
@@ -921,7 +1007,7 @@ Richard McElreath asks: why are surprising findings so often untrustworthy?
 # Another example: bad findings
 
 
-&lt;img src="images/shark-elections.png" width="60%" /&gt;
+&lt;img src="images/shark-elections.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -934,7 +1020,7 @@ Imagine that in the world there is no relationship between how **surprising** a 
 
 --
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-44-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-45-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -946,7 +1032,7 @@ Imagine that in the world there is no relationship between how **surprising** a 
 But now imagine that studies are only published **either** if they're *very trustworthy* OR *very surprising*
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-45-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-46-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -958,7 +1044,7 @@ But now imagine that studies are only published **either** if they're *very trus
 By only looking at *published papers* (e.g., **controlling for publication**), we create a negative relationship that doesn't exist
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-46-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-47-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -977,32 +1063,29 @@ We need to avoid controlling for colliders; but they are everywhere!
 
 
 .pull-left[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-47-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-48-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 .pull-right[
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-48-1.png" width="100%" /&gt;
+&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-49-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
 ---
 
 
-# Extra slides
----
+# 💥 Your turn: colliders 💥
 
 
-# A totally spurious relationship
+How are the following examples of colliders?
 
 
-Divorce is **higher** in the South; so are Waffles
+1. Say that, on average, Google pays women less than men. But *comparing employees in the same type of job* (title, seniority, skills, etc.) the difference goes away, so there is no bias.
+
+2. A study by Fryer (2019) on racial bias in policing finds that, *among people who are stopped by police*, white and non-white citizens are killed at the same rates, so there is no bias.
 
 
-&lt;img src="08-causality-II_files/figure-html/unnamed-chunk-49-1.png" width="100%" /&gt;
-
-
----
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

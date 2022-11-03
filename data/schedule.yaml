@@ -43,12 +43,12 @@ lessons:
   - title: '<span class="fake-header-table">Causality</span>'
     header: True
 
-  - title: "Week 7: Causality and DAGs"
+  - title: "Week 7: Causality and confounds"
     date: "Nov 1, Nov 3"
     class: "causality"
     reading: "07-causal"
     
-  - title: 'Week 8: ggdag<br><i class="fas fa-star"></i> **Assignment 6**'
+  - title: 'Week 8: Drawing DAGs<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 8, Nov 10"
     #class: "dags"
     reading: "08-dags"

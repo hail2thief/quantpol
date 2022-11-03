@@ -105,6 +105,10 @@ font-weight: bold;
   font-weight: bold;
 }
 
+.yellow {
+  color: #ecb025;
+  font-weight: bold;
+}
 
 figure {
   margin: 15px;

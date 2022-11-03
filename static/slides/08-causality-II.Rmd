@@ -23,11 +23,13 @@ editor_options:
 ---
 
 ```{r setup, include=FALSE}
+xaringanExtra::use_editable(id = "causal2")
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, 
   fig.height=3.5, 
   fig.retina=3,
+  fig.align = 'center',
   out.width = "100%",
   cache = FALSE,
   echo = FALSE,
@@ -51,9 +53,25 @@ red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
 
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+theme_set(theme_nice())
+
+# Make all geom_dag_text() layers use these settings automatically
+update_geom_defaults(ggdag:::GeomDagText, list(family = "Fira Sans Condensed", 
+                                               fontface = "bold",
+                                               color = "black"))
 
 # set seed
 set.seed(1990)
@@ -124,13 +142,13 @@ How can we tell?
 # Causal diagram
 
 .pull-left[
-We need a *causal diagram* to get at causality
+We need a *causal model*
 
 
-The diagram is our idea of the data came to be (the **data-generating process**)
+The model is our idea of how the data came to be (the **data-generating process**)
 
 
-The diagram tells us how to *identify* a causal effect (if it's possible!)
+The model tells us how to *identify* a causal effect (if it's possible!)
 
 ]
 
@@ -143,20 +161,47 @@ knitr::include_graphics("images/models.jpeg")
 ---
 
 
-# Directed acyclical graphs (DAGs)
+# Directed Acyclical Graphs (DAGs)
+
+A popular modeling tool for thinking about causality is the **DAG**
+
+Nodes (points) = variables; Edges (arrows) = direction of *causality*
+
+
+```{r}
+dagify(Y ~ X + Z + A + B, 
+       X ~ Z + W, 
+       Z ~ B, 
+       A ~ B + W, 
+       exposure = "X", outcome = "Y") %>% 
+  ggdag_status(stylized = TRUE) + 
+  theme_dag(legend.position = "none") + 
+  scale_color_manual(values = c(blue, red))
+```
+
+
+
+
+---
+
+
+class: center
+# DAGs
 
 
 Nodes = variables; Arrows = direction of *causality*
 
 --
 
-```{r,out.width="80%"}
-dagify(Y ~ X1) %>% 
-  ggdag() + theme_dag()
+```{r,out.width="80%", fig.align='center'}
+dagify(Y ~ X1, 
+       coords = c(list(x = c(X1 = 1, Y = 1.5), 
+                       y = c(X1 = 1, Y = 1)))) %>% 
+  ggdag(node_size = 20, text_size = 5, stylized = TRUE) + theme_dag()
 ```
 
 
-X1 has an effect on Y
+Read: X1 has an effect on Y
 
 ---
 
@@ -168,12 +213,17 @@ X1 has an effect on Y
 ```{r, out.width = "80%"}
 dagify(Y ~ X1, 
        X1 ~ X2) %>% 
-  ggdag() + theme_dag()
+  ggdag(node_size = 18, text_size = 4.5, stylized = TRUE) + theme_dag()
 ```
 
 --
 
-X1 has an effect on Y; X2 has an effect on X1; X2 does not affect Y
+X1 has an effect on Y; X2 has an effect on X1; X2 affects Y *only through* X1
+
+*Missing* arrows matter!
+
+???
+Example of x2 - x1 - y?
 
 ---
 
@@ -184,7 +234,7 @@ X1 has an effect on Y; X2 has an effect on X1; X2 does not affect Y
 ```{r, out.width="80%"}
 dagify(Y ~ X1 + X3, 
        X1 ~ X2 + X3) %>% 
-  ggdag() + theme_dag()
+  ggdag(node_size = 20, text_size = 5, stylized = TRUE) + theme_dag()
 ```
 
 --
@@ -208,12 +258,12 @@ Variables in the literature: Income (I), Liberal (L), Age (A), Media (M), Parent
 --
 
 
-```{r}
+```{r, out.width="80%"}
 dag = dagify(L ~ M + P + A + I, 
              M ~ P, 
              exposure = "M", 
              outcome = "L")
-ggdag(dag) + theme_dag() + theme(legend.position = "none")
+ggdag(dag, stylized = TRUE) + theme_dag() + theme(legend.position = "none")
 ```
 
 ???
@@ -222,7 +272,7 @@ What are our assumptions? What's this DAG saying?
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 # DAGs
 
 DAGs encode everything we know about some process
@@ -248,7 +298,7 @@ Missing arrows also matter: we are assuming that Age has *no effect* on Media di
 # 🚨 Our turn: let's make our own DAG 🚨
 
 
-On [daggity.net](http://www.dagitty.net/dags.html#) about civil war
+On [daggity.net](http://www.dagitty.net/dags.html#) about why people choose to vote (or not)
 
 ---
 
@@ -256,11 +306,11 @@ On [daggity.net](http://www.dagitty.net/dags.html#) about civil war
 # Identification
 
 
-DAGs are important because they help us figure out how to estimate the effect of one variable on another
+Why do this? As we will see, DAGs help us figure out how to estimate the effect of one variable on another
 
 --
 
-While at the same time being mindful of all the other variables that we need to **adjust**, or **control**
+While at the same time being mindful of all the other variables that we need to **adjust**, or **control** for
 
 --
 
@@ -280,9 +330,6 @@ class: center, middle, inverse
 # Waffles and Divorce
 ---
 
-
-
-# Waffle House 
 
 
 ```{r}
@@ -348,17 +395,20 @@ Do cheap, delicious waffles put marriages at risk?
 ggplot(WaffleDivorce, aes(x = WaffleHouses/Population, y = Divorce)) + 
   geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
   geom_smooth(method = "lm", color = red, fill = red) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults")
 ```
 
+???
+Speculate on underlying mechanism
 
 ---
 
-
+class: middle, center, inverse
 # Does Waffle House cause divorce?
 
+--
 
 Almost certainly *not*
 
@@ -368,7 +418,7 @@ No one thinks there is a *plausible* way in which Waffle House causes divorce
 
 --
 
-Instead, when we see a correlation of this kind we wonder about other variables that are "*actually*" driving the relationship
+When we see a correlation of this kind we wonder about other variables that are **actually** driving the relationship
 
 --
 
@@ -407,8 +457,9 @@ dagify(Divorce ~ South,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 ---
@@ -424,8 +475,9 @@ dagify(Divorce ~ South,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 --
@@ -442,14 +494,14 @@ This is called **confounding**: the South is **confounding** the relationship be
 ---
 
 
-# Simulation to convince ourselves
+# How does this happen?
 
 
 Let's make up data to convince ourselves this is true
 
 --
 
-fifty states, about half of them are in the South in this made-up example
+fifty states, about half of them are in the South
 
 --
 
@@ -460,47 +512,72 @@ tibble(south = sample(c(0, 1), size = 50, replace = TRUE))
 ---
 
 
-# Simulation to convince ourselves
+# Simulate the treatment
 
 
-Step 2: make Waffle houses, which are more **common** in the South
+Step 2: make Waffle houses, let's say about 20 per million residents, +/- 4
 
 ```{r, echo = TRUE}
 tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-       waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south) #<<
+       waffle = rnorm(n = 50, mean = 20, sd = 4)) #<<
+```
+
+---
+
+# Make Waffles more common in the South
+
+
+Step 3: The arrow from South to Waffles, let's say Southern states have about 10 more Waffles, on average
+
+```{r, echo = TRUE}
+tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+       waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south) #<<
 ```
 
 ---
 
 
-# Simulation to convince ourselves
+# Simulate the outcome
 
 
-Step 3: make a divorce rate, which is **higher** in the South
+Step 4: make a divorce rate, let's say about 20 divorces per 1,000 adults
 
 ```{r, echo = TRUE}
 fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
-              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south) #<<
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south,
+              divorce = rnorm(n = 50, mean = 20, sd = 2)) #<<
 ```
 
-
-Notice! Waffles do not **cause** divorce
 
 ---
 
 
-# A totally spurious relationship
+# Make the South have more divorce
 
 
-The South's **effect** on Waffle House and on Divorce creates a **spurious** correlation between the two
+Step 5: the arrow from South to divorce, let's say southern states have about 8 more divorces per 1,000 residents
+
+```{r, echo = TRUE}
+fake = tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
+              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10 * south,
+              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8 * south) #<<
+```
+
+**NOTICE!** Waffles have no effect on divorce in our fake data
+
+---
+
+# A totally confounded relationship
+
+
+The South's **effect** on Waffle House and on Divorce creates a **confounded** correlation between the two
 
 
 ```{r}
 ggplot(fake, aes(x = waffle, y = divorce)) + 
   geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
   geom_smooth(method = "lm", color = red, fill = red) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(title = "Our fake waffle data", 
        x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults")
@@ -512,7 +589,7 @@ ggplot(fake, aes(x = waffle, y = divorce)) +
 
 
 
-# A totally spurious relationship
+# A totally confounded relationship
 
 
 The DAG on the left will produce an association like the one on the right
@@ -525,8 +602,9 @@ dagify(Divorce ~ South,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 ]
 
@@ -536,7 +614,7 @@ dagify(Divorce ~ South,
 ggplot(fake, aes(x = waffle, y = divorce)) + 
   geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
   geom_smooth(method = "lm", color = red, fill = red) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(title = "Our fake waffle data", 
        x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults")
@@ -549,24 +627,22 @@ Even if Waffles and Divorce are **causally** unrelated
 ---
 
 
-# 🚨 Your turn: make a spurious correlation 🚨
+# 🧇 Your turn: confounded waffles 🧇
 
 
-Using code like this:
+Make up data where a lurking variable creates a confounded relationship between two other variables that isn't truly causal:
 
-```{r, echo = TRUE, eval = FALSE}
-tibble(south = sample(c(0, 1), size = 50, replace = TRUE), 
-              waffle = rnorm(n = 50, mean = 20, sd = 4) + 10*south,
-              divorce = rnorm(n = 50, mean = 20, sd = 2) + 8*south)
-```
+.small[
+1. Change the .yellow[confound], .blue[treatment] and .red[outcome] variables in the code to ones of your choosing
 
+2. Alter the parameters in `rnorm()` so the values make sense for your variables
 
-Make your own spurious correlation by changing the names and values of the variables, where the effect of X on Y is totally the result of some third variable, Z. Plot it and throw it in the Slack. 
-
+3. Make a scatterplot with a trend line -- use `labs()` to help us make sense of the plot axes and tell us what the confound is with the `title = ` argument in `labs()`
+]
 
 
 ```{r}
-countdown::countdown(minutes = 8L)
+countdown::countdown(minutes = 15L)
 ```
 
 
@@ -580,21 +656,23 @@ countdown::countdown(minutes = 8L)
 
 
 .pull-left[
-Think of causality as water flowing through the DAG, flowing in the direction of the arrows
+Think of causality as water flowing in the direction of the arrows
 
 
 We want look at water flowing **directly** from a **treatment** to an **outcome**
 
-But **account** for the fact that there is often *indirect* flows that *contaminate* our estimates
+But **account** for the fact that there is often *indirect* flow that *contaminates* our estimates
 
 
 ]
 
 .pull-right[
-```{r}
-knitr::include_graphics("images/mario-pipes.jpg")
-```
 
+<video width="100%" height="100%" controls id="my_video">
+    <source src="images/confound-heiss.mp4" type="video/mp4">
+</video>
+
+Source: the mighty Andrew Heiss
 ]
 
 
@@ -618,8 +696,9 @@ dagify(Divorce ~ South,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 ---
@@ -645,7 +724,9 @@ dagify(Divorce ~ South,
 dagify(Y ~ X, 
        exposure = "X", 
        outcome = "Y") %>% 
-  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 --
@@ -662,7 +743,9 @@ Nothing
 dagify(Y ~ X + Z, 
        exposure = "X", 
        outcome = "Y") %>% 
-  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 --
@@ -679,7 +762,9 @@ dagify(Y ~ X + Z + A + B,
        X ~ G + H + J + K, 
        exposure = "X", 
        outcome = "Y") %>% 
-  ggdag_status() + theme_dag_blank() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 --
@@ -701,7 +786,9 @@ dag = dagify(L ~ M + P + A + I,
              M ~ P, 
              exposure = "M", 
              outcome = "L")
-ggdag_status(dag) + theme_dag() + theme(legend.position = "none")
+ggdag_status(dag, text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 ---
@@ -717,7 +804,7 @@ knitr::include_graphics("images/elemental-confounds.png")
 ---
 
 
-# The confounding fork
+# The confounding fork 🍴
 
 Y $\leftarrow$ Z $\rightarrow$ X
 
@@ -734,8 +821,9 @@ dagify(Y ~ Z,
        outcome = "Y", 
        coords = list(x = c(Y = 0, X = 2, Z = 1), 
                       y = c(Y = 0, X = 0, Z = 1))) %>% 
-  ggdag() + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 
@@ -755,9 +843,13 @@ dagify(Divorce ~ South,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
+
+Creates an association between X and Y that isn't causal
+
 ]
 
 .pull-right[
@@ -768,12 +860,16 @@ dagify(Divorce ~ South + Waffle,
        outcome = "Divorce", 
        coords = list(x = c(Waffle = 0, Divorce = 2, South = 1), 
                       y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-  theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
+
+Distorts the true causal relation between X and Y
+
 ]
 
-But note that **both** of these fork scenarios will mess us up!
+Note that **both** of these fork scenarios will mess us up!
 
 
 ---
@@ -805,9 +901,8 @@ lm(divorce ~ waffle, data = fake) %>% tidy()
 
 --
 
-Estimate is many, many times larger than the true effect
+Estimate is `r .504/.0001` times larger than the true effect!
 
-In some cases can even produce an opposite relationship!
 
 ---
 
@@ -832,7 +927,7 @@ dagify(Y ~ Z,
 
 ---
 
-# The perplexing pipe
+# The perplexing pipe 🪠
 
 
 X $\rightarrow$ Z $\rightarrow$ Y
@@ -851,7 +946,7 @@ dagify(Y ~ Z,
 ```
 
 
-What happens if we **adjust for Z**?  We **block** the effect of X on Y; so we leave Z alone
+What happens if we **adjust for Z**?  We **block** the effect of X on Y
 
 
 ---
@@ -860,27 +955,24 @@ What happens if we **adjust for Z**?  We **block** the effect of X on Y; so we l
 # An example: foreign intervention
 
 
-What effect does US foreign intervention have on US support abroad?
+What effect does .blue[US foreign intervention] have on .red[US support abroad]?
 
 --
 
 Say the DAG looks like this:
 
 ```{r, out.width = "70%"}
-dagify(Sentiment ~ Infrastructure, 
-       Infrastructure ~ Intervention, 
+dagify(Sentiment ~ Casualties, 
+       Casualties ~ Intervention, 
        exposure = "Intervention",
-       outcome = "Sentiment", 
-       coords = list(x = c(Intervention = -.5, Infrastructure = 0, 
-                           Sentiment = 0), 
-                     y = c(Sentiment = -.5, Infrastructure = 0, 
-                           Intervention = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
-  theme(legend.position = "none")
+       outcome = "Sentiment") %>% 
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 
-If we control for *Infrastructure* we are *blocking* the effect of intervention on support
+If we control for *casualties* we are *blocking* the effect of intervention on support
 
 ---
 
@@ -891,16 +983,13 @@ If we control for *Infrastructure* we are *blocking* the effect of intervention 
 What if the DAG instead looked like this:
 
 ```{r}
-dagify(Sentiment ~ Infrastructure + Intervention, 
-       Infrastructure ~ Intervention, 
+dagify(Sentiment ~ Casualties + Intervention, 
+       Casualties ~ Intervention, 
        exposure = "Intervention",
-       outcome = "Sentiment", 
-       coords = list(x = c(Intervention = -.5, Infrastructure = 0, 
-                           Sentiment = 0), 
-                     y = c(Sentiment = -.5, Infrastructure = 0, 
-                           Intervention = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
-  theme(legend.position = "none")
+       outcome = "Sentiment") %>% 
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 ???
@@ -912,24 +1001,19 @@ What does it mean
 # An example: foreign intervention
 
 
-Two ways that Intervention affects US sentiment: direclty and indirectly
+Two ways that Intervention affects US sentiment: directly and indirectly
 
-Adjusting for **Infrastructure** blocks the *indirect* effect
-
-So we are still **missing** part of the effect!
+Adjusting for **casualties** blocks the *indirect* effect; if that's what we want, fine -- But if we want the full effect then we'll be wrong!
 
 
 ```{r, out.width="80%"}
-dagify(Sentiment ~ Infrastructure + Intervention, 
-       Infrastructure ~ Intervention, 
+dagify(Sentiment ~ Casualties, 
+       Casualties ~ Intervention, 
        exposure = "Intervention",
-       outcome = "Sentiment", 
-       coords = list(x = c(Intervention = -.5, Infrastructure = 0, 
-                           Sentiment = 0), 
-                     y = c(Sentiment = -.5, Infrastructure = 0, 
-                           Intervention = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
-  theme(legend.position = "none")
+       outcome = "Sentiment") %>% 
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 ???
@@ -967,6 +1051,14 @@ Researcher might think they need to control for a study subject's **cholesterol*
 
 --
 
+"We should compare people who smoke but have similar levels of cholesterol, because cholesterol affects heart health"
+
+---
+
+# Example: where pipes go wrong
+
+
+
 If the DAG looks like this, **cholesterol** is a pipe and controlling is bad!
 
 --
@@ -980,11 +1072,13 @@ smoking_ca_dag = dagify(cardiacarrest ~ cholesterol,
                                     "smoking" = "Smoking",
                                     "cholesterol" = "Cholesterol",
                                     "unhealthy" = "Unhealthy\n Lifestyle",
-                                    "weight" = "Weight"),
+                                    "weight" = "Fat content"),
                          exposure = "smoking",
                          outcome = "cardiacarrest")
 
-ggdag_status(smoking_ca_dag, text = FALSE, use_labels = "label") + theme_dag_blank() + theme(legend.position = "none")
+ggdag_status(smoking_ca_dag, text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 
@@ -992,7 +1086,7 @@ ggdag_status(smoking_ca_dag, text = FALSE, use_labels = "label") + theme_dag_bla
 
 ---
 
-# The explosive collider
+# The explosive collider 💥
 
 $X \rightarrow Z \leftarrow Y$
 
@@ -1009,7 +1103,7 @@ Left alone, it's no problem; but **controlling for Z** creates strange patterns
 
 ```{r, out.width="70%"}
 collider_triangle(x = "X", y = "Y", m = "Z") %>% 
-  ggdag(use_labels = "label", text = FALSE) + theme_dag()
+  ggdag(use_labels = "label", text = FALSE, stylized = TRUE) + theme_dag()
 ```
 
 
@@ -1053,8 +1147,9 @@ dagify(Scoring ~ Height,
        outcome = "Scoring",
        coords = list(x = c(Height = -.5, NBA = 0, Scoring = .5), 
                      y = c(Height = 0, NBA = -.5, Scoring = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + 
-  theme_dag() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 
 
@@ -1065,13 +1160,17 @@ dagify(Scoring ~ Height,
 
 # Another example: bad findings
 
+.pull-left[
 Richard McElreath asks: why are surprising findings so often untrustworthy? 
 
---
+]
 
-```{r,out.width="60%"}
+.pull-right[
+```{r}
 knitr::include_graphics("images/hurricanes.png")
 ```
+]
+
 
 
 ---
@@ -1096,7 +1195,7 @@ Imagine that in the world there is no relationship between how **surprising** a 
 
 ```{r}
 # simulate fake study selection data
-n = 200 # number of studies
+n = 500 # number of studies
 p = 0.1 # proportion of studies that get chosen
 df = tibble(newsworthy = rnorm(n), 
             trustworthy = rnorm(n), 
@@ -1108,10 +1207,12 @@ df = tibble(newsworthy = rnorm(n),
 
 ggplot(df, aes(x = newsworthy, y = trustworthy)) + 
   geom_point(size = 3, fill = red, alpha = .8, shape = 21, color = "white") + 
-  theme_fancy +
+  theme_nice() +
   labs(x = "How Surprising the Study is", 
        y = "How Trustworthy the Study is") + 
-  theme(legend.position = "none")
+  theme(legend.position = "none") + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very unsurprising", "Very surprising")) + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very untrustworthy", "Very trustworthy"))
 
 ```
 
@@ -1128,9 +1229,12 @@ But now imagine that studies are only published **either** if they're *very trus
 ```{r}
 ggplot(df, aes(x = newsworthy, y = trustworthy, fill = published)) + 
   geom_point(size = 3, alpha = .8, shape = 21, color = "white") + 
-  theme_fancy +
+  theme_nice() +
   labs(x = "How Surprising the Study is", 
        y = "How Trustworthy the Study is") + 
+  theme(legend.position = "none") + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very unsurprising", "Very surprising")) + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very untrustworthy", "Very trustworthy")) +
   scale_fill_manual(values = c(red, blue)) + 
   theme(legend.position = "top")
 ```
@@ -1148,12 +1252,15 @@ By only looking at *published papers* (e.g., **controlling for publication**), w
 ```{r}
 ggplot(df, aes(x = newsworthy, y = trustworthy, fill = published)) + 
   geom_point(size = 3, alpha = .8, shape = 21, color = "white") + 
-  theme_fancy +
+  theme_nice() +
   labs(x = "How Surprising the Study is", 
        y = "How Trustworthy the Study is") + 
+  theme(legend.position = "none") + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very unsurprising", "Very surprising")) + 
+  scale_x_continuous(breaks = c(-2, 2), labels = c("Very untrustworthy", "Very trustworthy")) +
   scale_fill_manual(values = c(red, blue)) + 
   theme(legend.position = "top") + 
-  geom_smooth(method = "lm")
+  geom_smooth(data = filter(df, published == TRUE), method = "lm")
 ```
 
 
@@ -1180,8 +1287,9 @@ dagify(Scoring ~ Height,
        outcome = "Scoring",
        coords = list(x = c(Height = -.5, NBA = 0, Scoring = .5), 
                      y = c(Height = 0, NBA = -.5, Scoring = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + 
-  theme_dag() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 ]
 
@@ -1193,8 +1301,9 @@ dagify(Published ~ Trustworth + Surprising,
        outcome = "Trustworth",
        coords = list(x = c(Surprising = -.5, Published = 0, Trustworth = .5), 
                      y = c(Surprising = 0, Published = -.5, Trustworth = 0))) %>% 
-  ggdag_status(text = FALSE, use_labels = "name") + 
-  theme_dag() + theme(legend.position = "none")
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) + theme_dag_blank() + 
+  theme(legend.position = "none") + scale_color_manual(values = c(blue, red)) + 
+  scale_fill_manual(values = c(blue, red))
 ```
 ]
 
@@ -1202,28 +1311,14 @@ dagify(Published ~ Trustworth + Surprising,
 ---
 
 
-# Extra slides
----
+# 💥 Your turn: colliders 💥
 
 
-# A totally spurious relationship
+How are the following examples of colliders?
 
 
-Divorce is **higher** in the South; so are Waffles
+1. Say that, on average, Google pays women less than men. But *comparing employees in the same type of job* (title, seniority, skills, etc.) the difference goes away, so there is no bias.
+
+2. A study by Fryer (2019) on racial bias in policing finds that, *among people who are stopped by police*, white and non-white citizens are killed at the same rates, so there is no bias.
 
 
-```{r}
-ggplot(fake, aes(x = waffle, y = divorce, fill = factor(south))) + 
-  geom_point(size = 3, alpha = .8, shape = 21, color = "white") + 
-  theme_fancy + 
-  labs(title = "Our fake waffle data", 
-       x = "Waffle Houses per million residents", 
-       y = "Divorce rate per 1,000 adults", 
-       fill = "Region:") + 
-  scale_fill_manual(values = c(red, blue), labels = c("Not South", 
-                                                      "South")) + 
-  theme(legend.position = "top")
-```
-
-
----
