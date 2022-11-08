@@ -4,7 +4,7 @@
     <title>Drawing DAGs</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-11-09" />
+    <meta name="date" content="2022-11-08" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
@@ -84,11 +84,11 @@ We also know that **lurking variables** might make things go awry (the South)
 We know that the DAG on the left will produce the **spurious** correlation on the right
 
 .pull-left[
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-1-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-2-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-2-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 
@@ -103,29 +103,87 @@ Regardless of whether or not waffles cause divorce
 --
 
 .pull-left[
-Controlling for the wrong thing can *close* a **perplexing pipe**
+Controlling for the wrong thing can *close* a **perplexing pipe** -- this erases **part** or **all** of the effect that X has on Y
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 ]
 
 --
 
 .pull-right[
-Or *open* up an **exploding collider**
+Or *open* up an **exploding collider** -- creates weird correlation between X and Y
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-4-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 
 ---
 
+
+# Example: Bias in police use of force
+
+
+Are the police more likely to use deadly force against people of color?
+
+--
+
+*Black Americans are 3.23 times more likely than white Americans to be killed by police* (Schwartz and Jahn, 2020)
+
+--
+
+Yet there are big debates about how exactly to estimate this bias (and the extent to which it exists)
+
+
+--
+
+.shout[Fryer (2019)] finds that Blacks and Hispanics are 50% more likely to be stopped by police, but that *conditional on being stopped by the police*, there are no racial differences in officer-involved shootings
+
+
+
+---
+
+
+# Bias in use of force
+
+Fryer used extensive controls about the nature of the interaction, time of day, and hundreds of factors that I’ve captured with `Confounds`
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-5-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+# Bias in use of force
+
+
+Fryer shows that once you account for the indirect effect, the direct effect is basically not there -- once the police has stopped someone, they do **not** use deadly force more often against POC than Whites
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-6-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Bias in police use of force
+
+
+But what if police are more likely to stop people they believe are "suspicious" AND use force against people they find "suspicious"? THEN conditioning on the stop is equivalent to .shout[conditioning on a collider]
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-7-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+
+
 class: center, middle, inverse
 # What do we do?
 
 
-We have to be careful, slow, and cautious
+We have to be careful and slow
 
 --
 
@@ -140,7 +198,7 @@ Use the DAG to figure out what we need to control
 
 --
 
-**Next week:** how to actually control for stuff
+**Next time:** how to actually control for stuff
 
 
 ---
@@ -156,11 +214,11 @@ DAGs can also help us see why experiments "work":
 
 | Person|Shown an ad? | Democrats thermometer|
 |------:|:------------|---------------------:|
-|      1|Yes          |                 95.51|
-|      2|No           |                 61.67|
-|      3|Yes          |                 62.09|
-|      4|No           |                 60.09|
-|      5|No           |                 46.38|
+|      1|Yes          |                 91.52|
+|      2|No           |                 60.04|
+|      3|Yes          |                 29.61|
+|      4|No           |                 45.11|
+|      5|No           |                 42.02|
 
 ---
 
@@ -172,7 +230,7 @@ Experiments seem simple...
 
 --
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-6-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -182,13 +240,13 @@ Experiments seem simple...
 
 But the outcome can be very complex ... 
 
-And yet we can still **identify** the effect:
+And yet we can still **identify** the effect because nothing **causes** you to receive the experimental treatment; it is random!
 
 
 --
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-7-1.png" width="90%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-10-1.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -196,12 +254,12 @@ And yet we can still **identify** the effect:
 # When experiments go wrong
 
 
-Say the ad experiment implemented on a phone app, and **younger people are more likely to use the app** than older (e.g., age and exposure to treatment are correlated):
+Say the ad experiment was implemented on TikTok, and **younger people are more likely to use TikTok** than older people
 
 --
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-8-1.png" width="70%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-11-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 This means **Age** is now a *fork*
@@ -229,12 +287,25 @@ Need to close back-doors and keep front-doors open
 ]
 
 .pull-right[
-&lt;img src="images/backdoor.jpeg" width="100%" /&gt;
+&lt;img src="images/backdoor.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
 
 ---
+
+# Backdoor paths
+
+
+A backdoor path can involve a chain of variables -- like the **fork**, but with more steps
+
+We can identify X `\(\rightarrow\)` Y by controlling for *any* variable in the backdoor path: `m`, `a`, or `b`
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-13-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
 
 
 
@@ -242,7 +313,7 @@ Need to close back-doors and keep front-doors open
 
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-10-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ???
 Control for A and I or A and S
@@ -253,7 +324,7 @@ Control for A and I or A and S
 # Solve the DAG
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ???
@@ -265,7 +336,7 @@ U1 and U2
 # Solve the DAG
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-12-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ???
 A, C, or U
@@ -274,59 +345,26 @@ What's B here?
 ---
 
 
-
-# The gender wage gap
-
-
-Does gender-based discrimination reduce women's earning potential (e.g., is there a "gender gap" in pay)?
-
---
-
-In general, women earn about 82 cents for every $1 earned by men
-
-.footnote[
-[1] specifically, this is the ratio of women’s and men’s median earnings for full-time, year-round workers 15 years old and older.
-]
+# Solve the DAG
 
 
---
-
-But **controlling** for occupation (e.g., comparing men and women in the same jobs), the wage gap seems to disappear (in some studies)
-
-
-
----
-
-
-# The gender wage gap
-
-
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-13-1.png" width="90%" /&gt;
-
-Controlling for occupation = looking at the **direct** effect of discrimination on wages
-
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ???
-How does discrimination affect wages?
-What happens if we control for occupation?
-
-
----
-
-# The gender wage gap
-
-
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-14-1.png" width="90%" /&gt;
-
-But doing so opens up a **collider** (through ability); no free lunch here
-
-???
-How does discrimination affect wages?
-What happens if we control for occupation?
-
+V, W1, W2
+W1, W2, Z1
+W1, W2, Z2
 
 ---
 
+
+# Solve the DAG
+
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
 
 class: center, middle, inverse
 # Making DAGs in R
@@ -339,7 +377,7 @@ class: center, middle, inverse
 We can use the `dagify()` function, from `ggdag`, to make a DAG
 
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-15-1.png" width="100%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -347,7 +385,31 @@ We can use the `dagify()` function, from `ggdag`, to make a DAG
 # The makings of a DAG
 
 
-Using same syntax as `lm()`, specify all of the **causes** of each of the variables
+Using same syntax as `lm()`, specify all of the **causes** of each of the variables in the `dagify()` function
+
+&gt; Y is caused by X, P, A and I
+
+
+```r
+dag = dagify(Y ~ X + P + A + I, # Y is caused by X, P, A and I
+       X ~ P,  # X is caused by P
+       A ~ I + P,  # A is caused by I and P
+       exposure = "X", 
+       outcome = "Y")
+```
+
+
+
+---
+
+
+# The makings of a DAG
+
+
+
+&gt; X is caused by P
+
+&gt; A is caused by I and P
 
 
 ```r
@@ -360,7 +422,6 @@ dag = dagify(Y ~ X + P + A + I, # Y is caused by X, P, A and I
 
 
 Finally, tell R which variable is the **treatment** ("exposure") and **outcome**
-
 
 
 ---
@@ -377,7 +438,7 @@ We can plot our dag using ggdag (*notice how the layout is randomly determined*)
 ggdag(dag)
 ```
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-17-1.png" width="80%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-22-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -393,7 +454,7 @@ We can see all the paths from X to Y using `ggdag_paths()`:
 ggdag_paths(dag)
 ```
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-18-1.png" width="80%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-23-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -409,7 +470,7 @@ We can identify what to control for using `ggdag_adjustment_set()`:
 ggdag_adjustment_set(dag)
 ```
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-19-1.png" width="80%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-24-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -426,7 +487,7 @@ ggdag(dag, text = FALSE, use_labels = "name") +
   theme_dag()
 ```
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-20-1.png" width="70%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-25-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -445,15 +506,34 @@ dag2 = dagify(child ~ grandpa + parent + neighborhood,
 ggdag(dag2, text = FALSE, use_labels = "name") + theme_dag()
 ```
 
-&lt;img src="09-dags_files/figure-html/unnamed-chunk-21-1.png" width="60%" /&gt;
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-26-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
-# 🚨 Your turn: make your own DAG 🚨
+# A variable cannot cause itself
+
+Explanation takes us into the weeds, but DAGs are *acyclical*, meaning: a variable cannot be its own cause (even indirectly):
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-27-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# A variable cannot cause itself
+
+If you have a cycle in your DAG, `ggdag_adjustment_set()` will return this:
 
 
-Come up with your own theory of how one variable affects another. Think about all of the variables that might affect each of those variables. 
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-28-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+
+# 🐶 Your turn: make your own DAG 🐶
+
+
+Come up with your own theory of how one .blue[treatment] affects an .red[outcome]. Then think about all of the variables that might affect each of them. 
 
 
 1. Make a DAG to represent all of those relationships. Post your DAG in the Slack. 
@@ -464,11 +544,30 @@ Come up with your own theory of how one variable affects another. Think about al
 
 
 
-<div class="countdown" id="timer_618b0ebd" style="right:0;bottom:0;font-size:1.5em;" data-warnwhen="0">
-<code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
+<div class="countdown" id="timer_636a9432" style="right:0;bottom:0;font-size:1.25em;" data-warnwhen="0">
+<code class="countdown-time"><span class="countdown-digits minutes">15</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
+---
 
+
+class: center, middle, inverse
+# Extra slides
+---
+
+exclude: true
+# Simulate the pipe
+
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-30-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+exclude: true
+# Simulate collider
+
+&lt;img src="09-dags_files/figure-html/unnamed-chunk-31-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

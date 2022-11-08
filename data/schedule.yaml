@@ -50,7 +50,7 @@ lessons:
     
   - title: 'Week 8: Drawing DAGs<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 8, Nov 10"
-    #class: "dags"
+    class: "dags"
     reading: "08-dags"
     #assignment: "ps-dags"
     
