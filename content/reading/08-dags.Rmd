@@ -37,3 +37,16 @@ xaringanExtra::embed_xaringan(
 )
 ```
 
+
+### Thursday
+
+
+[Class slides here](/slides/10-controls-I.html)
+
+
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/10-controls-I.html",
+   ratio = "16:9"
+)
+```

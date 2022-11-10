@@ -45,6 +45,7 @@ library(ggdag)
 library(rethinking)
 library(paletteer)
 library(ggrepel)
+library(moderndive)
 library(huxtable)
 library(gapminder)
 data("WaffleDivorce")
@@ -202,12 +203,32 @@ In this case: $Y = \alpha + \beta_1Waffles + \beta_2South$
 
 --
 
-Multiple regression is just regression with *multiple* explanatory variables
-
---
-
 In multiple regression, coefficients are different: they describe the relationship between **X1** and **Y**, *after adjusting for the X2, X3, X4, etc.*
 
+
+---
+
+
+# Intuition
+
+
+.pull-left[
+$Y = \alpha + \color{red}{\beta_1}Waffles + \beta_2South$
+
+Two ways of thinking about $\color{red}{\beta_1}$ here:
+
+- The relationship between Waffles and Divorce that **cannot be accounted for by the South**
+
+- The relationship between Waffles and Divorce, **comparing *among* Southern states (and non-Southern states)**
+
+]
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/wooden-puzzle.jpeg")
+```
+]
 
 ---
 
@@ -236,7 +257,7 @@ We can compare models using a **regression table**;
 many different functions, we'll use `huxreg()` from the `huxtable` package
 
 ```{r, echo = TRUE, eval = FALSE}
-huxreg(no_controls, controls) #<<
+huxreg("No controls" = no_controls, "With controls" = controls) #<<
 ```
 
 
@@ -246,43 +267,15 @@ huxreg(no_controls, controls) #<<
 # The regression table
 
 .scroll-output[
-```{r}
-huxreg(no_controls, controls)
-```
-]
-
-
-
----
-
-# The regression table
-
-We should add labels to the models: 
-
-.scroll-output[
-```{r, echo = TRUE, out.width="40%"}
+```{r, echo = TRUE}
 huxreg("No controls" = no_controls, "With controls" = controls) #<<
 ```
 ]
 
 
----
-
-
-# The regression table
-
-Get rid of the extra crap, keep only the sample size (`nobs`):
-
-.scroll-output[
-```{r, echo = TRUE}
-huxreg("No controls" = no_controls, 
-       "With controls" = controls, 
-       statistics = "nobs") #<<
-```
-]
-
 
 ---
+
 
 
 # Comparison
@@ -299,7 +292,7 @@ Model 2 controls/adjusts for: population and year
 .pull-right[
 .scroll-box-8[
 ```{r}
-huxreg("No controls" = no_controls, "With controls" = controls, statistics = "nobs")
+huxreg("No controls" = no_controls, "With controls" = controls)
 ```
 ]
 
@@ -332,6 +325,78 @@ huxreg("No controls" = no_controls, "With controls" = controls, statistics = "no
 
 In other words: .shout[comparing countries with similar population levels and in the same year], every additional 10k of GDP = 6.7 years more of life expectancy
 
+
+
+---
+
+
+# Another example: 🚽 and 💰
+
+
+How much does having an additional bathroom boost a house's value?
+
+--
+
+Wow!
+
+.scroll-output[
+```{r, echo = TRUE}
+no_controls = lm(price ~ bathrooms, data = house_prices)
+huxreg("No controls" = no_controls)
+```
+]
+
+
+
+---
+
+
+# The problem
+
+
+We are comparing houses with more and fewer bathrooms. But houses with more bathrooms tend to be **larger**! So house size is confounding the relationship between 🚽 and 💰
+
+
+```{r, out.width="90%"}
+dagify(Price ~ Bathrooms + Size, 
+       Bathrooms ~ Size, 
+       exposure = "Bathrooms", 
+       outcome = "Price", 
+       coords = list(x = c(Bathrooms = 0, Price = 1, Size = .5), 
+                     y = c(Bathrooms = 0, Price = 0, Size = 1))) %>% 
+  ggdag_status(text = FALSE, use_labels = "name", stylized = TRUE) +
+  theme_dag_blank() + 
+  theme(legend.position = "none") + 
+  scale_color_manual(values = c(blue, red, yellow)) + 
+  scale_fill_manual(values = c(blue, red, yellow))
+```
+
+
+---
+
+
+# Controlling for size
+
+What happens if we control for how large a house is?
+
+.pull-left[
+.shout[Comparing houses that are of similar size], every additional bathroom **decreases** the value by a small amount
+
+This makes sense! You are **losing** living space when you add bathrooms
+
+]
+
+
+
+.pull-right[
+
+.scroll-output[
+```{r, echo = TRUE}
+controls = lm(price ~ bathrooms + sqft_living, data = house_prices)
+huxreg("No controls" = no_controls, "Controls" = controls)
+```
+]
+]
 
 
 ---
@@ -440,7 +505,7 @@ Source: the mighty Andrew Heiss
 ---
 
 
-# Plot the data
+# Visualizing controlling for the South
 
 
 This is the **confounded** relationship between waffles and divorce:
@@ -659,12 +724,12 @@ dagify(Y ~ Z,
 # Simulation
 
 
-Let's make up some data to show this: X has an effect of 8 on Z; Z has an effect of 4 on Y
+Let's make up some data to show this: every unit of foreign aid increases corruption by 8; every unit of corruption increases the number of protest by 4
 
 ```{r, echo = TRUE}
-fake_pipe = tibble(x = rnorm(n = 200, mean = 10), 
-                   z = rnorm(n = 200, mean = 10) + 8 * x, 
-                   y = rnorm(n = 200, mean = 10) + 4 * z)
+fake_pipe = tibble(aid = rnorm(n = 200, mean = 10), 
+                   corruption = rnorm(n = 200, mean = 10) + 8 * aid, 
+                   protest = rnorm(n = 200, mean = 10) + 4 * corruption)
 ```
 
 
@@ -675,7 +740,7 @@ fake_pipe = tibble(x = rnorm(n = 200, mean = 10),
 
 
 ```{r}
-fake_pipe %>% knitr::kable()
+fake_pipe %>% knitr::kable(digits = 2)
 ```
 
 
@@ -685,15 +750,13 @@ fake_pipe %>% knitr::kable()
 # Bad controls
 
 
-What's the total effect of X on Y: just believe me, it is $8 \times 4 = 32$
+Remember, with a **pipe** controlling for Z (corruption) is a .shout[bad idea]
 
-Remember, with a **pipe** controlling for Z is a .shout[bad idea]
-
-Let's fit two models, where one makes the mistake of controlling for Z
+Let's fit two models, where one makes the mistake of controlling for corruption
 
 ```{r, echo = TRUE}
-right_model = lm(y ~ x, data = fake_pipe)
-bad_control = lm(y ~ x + z, data = fake_pipe)
+right_model = lm(protest ~ aid, data = fake_pipe)
+bad_control = lm(protest ~ aid + corruption, data = fake_pipe)
 ```
 
 
@@ -724,7 +787,7 @@ Remember, with an exploding collider, controlling for M creates strange correlat
 
 ```{r}
 collider_triangle(x = "X", y = "Y", m = "Z") %>% 
-  ggdag_status() + theme_dag() + 
+  ggdag_status(use_labels = "name", text = FALSE) + theme_dag() + 
   theme(legend.position = "none")
 ```
 
@@ -780,7 +843,7 @@ collided_model = lm(y ~ x + m, data = fake_collider)
 # Bad controls
 
 
-Notice how the model that mistakenly controls for Z tells you that X basically has no effect on Y (*wrong*)
+Notice how the model that mistakenly controls for M tells you that X has a strong, **negative** effect on Y (*wrong*)
 
 .scroll-output[
 ```{r}
@@ -804,7 +867,7 @@ Examples: the NBA, height, and scoring; the (alleged) negative correlation betwe
 
 --
 
-Imagine 😉 Google wants to hire the best of the best, and they have two criteria: interpersonal skills, and technical skills
+Imagine Google wants to hire the best of the best, and they have two criteria: interpersonal skills, and technical skills
 
 
 ---
@@ -829,7 +892,7 @@ fake_google = tibble(social_skills = rnorm(n = 200, mean = 50, sd = 10),
 
 
 ```{r}
-fake_google %>% knitr::kable()
+fake_google %>% knitr::kable(digits = 2)
 ```
 
 
@@ -948,8 +1011,4 @@ Using the templates in the class script:
 ```{r}
 countdown::countdown(minutes = 10L)
 ```
-
-
----
-
 
