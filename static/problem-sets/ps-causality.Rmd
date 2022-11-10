@@ -1,0 +1,270 @@
+---
+title: "Problem set 6: Causality"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggdag)
+library(AER) # install this if you don't have it!
+library(broom)
+```
+
+
+
+# Task 1: Experiments
+
+Imagine the following scenario:
+
+> You're a researcher that wants to test to what extent providing people with free car service to and from the polls increases the likelihood that they vote. You go to a town with 1,000 residents, randomly give half of them a free shuttle service to and from the polls, and all who are offered the ride accept. Now imagine that, generally speaking, people who are older are much more likely to turn out to vote than people who are younger. 
+
+
+**Q1: will the fact that people who are older are more likely to turnout to vote mess up your experiment and confound your estimate of the effect of the shuttle service on voter turnout? Explain why or why not, in your own words.**
+
+
+
+
+
+# Task 2: Simulation
+
+
+Here I want you to simulate (i.e., make up) the following data using the `rnorm()` function as we've been doing in class. Here what we want to simulate the effect of *terrorism* on public support for *extreme political candidates*. Use the info below to simulate this scenario:
+
+
+- We're in a country that has N = 800 cities. 
+- These cities are experiencing significant levels of terrorism. Say that, on average, a city experiences 8 terrorist attacks +/- 1. 
+- People in this country are a little anxious. On a 100-point "anxiety scale", the average city is at 20, +/- 2. Now, terrorism *increases* anxiety: for every terrorist attack, anxiety increases by 2 points.
+- Extreme political candidates are not so popular. The average vote share of an extreme political candidate is roughly 15, +/- 3. Now, as cities get more anxious, support for these candidates *increases*. Say that for every point of anxiety, support for extreme candidates goes up by 0.5 points. 
+
+
+Simulate the data below and store it as an object (NOTE: leave `set.seed(1990)` as is! we need it to get the same answer):
+
+```{r}
+set.seed(1990)
+
+
+```
+
+
+Now, make a scatterplot of the relationship between the number of terror attacks a city has and the level of support for extreme candidates in that city. Color the points by `anxiety` level. Include a line of best fit and a theme. Add `scale_color_viridis_c(option = "magma")` to the plot so the colors are nicer. 
+
+```{r}
+
+
+```
+
+**Q2: right click the graph --> "save image as" --> and save it somewhere on your computer. You will need to submit the plot!**
+
+
+Now, using a model, what is the effect of terrorism on support for extreme political candidates?
+
+```{r}
+
+
+```
+
+
+**Q3: what is the effect of terrorism on support for extreme candidates?**
+
+
+
+
+# Task 3: Doggy DAG
+
+
+A study claims that [owning a dog lowers a person's risk of early death by 24%](https://twitter.com/SwedishMedical/status/1186669377506205703). These are not experiments: people were *not* randomly assigned dog or no-dog. Instead, researchers went out in the world and asked people if they owned a dog or not, asked them about their health, and other characteristics. 
+
+
+Make a DAG that has the following characteristics: 
+
+- health is caused by age, income, having a dog, race, region, and education; having a dog is caused by income, race, and age; income is caused by race, region, age, and education; education is caused by age
+
+
+```{r dog-dag}
+
+
+
+```
+
+
+Look at all the paths from owning a dog to health:
+
+
+```{r dog-dag-paths}
+
+
+
+
+```
+
+
+**Q4: what is the longest backdoor path from health to dog-ownership?**
+
+
+
+
+Look at which variables you need to control for to properly estimate the effect of dog-ownership on health: 
+
+
+```{r}
+
+
+```
+
+
+
+**Q5: Which variables do you need to control for?**
+
+
+Seems obvious that just looking at the correlation without controls won't work, right? But note this from the study's abstract, published in the journal *Circulation*: ["A possible limitation was that the analyses were not adjusted for confounders."](https://www.ahajournals.org/doi/10.1161/CIRCOUTCOMES.119.005554)
+
+
+
+
+# Task 4: Affairs
+ 
+
+For this part, you'll look at data on extra-marital affairs, taken from a Psychology Today study in 1969, from the AER package. 
+
+
+```{r load-data}
+data("Affairs")
+?Affairs # read about the data and variables
+```
+
+
+Here's the question: does having a child make someone more or less likely to have an extra-marital affair? 
+
+
+Looking at the variable names in the Affairs dataset, make a DAG where: 
+
+- having an affair is a function of: having children, how religious you are, how long you've been married, and how happy you are in your marriage (rating)
+- having children is a function of: how long you've been married and how religious you are (more religious people tend to have more kids)
+- length of marriage is a function of: how religious you are (more religious people tend to get married younger)
+- happinness of marriage is a function of: whether or not you have kids (studies show having children is a significant stressor on a marriage)
+
+
+Note: don't forget to set `exposure` and `outcome` in the DAG!
+
+
+```{r affair-dag}
+
+```
+
+
+**Q6: What do we need to adjust for to identify the effect of having kids on affairs?** 
+
+
+
+Now, run a *naive* regression where you just regress affairs against having kids and look at the output. 
+
+
+```{r naive-kids}
+
+
+```
+
+
+**Q7: Interpret the coefficient on kids**
+
+
+
+
+Now, run a better regression controlling for the variable(s) you identified in the last question and look at the output. 
+
+
+```{r control-kids}
+
+
+```
+
+
+**Q8: Interpret the coefficient on kids** 
+
+
+
+## Bonus: Scraping Trump insults from Wikipedia
+
+
+You don't have to do this one. This one teaches you how to do simple web-scraping.
+
+
+There's a lot of information on the internet. Sometimes this information is nicely formatted, which means we can scrape it from the internet fairly easily. 
+
+Take a look at the table on this page of insults by former president Donald Trump: 
+https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump
+
+
+We're gonna pull this table from the internet into R. You'll need the `rvest` and `janitor` packages. Install if you don't have and load them below. 
+
+
+```{r}
+library(rvest)
+library(janitor)
+```
+
+
+First step is to pull down the whole Wikipedia page. To do so, use the `read_html` function, putting the URL of the site we want to scrape inside of it (in quotation marks!). Assign this to an object named `content`. 
+
+
+```{r}
+```
+
+
+Now we have the whole page. We just want that table. Run the `html_table` function on `content` and store that in an object called `tables`. Add `fill = TRUE` within the function otherwise you'll get an error. 
+
+
+```{r}
+```
+
+
+Notice up top in your environment that you have an object called `table` that is a **list** with 10 elements. That means we have 10 tables from that page. But we only want the one with *domestic political figures*! Which one is it? 
+
+
+We need to look at the elements in that list to figure out which of the 10 tables is ours. To look at the first element in that list, run `tables %>% pluck(1)` in the console. Is that the table? If not, try looking at the second element, and so on, until you find the table with insults. 
+
+
+Once you identify the right number, assign that table to an object called insults, like so: `insults = tables %>% pluck(NUMBER)`
+
+
+```{r}
+```
+
+
+The column names of this table are hard to work with. Let's use the `clean_names` function on our table and assign that to another object called `clean_insults`. 
+
+
+```{r}
+```
+
+Finally, use your tidyverse know-how to calculate how many times each person has been given an insulting nickname by Trump. Make a plot showing how many times each person was insulted. 
+
+```{r}
+```
+
+
+Double-bonus: repeat the steps above for a different table on Wikipedia (suggestions below). Whether you finish the Trump one or another of these, post on Slack so I can see. 
+
+- https://en.wikipedia.org/wiki/List_of_nicknames_used_by_Donald_Trump
+- https://en.wikipedia.org/wiki/List_of_helicopter_prison_escapes
+- https://en.wikipedia.org/wiki/Passengers_of_the_Titanic
+- https://en.wikipedia.org/wiki/Last_meal
+- https://en.wikipedia.org/wiki/List_of_consorts_of_the_Ottoman_sultans
+- https://en.wikipedia.org/wiki/List_of_people_who_died_climbing_Mount_Everest
+
+
+
+

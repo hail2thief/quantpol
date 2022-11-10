@@ -64,9 +64,21 @@ red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
 
+# theme
+theme_nice = function() {
+  theme_minimal(base_family = "Fira Sans Condensed", base_size = 14) +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold"),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"), 
+          plot.subtitle = element_text(hjust = .5, face = "italic"))
+}
+
+theme_set(theme_nice())
 # stupid geom_label_repel problem
 update_geom_defaults("label", list(family = "Fira Sans"))
 update_geom_defaults("label_repel", list(family = "Fira Sans"))
@@ -412,20 +424,15 @@ But what's `lm()` doing under-the-hood that makes this possible?
 
 - what's left is the relationship between Waffles and Divorce, *adjusting for the influence of the South on each*
 
-- Need math to fully grasp, but plots help:
+
 ]
 
 .pull-right[
-```{r}
-dagify(Divorce ~ South + Waffle, 
-           Waffle ~ South, 
-           exposure = "Waffle",
-           outcome = "Divorce", 
-           coords = list(x = c(Waffle = 0, Divorce = 1, South = .5), 
-                         y = c(Waffle = 0, Divorce = 0, South = 1))) %>% 
-      ggdag_status(text = FALSE, use_labels = "name") + theme_dag_blank() + 
-      theme(legend.position = "none")
-```
+<video width="100%" height="100%" controls id="my_video">
+    <source src="images/controls-heiss.mp4" type="video/mp4">
+</video>
+
+Source: the mighty Andrew Heiss
 
 ]
 
@@ -442,7 +449,7 @@ This is the **confounded** relationship between waffles and divorce:
 ggplot(fake, aes(x = waffle, y = divorce)) + 
   geom_point(size = 3, alpha = .8) + 
   geom_smooth(method = "lm", color = red, fill = red) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults") + 
   coord_cartesian(xlim = c(-10, 45), 
@@ -464,7 +471,7 @@ We can see what we already know: states in the South tend to have more divorce, 
 ggplot(fake, aes(x = waffle, y = divorce, color = factor(south))) + 
   geom_point(size = 3, alpha = .8) + 
   geom_smooth(method = "lm", color = red, fill = red) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "Is the state in the South?") + 
@@ -500,7 +507,7 @@ ggplot(fake2, aes(x = waffle, y = divorce, color = factor(south))) +
              color = "blue", size = 2) + 
   coord_cartesian(xlim = c(-10, 45), 
                   ylim = c(-10, 35)) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "In the South?") + 
@@ -522,7 +529,7 @@ ggplot(fake2, aes(x = waffle, y = divorce_res, color = factor(south))) +
              color = "blue", size = 2) + 
   coord_cartesian(xlim = c(-10, 45), 
                   ylim = c(-10, 35)) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "In the South?") + 
@@ -546,7 +553,7 @@ ggplot(fake2, aes(x = waffle, y = divorce_res, color = factor(south))) +
              color = "blue", size = 2) + 
   coord_cartesian(xlim = c(-10, 45), 
                   ylim = c(-10, 35)) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "In the South?") + 
@@ -569,7 +576,7 @@ ggplot(fake2, aes(x = waffles_res, y = divorce_res, color = factor(south))) +
              color = "blue", size = 2) + 
   coord_cartesian(xlim = c(-10, 45), 
                   ylim = c(-10, 35)) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "In the South?") + 
@@ -591,7 +598,7 @@ ggplot(fake2, aes(x = waffles_res, y = divorce_res)) +
   geom_smooth(method = "lm") + 
   coord_cartesian(xlim = c(-10, 45), 
                   ylim = c(-10, 35)) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Waffle Houses per million residents", 
        y = "Divorce rate per 1,000 adults", 
        color = "In the South?") + 
@@ -874,7 +881,7 @@ No relationship between social and technical skills among all job candidates
 ```{r}
 ggplot(collide_google, aes(x = social_skills, y = tech_skills)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + labs(x = "Social skill score", y = "Technical skill score") + 
+  theme_nice() + labs(x = "Social skill score", y = "Technical skill score") + 
   geom_smooth(method = "lm")
 ```
 
@@ -890,7 +897,7 @@ No bad models here; but if we only look at Google workers we see the weird trade
 ggplot(collide_google, aes(x = social_skills, y = tech_skills, 
                            color = hired)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + labs(x = "Social skill score", y = "Technical skill score", 
+  theme_nice() + labs(x = "Social skill score", y = "Technical skill score", 
                      color = "Works at Google?") + 
   geom_smooth(method = "lm") + 
   theme(legend.position = "right")

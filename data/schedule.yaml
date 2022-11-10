@@ -48,11 +48,11 @@ lessons:
     class: "causality"
     reading: "07-causal"
     
-  - title: 'Week 8: Drawing DAGs<br><i class="fas fa-star"></i> **Assignment 6**'
+  - title: 'Week 8: DAGs and controls<br><i class="fas fa-star"></i> **Assignment 6**'
     date: "Nov 8, Nov 10"
     class: "dags"
     reading: "08-dags"
-    #assignment: "ps-dags"
+    assignment: "ps-dags"
     
   - title: 'Week 9: Closing backdoors<br><i class="fas fa-star"></i> **Assignment 7**'
     date: "Nov 15, Nov 17"
