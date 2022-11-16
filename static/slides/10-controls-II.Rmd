@@ -54,8 +54,22 @@ red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+# custom ggplot theme
+theme_nice = function() {
+  theme_minimal(base_family = "Archivo Narrow") +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"))
+}
+
+theme_set(theme_nice())
+
+# palette
+palette = MetBrewer::met.brewer(name = "Cross")
 
 # stupid geom_label_repel problem
 update_geom_defaults("label", list(family = "Fira Sans"))
@@ -111,7 +125,7 @@ class: center, middle, inverse
 
 
 .pull-left[
-* for a long time there was a tendency to estimate **garbage can models**
+* for a long time there was a tendency to estimate **"garbage can" models**
 * throw every variable under the sun into regression model, hope for the best
 * in some cases, no pre-meditated *treatment* variable
 ]
@@ -198,28 +212,53 @@ Hard to correctly specify the DAG and measure all the variables; what can we do?
 
 --
 
-Ideal - an experiment, where *treatment is randomly assigned*; but this is rarely feasible
-
---
-
-Alternative - find moments, situations, or weird, freak occurrences where some group were exposed to some **treatment** while another group was not
+Ideal - an experiment -- where *treatment is randomly assigned*; where *nothing causes treatment assignment* -- but this is rarely feasible
 
 
-the reason one group got the **treatment**, and other didn't, is purely by *chance* (just like with an experiment)
+
+```{r,out.width="70%"}
+dagify(Support ~ Ad + Age + Income + Race + Region + Religion +
+         Parents + Media, 
+       Income ~ Region + Parents, 
+       Religion ~ Parents, 
+       Media ~ Parents + Religion + Age + Region, 
+       exposure = "Ad", 
+       outcome = "Support") %>% 
+  ggdag_status(text = FALSE, use_labels = "name") + theme_dag() + 
+  theme(legend.position = "none") + 
+  scale_fill_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20") + 
+  scale_color_manual(values = wesanderson::wes_palettes$Darjeeling1, 
+                     na.value = "grey20")
+```
+
+---
+
+# Natural experiments
 
 
---
+.pull-left[
+Alternative - find moments, situations, or weird, freak occurrences where some group is exposed to some *treatment* .shout[by chance] while another group was not
 
 These weird moments in history are called **natural experiments**
+]
+
+
+.pull-right[
+```{r, out.width="80%"}
+knitr::include_graphics("images/natural_experiments.jpeg")
+```
+
+]
 
 
 ---
 
 
-# A good year for causality
+# A good (last) year for causality
 
 
-2021 Nobel Prize winners in economics pioneered **quasi-experimental methods**
+2021 Nobel Prize winners in economics pioneered **quasi-experimental methods** -- using research designs that leverage *natural experiments*
 
 .pull-left[
 ```{r, out.width="60%", fig.align='center'}
@@ -304,7 +343,7 @@ ggplot(fake_students, aes(x= gifted, y = earnings,
   scale_y_continuous(labels = scales::dollar) + 
   scale_color_paletteer_d(palette = "nationalparkcolors::BlueRidgePkwy", 
                           direction = -1) + 
-  theme_fancy + 
+  theme_nice() + 
   theme(legend.position = "none") + 
   labs(y = "Current salary", x = "Was the respondent in gifted?") + 
   geom_label_repel(data = avgs, aes(label = paste0("Avg: ", scales::dollar(earnings))), 
@@ -377,11 +416,11 @@ A student who a 76 and a student who got a 34 are probably very different; if on
 
 --
 
-But a student who got a 76 and one who got a 74 are probably interchangeable, especially since tests are *noisy*
+But a student who got a 76 and one who got a 74 are probably interchangeable
 
 --
 
-Few points difference might be function of: random error, luck, whatever
+Few points difference might be function of: .shout[random] error, luck, whatever
 
 
 ---
@@ -453,7 +492,7 @@ People with higher aptitude/training/ability/etc. better off today:
 ```{r}
 ggplot(fake_students, aes(x = test, y = earnings)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary") + 
   scale_y_continuous(labels = scales::dollar)
 ```
@@ -469,7 +508,7 @@ ggplot(fake_students, aes(x = test, y = earnings)) +
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary", 
        color = "Gifted?") + 
   scale_y_continuous(labels = scales::dollar) + 
@@ -489,7 +528,7 @@ ggplot(fake_students, aes(x = test, y = earnings,
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary", 
        color = "Gifted?") + 
   scale_y_continuous(labels = scales::dollar) + 
@@ -512,7 +551,7 @@ These are the students who, **by chance**, just barely made it (or not) into gif
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary", 
        color = "Gifted?") + 
   scale_y_continuous(labels = scales::dollar) + 
@@ -534,7 +573,7 @@ On average, the students who *by chance* made it in make **less money**
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary", 
        color = "Gifted?") + 
   scale_y_continuous(labels = scales::dollar) + 
@@ -645,24 +684,24 @@ knitr::include_graphics("images/diamond-rd-graph.png")
 
 
 
-# Other examples: Nobel Prize winner
+## Other examples: McNamara and the Whiz Kids
 
-
-Min wage -> unemployment?
 
 .pull-left[
-```{r, out.width="80%"}
-knitr::include_graphics("images/min-wage-model.png")
-```
+What effect did bombing raids in Vietnam have on development? Problem: the places that *were* bombed are **very different** from the places that were never bombed
+
+Decision to bomb based on scoring system. A **discontinuity** due to rounding: hamlet with score of 4.4999 gets a 4, hamlet with 4.5001 gets a 5
 ]
 
 .pull-right[
-```{r, out.width="80%"}
-knitr::include_graphics("images/pa-nj-nobel.jpg")
+```{r}
+knitr::include_graphics("images/dell-vietnam.png")
 ```
+
 ]
 
-
+???
+McNamara and whiz kids
 
 ---
 
@@ -752,7 +791,7 @@ By focusing on units near cutoff, our estimate subtly changes:
 ggplot(fake_students, aes(x = test, y = earnings, 
                           color = gifted)) + 
   geom_point(size = 2, alpha = .8) + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Score on IQ test", y = "Current salary", 
        color = "Gifted?") + 
   scale_y_continuous(labels = scales::dollar) + 
@@ -772,11 +811,16 @@ There is also a risk that if people *know* about the cutoff they will behave str
 
 --
 
-With gifted, maybe wealthier/better-connected/etc parents have students retake test, pressure test-giver, etc.
+Imagine that there is room to pressure/bully the school psychologist into turning a 74.9 into a 75 so little Timmy can be gifted
 
 --
 
-In that case, being gifted is no longer as-if random for those close to the cutoff
+
+And image wealthier/better-connected/etc parents are better bullies than poor parents
+
+--
+
+In that case, being gifted is no longer as-if random for those close to the cutoff -- wealthy parents **cause** you to get over the cutoff
 
 
 ---
@@ -801,6 +845,18 @@ dagify(earnings ~ gifted + parents,
 ---
 
 
+# 🚨 Your turn: sorting around the cutoff 🚨
+
+
+Think back to the arbitrary cutoff you came up with in the last exercise. Discuss again with your neighbor:
+
+
+1. Could someone "game" or sort around that cutoff? 
+2. What would that look like? 
+3. And how could it confound your estimate / ruin the natural experiment? 
 
 
 
+```{r}
+countdown::countdown(minutes = 10L, font_size = "2em")
+```

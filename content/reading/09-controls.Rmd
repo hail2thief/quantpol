@@ -23,17 +23,17 @@ None
 
 ## Slides
 
-<!-- ### Tuesday -->
+### Tuesday
 
-<!-- [Class slides here](/slides/10-controls-I.html) -->
+[Class slides here](/slides/10-controls-II.html)
 
 
-<!-- ```{r,echo=FALSE} -->
-<!-- xaringanExtra::embed_xaringan( -->
-<!--    url = "/slides/10-controls-I.html", -->
-<!--    ratio = "16:9" -->
-<!-- ) -->
-<!-- ``` -->
+```{r,echo=FALSE}
+xaringanExtra::embed_xaringan(
+   url = "/slides/10-controls-II.html",
+   ratio = "16:9"
+)
+```
 
 
 <!-- ### Thursday -->

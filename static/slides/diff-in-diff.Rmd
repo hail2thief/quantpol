@@ -1,0 +1,226 @@
+---
+title: "Diff-in-diff"
+subtitle: "The Scientific Study of Politics"  
+author: 
+  - "Juan Tellez"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    lib_dir: "libs"
+    css: ["default", "css/my-theme.css", "css/ath-inferno-fonts.css"]
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLanguage: ["r"]
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      navigation:
+        scroll: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, 
+  fig.height=3.5, 
+  fig.retina=3,
+  fig.align="center",
+  out.width = "100%",
+  cache = FALSE,
+  echo = FALSE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+```
+
+
+
+```{r packages}
+library(tidyverse)
+library(ggdag)
+library(panelView)
+library(ggrepel)
+
+
+# dubois colors
+red = "#dc354a"
+yellow = "#ecb025"
+blue = "#213772"
+
+# custom ggplot theme
+theme_nice = function() {
+  theme_minimal(base_family = "Archivo Narrow") +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"))
+}
+
+theme_set(theme_nice())
+
+# palette
+palette = MetBrewer::met.brewer(name = "Cross")
+
+# stupid geom_label_repel problem
+update_geom_defaults("label", list(family = "Fira Sans"))
+update_geom_defaults("label_repel", list(family = "Fira Sans"))
+
+
+# set seed
+set.seed(1990)
+
+```
+
+
+
+class: left, middle
+background-image: url("images/dubois-spiral-2.png")
+background-position: right
+background-size: contain
+
+# `r rmarkdown::metadata$title`
+
+### *`r rmarkdown::metadata$subtitle`*
+
+### Professor `r rmarkdown::metadata$author` 
+
+#### University of California, Davis
+
+---
+
+
+class: center
+.large[
+# Today's agenda
+]
+
+--
+.box-1.large.sp-after[Sudden policies]
+
+--
+.box-2.large.sp-after[Difference in differences]
+
+--
+.box-3.large.sp-after[Parallel trends]
+
+---
+
+
+# Things are always changing
+
+
+.pull-left[
+Countries, states, local governments, etc., are constantly passing new laws/policies, altering existing ones, etc.
+
+What **effect** do new laws have on people's behaviors, attitudes, etc.?
+
+How can we **estimate** the effect of these laws? 
+]
+
+
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/nyt-abortion-map.png")
+```
+]
+
+---
+
+
+# New policies: natural experiments?
+
+
+Can we think of the the passage of a new policy as a kind of **natural experiment**? 
+
+--
+
+In some ways no: the countries/states that adopt a policy (e.g., abortion bans) are **very different** from the states that don't pass them
+
+
+```{r, out.width="70%"}
+dagify(A ~ U + L, 
+       L ~ U, 
+       exposure = "L", 
+       outcome = "A", 
+       latent = "U",
+       coords = list(x = c(L = 0, U = .5, A = 1), 
+                     y = c(L = 0, U = 1, A = 0)), 
+       labels = list(A = "Abortion rate", 
+                     U = "Unknown confounds", 
+                     L = "Law restricting abortion")) %>% 
+  ggdag_status(text = FALSE, use_labels = "label", stylized = TRUE) +
+  theme_dag_blank() + 
+  theme(legend.position = "none") + 
+  scale_color_manual(values = c(red, yellow, blue)) + 
+  scale_fill_manual(values = c(red, yellow, blue))
+```
+
+---
+
+# New policies: natural experiments?
+
+
+But in some ways maybe *yes*: the policy didn't exist, and then suddenly it does
+
+--
+
+There can be factors that make the policy more likely: e.g., a cash transfer (Biden bucks) might be more likely during an economic downturn than during good times
+
+--
+
+But some policies are sudden or unexpected enough where the **exact** moment they go into effect is *arbitrary*
+
+
+```{r}
+
+```
+
+
+---
+
+# What's the counterfactual?
+
+Some states pass laws and (presumably) those laws have an effect on turnout; what is the **counterfactual** for these states?
+
+--
+
+The counterfactual is what happened in the states *that didn't pass the law over the same time period*
+
+
+
+
+
+---
+
+# Difference in difference (diff in diff)
+
+One of the most commonly used methods for estimating the effect of a policy (or sudden change) on outcomes is **diff in diff**
+
+We have a treated group, observed both before and after treatment and a control group, observed before and after treatment
+
+---
+
+
+```{r}
+set.seed(1990)
+
+tibble(abb = sample(state.name, size = 10)) %>% 
+  mutate(treated = rbinom(n = n(), size = 1, prob = .5)) %>% 
+  crossing(year = 1990:2010) %>% 
+  mutate(onset = year > 2002, 
+         treat_onset = treated * onset) %>% 
+  mutate(turnout = rnorm(n = n())) %>% 
+  panelview(turnout ~ treat_onset, pre.post = TRUE,
+            by.timing = TRUE,
+            data = ., index = c("abb","year"), 
+            main = "Abortion restriction laws")
+```
