@@ -54,9 +54,9 @@ lessons:
     reading: "08-dags"
     assignment: "ps-dags"
     
-  - title: 'Week 9: Closing backdoors<br><i class="fas fa-star"></i> **Assignment 7**'
+  - title: 'Week 9: Natural experiments<br><i class="fas fa-star"></i> ~~**Cancelled: Assignment 7**~~'
     date: "Nov 15, Nov 17"
-    #class: "controls"
+    class: "controls"
     reading: "09-controls"
     #assignment: "ps-controls"
     

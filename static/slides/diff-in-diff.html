@@ -4,9 +4,13 @@
     <title>Diff-in-diff</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2022-11-15" />
+    <meta name="date" content="2022-11-17" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/fabric/fabric.min.js"></script>
+    <link href="libs/xaringanExtra-scribble/scribble.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-scribble/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
     <link rel="stylesheet" href="css/my-theme.css" type="text/css" />
     <link rel="stylesheet" href="css/ath-inferno-fonts.css" type="text/css" />
   </head>
@@ -55,7 +59,7 @@ class: center
 ---
 
 
-# Things are always changing
+# The world's always changing
 
 
 .pull-left[
@@ -75,6 +79,27 @@ How can we **estimate** the effect of these laws?
 ---
 
 
+# How to evaluate?
+
+
+We could compare abortion rates in the states **with** and **without** abortion restrictions -- but that's obviously problematic! Is whatever difference we observe because of the policy, or some lurking confound?
+
+&lt;img src="images/nyt-abortion-map.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# How to evaluate?
+
+We could compare abortion rates **before and after** the policy goes into effect -- also problematic! The abortion rate is always fluctuating -- how do we know whatever difference we see isn't just a normal fluctuation?
+
+
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-3-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
 # New policies: natural experiments?
 
 
@@ -85,7 +110,7 @@ Can we think of the the passage of a new policy as a kind of **natural experimen
 In some ways no: the countries/states that adopt a policy (e.g., abortion bans) are **very different** from the states that don't pass them
 
 
-&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-2-1.png" width="70%" style="display: block; margin: auto;" /&gt;
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-4-1.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -96,42 +121,375 @@ But in some ways maybe *yes*: the policy didn't exist, and then suddenly it does
 
 --
 
-There can be factors that make the policy more likely: e.g., a cash transfer (Biden bucks) might be more likely during an economic downturn than during good times
+There can be factors that make the policy more likely: e.g., a cash transfer (Biden bucks) are more likely during an economic downturn than during good times
 
 --
 
 But some policies are sudden or unexpected enough where the **exact** moment they go into effect is *arbitrary*
 
-
-
-
-
 ---
 
-# What's the counterfactual?
+# Difference-in-difference
 
-Some states pass laws and (presumably) those laws have an effect on turnout; what is the **counterfactual** for these states?
+This is where the **difference-in-difference (DiD)** research design comes into play
 
 --
 
-The counterfactual is what happened in the states *that didn't pass the law over the same time period*
+One of the most commonly used (and maybe abused) methods for **estimating the effect of a policy (or sudden change) on an outcome**
 
 
+--
+
+General idea: try to simulate *what would have happened* in the places that received a policy/shock, using what happened in the places that *didn't* receive the shock over the same time period
+
+---
+
+# The setup
+
+We observe **units** (e.g., states) over **time**
+
+
+Some units experience some policy or shock (the **treatment group**), and we observe them *before* and *after* the shock
+
+
+Some units *never* experience the policy (the **control group**) and we also observe them *before* and *after* the shock
+
+---
+
+# The setup
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 
 ---
 
-# Difference in difference (diff in diff)
 
-One of the most commonly used methods for estimating the effect of a policy (or sudden change) on outcomes is **diff in diff**
+&lt;img src="images/did-bikes.png" width="60%" style="display: block; margin: auto;" /&gt;
 
-We have a treated group, observed both before and after treatment and a control group, observed before and after treatment
+
+---
+
+&lt;img src="images/did-daycare.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
-&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-4-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="images/did-quarters.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle, inverse
+# Pokemon Go! to the polls
+---
+
+
+&lt;img src="images/pokemon-go.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+&lt;img src="images/pokemon-scandal.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+# The effect of Pokemon Go!
+
+--
+
+Pokemon Go! involves a ton of walking around
+
+--
+
+Did Pokemon Go! meaningfully **increase** Americans' activity levels? 
+
+--
+
+Seems obvious, but by how much exactly?
+
+
+---
+
+
+# The setup 
+
+--
+
+We have kids who download the app when it comes out (**treatment**)
+
+--
+
+We have kids who never download the app (**control**)
+
+--
+
+We have data on both of these groups of kids **before** and **after** the app is released
+
+---
+
+# Problems
+
+.pull-left[
+If we compare treated against controls, we worry about backdoor paths between having the app and amount of walking
+
+If we compare before and after the app comes out, is this because of the app or random fluctuations in walking?
+]
+
+
+.pull-right[
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# The DiD approach
+
+--
+
+One thing we can do is look at what happens to the kids in the treatment group (those who downloaded the app), *before and after* the app was released
+
+--
+
+The change from before to after will include the effect of the app + the time fluctuations we are worried about
+
+--
+
+We can then compare to what happens with the kids in the control group (never download the app) -- change from before to after will **only include** the time fluctuations
+
+--
+
+This is the **DiD** approach: the change in the control group is our counterfactual for *what would have happened* had the treated kids never been treated
+
+
+---
+
+# Treated units, before and after the app
+
+
+Among **treated**, kids go from walking 0.8 miles a day to 1.6, so an improvement of 0.8 miles on average. Is this just because of the app?
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Control units, before and after app
+
+
+Among **control**, kids go from walking 0.6 miles a day to 0.9 miles -- and we *know* this isn't because of the app -- this is just the *time trend*
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The counterfactual
+
+
+So what would have happened to the **treated** kids if they had never downloaded the app? We can use the time trend from the control group as our **counterfactual**
+
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# The effect
+
+
+The effect of the app then is .yellow[the difference] between the amount the kids with the app walked and what they would have walked *had they not downloaded the app*
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# The DiD estimate
+
+
+This is the **difference-in-difference** estimate. It's called that because we are taking the difference among the .red[treated] (pre- to post-) and subtracting the difference among the .blue[control] (pre- to post-)
+
+.red[(1.6 - 0.8)] - .blue[(0.9 - 0.6)] = .yellow[0.5]
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+
+
+# Does immigration hurt local wages?
+
+.pull-left[
+Simple supply and demand `\(\rightarrow\)` increase supply of labor, price of labor (wages) goes down
+
+On the other hand, immigrants might boost demand, other (+) effect on wages
+
+Can't just compare places with and without immigrants -- too many confounds!
+]
+
+.pull-right[
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+
+# The Mariel Boatlift
+
+.pull-left[
+Classic paper by David Card using the "Mariel Boat Lift" as a natural experiment
+
+Mariel boat lift = sudden arrival of 125k (!!!) Cubans to Miami between 15 April and 31 October 1980
+
+Miami is *treated* by a random and sudden **increase** in the immigrant population
+]
+
+
+.pull-right[
+&lt;img src="images/mariel-boatlift.jpeg" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+
+# The DiD setup
+
+Remember, with DiD we need a treatment group, a control group, and to observe both before and after the sudden event
+
+--
+
+The treatment group? Miami
+
+The control group? Card chooses "similar" cities as point of comparison: Atlanta, Houston, Los Angeles, and Tampa/St. Petersburg
+
+
+---
+
+
+# Miami, before and after
+
+
+Wages decrease in Miami after the Mariel boatlift; is this **because** of the boatlift?
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# What was happening in the control cities?
+
+
+Wages were decreasing in control areas too -- this means wages were going down *generally*
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+
+# The DiD estimate
+
+
+Wages were actually *higher* than we would expect given changes in other cities
+
+In other words, migration seems to have **improved** wages, or reduced the impact of the economic downturn
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-21-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+# When does this work?
+
+
+The nice thing about DiD is that we don't need treatment and control to be exchangeable (as with discontinuity designs) -- eg, the kids who download the app are more active from the get go than kids who never get the app
+
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-22-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+# Parallel trends
+
+--
+
+The key assumption we are making with DiD is that had the treatment not happened (e.g., had Mariel not happened), the treatment units (Miami) and control units (other cities) would **look the *same**
+
+--
+
+What we need for this assumption to work is for **treatment** and **control** units to have similar trends over time
+
+--
+
+This is called the *parallel trends assumption*. We can look at **pre-treatment** trends to evaluate how good this assumption is
+
+
+---
+
+
+# Parallel trends
+
+
+Below the trends looks very good -- prior to treatment, control and treated units behave similarly
+
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Parallel trends
+
+
+This looks 🤢 -- prior to treatment, treated and control behave very differently. The control unit trend is *not a good counterfactual* for the treated unit trend
+
+
+&lt;img src="diff-in-diff_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle
+# Recap
+
+
+We know that to identify the effect of a .red[treatment] on an .blue[outcome] we need to worry about confounds
+
+--
+
+With a good DAG and good controls, we might make it to the promised land, but this is **hard**
+
+--
+
+But sometimes Nature (or History) is kind and gives us moments that **resemble experiments**
+
+--
+
+Discontinuities, where to treatment is as-if random, conditional on **the cutoff being respected**
+
+--
+
+Sudden policies/shocks, where DiD can identify their effect, conditional on treatment and control units **having parallel trends**
+
+
+
+---
+
+
+# 🗺️ A hard left turn 🗺️
+
+
+We're going to randomly make maps now Using the code from today:
+
+1. Make a map of US counties, "filling" the counties with a variable of your choice.
+
+2. Add nice color to the graph, using `scale_fill_viridis_d(option = "rocket")` if your fill data is discrete, and `scale_fill_viridis_c(option = "rocket")` if continuous
+
+3. Repeat but subset the data to a state of your choosing. 
+
+4. Post the map in the Slack. 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

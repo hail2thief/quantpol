@@ -1,5 +1,5 @@
 ---
-title: "Controls"
+title: "Natural Experiments"
 citeproc: true
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-fullnote-bibliography-no-bib.csl
@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
-[<i class="fas fa-file-archive"></i> `Controls.R`](/files/controls.R)
+[<i class="fas fa-file-archive"></i> `socviz-maps.R`](/slides/code/socviz-maps.R)
 
 
 
