@@ -4,7 +4,7 @@
     <title>Uncertainty</title>
     <meta charset="utf-8" />
     <meta name="author" content="Juan Tellez" />
-    <meta name="date" content="2021-11-23" />
+    <meta name="date" content="2022-11-22" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/countdown/countdown.css" rel="stylesheet" />
@@ -63,12 +63,12 @@ class: center, middle, inverse
 
 --
 
-So far: worrying about causality; how can we know the effect of X on Y is not being confounded by something else?
+So far: worrying about causality -- how can we *know* the effect of X on Y is not being confounded by something else?
 
 
 --
 
-The end: how confident are we in our estimates given that they *vary* from sample to sample? 
+Last bit: how **confident** are we in our estimates given that they *vary* from sample to sample? 
 
 
 ---
@@ -77,7 +77,7 @@ The end: how confident are we in our estimates given that they *vary* from sampl
 # Uncertainty in the wild
 
 
-&lt;img src="images/polls.png" width="80%" /&gt;
+&lt;img src="images/polls.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 ???
@@ -89,7 +89,7 @@ uncertainty
 # Uncertainty in the wild
 
 
-&lt;img src="images/margin-of-error.jpeg" width="80%" /&gt;
+&lt;img src="images/margin-of-error.jpeg" width="80%" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -101,7 +101,7 @@ uncertainty
 
 The "bounds" in `geom_smooth` tells us something about how confident we should be in the line:
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-3-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-3-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -143,7 +143,7 @@ Problem - each sample will look different, and give us a different answer to the
 ]
 
 .pull-right[
-&lt;div class="figure"&gt;
+&lt;div class="figure" style="text-align: center"&gt;
 &lt;img src="images/MPP_map1.jpeg" alt="Sample locations in Guatemala" width="100%" /&gt;
 &lt;p class="caption"&gt;Sample locations in Guatemala&lt;/p&gt;
 &lt;/div&gt;
@@ -252,18 +252,18 @@ gss_sm %&gt;%
 ```
 ## # A tibble: 10 × 33
 ## # Groups:   replicate [1]
-##    replicate  year    id ballot       age childs sibs   degree  race  sex   region 
-##        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;labelled&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;labe&gt; &lt;fct&gt;   &lt;fct&gt; &lt;fct&gt; &lt;fct&gt;  
-##  1         1  2016  2299 2             42      3  5     Lt Hig… White Fema… W. Sou…
-##  2         1  2016  1366 2             66      4  3     High S… Black Fema… E. Nor…
-##  3         1  2016  2686 2             54      2  3     Junior… White Fema… E. Nor…
-##  4         1  2016  1958 2             59      2  3     High S… White Fema… E. Sou…
-##  5         1  2016  1587 3             32      2 10     High S… Black Fema… Middle…
-##  6         1  2016  1281 3             56      4  3     High S… White Fema… E. Nor…
-##  7         1  2016   819 3             54      0  6     Bachel… Black Fema… E. Nor…
-##  8         1  2016  2765 1             24      1  5     High S… White Fema… E. Nor…
-##  9         1  2016   691 1             33      3  8     High S… White Fema… W. Sou…
-## 10         1  2016  1060 1             31      3  1     High S… Black Fema… E. Nor…
+##    replicate  year    id ballot       age childs sibs   degree race  sex   region
+##        &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;labelled&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;labe&gt; &lt;fct&gt;  &lt;fct&gt; &lt;fct&gt; &lt;fct&gt; 
+##  1         1  2016  2299 2             42      3  5     Lt Hi… White Fema… W. So…
+##  2         1  2016  1366 2             66      4  3     High … Black Fema… E. No…
+##  3         1  2016  2686 2             54      2  3     Junio… White Fema… E. No…
+##  4         1  2016  1958 2             59      2  3     High … White Fema… E. So…
+##  5         1  2016  1587 3             32      2 10     High … Black Fema… Middl…
+##  6         1  2016  1281 3             56      4  3     High … White Fema… E. No…
+##  7         1  2016   819 3             54      0  6     Bache… Black Fema… E. No…
+##  8         1  2016  2765 1             24      1  5     High … White Fema… E. No…
+##  9         1  2016   691 1             33      3  8     High … White Fema… W. So…
+## 10         1  2016  1060 1             31      3  1     High … Black Fema… E. No…
 ## # … with 22 more variables: income16 &lt;fct&gt;, relig &lt;fct&gt;, marital &lt;fct&gt;,
 ## #   padeg &lt;fct&gt;, madeg &lt;fct&gt;, partyid &lt;fct&gt;, polviews &lt;fct&gt;, happy &lt;fct&gt;,
 ## #   partners &lt;fct&gt;, grass &lt;fct&gt;, zodiac &lt;fct&gt;, pres12 &lt;labelled&gt;, wtssall &lt;dbl&gt;,
@@ -2355,7 +2355,7 @@ kids_10
 
 Across 1,000 samples of 10 people each, the *estimated* average number of kids can vary between 0.6 and 4.4!! Remember, the true average is 1.85
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-11-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -2380,7 +2380,7 @@ Pretend the `gss_abortion` dataset from `stevedata` captures how every American 
 3. Plot your sample estimates as a `geom_histogram` or `geom_density`.
 
 
-<div class="countdown" id="timer_619d94f2" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_637d3ae4" style="right:0;bottom:0;font-size:2em;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2419,8 +2419,9 @@ This is also a problem for **regression**, since every regression estimate is ba
 
 --
 
-What's the relationship between sex and vote choice among all Americans? We can estimate that with `gss_sm` in this made-up world we're in:
+What's the relationship between sex and vote choice among all Americans?
 
+.scroll-output[
 
 ```r
 mod1 = lm(obama ~ sex, data = gss_sm)
@@ -2435,6 +2436,8 @@ tidy(mod1)
 <tr>
 <td style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0.4pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">sexFemale</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0871</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.0234</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3.72</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0.4pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.000206&nbsp;</td></tr>
 </table>
+
+]
 
 
 
@@ -2507,7 +2510,7 @@ Turns out that if a sample is random, representative, and large...
 
 With a small sample, estimates can vary a lot:
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-16-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -2517,16 +2520,16 @@ With a small sample, estimates can vary a lot:
 
 As the sample size (N) increases, estimates begin to converge:
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-17-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # Law of large numbers
 
 
-They become more and more concentrated around the population parameter...
+They become more concentrated around the population average...
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-18-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -2535,7 +2538,7 @@ They become more and more concentrated around the population parameter...
 
 And eventually it becomes very unlikely the sample estimate is way off
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-19-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-19-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -2544,9 +2547,9 @@ And eventually it becomes very unlikely the sample estimate is way off
 # This works for regression estimates, too
 
 
-Coefficient estimates become more precise as sample size increases:
+Coefficient estimates *also* become more precise as sample size increases:
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-20-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -2570,7 +2573,7 @@ Intuitive = the more data we have, the less *uncertain* we should feel
 
 --
 
-But this only works if we have a good sample
+But .shout[this only works if we have a *good* sample]
 
 
 ---
@@ -2591,9 +2594,9 @@ What does this mean?
 
 
 .pull-right[
-&lt;div class="figure"&gt;
-&lt;img src="images/samples.jpg" alt="Good samples at Sam's club" width="100%" /&gt;
-&lt;p class="caption"&gt;Good samples at Sam's club&lt;/p&gt;
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="images/samples.jpg" alt="Good samples" width="100%" /&gt;
+&lt;p class="caption"&gt;Good samples&lt;/p&gt;
 &lt;/div&gt;
 ]
 
@@ -2644,7 +2647,7 @@ gss_sm %&gt;%
 
 
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-23-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -2653,16 +2656,16 @@ gss_sm %&gt;%
 
 As sample size increases, variability of estimates will still decrease
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-24-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-24-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 # When sampling goes wrong
 
-But estimates will no longer be centered around population parameter; they will be **biased**
+But estimates will be **biased**, regardless of sample size
 
-&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="100%" /&gt;
+&lt;img src="11-uncertainty_files/figure-html/unnamed-chunk-25-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -2705,7 +2708,7 @@ Using the `gss_abortion` data again, imagine you are an evil pollster:
 
 
 
-<div class="countdown" id="timer_619d96d9" style="right:0;bottom:0;" data-warnwhen="0">
+<div class="countdown" id="timer_637d3b47" style="right:0;bottom:0;" data-warnwhen="0">
 <code class="countdown-time"><span class="countdown-digits minutes">10</span><span class="countdown-digits colon">:</span><span class="countdown-digits seconds">00</span></code>
 </div>
 
@@ -2728,7 +2731,6 @@ This makes sense: more data, more certain of the pattern
 --
 
 But it all depends on whether we have a random, representative (good) sample; no amount of data in the world will correct for sampling bias
-
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

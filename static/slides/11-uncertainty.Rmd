@@ -26,6 +26,7 @@ editor_options:
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
   fig.width=9, 
+  fig.align = "center",
   fig.height=3.5, 
   fig.retina=3,
   out.width = "100%",
@@ -52,8 +53,22 @@ red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+# custom ggplot theme
+theme_nice = function() {
+  theme_minimal(base_family = "Archivo Narrow") +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"))
+}
+
+theme_set(theme_nice())
+
+# palette
+palette = MetBrewer::met.brewer(name = "Cross")
 
 # stupid geom_label_repel problem
 update_geom_defaults("label", list(family = "Fira Sans"))
@@ -106,12 +121,12 @@ class: center, middle, inverse
 
 --
 
-So far: worrying about causality; how can we know the effect of X on Y is not being confounded by something else?
+So far: worrying about causality -- how can we *know* the effect of X on Y is not being confounded by something else?
 
 
 --
 
-The end: how confident are we in our estimates given that they *vary* from sample to sample? 
+Last bit: how **confident** are we in our estimates given that they *vary* from sample to sample? 
 
 
 ---
@@ -151,7 +166,7 @@ The "bounds" in `geom_smooth` tells us something about how confident we should b
 ```{r}
 ggplot(gapminder::gapminder, aes(x = gdpPercap, y = lifeExp)) + 
   geom_point(size = 2, alpha = .8, color = red) +
-  geom_smooth(color = blue, fill = blue) + theme_fancy + 
+  geom_smooth(color = blue, fill = blue) + theme_nice() + 
   labs(x = "GDP per capita", y = "Life expectancy") + 
   scale_x_continuous(labels = scales::dollar)
 ```
@@ -351,7 +366,7 @@ kids_10 = gss_sm %>%
 
 ggplot(kids_10, aes(x = avg_kids)) + 
   geom_histogram(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids in sample") + 
   geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
              size = 3)
@@ -381,7 +396,7 @@ Pretend the `gss_abortion` dataset from `stevedata` captures how every American 
 
 
 ```{r}
-countdown::countdown(minutes = 10L)
+countdown::countdown(minutes = 10L, font_size = "2em")
 ```
 
 
@@ -419,12 +434,15 @@ This is also a problem for **regression**, since every regression estimate is ba
 
 --
 
-What's the relationship between sex and vote choice among all Americans? We can estimate that with `gss_sm` in this made-up world we're in:
+What's the relationship between sex and vote choice among all Americans?
 
+.scroll-output[
 ```{r, echo = TRUE}
 mod1 = lm(obama ~ sex, data = gss_sm)
 tidy(mod1)
 ```
+]
+
 
 
 ---
@@ -496,32 +514,28 @@ Turns out that if a sample is random, representative, and large...
 With a small sample, estimates can vary a lot:
 
 ```{r}
-kids_20 = gss_sm %>% 
-  rep_sample_n(size = 20, reps = 1000) %>% 
-  group_by(replicate) %>% 
-  summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
-  mutate(size = "20")
+reps = tibble(samples = c(20, 100, 500, 1000)) %>% 
+  mutate(reps = map(.x = samples, .f = ~ 
+                      rep_sample_n(tbl = gss_sm, size = .x, reps = 1e3))) %>% 
+  unnest(reps) %>% 
+  group_by(samples, replicate) %>% 
+  summarise(avg_kids = mean(childs, na.rm = TRUE))
 
-kids_100 = gss_sm %>% 
-  rep_sample_n(size = 100, reps = 1000) %>% 
-  group_by(replicate) %>% 
-  summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
-  mutate(size = "100")
 
-kids_300 = gss_sm %>% 
-  rep_sample_n(size = 300, reps = 1000) %>% 
-  group_by(replicate) %>% 
-  summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
-  mutate(size = "300")
-
-ggplot(kids_10, aes(x = avg_kids)) + 
-  geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+ggplot(filter(reps, samples == 20), 
+       aes(x = avg_kids, fill = factor(samples))) +  
+  geom_density(alpha = .8, color = "white") +
   labs(x = "Average number of kids in sample", 
-       title = glue::glue("Size of each sample? N = {unique(kids_10$size)}")) + 
-  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
-             size = 3) + 
-  coord_cartesian(xlim = c(0, 4))
+       y = NULL, fill = "Size of sample:") + 
+  theme(axis.text.y = element_blank(), 
+        legend.position = "bottom") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), 
+             lty = 1, color = red, size = 3, alpha = .9) + 
+  coord_cartesian(ylim = c(0, 7)) + 
+  geom_label(aes(x = 2.25, y = 6, label = "Population average = 1.85"), 
+             fill = "white", color = red, fontface = "bold")
+
 ```
 
 
@@ -533,14 +547,21 @@ ggplot(kids_10, aes(x = avg_kids)) +
 As the sample size (N) increases, estimates begin to converge:
 
 ```{r}
-ggplot(kids_20, aes(x = avg_kids)) + 
-  geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+ggplot(filter(reps, samples == 20), 
+       aes(x = avg_kids, fill = factor(samples))) +  
+  geom_density(alpha = .8, color = "white") +
   labs(x = "Average number of kids in sample", 
-       title = glue::glue("Size of each sample? N = {unique(kids_20$size)}")) + 
-  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
-             size = 3) + 
-  coord_cartesian(xlim = c(0, 4))
+       y = NULL, fill = "Size of sample:") + 
+  theme(axis.text.y = element_blank(), 
+        legend.position = "bottom") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), 
+             lty = 1, color = red, size = 3, alpha = .9) + 
+  coord_cartesian(ylim = c(0, 7)) + 
+  geom_label(aes(x = 2.25, y = 6, label = "Population average = 1.85"), 
+             fill = "white", color = red, fontface = "bold") + 
+  geom_density(data = filter(reps, samples == 100),
+               alpha = .8, color = "white") 
 ```
 
 ---
@@ -548,17 +569,26 @@ ggplot(kids_20, aes(x = avg_kids)) +
 # Law of large numbers
 
 
-They become more and more concentrated around the population parameter...
+They become more concentrated around the population average...
 
 ```{r}
-ggplot(kids_100, aes(x = avg_kids)) + 
-  geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+ggplot(filter(reps, samples == 20), 
+       aes(x = avg_kids, fill = factor(samples))) +  
+  geom_density(alpha = .8, color = "white") +
   labs(x = "Average number of kids in sample", 
-       title = glue::glue("Size of each sample? N = {unique(kids_100$size)}")) + 
-  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
-             size = 3) + 
-  coord_cartesian(xlim = c(0, 4))
+       y = NULL, fill = "Size of sample:") + 
+  theme(axis.text.y = element_blank(), 
+        legend.position = "bottom") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), 
+             lty = 1, color = red, size = 3, alpha = .9) + 
+  coord_cartesian(ylim = c(0, 7)) + 
+  geom_label(aes(x = 2.25, y = 6, label = "Population average = 1.85"), 
+             fill = "white", color = red, fontface = "bold") + 
+  geom_density(data = filter(reps, samples == 100),
+               alpha = .8, color = "white") +
+  geom_density(data = filter(reps, samples == 500),
+               alpha = .8, color = "white")
 ```
 
 ---
@@ -569,14 +599,25 @@ ggplot(kids_100, aes(x = avg_kids)) +
 And eventually it becomes very unlikely the sample estimate is way off
 
 ```{r}
-ggplot(kids_300, aes(x = avg_kids)) + 
-  geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+ggplot(filter(reps, samples == 20), 
+       aes(x = avg_kids, fill = factor(samples))) +  
+  geom_density(alpha = .8, color = "white") +
   labs(x = "Average number of kids in sample", 
-       title = glue::glue("Size of each sample? N = {unique(kids_300$size)}")) + 
-  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
-             size = 3) + 
-  coord_cartesian(xlim = c(0, 4))
+       y = NULL, fill = "Size of sample:") + 
+  theme(axis.text.y = element_blank(), 
+        legend.position = "bottom") + 
+  scale_fill_viridis_d(option = "rocket", end = .8) + 
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), 
+             lty = 1, color = red, size = 3, alpha = .9) + 
+  coord_cartesian(ylim = c(0, 7)) + 
+  geom_label(aes(x = 2.25, y = 6, label = "Population average = 1.85"), 
+             fill = "white", color = red, fontface = "bold") + 
+  geom_density(data = filter(reps, samples == 100),
+               alpha = .8, color = "white") +
+  geom_density(data = filter(reps, samples == 500),
+               alpha = .8, color = "white") + 
+  geom_density(data = filter(reps, samples == 1000),
+               alpha = .8, color = "white")
 ```
 
 
@@ -586,7 +627,7 @@ ggplot(kids_300, aes(x = avg_kids)) +
 # This works for regression estimates, too
 
 
-Coefficient estimates become more precise as sample size increases:
+Coefficient estimates *also* become more precise as sample size increases:
 
 ```{r}
 obama_50 = gss_sm %>% 
@@ -612,9 +653,10 @@ obama_300 = gss_sm %>%
   mutate(size = "N = 300")
 
 bind_rows(obama_50, obama_300) %>% 
+  mutate(size = fct_rev(size)) %>% 
   ggplot(aes(x = estimate)) + 
   geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   facet_wrap(vars(size)) +
   labs(x = NULL, 
        title = "Sample coefficient estimates for lm(obama ~ sex)") + 
@@ -645,7 +687,7 @@ Intuitive = the more data we have, the less *uncertain* we should feel
 
 --
 
-But this only works if we have a good sample
+But .shout[this only works if we have a *good* sample]
 
 
 ---
@@ -666,7 +708,7 @@ What does this mean?
 
 
 .pull-right[
-```{r, fig.cap="Good samples at Sam's club"}
+```{r, fig.cap="Good samples"}
 knitr::include_graphics("images/samples.jpg")
 ```
 ]
@@ -724,7 +766,7 @@ gss_sm %>%
   summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
   ggplot(aes(x = avg_kids)) + 
   geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids in sample", 
        title = "Sample size: 50") + 
   geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
@@ -746,7 +788,7 @@ gss_sm %>%
   summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
   ggplot(aes(x = avg_kids)) + 
   geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids in sample", 
        title = "Sample size: 500") + 
   geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
@@ -759,7 +801,7 @@ gss_sm %>%
 
 # When sampling goes wrong
 
-But estimates will no longer be centered around population parameter; they will be **biased**
+But estimates will be **biased**, regardless of sample size
 
 ```{r}
 gss_sm %>% 
@@ -768,7 +810,7 @@ gss_sm %>%
   summarise(avg_kids = mean(childs, na.rm = TRUE)) %>% 
   ggplot(aes(x = avg_kids)) + 
   geom_density(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids in sample", 
        title = "Sample size: 1000") + 
   geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), lty = 2, color = blue, 
@@ -842,4 +884,3 @@ This makes sense: more data, more certain of the pattern
 --
 
 But it all depends on whether we have a random, representative (good) sample; no amount of data in the world will correct for sampling bias
-

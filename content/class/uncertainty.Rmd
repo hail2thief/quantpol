@@ -27,7 +27,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = F, message = F)
 
 Here's the code we'll be using in class. Download it and store it with the rest of your materials for this course. If simply clicking doesn't trigger download, you should right-click and select "save link as...". 
 
-[<i class="fas fa-file-archive"></i> `uncertainty.R`](/slides/code/uncertainty.R)
+[<i class="fas fa-file-archive"></i> `day1-uncertainty.R`](/slides/code/day1-uncertainty.R)
 
 
 

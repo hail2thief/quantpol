@@ -65,7 +65,7 @@ lessons:
     
   - title: "Week 10: Uncertainty <br> (**no class Thursday: Thanksgiving**)"
     date: "Nov 22"
-    #class: "uncertainty"
+    class: "uncertainty"
     reading: "10-uncertainty"
     
   - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
