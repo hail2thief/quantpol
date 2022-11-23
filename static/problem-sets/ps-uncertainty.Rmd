@@ -1,0 +1,135 @@
+---
+title: "Problem set 8: Uncertainty"
+output: html_document
+---
+
+
+# Instructions
+
+
+- You will do your work in this `Rmarkdown` document but will submit all your answers on Canvas
+- *very important*: As you move through the document, make sure to run all code chunks (grey bits) that already have code in them
+- Write your own code in the empty code chunks
+- Useful shortcuts: 
+    - to run all the code in a specific code chunk, press the green right-facing triangle at the top right of the code chunk
+    - to run all *prior* code chunks, press the downward-facing gray triangle at the top right of the code chunk
+
+
+
+```{r load-libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(juanr)
+library(moderndive)
+```
+
+
+
+
+
+## Task 1: The draft
+
+
+Imagine the following: In the 1960s all men of military age (18+ years) became draft eligible to fight in the Vietnam War. A lottery is used where the social security numbers of draft eligible men were randomly drawn. Those chosen would have to serve in the military. 
+
+
+**Q1: for which of the following could the random lottery draft be used as a natural experiment?**
+
+ - To study the effects of military service on long-term mental health
+ - To study why people choose to join the military
+ - To study whether drafts are effective tools of recruitment or ultimately counterproductive
+ 
+
+Now imagine that, contrary to official policy, people could pay unscrupulous doctors to produce reports of illnesses and disabilities that would *disqualify* someone from the draft. 
+
+**Q2: In which of the following ways would this fact mess up the natural experiment? Choose one** 
+
+- The fact that many people can evade the draft will reduce the number of observations and increase our uncertainty about the effects we estimate
+- Those who are drafted and not drafted are no longer as-if random, since the unscrupulous doctor is a backdoor path
+- The fact would not undermine the natural experiment, since a backdoor path must affect both treatment and outcome
+
+
+## Task 2: Terror
+
+
+Read the abstract (and if you want, the introduction) to this paper by Rafael Di Tella and Ernesto Schargrodsky (2003), which uses a difference-in-difference design: https://bibliotecadigital.fgv.br/dspace/bitstream/handle/10438/13019/000317610_s311d.pdf?s
+
+
+**Q3: What is the treatment group, control group, and the pre- and post-treatment periods in this paper?**
+
+
+**Q4: What would it mean, in this paper, for the parallel trends assumption to hold? Choose one**
+
+- The rate of Jewish institutions in the places affected and unaffected by terrorism would look similar prior to treatment onset
+- The rate of robberies in places with and without Jewish institutions would look similar prior to treatment onset
+- The rate of terrorist attacks in places with and without robberies would look similar prior to treatment onset
+
+
+## Task 3: Feelings
+
+
+```{r}
+therm
+?therm
+```
+
+
+What is the average feeling thermometer for the police in our sample (`therm`)? Calculate the average below: 
+
+```{r}
+
+```
+
+
+
+
+How much might this estimate vary from sample to sample? Simulate this using `rep_sample_n()` by taking 1,000 samples, with replacement, each sample the same size as `therm`. Calculate the average for each of those samples and then plot the resulting averages in a histogram. 
+
+
+```{r}
+set.seed(1990)
+
+```
+
+
+**Q5: Between what two numbers do most of the sample averages fall?**
+
+
+
+Repeat the same procedure above, except this time only for respondents who identify as "Middle Eastern".
+
+```{r}
+set.seed(1990)
+
+```
+
+
+**Q6: Between what two numbers do most of the sample averages fall?**
+
+
+
+**Q7: Why is the range of values in Q5 different than in Q6?**
+
+
+
+
+
+Look at the output from the following regression:
+
+```{r}
+lm(ft_police ~ sex, data = therm) %>% broom::tidy()
+```
+
+**Q8 Roughly speaking, what does the value in `std.error` for `sexFemale` tell us?**
+
+- How much the effect of sex on attitudes towards the police might vary from sample to sample
+- How much higher, on average, attitudes towards the police are among females than males
+- The probability that females support the police more than males
+
+
+**Q9 The fact that the p.value is .54 tells us that the 95% confidence interval for `sexFemale:`**
+
+- DOES contain zero
+- DOES NOT contain zero
+- The p.value has no relation to confidence intervals
+
+

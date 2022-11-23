@@ -72,7 +72,7 @@ lessons:
     date: "Nov 29 - Dec 1"
     #class: "bootstrap"
     reading: "11-bootstrap"
-    #assignment: "ps-uncertainty"
+    assignment: "ps-uncertainty"
     
   - title: '<i class="fas fa-star"></i> **Final Project Due**'
     date: "Dec 7th, 11:59PM"
