@@ -51,7 +51,8 @@ keep = c("immi_naturalize_2016", "gaymar_2016", "deathpen_2016",
          "amshamed_2016", "gunown_2016")
 
 issues = df %>% 
-  select(state = state_2018, birth_year = birthyr_baseline, sex = gender_baseline, 
+  select(state = state_2018, 
+         birth_year = birthyr_baseline, sex = gender_baseline, 
          all_of(keep)) %>% 
   mutate(across(.cols = c(immi_naturalize_2016:univhealthcov_2016),
                 .fns = ~ case_when(. == 1 ~ 1, 

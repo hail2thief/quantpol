@@ -70,7 +70,7 @@ lessons:
     
   - title: 'Week 11: Quantifying uncertainty<br><i class="fas fa-star"></i> **Assignment 8**'
     date: "Nov 29 - Dec 1"
-    #class: "bootstrap"
+    class: "bootstrap"
     reading: "11-bootstrap"
     assignment: "ps-uncertainty"
     

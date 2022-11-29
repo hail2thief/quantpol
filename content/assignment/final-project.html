@@ -28,29 +28,25 @@ editor_options:
 <ul>
 <li><a href="#the-template" id="toc-the-template">The template</a></li>
 </ul></li>
-<li><a href="#decapitation-and-counter-terrorism" id="toc-decapitation-and-counter-terrorism">Decapitation and counter-terrorism</a>
+<li><a href="#western-education-and-the-spread-of-democracy" id="toc-western-education-and-the-spread-of-democracy">Western education and the spread of democracy</a>
 <ul>
 <li><a href="#the-template-1" id="toc-the-template-1">The template</a></li>
 </ul></li>
-<li><a href="#western-education-and-the-spread-of-democracy" id="toc-western-education-and-the-spread-of-democracy">Western education and the spread of democracy</a>
+<li><a href="#the-effects-of-criminal-victimization" id="toc-the-effects-of-criminal-victimization">The effects of criminal victimization</a>
 <ul>
 <li><a href="#the-template-2" id="toc-the-template-2">The template</a></li>
 </ul></li>
-<li><a href="#the-effects-of-criminal-victimization" id="toc-the-effects-of-criminal-victimization">The effects of criminal victimization</a>
+<li><a href="#judicial-appointments-and-public-opinion-in-the-us" id="toc-judicial-appointments-and-public-opinion-in-the-us">Judicial appointments and public opinion in the US</a>
 <ul>
 <li><a href="#the-template-3" id="toc-the-template-3">The template</a></li>
 </ul></li>
-<li><a href="#judicial-appointments-and-public-opinion-in-the-us" id="toc-judicial-appointments-and-public-opinion-in-the-us">Judicial appointments and public opinion in the US</a>
+<li><a href="#welfare-and-race-in-the-united-states" id="toc-welfare-and-race-in-the-united-states">Welfare and race in the United States</a>
 <ul>
 <li><a href="#the-template-4" id="toc-the-template-4">The template</a></li>
 </ul></li>
-<li><a href="#welfare-and-race-in-the-united-states" id="toc-welfare-and-race-in-the-united-states">Welfare and race in the United States</a>
-<ul>
-<li><a href="#the-template-5" id="toc-the-template-5">The template</a></li>
-</ul></li>
 <li><a href="#coca-and-conflict-in-colombia" id="toc-coca-and-conflict-in-colombia">Coca and conflict in Colombia</a>
 <ul>
-<li><a href="#the-template-6" id="toc-the-template-6">The template</a></li>
+<li><a href="#the-template-5" id="toc-the-template-5">The template</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -194,140 +190,34 @@ Country’s democracy score in that year, from POLITY2. Ranging from full autocr
 <div id="the-template" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-webster.Rmd"><code>Webster template</code></a></p>
-</div>
-</div>
-<div id="decapitation-and-counter-terrorism" class="section level2">
-<h2>Decapitation and counter-terrorism</h2>
-<p>States spend lots of resources trying to capture or kill the leaders of non-state organizations such as terrorist groups, rebel groups, and criminal organizations. Does <strong>decapitating</strong> these orgs actually work?</p>
-<p>This dataset comes from <a href="https://www.tandfonline.com/doi/full/10.1080/03050629.2020.1719406?casa_token=cZ2b77wtvbMAAAAA%3AQzsQxZqs7asZricF_a2V9EnRMmsOCNPV0zh1c_DV1dMwwfZ5TTrhj03HiTnHv4i0OEE3Wy85ow">this II article by Milton and Price</a>. The dataset contains information on terrorist organizations, decapitation, and other associated variables for terrorist groups across the world.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left;">
-variable
-</th>
-<th style="text-align:left;">
-meaning
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-name
-</td>
-<td style="text-align:left;width: 20em; ">
-The group’s name
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-year
-</td>
-<td style="text-align:left;width: 20em; ">
-Year
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-failure
-</td>
-<td style="text-align:left;width: 20em; ">
-Did the group experience failure in this year?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-allies
-</td>
-<td style="text-align:left;width: 20em; ">
-Number of allies the group has
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-alliesties
-</td>
-<td style="text-align:left;width: 20em; ">
-Number of ties a group’s allies have (eigenvector centrality score)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-size
-</td>
-<td style="text-align:left;width: 20em; ">
-Size of group (from 0 to 3)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-religious
-</td>
-<td style="text-align:left;width: 20em; ">
-Is the group religious?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-ethnic
-</td>
-<td style="text-align:left;width: 20em; ">
-Is the group ethnically defined?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-pop
-</td>
-<td style="text-align:left;width: 20em; ">
-Country population
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cinc
-</td>
-<td style="text-align:left;width: 20em; ">
-Military capability score of country (as a percent of the world’s total capabilities)
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-civilwar
-</td>
-<td style="text-align:left;width: 20em; ">
-Is the country experiencing a civil war?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-decap
-</td>
-<td style="text-align:left;width: 20em; ">
-Was the group decapitated this year?
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-gdppercap
-</td>
-<td style="text-align:left;width: 20em; ">
-Country’s GDP per capita.
-</td>
-</tr>
-</tbody>
-</table>
-<p>Ideas:</p>
-<ul>
-<li>does decapitation cause organizational failure?</li>
-<li>do terrorist alliances reduce organizational failure?</li>
-<li>does religion or ethnicity make a group more likely to form alliances?</li>
-<li>does religious belief make a group more resistant to failure?</li>
-</ul>
-<div id="the-template-1" class="section level3">
-<h3>The template</h3>
-<p><a href="/files/final-project-data/final-price.Rmd"><code>Price template</code></a></p>
+<!-- ## Decapitation and counter-terrorism -->
+<!-- States spend lots of resources trying to capture or kill the leaders of non-state organizations such as terrorist groups, rebel groups, and criminal organizations. Does **decapitating** these orgs actually work? -->
+<!-- This dataset comes from [this II article by Milton and Price](https://www.tandfonline.com/doi/full/10.1080/03050629.2020.1719406?casa_token=cZ2b77wtvbMAAAAA%3AQzsQxZqs7asZricF_a2V9EnRMmsOCNPV0zh1c_DV1dMwwfZ5TTrhj03HiTnHv4i0OEE3Wy85ow). The dataset contains information on terrorist organizations, decapitation, and other associated variables for terrorist groups across the world.  -->
+<!-- ```{r} -->
+<!-- tribble(~variable, ~meaning,  -->
+<!--         "name", "The group's name",  -->
+<!--         "year", "Year",  -->
+<!--         "failure", "Did the group experience failure in this year?",  -->
+<!--         "allies", "Number of allies the group has",  -->
+<!--         "alliesties", "Number of ties a group's allies have (eigenvector centrality score)",  -->
+<!--         "size", "Size of group (from 0 to 3)",  -->
+<!--         "religious", "Is the group religious?",  -->
+<!--         "ethnic", "Is the group ethnically defined?",  -->
+<!--         "pop", "Country population",  -->
+<!--         "cinc", "Military capability score of country (as a percent of the world's total capabilities)",  -->
+<!--         "civilwar", "Is the country experiencing a civil war?",  -->
+<!--         "decap", "Was the group decapitated this year?",  -->
+<!--         "gdppercap", "Country's GDP per capita.") %>%  -->
+<!--   kable() %>%  -->
+<!--     column_spec(2, width = "20em") -->
+<!-- ``` -->
+<!-- Ideas:  -->
+<!-- - does decapitation cause organizational failure?  -->
+<!-- - do terrorist alliances reduce organizational failure?  -->
+<!-- - does religion or ethnicity make a group more likely to form alliances?  -->
+<!-- - does religious belief make a group more resistant to failure? -->
+<!-- ### The template -->
+<!-- [`Price template`](/files/final-project-data/final-price.Rmd) -->
 </div>
 </div>
 <div id="western-education-and-the-spread-of-democracy" class="section level2">
@@ -475,7 +365,7 @@ students studying in the US (in thousands)
 <li>does a leader having lots of students studying abroad in the US make US alliances more likely?</li>
 <li>does a country experiencing a democratic transition increase the likelihood a leader studies in the West? or that more of their students study in the West?</li>
 </ul>
-<div id="the-template-2" class="section level3">
+<div id="the-template-1" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-gift.Rmd"><code>Gift template</code></a></p>
 </div>
@@ -618,7 +508,7 @@ Ideology (1 = far left, 10 = far right)
 <li>do victims of crime become more involved in their communities, or engage in protest?</li>
 <li>does the experience of participating in a protest make someone become more liberal or conservative?</li>
 </ul>
-<div id="the-template-3" class="section level3">
+<div id="the-template-2" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-lap-crime.Rmd"><code>LAPOP template</code></a></p>
 </div>
@@ -751,7 +641,7 @@ if the senator faces reelection within two years of the vote
 <li>does not having to face reelection change how Senators vote?</li>
 <li>does a senator’s ideology cause them to vote in particular ways during Senate confirmations?</li>
 </ul>
-<div id="the-template-4" class="section level3">
+<div id="the-template-3" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-kastellec.Rmd"><code>Kastellec template</code></a></p>
 </div>
@@ -892,7 +782,7 @@ Government should redistribute wealth (1 = strongly agree, 5 = strongly disagree
 <li>can education reduce racial prejudice?</li>
 <li>does education cause people to become more liberal or more conservative?</li>
 </ul>
-<div id="the-template-5" class="section level3">
+<div id="the-template-4" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-prejudice.Rmd"><code>Prejudice template</code></a></p>
 </div>
@@ -1057,7 +947,7 @@ Number of attacks by the AUC
 <li>do past conflicts, either during La Violencia, or over land, cause current conflicts?</li>
 <li>how has the experience of Spanish colonization in some parts of the country but not others influenced contemporary outcomes?</li>
 </ul>
-<div id="the-template-6" class="section level3">
+<div id="the-template-5" class="section level3">
 <h3>The template</h3>
 <p><a href="/files/final-project-data/final-colombia.Rmd"><code>Colombia template</code></a></p>
 </div>

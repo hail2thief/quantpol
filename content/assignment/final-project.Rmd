@@ -101,45 +101,45 @@ Ideas:
 
 
 
-## Decapitation and counter-terrorism
+<!-- ## Decapitation and counter-terrorism -->
 
 
-States spend lots of resources trying to capture or kill the leaders of non-state organizations such as terrorist groups, rebel groups, and criminal organizations. Does **decapitating** these orgs actually work?
+<!-- States spend lots of resources trying to capture or kill the leaders of non-state organizations such as terrorist groups, rebel groups, and criminal organizations. Does **decapitating** these orgs actually work? -->
 
 
-This dataset comes from [this II article by Milton and Price](https://www.tandfonline.com/doi/full/10.1080/03050629.2020.1719406?casa_token=cZ2b77wtvbMAAAAA%3AQzsQxZqs7asZricF_a2V9EnRMmsOCNPV0zh1c_DV1dMwwfZ5TTrhj03HiTnHv4i0OEE3Wy85ow). The dataset contains information on terrorist organizations, decapitation, and other associated variables for terrorist groups across the world. 
+<!-- This dataset comes from [this II article by Milton and Price](https://www.tandfonline.com/doi/full/10.1080/03050629.2020.1719406?casa_token=cZ2b77wtvbMAAAAA%3AQzsQxZqs7asZricF_a2V9EnRMmsOCNPV0zh1c_DV1dMwwfZ5TTrhj03HiTnHv4i0OEE3Wy85ow). The dataset contains information on terrorist organizations, decapitation, and other associated variables for terrorist groups across the world.  -->
 
-```{r}
-tribble(~variable, ~meaning, 
-        "name", "The group's name", 
-        "year", "Year", 
-        "failure", "Did the group experience failure in this year?", 
-        "allies", "Number of allies the group has", 
-        "alliesties", "Number of ties a group's allies have (eigenvector centrality score)", 
-        "size", "Size of group (from 0 to 3)", 
-        "religious", "Is the group religious?", 
-        "ethnic", "Is the group ethnically defined?", 
-        "pop", "Country population", 
-        "cinc", "Military capability score of country (as a percent of the world's total capabilities)", 
-        "civilwar", "Is the country experiencing a civil war?", 
-        "decap", "Was the group decapitated this year?", 
-        "gdppercap", "Country's GDP per capita.") %>% 
-  kable() %>% 
-    column_spec(2, width = "20em")
-```
-
-
-Ideas: 
-
-- does decapitation cause organizational failure? 
-- do terrorist alliances reduce organizational failure? 
-- does religion or ethnicity make a group more likely to form alliances? 
-- does religious belief make a group more resistant to failure?
+<!-- ```{r} -->
+<!-- tribble(~variable, ~meaning,  -->
+<!--         "name", "The group's name",  -->
+<!--         "year", "Year",  -->
+<!--         "failure", "Did the group experience failure in this year?",  -->
+<!--         "allies", "Number of allies the group has",  -->
+<!--         "alliesties", "Number of ties a group's allies have (eigenvector centrality score)",  -->
+<!--         "size", "Size of group (from 0 to 3)",  -->
+<!--         "religious", "Is the group religious?",  -->
+<!--         "ethnic", "Is the group ethnically defined?",  -->
+<!--         "pop", "Country population",  -->
+<!--         "cinc", "Military capability score of country (as a percent of the world's total capabilities)",  -->
+<!--         "civilwar", "Is the country experiencing a civil war?",  -->
+<!--         "decap", "Was the group decapitated this year?",  -->
+<!--         "gdppercap", "Country's GDP per capita.") %>%  -->
+<!--   kable() %>%  -->
+<!--     column_spec(2, width = "20em") -->
+<!-- ``` -->
 
 
-### The template
+<!-- Ideas:  -->
 
-[`Price template`](/files/final-project-data/final-price.Rmd)
+<!-- - does decapitation cause organizational failure?  -->
+<!-- - do terrorist alliances reduce organizational failure?  -->
+<!-- - does religion or ethnicity make a group more likely to form alliances?  -->
+<!-- - does religious belief make a group more resistant to failure? -->
+
+
+<!-- ### The template -->
+
+<!-- [`Price template`](/files/final-project-data/final-price.Rmd) -->
 
 
 

@@ -1,5 +1,5 @@
 ---
-title: "Quantifying uncertainty"
+title: "Quantifying <br> uncertainty"
 subtitle: "The Scientific Study of Politics"  
 author: 
   - "Juan Tellez"
@@ -52,8 +52,22 @@ red = "#dc354a"
 yellow = "#ecb025"
 blue = "#213772"
 
-# fancy theme
-theme_fancy <- theme_bw(base_family = "Fira Sans", base_size = 14)
+# custom ggplot theme
+theme_nice = function() {
+  theme_minimal(base_family = "Archivo Narrow") +
+    theme(panel.grid.minor = element_blank(),
+          plot.background = element_rect(fill = "white", color = NA),
+          plot.title = element_text(face = "bold"),
+          axis.title = element_text(face = "bold"),
+          strip.text = element_text(face = "bold", size = rel(0.8), hjust = 0),
+          strip.background = element_rect(fill = "grey80", color = NA),
+          legend.title = element_text(face = "bold"))
+}
+
+theme_set(theme_nice())
+
+# palette
+palette = MetBrewer::met.brewer(name = "Cross")
 
 # stupid geom_label_repel problem
 update_geom_defaults("label", list(family = "Fira Sans"))
@@ -89,7 +103,7 @@ class: center
 ]
 
 --
-.box-1.large.sp-after[The bootstrap]
+.box-1.large.sp-after[Quantifying uncertainty]
 
 --
 .box-2.large.sp-after[The confidence interval]
@@ -116,7 +130,7 @@ gss_sm %>%
   group_by(replicate) %>% 
   summarise(childs = mean(childs, na.rm = TRUE)) %>% 
   select(`Sample` = replicate, `Avg. num of kids in sample` = childs) %>% 
-  knitr::kable()
+  knitr::kable(digits = 2)
 ```
 
 
@@ -126,7 +140,7 @@ gss_sm %>%
 # The way out
 
 
-Turns out that if our samples are representative of the population, then estimates from large samples will tend to be pretty damn close
+Turns out that if our samples are **representative** of the population, then estimates from **large** samples will tend to be pretty damn close
 
 --
 
@@ -143,7 +157,7 @@ kids = crossing(n = c(10, 20, 50, 100, 200, 500)) %>%
 ggplot(kids, aes(x = childs)) + 
   geom_density(fill = red, alpha = .9, color = "white") + 
   facet_wrap(vars(n)) + 
-  theme_fancy + 
+  theme_nice() + 
   geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), 
              lty = 1, size = 1, color = blue) + 
   labs(x = "Distribution of sample average # of kids")
@@ -151,6 +165,8 @@ ggplot(kids, aes(x = childs)) +
 
 
 ---
+
+
 
 class: center, middle, inverse
 # But this is weird
@@ -165,7 +181,7 @@ But in real life we only ever have one sample (e.g., one poll)
 
 --
 
-How do we get a sense for our uncertainty in this one sample?
+How do we get a sense for uncertainty in **our one sample**?
 
 
 ---
@@ -184,7 +200,7 @@ How do we get a sense for our uncertainty in this one sample?
 .pull-right[
 ✅ Simulation
 
-* Simulate different samples that look like ours
+* Simulate different samples that **look like ours**
 * Use distribution of simulated samples to quantify uncertainty
 ]
 
@@ -192,31 +208,58 @@ How do we get a sense for our uncertainty in this one sample?
 
 ---
 
-
-class: center, middle, inverse
-# How to simulate? 
+# How to simulate
 
 --
 
+Taking lots of samples of size 20 $\rightarrow$ uncertainty in a sample of 20
 
-We need to simulate what it would look like if we had taken many samples from the population we are interested in 
-
+```{r, echo = TRUE, eval = FALSE}
+gss_sm %>%
+  rep_sample_n(`size = 20`, reps = 1000) # size is smaller than dataset
+```
 
 --
 
-We can take samples *from our dataset* that are the same size as the original, but **with replacement** (i.e., the same observation can appear multiple times)
+So to simulate uncertainty in our sample of size N, just take many samples of size N, **with replacement**
 
---
 
-This **mimics** how samples from a population vary, and gives us a sense for how much the estimate we care about might vary
+```{r, echo = TRUE, eval = FALSE}
+gss_sm %>% 
+  rep_sample_n(`size = nrow(gss_sm)`, reps = 1000, `replace = TRUE`)
+```
 
+.small[
+Note: `nrow(DATA)` tells you how many observations in data object
+]
+
+---
+
+# "With replacement?"
+
+
+.pull-left[
+If we have a dataset of 2,867 observations and take a sample of that size (2,867) we'll just get back the original dataset!
+
+
+Sampling **with replacement** means once we draw an observation it goes back into the dataset
+
+Each observation can appear **multiple times** in a sample
+]
+
+.pull-right[
+```{r}
+knitr::include_graphics("images/with-replacement.png")
+```
+
+]
 
 ---
 
 
 # Sampling with and without replacement
 
-If we were sampling these delicious fruits: 
+If we were sampling .shout[4] of these delicious fruits: 
 
 ```{r}
 fruits = c("Mango", "Pineapple", "Banana", "Blackberry")
@@ -226,7 +269,7 @@ fruits
 --
 
 
-It would look like this:
+It would look like this, with and without replacement:
 
 ```{r}
 set.seed(1990)
@@ -245,14 +288,14 @@ tibble(`Sample, no replace` = sample(fruits, size = 4),
 
 
 .pull-left[
-* This is called **bootstrapping**
-* Don't have many samples? Well then, "pull yourself up by your bootstraps" and create some by sampling with replacement
-* Use the distribution of these samples to quantify uncertainty
+* Generating many, **same-sized** samples with replacement is called **bootstrapping**
+* Replacement lets us generate samples that randomly differ from ours
+* Use the distribution of bootstrapped samples to quantify uncertainty
 ]
 
 
 .pull-right[
-```{r}
+```{r, fig.cap="Only one sample? Pull yourself up by your bootstraps!"}
 knitr::include_graphics("images/cowboy-spongebob.png")
 ```
 ]
@@ -261,39 +304,15 @@ knitr::include_graphics("images/cowboy-spongebob.png")
 ---
 
 
-# How does this work?
-
-
-Last week, small sample, lots of reps, no replacement:
-
-```{r, echo = TRUE, eval = FALSE}
-gss_sm %>%
-  rep_sample_n(`size = 20`, reps = 1000) # size is smaller than dataset
-```
-
---
-
-Bootstrap, same-size sample, lots of reps, with replacement: 
-
-```{r, echo = TRUE, eval = FALSE}
-gss_sm %>% 
-  rep_sample_n(`size = 2867`, reps = 1000, `replace = TRUE`) %>% # size = nrow(gss_sm), with replacement
-  summarise(avg_kids = mean(childs, na.rm = TRUE))
-```
-
-
----
-
-
 # Back to the damn kids
 
 
-Let's bootstrap estimates of the average number of kids in the US, based on `gss_sm`: 
+How uncertain should we be of our estimate of the avg. number of kids in the US, Given that it's based on our one sample, `gss_sm`? We can bootstrap:
 
 .scroll-output[
 ```{r, echo = TRUE}
 boot_kids = gss_sm %>% 
-  rep_sample_n(size = nrow(gss_sm), reps = 1000, replace = TRUE) %>% 
+  rep_sample_n(size = nrow(gss_sm), reps = 1000, replace = TRUE) %>% #<<
   summarise(avg_kids = mean(childs, na.rm = TRUE))
 
 boot_kids
@@ -305,16 +324,17 @@ boot_kids
 ---
 
 
-# Results
+# The distribution of bootstrapped estimates
 
-This is how much our estimates might vary from sample to sample: 
+.blue[Blue] is our estimate, .red[red] is how much estimates might vary across bootstrapped samples that **look like ours**
 
-```{r}
+```{r, out.width="90%"}
 ggplot(boot_kids, aes(x = avg_kids)) + 
   geom_histogram(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids across bootstraps") + 
-  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), size = 2, color = blue)
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), size = 2.5, 
+             color = blue)
 ```
 
 
@@ -328,8 +348,34 @@ class: middle, center, inverse
 
 # How to quantify uncertainty?
 
+.pull-left[
+The red histogram is nice, but how can we communicate uncertainty in our estimates in a pithy, more comparable way?
 
-One approach is to measure the "spread" of the distribution, using the standard deviation
+Three approaches:
+
+* The standard error
+* The confidence interval
+* Statistical significance
+]
+
+
+.pull-right[
+```{r}
+ggplot(boot_kids, aes(x = avg_kids)) + 
+  geom_histogram(fill = red, color = "white") + 
+  theme_nice() + 
+  labs(x = "Average number of kids across bootstraps") + 
+  geom_vline(xintercept = mean(gss_sm$childs, na.rm = TRUE), size = 2.5, 
+             color = blue)
+```
+]
+
+---
+
+# The standard error
+
+As we learned so long ago, one way to measure the "spread" of a distribution (i.e., how much a variable **varies**), is with the *standard deviation*
+
 
 --
 
@@ -341,10 +387,11 @@ This is also called the **standard error**, or the **margin of error**
 ```{r, echo = TRUE}
 boot_kids %>% 
   summarise(mean = mean(avg_kids), 
-            standard_error = sd(avg_kids))
+            standard_error = sd(avg_kids)) #<<
 ```
 ]
 
+--
 
 .pull-right[
 Best guess? About 1.85 kids, +/- 2 standard errors
@@ -356,7 +403,7 @@ This is what you see in the news! That +/- polling/margin of error
 ---
 
 
-# How to quantify uncertainty?
+# The confidence interval
 
 
 Another way is to look at where most of the estimates fall; this is called the **confidence interval** and it represents our "best guess" of what we're trying to estimate
@@ -365,7 +412,7 @@ Another way is to look at where most of the estimates fall; this is called the *
 ```{r, out.width="80%"}
 ggplot(boot_kids, aes(x = avg_kids)) + 
   geom_histogram(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids across bootstraps") +
   annotate(geom = "rect", 
            xmin = quantile(boot_kids$avg_kids, probs = c(.025)), 
@@ -384,10 +431,10 @@ ggplot(boot_kids, aes(x = avg_kids)) +
 You could report (for example) where the middle `r kableExtra::text_spec("50%", color = red, bold = TRUE)` of bootstraps fall, or (for example) where the middle `r kableExtra::text_spec("95%", color = yellow, bold = TRUE)` of bootstraps fall, but there are **tradeoffs**!
 
 
-```{r}
+```{r, out.width="80%"}
 ggplot(boot_kids, aes(x = avg_kids)) + 
   geom_histogram(color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Average number of kids across bootstraps") +
   annotate(geom = "rect", 
            xmin = quantile(boot_kids$avg_kids, probs = c(.025)), 
@@ -400,6 +447,35 @@ ggplot(boot_kids, aes(x = avg_kids)) +
            ymin = 0, ymax = Inf, 
            alpha = .5, fill = red)
 ```
+
+
+---
+
+
+# The tradeoff
+
+* You are .red[50%] "confident" that avg. number of kids could vary between `r round(quantile(boot_kids$avg_kids, probs = c(.25)), 2)` and `r round(quantile(boot_kids$avg_kids, probs = c(.75)), 2)`. Narrower range! But low confidence!
+
+* You are .blue[95%] "confident" that avg. number of kids could vary between `r round(quantile(boot_kids$avg_kids, probs = c(.025)), 2)` and `r round(quantile(boot_kids$avg_kids, probs = c(.975)), 2)`. Higher range! But higher confidence!
+
+
+```{r, out.width="60%"}
+ggplot(boot_kids, aes(x = avg_kids)) + 
+  geom_histogram(color = "white") + 
+  theme_nice() + 
+  labs(x = "Average number of kids across bootstraps") +
+  annotate(geom = "rect", 
+           xmin = quantile(boot_kids$avg_kids, probs = c(.025)), 
+           xmax = quantile(boot_kids$avg_kids, probs = c(.975)), 
+           ymin = 0, ymax = Inf, 
+           alpha = .5, fill = yellow) + 
+  annotate(geom = "rect", 
+           xmin = quantile(boot_kids$avg_kids, probs = c(.25)), 
+           xmax = quantile(boot_kids$avg_kids, probs = c(.75)), 
+           ymin = 0, ymax = Inf, 
+           alpha = .5, fill = red)
+```
+
 
 
 ---
@@ -421,23 +497,50 @@ boot_kids %>%
 
 ---
 
+# Mirrors of one another
 
+The standard error and confidence interval are actually telling you the same thing -- A 95% confidence interval is roughly equal to the Estimate +/- 1.96 $\times$ standard error
+
+--
+
+
+.pull-left[
+```{r, echo = TRUE}
+boot_kids %>% 
+  summarise(low = quantile(avg_kids, .025),
+            mean = mean(avg_kids), 
+            high = quantile(avg_kids, .975))
+```
+]
+
+
+.pull-right[
+```{r, echo = TRUE}
+boot_kids %>% 
+  summarise(mean = mean(avg_kids), standard_error = sd(avg_kids)) %>% 
+  mutate(low = mean - 1.96 * standard_error, 
+         high = mean + 1.96 * standard_error) %>% 
+  select(low, mean, high)
+```
+]
+
+---
 
 # 🚨 Your turn: polling the death penalty 🚨
 
-Using the `issues` data, and: 
+Use the `issues` data, and: 
 
 
 1. Pick a state of your choosing. What proportion of respondents support the death penalty in that state? 
 
 2. OK, but how certain are you of that? Generate 1,000 bootstraps and plot the distribution. 
 
-3. Calculate and report the 95% confidence interval of your best guess. 
+3. Calculate the standard error and the 95% confidence interval of your best guess. Convince yourself the two can be made equivalent. 
 
 
 
 ```{r}
-countdown::countdown(minutes = 10L)
+countdown::countdown(minutes = 10L, font_size = "2em")
 ```
 
 
@@ -480,7 +583,7 @@ boot_lm_kids = gss_sm %>%
 boot_lm_kids %>% 
   select(`Bootstrap` = replicate, `Coefficient` = term, Estimate = estimate) %>%
   slice(1:10) %>% 
-  knitr::kable()
+  knitr::kable(digits = 4)
 ```
 
 
@@ -490,21 +593,22 @@ boot_lm_kids %>%
 # Regression uncertainty
 
 
-How much might our estimate of `childs ~ age` vary? We can look at the standard error: 
+How uncertain is our estimate of `childs ~ age` vary? Look at the standard error
 
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 boot_lm_kids %>% 
   summarise(mean = mean(estimate), 
             standard_error = sd(estimate))
 ```
 
 
+You might report it is .0345, +/- .002
 
 ---
 
 
-# Theory vs. simulation
+# Connecting the dots
 
 
 Notice! This is what the (NUMBERS) mean in the regression table; they are the **standard error of the coefficient estimate**
@@ -537,15 +641,15 @@ lm(childs ~ age, data = gss_sm) %>%
 # Regression uncertainty
 
 
-How much might our estimate of `childs ~ age` vary? We can look at the 95% confidence interval
+We can also look at the 95% confidence interval -- so we are 95% "confident" the effect of age on the number of children a person has is between .031 and .038
 
 
-```{r}
+```{r, out.width="90%"}
 low = quantile(boot_lm_kids$estimate, probs = c(.025))
 hi = quantile(boot_lm_kids$estimate, probs = c(.975))
 ggplot(boot_lm_kids, aes(x = estimate)) + 
   geom_histogram(fill = red, color = "white") + 
-  theme_fancy + 
+  theme_nice() + 
   labs(x = "Estimates of lm(childs ~ age)") +
   annotate(geom = "rect", 
            xmin = low, 
@@ -604,7 +708,7 @@ ggplot(scens, aes(x = scenario,
   geom_pointrange(size = 1) + 
   coord_flip() + 
   geom_hline(yintercept = 0, lty = 2) + 
-  theme_fancy + 
+  theme_nice() + 
   theme(legend.position = "none", 
         axis.text.y = element_blank(), 
         axis.ticks.y = element_blank()) + 
@@ -624,7 +728,13 @@ ggplot(scens, aes(x = scenario,
 
 
 * `r kableExtra::text_spec("Small range", color = yellow, bold = TRUE)`: great! Effect is precise; ads are worth it!
+
+--
+
 * `r kableExtra::text_spec("Big range", color = blue, bold = TRUE)`: not great! Effect could be *tiny*, or *huge*; are the ads worth it? At least we know they help
+
+--
+
 * `r kableExtra::text_spec("Crosses zero", color = red, bold = TRUE)`: awful! Ads could work (+), they could do nothing (0), or they could be counterproductive (-)
 
 
@@ -641,7 +751,7 @@ ggplot(scens, aes(x = scenario,
   geom_pointrange(size = 1) + 
   coord_flip() + 
   geom_hline(yintercept = 0, lty = 2) + 
-  theme_fancy + 
+  theme_nice() + 
   theme(legend.position = "none", 
         axis.text.y = element_blank(), 
         axis.ticks.y = element_blank()) + 
@@ -693,7 +803,7 @@ ggplot(scens, aes(x = scenario,
   geom_pointrange(size = 1) + 
   coord_flip() + 
   geom_hline(yintercept = 0, lty = 2) + 
-  theme_fancy + 
+  theme_nice() + 
   theme(legend.position = "top", 
         axis.text.y = element_blank(), 
         axis.ticks.y = element_blank()) + 
@@ -726,14 +836,16 @@ For a more sane approach to this, see: Bayesian statistics
 ---
 
 
-# Reporting statistical significance: the stars
+# Statistical significance
+
+.pull-left[
+* The *stars* (`*`) in regression output tell you about whether an estimate's confidence interval crosses the dreaded zero and at what *level of confidence*
+
+* This is done via the **p-value**, which we don't cover, but is the mirror image of the confidence interval
+]
 
 
-The *stars* (*) in regression output tell you about whether an estimate's confidence interval crosses the dreaded zero, through a statistic called the p-value
-
-We didn't cover p-values, but they are just the mirror image of the confidence interval
-
-.scroll-output[
+.pull-right[
 ```{r}
 lm(childs ~ age, data = gss_sm) %>% 
   huxreg("Number of kids" = ., statistics = "nobs") %>% 
@@ -751,11 +863,41 @@ lm(childs ~ age, data = gss_sm) %>%
 # Reading the stars
 
 
-- (*) p < .05 = the 95% confidence interval does not cross zero
-- (**) p < .01 = the 99% confidence interval does not cross zero
-- (***) p < .001 = the 99.9% confidence interval does not cross zero
+.pull-left[
 
-.scroll-output[
+- (`*`) p < .05 = the 95% confidence interval does not cross zero
+- (`**`) p < .01 = the 99% confidence interval does not cross zero
+- (`***`) p < .001 = the 99.9% confidence interval does not cross zero
+]
+
+.pull-right[
+```{r}
+lm(childs ~ age, data = gss_sm) %>% 
+  huxreg("Number of kids" = ., statistics = "nobs") %>% 
+  map_background_color(by_regex(
+        "\\*" = "yellow"
+      ))
+```
+]
+
+
+
+---
+
+
+# Another way...
+
+
+.pull-left[
+
+The estimate is **statistically significant** at the...
+
+- (`*`) p < .05 = 95% confidence level
+- (`**`) p < .01 = 99% confidence level
+- (`***`) p < .001 = 99.9% confidence level
+]
+
+.pull-right[
 ```{r}
 lm(childs ~ age, data = gss_sm) %>% 
   huxreg("Number of kids" = ., statistics = "nobs") %>% 
@@ -797,5 +939,22 @@ huxreg("Naive model" = m1, "Controls model" = m2, statistics = "nobs") %>%
 ]
 ]
 
+---
 
+
+# 🚨 Your turn: pulling it all together 🚨
+
+
+Using any dataset from class:
+
+
+1. Estimate a model, with and without (appropriate!) controls. 
+
+2. Interpret **all** of the regression output. 
+
+
+
+```{r}
+countdown::countdown(minutes = 10L)
+```
 
