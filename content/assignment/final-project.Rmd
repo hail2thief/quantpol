@@ -31,12 +31,18 @@ Your primary goal is this: to explore the effect of some treatment on an outcome
 Browse through the different topics, think about what causal story you want to tell, and pick the topic you want. Download the adjoining Rmarkdown template, and complete the following activities outlined there. 
 
 
-Once you are done, you will submit the completed .Rmd file on Canvas.
+You can use your notes, slides, and any other material from the course, but *you must work on this independently.*
 
 
-You can use your notes, slides, and any other material from the course, but you must work on this independently. The project is due by **December 5th at 5pm**. 
+Once you are done, you will submit the completed .Rmd file on Canvas. *Late submissions will not be accepted*. 
 
 
+## Help from instructors
+
+On the problem sets the instructors (the professor + TAs) provided substantial guidance. This is not the case for the final project. *We will not provide any help in answering questions*. This is your chance to show how much you have learned. 
+
+
+If there are MAJOR issues that prevent you from working on the project (e.g., you cannot load the dataset at the top of the Rmd file), reach out to us ASAP, by email. If there are clarification questions about the language of a question, also reach out to us ASAP by email. 
 
 
 # Evaluation
